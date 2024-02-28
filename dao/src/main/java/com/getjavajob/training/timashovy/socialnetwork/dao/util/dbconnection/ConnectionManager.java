@@ -26,13 +26,9 @@ public final class ConnectionManager {
     private static final String LOGIN_KEY = "db.login";
     private static final String PASSWORD_KEY = "db.password";
     private static final String POOL_SIZE_KEY = "db.pool.size";
-    private static BlockingQueue<Connection> connectionPool;
+    private static final String DRIVER_CLASS = "org.postgresql.Driver";
+    private static volatile BlockingQueue<Connection> connectionPool;
     private static final Integer DEFAULT_POOL_SIZE = 10;
-
-    static {
-        loadDriver();
-        initializeConnectionPool();
-    }
 
     /**
      * Class is not considered to have any instances.
@@ -44,15 +40,6 @@ public final class ConnectionManager {
         throw new AssertionError();
     }
 
-    private static void initializeConnectionPool() {
-        String poolSize = get(POOL_SIZE_KEY);
-        int size = poolSize == null ? DEFAULT_POOL_SIZE : parseInt(poolSize);
-        connectionPool = new ArrayBlockingQueue<>(size);
-        for (int i = 0; i < size; i++) {
-            connectionPool.add(createConnection());
-        }
-    }
-
     /**
      * Public method for clients to work with connections to DB, using connection pool.
      *
@@ -60,15 +47,32 @@ public final class ConnectionManager {
      */
     public static Connection getConnection() {
         try {
-            return connectionPool.take();
+            return getConnectionPool().take();
         } catch (InterruptedException e) {
             throw new DaoException("Cannot establish connection to db");
         }
     }
 
+    private static BlockingQueue<Connection> getConnectionPool() {
+        if (connectionPool == null) {
+            initializeConnectionPool();
+        }
+        return connectionPool;
+    }
+
+    private static void initializeConnectionPool() {
+        String poolSize = get(POOL_SIZE_KEY);
+        int size = poolSize == null ? DEFAULT_POOL_SIZE : parseInt(poolSize);
+        connectionPool = new ArrayBlockingQueue<>(size);
+        loadDriver();
+        for (int i = 0; i < size; i++) {
+            connectionPool.add(createConnection());
+        }
+    }
+
     private static void loadDriver() {
         try {
-            forName("org.postgresql.Driver");
+            forName(DRIVER_CLASS);
         } catch (ClassNotFoundException e) {
             throw new DaoException("Cannot load db driver");
         }
