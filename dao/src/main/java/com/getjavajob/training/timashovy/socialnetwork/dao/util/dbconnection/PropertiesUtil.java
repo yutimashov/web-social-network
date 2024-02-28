@@ -18,10 +18,7 @@ import java.util.Properties;
 public final class PropertiesUtil {
 
     private static final Properties PROPERTIES = new Properties();
-
-    static {
-        loadProperties();
-    }
+    public static final String PROPERTIES_FILE_NAME = "db.properties";
 
     /**
      * Class is not considered to have any instances.
@@ -33,16 +30,19 @@ public final class PropertiesUtil {
         throw new AssertionError();
     }
 
+    public static String get(String key) {
+        if (PROPERTIES.isEmpty()) {
+            loadProperties();
+        }
+        return PROPERTIES.getProperty(key);
+    }
+
     private static void loadProperties() {
-        try (InputStream inputStream = PropertiesUtil.class.getClassLoader().getResourceAsStream("db.properties")) {
+        try (InputStream inputStream = PropertiesUtil.class.getClassLoader().getResourceAsStream(PROPERTIES_FILE_NAME)) {
             PROPERTIES.load(inputStream);
         } catch (IOException e) {
             throw new DaoException("Cannot load properties for establishing connection to db");
         }
-    }
-
-    public static String get(String key) {
-        return PROPERTIES.getProperty(key);
     }
 
 }
