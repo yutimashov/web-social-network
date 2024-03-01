@@ -1,13 +1,13 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.FriendshipChecker;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatement;
 
 public class FriendshipCheckerImpl implements FriendshipChecker {
 
@@ -28,8 +28,7 @@ public class FriendshipCheckerImpl implements FriendshipChecker {
 
     @Override
     public boolean checkFriendshipRecordExistence(Long requesterId, Long accepterId) {
-        try (Connection connection = ConnectionManager.getConnection();
-             PreparedStatement friendshipExistence = connection.prepareStatement(FRIENDSHIP_RECORD_EXISTENCE)) {
+        try (PreparedStatement friendshipExistence = getPreparedStatement(FRIENDSHIP_RECORD_EXISTENCE)) {
             return followConstraintReqIdIsLessThanAcceptId(requesterId, accepterId, friendshipExistence);
         } catch (SQLException e) {
             throw new DaoException("dao: friendship record existence method failed: " + e.getMessage());
@@ -38,8 +37,7 @@ public class FriendshipCheckerImpl implements FriendshipChecker {
 
     @Override
     public boolean checkUsersAreFriends(Long requesterId, Long accepterId) {
-        try (Connection connection = ConnectionManager.getConnection();
-             PreparedStatement checkFriends = connection.prepareStatement(ARE_USERS_FRIENDS)) {
+        try (PreparedStatement checkFriends = getPreparedStatement(ARE_USERS_FRIENDS)) {
             return followConstraintReqIdIsLessThanAcceptId(requesterId, accepterId, checkFriends);
         } catch (SQLException e) {
             throw new DaoException("dao: areUsersFriends method failed: " + e.getMessage());
@@ -61,8 +59,7 @@ public class FriendshipCheckerImpl implements FriendshipChecker {
 
     @Override
     public boolean checkFriendRequestAlreadyExist(Long requesterId, Long accepterId) {
-        try (Connection connection = ConnectionManager.getConnection();
-             PreparedStatement checkFriendRequest = connection.prepareStatement(REQUESTERS_EQUALITY)) {
+        try (PreparedStatement checkFriendRequest = getPreparedStatement(REQUESTERS_EQUALITY)) {
             return followConstraintReqIdIsLessThanAcceptId(requesterId, accepterId, checkFriendRequest);
         } catch (SQLException e) {
             throw new DaoException("dao: checkFriendRequestAlreadyExist method failed: " + e.getMessage());

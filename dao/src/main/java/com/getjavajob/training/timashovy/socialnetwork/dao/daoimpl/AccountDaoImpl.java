@@ -3,17 +3,16 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl;
 import com.getjavajob.training.timashovy.socialnetwork.common.Account;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.AccountGroupDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.sql.Statement.RETURN_GENERATED_KEYS;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatement;
 import static java.util.Objects.isNull;
 
 public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraintsValidator {
@@ -47,11 +46,10 @@ public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraint
         if (isNull(fieldName) || isNull(fieldValue)) {
             throw new IllegalArgumentException("uniqueness field violation: either fieldName or fieldValue is null");
         }
-        String sql = "SELECT id FROM account_data.account WHERE " + fieldName + " = ?";
-        try (Connection connection = ConnectionManager.getConnection();
-             PreparedStatement checkUniqueness = connection.prepareStatement(sql)) {
-            checkUniqueness.setObject(1, fieldValue);
-            ResultSet existedRecords = checkUniqueness.executeQuery();
+        String checkRecordExistenceQuery = "SELECT id FROM account_data.account WHERE " + fieldName + " = ?";
+        try (PreparedStatement recordsSet = getPreparedStatement(checkRecordExistenceQuery)) {
+            recordsSet.setObject(1, fieldValue);
+            ResultSet existedRecords = recordsSet.executeQuery();
             if (existedRecords.next()) {
                 throw new IllegalArgumentException("account fields uniqueness violation");
             }
@@ -62,9 +60,7 @@ public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraint
 
     @Override
     public Long create(Account account) {
-        try (Connection connection = ConnectionManager.getConnection();
-             PreparedStatement createAccountStatement = connection.prepareStatement(CREATE_ACCOUNT,
-                     RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement createAccountStatement = getPreparedStatementWithGeneratedKeys(CREATE_ACCOUNT)) {
             setAccountData(account, createAccountStatement);
             createAccountStatement.executeUpdate();
             ResultSet generatedKeys = createAccountStatement.getGeneratedKeys();
@@ -94,59 +90,44 @@ public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraint
 
     @Override
     public Account getById(Long id) {
-        try (Connection connection = ConnectionManager.getConnection();
-             PreparedStatement getAccountByIdStatement = connection.prepareStatement(GET_ACCOUNT)) {
+        try (PreparedStatement getAccountByIdStatement = getPreparedStatement(GET_ACCOUNT)) {
             getAccountByIdStatement.setLong(1, id);
             ResultSet accountData = getAccountByIdStatement.executeQuery();
-            Account receivedAccount = null;
             if (accountData.next()) {
-                receivedAccount = new Account.Builder()
-                        .id(accountData.getLong("id"))
-                        .firstName(accountData.getString("first_name"))
-                        .birthDate((accountData.getDate("birth_date")).toLocalDate())
-                        .lastName(accountData.getString("last_name"))
-                        .personalPhoneNumber(accountData.getString("personal_phone_number"))
-                        .email(accountData.getString("email"))
-                        .middleName(accountData.getString("middle_name"))
-                        .workPhoneNumber(accountData.getString("work_phone_number"))
-                        .personalAddress(accountData.getString("personal_address"))
-                        .workAddress(accountData.getString("work_address"))
-                        .icq(accountData.getString("icq"))
-                        .skype(accountData.getString("skype"))
-                        .additionalInfo(accountData.getString("additional_info"))
-                        .build();
+                return createAccountFromResultSet(accountData);
             } else {
                 throw new IllegalArgumentException("try to get non-existing account by id");
             }
-            return receivedAccount;
         } catch (SQLException e) {
             throw new DaoException("dao: get account by id method failed: " + e.getMessage());
         }
     }
 
+    private Account createAccountFromResultSet(ResultSet resultSet) throws SQLException {
+        return new Account.Builder()
+                .id(resultSet.getLong("id"))
+                .firstName(resultSet.getString("first_name"))
+                .birthDate((resultSet.getDate("birth_date")).toLocalDate())
+                .lastName(resultSet.getString("last_name"))
+                .personalPhoneNumber(resultSet.getString("personal_phone_number"))
+                .email(resultSet.getString("email"))
+                .middleName(resultSet.getString("middle_name"))
+                .workPhoneNumber(resultSet.getString("work_phone_number"))
+                .personalAddress(resultSet.getString("personal_address"))
+                .workAddress(resultSet.getString("work_address"))
+                .icq(resultSet.getString("icq"))
+                .skype(resultSet.getString("skype"))
+                .additionalInfo(resultSet.getString("additional_info"))
+                .build();
+    }
+
     @Override
     public List<Account> getAll() {
-        try (Connection connection = ConnectionManager.getConnection();
-             PreparedStatement getAllAccountsStatement = connection.prepareStatement(GET_ALL_ACCOUNTS)) {
+        try (PreparedStatement getAllAccountsStatement = getPreparedStatement(GET_ALL_ACCOUNTS)) {
             List<Account> accounts = new ArrayList<>();
             ResultSet accountsSet = getAllAccountsStatement.executeQuery();
             while (accountsSet.next()) {
-                accounts.add(new Account.Builder()
-                        .id(accountsSet.getLong("id"))
-                        .firstName(accountsSet.getString("first_name"))
-                        .birthDate((accountsSet.getDate("birth_date")).toLocalDate())
-                        .lastName(accountsSet.getString("last_name"))
-                        .personalPhoneNumber(accountsSet.getString("personal_phone_number"))
-                        .email(accountsSet.getString("email"))
-                        .middleName(accountsSet.getString("middle_name"))
-                        .workPhoneNumber(accountsSet.getString("work_phone_number"))
-                        .personalAddress(accountsSet.getString("personal_address"))
-                        .workAddress(accountsSet.getString("work_address"))
-                        .icq(accountsSet.getString("icq"))
-                        .skype(accountsSet.getString("skype"))
-                        .additionalInfo(accountsSet.getString("additional_info"))
-                        .build()
-                );
+                accounts.add(createAccountFromResultSet(accountsSet));
             }
             return accounts;
         } catch (SQLException e) {
@@ -156,8 +137,7 @@ public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraint
 
     @Override
     public boolean updateById(Long id, Account account) {
-        try (Connection connection = ConnectionManager.getConnection();
-             PreparedStatement updateByIdStatement = connection.prepareStatement(UPDATE_ACCOUNT)) {
+        try (PreparedStatement updateByIdStatement = getPreparedStatement(UPDATE_ACCOUNT)) {
             setAccountData(account, updateByIdStatement);
             updateByIdStatement.setLong(13, id);
             return updateByIdStatement.executeUpdate() > 0;
@@ -168,8 +148,7 @@ public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraint
 
     @Override
     public boolean deleteById(Long id) {
-        try (Connection connection = ConnectionManager.getConnection();
-             PreparedStatement deleteByIdStatement = connection.prepareStatement(DELETE_ACCOUNT)) {
+        try (PreparedStatement deleteByIdStatement = getPreparedStatement(DELETE_ACCOUNT)) {
             deleteByIdStatement.setLong(1, id);
             return deleteByIdStatement.executeUpdate() > 0;
         } catch (SQLException e) {

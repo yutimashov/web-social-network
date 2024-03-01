@@ -3,17 +3,16 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl;
 import com.getjavajob.training.timashovy.socialnetwork.common.Group;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.AccountGroupDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.sql.Statement.RETURN_GENERATED_KEYS;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatement;
 import static java.util.Objects.isNull;
 
 public class GroupDaoImpl implements AccountGroupDao<Group>, TableConstraintsValidator {
@@ -38,8 +37,7 @@ public class GroupDaoImpl implements AccountGroupDao<Group>, TableConstraintsVal
 
     @Override
     public Long create(Group group) {
-        try (Connection connection = ConnectionManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SAVE_GROUP, RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement preparedStatement = getPreparedStatementWithGeneratedKeys(SAVE_GROUP)) {
             setGroupData(group, preparedStatement);
             preparedStatement.executeUpdate();
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
@@ -54,11 +52,10 @@ public class GroupDaoImpl implements AccountGroupDao<Group>, TableConstraintsVal
 
     @Override
     public Group getById(Long id) {
-        try (Connection connection = ConnectionManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(GET_GROUP_BY_ID)) {
+        try (PreparedStatement preparedStatement = getPreparedStatement(GET_GROUP_BY_ID)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            Group receivedGroup = null;
+            Group receivedGroup;
             if (resultSet.next()) {
                 receivedGroup = new Group(
                         resultSet.getLong("id"),
@@ -78,8 +75,7 @@ public class GroupDaoImpl implements AccountGroupDao<Group>, TableConstraintsVal
 
     @Override
     public List<Group> getAll() {
-        try (Connection connection = ConnectionManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_GROUPS)) {
+        try (PreparedStatement preparedStatement = getPreparedStatement(GET_ALL_GROUPS)) {
             List<Group> receivedGroups = new ArrayList<>();
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -99,8 +95,7 @@ public class GroupDaoImpl implements AccountGroupDao<Group>, TableConstraintsVal
 
     @Override
     public boolean updateById(Long id, Group group) {
-        try (Connection connection = ConnectionManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_GROUP_BY_ID)) {
+        try (PreparedStatement preparedStatement = getPreparedStatement(UPDATE_GROUP_BY_ID)) {
             setGroupData(group, preparedStatement);
             preparedStatement.setLong(5, id);
             return preparedStatement.executeUpdate() > 0;
@@ -118,8 +113,7 @@ public class GroupDaoImpl implements AccountGroupDao<Group>, TableConstraintsVal
 
     @Override
     public boolean deleteById(Long id) {
-        try (Connection connection = ConnectionManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_GROUP_BY_ID)) {
+        try (PreparedStatement preparedStatement = getPreparedStatement(DELETE_GROUP_BY_ID)) {
             preparedStatement.setLong(1, id);
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -132,9 +126,8 @@ public class GroupDaoImpl implements AccountGroupDao<Group>, TableConstraintsVal
         if (isNull(fieldName) || isNull(fieldValue)) {
             throw new IllegalArgumentException("checking uniqueness field value: either fieldName or fieldValue is null");
         }
-        final String sql = "SELECT id FROM group_data.\"group\" WHERE " + fieldName + " = ?";
-        try (Connection connection = ConnectionManager.getConnection();
-             PreparedStatement checkUniqueness = connection.prepareStatement(sql)) {
+        String checkRecordExistenceQuery = "SELECT id FROM group_data.\"group\" WHERE " + fieldName + " = ?";
+        try (PreparedStatement checkUniqueness = getPreparedStatement(checkRecordExistenceQuery)) {
             checkUniqueness.setObject(1, fieldValue);
             ResultSet existedRecords = checkUniqueness.executeQuery();
             if (existedRecords.next()) {

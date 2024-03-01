@@ -1,15 +1,15 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.FriendshipDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatement;
 
 public class FriendshipDaoImpl implements FriendshipDao {
 
@@ -40,8 +40,7 @@ public class FriendshipDaoImpl implements FriendshipDao {
      */
     @Override
     public boolean sendFriendshipRequest(Long requesterId, Long accepterId) {
-        try (Connection connection = ConnectionManager.getConnection();
-             PreparedStatement friendshipRequest = connection.prepareStatement(SEND_FRIEND_REQUEST)) {
+        try (PreparedStatement friendshipRequest = getPreparedStatement(SEND_FRIEND_REQUEST)) {
             if (requesterId < accepterId) {
                 friendshipRequest.setLong(1, requesterId);
                 friendshipRequest.setLong(2, accepterId);
@@ -57,8 +56,7 @@ public class FriendshipDaoImpl implements FriendshipDao {
 
     @Override
     public boolean acceptFriendRequest(Long requesterId, Long accepterId) {
-        try (Connection connection = ConnectionManager.getConnection();
-             PreparedStatement addFriend = connection.prepareStatement(ACCEPT_FRIEND_REQUEST)) {
+        try (PreparedStatement addFriend = getPreparedStatement(ACCEPT_FRIEND_REQUEST)) {
             if (requesterId < accepterId) {
                 addFriend.setLong(1, requesterId);
                 addFriend.setLong(2, accepterId);
@@ -80,8 +78,7 @@ public class FriendshipDaoImpl implements FriendshipDao {
      */
     @Override
     public List<Long> getFriendsIds(Long accountId) {
-        try (Connection connection = ConnectionManager.getConnection();
-             PreparedStatement getFriends = connection.prepareStatement(GET_FRIENDS)) {
+        try (PreparedStatement getFriends = getPreparedStatement(GET_FRIENDS)) {
             List<Long> friends = new ArrayList<>();
             getFriends.setLong(1, accountId);
             getFriends.setLong(2, accountId);
@@ -104,8 +101,7 @@ public class FriendshipDaoImpl implements FriendshipDao {
      */
     @Override
     public boolean deleteFriend(Long accountId, Long deletingFriendId) {
-        try (Connection connection = ConnectionManager.getConnection();
-             PreparedStatement deleteFriend = connection.prepareStatement(DELETE_FRIEND)) {
+        try (PreparedStatement deleteFriend = getPreparedStatement(DELETE_FRIEND)) {
             deleteFriend.setLong(1, accountId);
             deleteFriend.setLong(2, deletingFriendId);
             return deleteFriend.executeUpdate() > 0;
