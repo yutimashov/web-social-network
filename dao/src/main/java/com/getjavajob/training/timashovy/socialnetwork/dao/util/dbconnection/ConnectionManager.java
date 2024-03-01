@@ -4,6 +4,7 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoEx
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -11,14 +12,16 @@ import java.util.concurrent.BlockingQueue;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.PropertiesUtil.get;
 import static java.lang.Class.forName;
 import static java.lang.Integer.parseInt;
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
 /**
- * Class responsible for creation connections to DB.
- * It provides only one public method for clients - {@link ConnectionManager#getConnection()}.
- * All the work with connections to DB is organized via connection pool.
+ * Class is responsible for creation and managing connections to DB.
+ * It provides public methods for clients - {@link ConnectionManager#getPreparedStatement(String)} and
+ * {@link ConnectionManager#getPreparedStatementWithGeneratedKeys(String)}.
+ * All the work with connections to DB is organized via {@link ConnectionManager#connectionPool}.
  *
  * @author Yuriy Timashov
- * @since 14.01.2023
+ * @since 01.03.2023
  */
 public final class ConnectionManager {
 
@@ -26,13 +29,9 @@ public final class ConnectionManager {
     private static final String LOGIN_KEY = "db.login";
     private static final String PASSWORD_KEY = "db.password";
     private static final String POOL_SIZE_KEY = "db.pool.size";
-    private static BlockingQueue<Connection> connectionPool;
+    private static final String DRIVER_CLASS = "org.postgresql.Driver";
+    private static volatile BlockingQueue<Connection> connectionPool;
     private static final Integer DEFAULT_POOL_SIZE = 10;
-
-    static {
-        loadDriver();
-        initializeConnectionPool();
-    }
 
     /**
      * Class is not considered to have any instances.
@@ -44,31 +43,55 @@ public final class ConnectionManager {
         throw new AssertionError();
     }
 
-    private static void initializeConnectionPool() {
-        String poolSize = get(POOL_SIZE_KEY);
-        int size = poolSize == null ? DEFAULT_POOL_SIZE : parseInt(poolSize);
-        connectionPool = new ArrayBlockingQueue<>(size);
-        for (int i = 0; i < size; i++) {
-            connectionPool.add(createConnection());
+    public static PreparedStatement getPreparedStatement(String query) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection()) {
+            return connection.prepareStatement(query);
+        } catch (SQLException e) {
+            throw new DaoException("dao: create prepared statement failed: " + e.getMessage());
+        }
+    }
+
+    public static PreparedStatement getPreparedStatementWithGeneratedKeys(String query) throws SQLException {
+        try (Connection connection = ConnectionManager.getConnection()) {
+            return connection.prepareStatement(query, RETURN_GENERATED_KEYS);
+        } catch (SQLException e) {
+            throw new DaoException("dao: create prepared statement failed: " + e.getMessage());
         }
     }
 
     /**
-     * Public method for clients to work with connections to DB, using connection pool.
+     * Method for further manipulation with created connection to db.
      *
      * @return connection to DB
      */
-    public static Connection getConnection() {
+    private static Connection getConnection() {
         try {
-            return connectionPool.take();
+            return getConnectionPool().take();
         } catch (InterruptedException e) {
             throw new DaoException("Cannot establish connection to db");
         }
     }
 
+    private static BlockingQueue<Connection> getConnectionPool() {
+        if (connectionPool == null) {
+            initializeConnectionPool();
+        }
+        return connectionPool;
+    }
+
+    private static void initializeConnectionPool() {
+        String poolSize = get(POOL_SIZE_KEY);
+        int size = poolSize == null ? DEFAULT_POOL_SIZE : parseInt(poolSize);
+        connectionPool = new ArrayBlockingQueue<>(size);
+        loadDriver();
+        for (int i = 0; i < size; i++) {
+            connectionPool.add(createConnection());
+        }
+    }
+
     private static void loadDriver() {
         try {
-            forName("org.postgresql.Driver");
+            forName(DRIVER_CLASS);
         } catch (ClassNotFoundException e) {
             throw new DaoException("Cannot load db driver");
         }
