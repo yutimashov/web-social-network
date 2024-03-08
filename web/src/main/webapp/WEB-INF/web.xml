@@ -12,7 +12,16 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Accounts</servlet-name>
-        <url-pattern>/</url-pattern>
+        <url-pattern>/accounts</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Registration</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.RegistrationServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Registration</servlet-name>
+        <url-pattern>/register</url-pattern>
     </servlet-mapping>
 
 </web-app>
