@@ -11,8 +11,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatement;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
 import static java.util.Objects.isNull;
 
 public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraintsValidator {
@@ -62,12 +62,16 @@ public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraint
     public Long create(Account account) {
         try (PreparedStatement createAccountStatement = getPreparedStatementWithGeneratedKeys(CREATE_ACCOUNT)) {
             setAccountData(account, createAccountStatement);
-            createAccountStatement.executeUpdate();
-            ResultSet generatedKeys = createAccountStatement.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                account.setId(generatedKeys.getLong(1));
+            int affectedRows = createAccountStatement.executeUpdate();
+            if (affectedRows > 0) {
+                ResultSet generatedKeys = createAccountStatement.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    account.setId(generatedKeys.getLong(1));
+                }
+                return account.getId();
+            } else {
+                throw new DaoException("Failed to create account. No rows affected.");
             }
-            return account.getId();
         } catch (SQLException e) {
             throw new DaoException("dao: create account method failed: " + e.getMessage());
         }
