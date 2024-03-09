@@ -6,7 +6,7 @@
 <body>
 <h1>Регистрация нового аккаунта</h1>
 <p>Введите данные для регистрации</p>
-<form action="${pageContext.request.contextPath}/register" method="POST">
+<form action="${pageContext.request.contextPath}/register" method="POST" enctype="multipart/form-data">
     <label for="name">Имя:
         <input type="text" name="name" id="name">
     </label>
@@ -21,6 +21,10 @@
     <br>
     <label for="birthDate">Дата рождения:
         <input type="date" name="birthDate" id="birthDate">
+    </label>
+    <br>
+    <label for="avatar">Фото профиля:
+        <input type="file" name="avatar" id="avatar">
     </label>
     <br>
     <label for="email">Email* :
