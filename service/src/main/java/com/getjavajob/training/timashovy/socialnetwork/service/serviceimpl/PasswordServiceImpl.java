@@ -10,12 +10,14 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.PasswordDaoImpl.getPasswordDaoInstance;
+import static java.lang.String.format;
 
 public class PasswordServiceImpl implements PasswordService {
 
     private static final int SALT_LENGTH = 32;
     private static final String HASH_ALGORITHM = "SHA-256";
     private static final int ASCII_CHARACTER_COUNT = 128;
+    private static final int ASCII_STARTING_CHARACTER = 33;
 
     private static final PasswordServiceImpl passwordServiceImpl = new PasswordServiceImpl();
 
@@ -51,7 +53,8 @@ public class PasswordServiceImpl implements PasswordService {
         StringBuilder salt = new StringBuilder();
         Random random = new Random();
         for (int i = 0; i < SALT_LENGTH; i++) {
-            salt.append((char) random.nextInt(ASCII_CHARACTER_COUNT));
+            int randomChar = ASCII_STARTING_CHARACTER + random.nextInt(ASCII_CHARACTER_COUNT);
+            salt.append((char) randomChar);
         }
         return salt.toString();
     }
@@ -59,7 +62,7 @@ public class PasswordServiceImpl implements PasswordService {
     private String bytesToHex(byte[] bytes) {
         StringBuilder passwordHash = new StringBuilder();
         for (byte byteValue : bytes) {
-            passwordHash.append(String.format("%02X", byteValue));
+            passwordHash.append(format("%02X", byteValue));
         }
         return passwordHash.toString();
     }
