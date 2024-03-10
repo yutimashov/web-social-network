@@ -6,7 +6,7 @@ import com.getjavajob.training.timashovy.socialnetwork.common.account.Password;
 public interface PasswordService {
 
     boolean savePassword(Account account, String password);
-    boolean checkPassword(String enteredPassword);
+    boolean checkPassword(Account account, String enteredPassword);
     boolean changePassword(Password password);
 
 }

@@ -35,7 +35,7 @@ public class PasswordServiceImpl implements PasswordService {
         return getPasswordDaoInstance().savePassword(account, passwordObject);
     }
 
-    private String createHashedPassword(String password, String salt) {
+    public String createHashedPassword(String password, String salt) {
         byte[] passwordBytes = password.getBytes();
         byte[] saltBytes = salt.getBytes();
         try {
@@ -68,7 +68,8 @@ public class PasswordServiceImpl implements PasswordService {
     }
 
     @Override
-    public boolean checkPassword(String enteredPassword) {
+    public boolean checkPassword(Account account, String enteredPassword) {
+
         return false;
     }
 
