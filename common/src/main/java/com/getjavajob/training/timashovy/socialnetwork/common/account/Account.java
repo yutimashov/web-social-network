@@ -1,6 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.common;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 import static java.util.Objects.hash;
@@ -19,8 +20,8 @@ public class Account {
     private String lastName;
     private String middleName;
     private LocalDate birthDate;
-    private String personalPhoneNumber;
-    private String workPhoneNumber;
+    private List<Phone> personalPhoneNumber;
+    private List<Phone> workPhoneNumber;
     private String personalAddress;
     private String workAddress;
     private String email;
@@ -51,8 +52,8 @@ public class Account {
         private String lastName;
         private String middleName;
         private LocalDate birthDate;
-        private String personalPhoneNumber;
-        private String workPhoneNumber;
+        private List<Phone> personalPhoneNumber;
+        private List<Phone> workPhoneNumber;
         private String personalAddress;
         private String workAddress;
         private String email;
@@ -99,7 +100,7 @@ public class Account {
             return this;
         }
 
-        public Builder personalPhoneNumber(String personalPhoneNumber) {
+        public Builder personalPhoneNumber(List<Phone> personalPhoneNumber) {
             this.personalPhoneNumber = personalPhoneNumber;
             return this;
         }
@@ -114,7 +115,7 @@ public class Account {
             return this;
         }
 
-        public Builder workPhoneNumber(String workPhoneNumber) {
+        public Builder workPhoneNumber(List<Phone> workPhoneNumber) {
             this.workPhoneNumber = workPhoneNumber;
             return this;
         }
@@ -190,19 +191,19 @@ public class Account {
         this.birthDate = birthDate;
     }
 
-    public String getPersonalPhoneNumber() {
+    public List<Phone> getPersonalPhoneNumber() {
         return personalPhoneNumber;
     }
 
-    public void setPersonalPhoneNumber(String personalPhoneNumber) {
+    public void setPersonalPhoneNumber(List<Phone> personalPhoneNumber) {
         this.personalPhoneNumber = personalPhoneNumber;
     }
 
-    public String getWorkPhoneNumber() {
+    public List<Phone> getWorkPhoneNumber() {
         return workPhoneNumber;
     }
 
-    public void setWorkPhoneNumber(String workPhoneNumber) {
+    public void setWorkPhoneNumber(List<Phone> workPhoneNumber) {
         this.workPhoneNumber = workPhoneNumber;
     }
 
@@ -281,10 +282,10 @@ public class Account {
     @Override
     public String toString() {
         return "Account {id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", middleName="
-                + middleName + ", birthDate=" + birthDate + ", personalPhoneNumber=" + personalPhoneNumber
-                + ", workPhoneNumber=" + workPhoneNumber + ", personalAddress=" + personalAddress + ", workAddress="
-                + workAddress + ", email=" + email + ", icq=" + icq + ", skype=" + skype + ", additionalInfo="
-                + additionalInfo + " }";
+                + middleName + ", birthDate=" + birthDate + ", personalPhoneNumber="
+                + personalPhoneNumber + ", workPhoneNumber=" + workPhoneNumber + ", personalAddress=" + personalAddress
+                + ", workAddress=" + workAddress + ", email=" + email + ", icq=" + icq + ", skype=" + skype
+                + ", additionalInfo=" + additionalInfo + " }";
     }
 
 }

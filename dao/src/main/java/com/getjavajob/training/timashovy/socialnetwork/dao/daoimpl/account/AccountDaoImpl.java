@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.Account;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.AccountGroupDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
@@ -19,19 +19,16 @@ public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraint
 
     private static final AccountDaoImpl ACCOUNT_DAO_INSTANCE = new AccountDaoImpl();
     private static final String CREATE_ACCOUNT = "INSERT INTO account_data.account"
-            + " (first_name, last_name, middle_name, birth_date, personal_phone_number, work_phone_number,"
-            + " personal_address, work_address, email, icq, skype, additional_info)"
-            + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+            + " (first_name, last_name, middle_name, birth_date, personal_address, work_address, email, icq, skype,"
+            + " additional_info) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     private static final String GET_ACCOUNT = "SELECT id, first_name, last_name, middle_name, birth_date,"
-            + " personal_phone_number, work_phone_number, personal_address, work_address, email, icq, skype,"
-            + " additional_info FROM account_data.account WHERE id = ?;";
+            + " personal_address, work_address, email, icq, skype, additional_info FROM account_data.account WHERE"
+            + " id = ?;";
     private static final String GET_ALL_ACCOUNTS = "SELECT id, first_name, last_name, middle_name, birth_date,"
-            + " personal_phone_number, work_phone_number, personal_address, work_address, email, icq, skype,"
-            + " additional_info FROM account_data.account;";
+            + " personal_address, work_address, email, icq, skype, additional_info FROM account_data.account;";
     private static final String UPDATE_ACCOUNT = "UPDATE account_data.account SET first_name = ?, last_name = ?,"
-            + " middle_name = ?, birth_date = ?, personal_phone_number = ?, work_phone_number = ?,"
-            + " personal_address = ?, work_address = ?, email = ?, icq = ?, skype = ?, additional_info = ?"
-            + " WHERE id = ?;";
+            + " middle_name = ?, birth_date = ?, personal_address = ?, work_address = ?, email = ?, icq = ?, skype = ?,"
+            + " additional_info = ? WHERE id = ?;";
     private static final String DELETE_ACCOUNT = "DELETE FROM account_data.account WHERE id = ?;";
 
     private AccountDaoImpl() {
@@ -62,15 +59,14 @@ public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraint
     public Long create(Account account) {
         try (PreparedStatement createAccountStatement = getPreparedStatementWithGeneratedKeys(CREATE_ACCOUNT)) {
             setAccountData(account, createAccountStatement);
-            int affectedRows = createAccountStatement.executeUpdate();
-            if (affectedRows > 0) {
+            if (createAccountStatement.executeUpdate() > 0) {
                 ResultSet generatedKeys = createAccountStatement.getGeneratedKeys();
                 if (generatedKeys.next()) {
                     account.setId(generatedKeys.getLong(1));
                 }
                 return account.getId();
             } else {
-                throw new DaoException("Failed to create account. No rows affected.");
+                throw new DaoException("dao: create account method failed: no rows affected.");
             }
         } catch (SQLException e) {
             throw new DaoException("dao: create account method failed: " + e.getMessage());
@@ -82,14 +78,12 @@ public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraint
         preparedStatement.setString(2, account.getLastName());
         preparedStatement.setString(3, account.getMiddleName());
         preparedStatement.setObject(4, account.getBirthDate());
-        preparedStatement.setString(5, account.getPersonalPhoneNumber());
-        preparedStatement.setString(6, account.getWorkPhoneNumber());
-        preparedStatement.setString(7, account.getPersonalAddress());
-        preparedStatement.setString(8, account.getWorkAddress());
-        preparedStatement.setString(9, account.getEmail());
-        preparedStatement.setString(10, account.getIcq());
-        preparedStatement.setString(11, account.getSkype());
-        preparedStatement.setString(12, account.getAdditionalInfo());
+        preparedStatement.setString(5, account.getPersonalAddress());
+        preparedStatement.setString(6, account.getWorkAddress());
+        preparedStatement.setString(7, account.getEmail());
+        preparedStatement.setString(8, account.getIcq());
+        preparedStatement.setString(9, account.getSkype());
+        preparedStatement.setString(10, account.getAdditionalInfo());
     }
 
     @Override
@@ -113,10 +107,8 @@ public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraint
                 .firstName(resultSet.getString("first_name"))
                 .birthDate((resultSet.getDate("birth_date")).toLocalDate())
                 .lastName(resultSet.getString("last_name"))
-                .personalPhoneNumber(resultSet.getString("personal_phone_number"))
                 .email(resultSet.getString("email"))
                 .middleName(resultSet.getString("middle_name"))
-                .workPhoneNumber(resultSet.getString("work_phone_number"))
                 .personalAddress(resultSet.getString("personal_address"))
                 .workAddress(resultSet.getString("work_address"))
                 .icq(resultSet.getString("icq"))
@@ -143,7 +135,7 @@ public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraint
     public boolean updateById(Long id, Account account) {
         try (PreparedStatement updateByIdStatement = getPreparedStatement(UPDATE_ACCOUNT)) {
             setAccountData(account, updateByIdStatement);
-            updateByIdStatement.setLong(13, id);
+            updateByIdStatement.setLong(11, id);
             return updateByIdStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DaoException("dao: update account by id method failed: ", e);

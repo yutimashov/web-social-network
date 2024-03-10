@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.Account;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.ImageDao;
 
 import java.io.InputStream;
