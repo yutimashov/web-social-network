@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.Account;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.AccountGroupDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
@@ -8,7 +8,7 @@ import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.AccountDaoImpl.getAccountDaoInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AccountDaoImpl.getAccountDaoInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static java.time.LocalDate.of;
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,8 +26,6 @@ class AccountDaoImplTest {
             .lastName("")
             .middleName("")
             .birthDate(of(1800, 1, 1))
-            .personalPhoneNumber("")
-            .workPhoneNumber("")
             .personalAddress("")
             .workAddress("")
             .email("")
@@ -43,8 +41,6 @@ class AccountDaoImplTest {
         TEST_ACCOUNT.setMiddleName("");
         TEST_ACCOUNT.setBirthDate(of(1800, 1, 1));
         TEST_ACCOUNT.setPersonalAddress("");
-        TEST_ACCOUNT.setPersonalPhoneNumber("");
-        TEST_ACCOUNT.setWorkPhoneNumber("");
         TEST_ACCOUNT.setPersonalAddress("");
         TEST_ACCOUNT.setWorkAddress("");
         TEST_ACCOUNT.setEmail("");
@@ -60,9 +56,7 @@ class AccountDaoImplTest {
         TEST_ACCOUNT.setLastName("test");
         TEST_ACCOUNT.setMiddleName("test");
         TEST_ACCOUNT.setBirthDate(of(1800, 1, 1));
-        TEST_ACCOUNT.setPersonalPhoneNumber("test");
         TEST_ACCOUNT.setPersonalAddress("test");
-        TEST_ACCOUNT.setWorkPhoneNumber("test");
         TEST_ACCOUNT.setPersonalAddress("test");
         TEST_ACCOUNT.setWorkAddress("test");
         TEST_ACCOUNT.setEmail("test");

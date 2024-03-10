@@ -1,19 +1,21 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.Account;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.AccountGroupDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.FriendshipChecker;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.FriendshipDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.*;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.AccountDaoImpl.getAccountDaoInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AccountDaoImpl.getAccountDaoInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.FriendshipCheckerImpl.getFriendshipCheckerInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.FriendshipDaoImpl.getFriendshipDaoInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PhoneDaoImpl.getPhoneDaoInstance;
 import static java.util.Objects.isNull;
 
 public class AccountServiceImpl implements AccountService {
@@ -21,12 +23,14 @@ public class AccountServiceImpl implements AccountService {
     private final AccountGroupDao<Account> accountDao;
     private final FriendshipDao friendshipDao;
     private final FriendshipChecker friendshipChecker;
+    private final PhoneDao phoneDao;
 
     private AccountServiceImpl(AccountGroupDao<Account> accountDao, FriendshipDao friendshipDao,
-                               FriendshipChecker friendshipChecker) {
+                               FriendshipChecker friendshipChecker, PhoneDao phoneDao) {
         this.accountDao = accountDao;
         this.friendshipDao = friendshipDao;
         this.friendshipChecker = friendshipChecker;
+        this.phoneDao = phoneDao;
     }
 
     private static class SingletonHolder {
@@ -37,7 +41,8 @@ public class AccountServiceImpl implements AccountService {
             AccountGroupDao<Account> accountDao = getAccountDaoInstance();
             FriendshipDao friendshipDao = getFriendshipDaoInstance();
             FriendshipChecker friendshipChecker = getFriendshipCheckerInstance();
-            INSTANCE = new AccountServiceImpl(accountDao, friendshipDao, friendshipChecker);
+            PhoneDao phoneDao = getPhoneDaoInstance();
+            INSTANCE = new AccountServiceImpl(accountDao, friendshipDao, friendshipChecker, phoneDao);
         }
 
     }
@@ -63,7 +68,7 @@ public class AccountServiceImpl implements AccountService {
             throw new IllegalArgumentException("Account should not be null");
         }
         if (isNull(account.getFirstName()) || isNull(account.getLastName()) || isNull(account.getBirthDate())
-                || isNull(account.getPersonalPhoneNumber()) || isNull(account.getEmail())) {
+                || isNull(account.getEmail())) {
             throw new IllegalArgumentException("Account validation error: field not null constraint violation");
         }
         if (!isNull(account.getIcq())) {
@@ -73,8 +78,6 @@ public class AccountServiceImpl implements AccountService {
             ((TableConstraintsValidator) accountDao).validateEntityFieldUniqueness("skype", account.getSkype());
         }
         ((TableConstraintsValidator) accountDao).validateEntityFieldUniqueness("email", account.getEmail());
-        ((TableConstraintsValidator) accountDao).validateEntityFieldUniqueness("personal_phone_number",
-                account.getPersonalPhoneNumber());
     }
 
     @Override
@@ -130,22 +133,6 @@ public class AccountServiceImpl implements AccountService {
         return accountDao.updateById(accountId, modifiedAccount);
     }
 
-    public boolean updateAccountPersonalPhoneNumber(Long accountId, String personalPhoneNumber) {
-        validateAccountId(accountId);
-        validateAccountFieldNotNull(personalPhoneNumber);
-        Account modifiedAccount = new Account.Builder(accountDao.getById(accountId))
-                .personalPhoneNumber(personalPhoneNumber).build();
-        return accountDao.updateById(accountId, modifiedAccount);
-    }
-
-    public boolean updateAccountWorkPhoneNumber(Long accountId, String workPhoneNumber) {
-        validateAccountId(accountId);
-        validateAccountFieldNotNull(workPhoneNumber);
-        Account modifiedAccount = new Account.Builder(accountDao.getById(accountId)).workPhoneNumber(workPhoneNumber)
-                .build();
-        return accountDao.updateById(accountId, modifiedAccount);
-    }
-
     public boolean updateAccountWorkAddress(Long accountId, String workAddress) {
         validateAccountId(accountId);
         validateAccountFieldNotNull(workAddress);
@@ -198,7 +185,15 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public List<Account> getAllAccounts() {
-        return accountDao.getAll();
+        List<Account> accounts = accountDao.getAll();
+        for (Account account : accounts) {
+            List<Phone> accountPhones = phoneDao.getPhoneNumbers(account);
+            account.setPersonalPhoneNumber(accountPhones.stream()
+                    .filter(phone -> phone.getPhoneType() == PhoneType.PERSONAL).collect(Collectors.toList()));
+            account.setWorkPhoneNumber(accountPhones.stream()
+                    .filter(phone -> phone.getPhoneType() == PhoneType.WORKING).collect(Collectors.toList()));
+        }
+        return accounts;
     }
 
     /**

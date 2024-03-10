@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.common;
+package com.getjavajob.training.timashovy.socialnetwork.common.account;
 
 public class Password {
 

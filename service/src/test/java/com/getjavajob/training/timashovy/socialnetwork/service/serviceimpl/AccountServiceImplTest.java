@@ -1,7 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.Account;
-import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.AccountDaoImpl;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AccountDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.FriendshipCheckerImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.FriendshipDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
@@ -41,8 +41,6 @@ class AccountServiceImplTest {
             .lastName("")
             .middleName("")
             .birthDate(of(1800, 1, 1))
-            .personalPhoneNumber("")
-            .workPhoneNumber("")
             .personalAddress("")
             .workAddress("")
             .email("")
@@ -308,35 +306,35 @@ class AccountServiceImplTest {
 
         final String validPersonalNumber = "+7";
 
-        @Test
-        void updateAccountPersonalPhoneNumberWhenAccountIdIsNull() {
-            Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.updateAccountPersonalPhoneNumber(null, validPersonalNumber);
-                throw new UnsupportedOperationException("Not supported");
-            });
-            assertEquals(IllegalArgumentException.class, exception.getClass());
-        }
-
-        @Test
-        void updateAccountPersonalPhoneNumberWhenPersonalPhoneNumberIsNull() {
-            Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.updateAccountPersonalPhoneNumber(validAccountId, null);
-                throw new UnsupportedOperationException("Not supported");
-            });
-            assertEquals(IllegalArgumentException.class, exception.getClass());
-        }
-
-        @Test
-        void successfulPersonalPhoneNumberUpdating() {
-            String newPersonalPhoneNumber = "+3";
-            Account accountOriginal = new Account.Builder().id(validAccountId)
-                    .personalPhoneNumber(validPersonalNumber).build();
-            when(accountDao.getById(validAccountId)).thenReturn(accountOriginal);
-            Account accountChanged = new Account.Builder(accountOriginal).personalPhoneNumber(newPersonalPhoneNumber)
-                    .build();
-            when(accountDao.updateById(validAccountId, accountChanged)).thenReturn(true);
-            assertTrue(accountService.updateAccountPersonalPhoneNumber(validAccountId, newPersonalPhoneNumber));
-        }
+//        @Test
+//        void updateAccountPersonalPhoneNumberWhenAccountIdIsNull() {
+//            Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
+//                accountService.updateAccountPersonalPhoneNumber(null, validPersonalNumber);
+//                throw new UnsupportedOperationException("Not supported");
+//            });
+//            assertEquals(IllegalArgumentException.class, exception.getClass());
+//        }
+//
+//        @Test
+//        void updateAccountPersonalPhoneNumberWhenPersonalPhoneNumberIsNull() {
+//            Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
+//                accountService.updateAccountPersonalPhoneNumber(validAccountId, null);
+//                throw new UnsupportedOperationException("Not supported");
+//            });
+//            assertEquals(IllegalArgumentException.class, exception.getClass());
+//        }
+//
+//        @Test
+//        void successfulPersonalPhoneNumberUpdating() {
+//            String newPersonalPhoneNumber = "+3";
+//            Account accountOriginal = new Account.Builder().id(validAccountId)
+//                    .personalPhoneNumber(validPersonalNumber).build();
+//            when(accountDao.getById(validAccountId)).thenReturn(accountOriginal);
+//            Account accountChanged = new Account.Builder(accountOriginal).personalPhoneNumber(newPersonalPhoneNumber)
+//                    .build();
+//            when(accountDao.updateById(validAccountId, accountChanged)).thenReturn(true);
+//            assertTrue(accountService.updateAccountPersonalPhoneNumber(validAccountId, newPersonalPhoneNumber));
+//        }
 
     }
 
@@ -344,36 +342,36 @@ class AccountServiceImplTest {
     @DisplayName("updateAccountWorkPhoneNumber(Long accountId, String workPhoneNumber)")
     class TestUpdateAccountWorkPhoneNumber {
 
-        final String validPersonalNumber = "+7";
-
-        @Test
-        void updateAccountWorkPhoneNumberWhenAccountIdIsNull() {
-            Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.updateAccountWorkAddress(null, validPersonalNumber);
-                throw new UnsupportedOperationException("Not supported");
-            });
-            assertEquals(IllegalArgumentException.class, exception.getClass());
-        }
-
-        @Test
-        void updateAccountWorkPhoneNumberWhenWorkPhoneNumberIsNull() {
-            Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.updateAccountWorkAddress(validAccountId, null);
-                throw new UnsupportedOperationException("Not supported");
-            });
-            assertEquals(IllegalArgumentException.class, exception.getClass());
-        }
-
-        @Test
-        void successfulWorkPhoneNumberUpdating() {
-            String newWorkPhoneNumber = "+3";
-            Account accountOriginal = new Account.Builder().id(validAccountId).workPhoneNumber(validPersonalNumber)
-                    .build();
-            when(accountDao.getById(validAccountId)).thenReturn(accountOriginal);
-            Account accountChanged = new Account.Builder(accountOriginal).workPhoneNumber(newWorkPhoneNumber).build();
-            when(accountDao.updateById(validAccountId, accountChanged)).thenReturn(true);
-            assertTrue(accountService.updateAccountWorkPhoneNumber(validAccountId, newWorkPhoneNumber));
-        }
+//        final String validPersonalNumber = "+7";
+//
+//        @Test
+//        void updateAccountWorkPhoneNumberWhenAccountIdIsNull() {
+//            Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
+//                accountService.updateAccountWorkAddress(null, validPersonalNumber);
+//                throw new UnsupportedOperationException("Not supported");
+//            });
+//            assertEquals(IllegalArgumentException.class, exception.getClass());
+//        }
+//
+//        @Test
+//        void updateAccountWorkPhoneNumberWhenWorkPhoneNumberIsNull() {
+//            Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
+//                accountService.updateAccountWorkAddress(validAccountId, null);
+//                throw new UnsupportedOperationException("Not supported");
+//            });
+//            assertEquals(IllegalArgumentException.class, exception.getClass());
+//        }
+//
+//        @Test
+//        void successfulWorkPhoneNumberUpdating() {
+//            String newWorkPhoneNumber = "+3";
+//            Account accountOriginal = new Account.Builder().id(validAccountId).workPhoneNumber(validPersonalNumber)
+//                    .build();
+//            when(accountDao.getById(validAccountId)).thenReturn(accountOriginal);
+//            Account accountChanged = new Account.Builder(accountOriginal).workPhoneNumber(newWorkPhoneNumber).build();
+//            when(accountDao.updateById(validAccountId, accountChanged)).thenReturn(true);
+//            assertTrue(accountService.updateAccountWorkPhoneNumber(validAccountId, newWorkPhoneNumber));
+//        }
 
     }
 

@@ -39,11 +39,11 @@
         <input type="text" name="icq" id="icq">
     </label>
     <br>
-    <label for="personalPhoneNumber">Телефон домашний:
+    <label for="personalPhoneNumber">Телефон домашний<sub>если несколько - разделите запятыми</sub>:
         <input type="tel" name="personalPhoneNumber" id="personalPhoneNumber">
     </label>
     <br>
-    <label for="workPhoneNumber">Телефон рабочий:
+    <label for="workPhoneNumber">Телефон рабочий<sub>если несколько - разделите запятыми</sub>:
         <input type="tel" name="workPhoneNumber" id="workPhoneNumber">
     </label>
     <br>

@@ -1,6 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.servlets;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.Account;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountServiceImpl;
 
 import javax.servlet.http.HttpServlet;
@@ -32,14 +33,28 @@ public class AccountsServlet extends HttpServlet {
                     printWriter.write("<li>");
                     printWriter.write("<p>Имя: " + account.getFirstName() + " </p>");
                     printWriter.write("<p>Фамилия: " + account.getLastName() + " </p>");
-                    printWriter.write("<p>Личный номер телефона: " + account.getPersonalPhoneNumber() + " </p>");
-                    printWriter.write("<p>Рабочий номер телефона: " + account.getWorkPhoneNumber() + " </p>");
+                    printWriter.write("<p>Личный номер телефона: " + getPhoneNumber(account.getPersonalPhoneNumber())
+                            + " </p>");
+                    printWriter.write("<p>Рабочий номер телефона: " + getPhoneNumber(account.getWorkPhoneNumber())
+                            + " </p>");
                     printWriter.write("<p>Домашний адрес: " + account.getPersonalAddress() + " </p>");
                     printWriter.write("</li>");
                 }
                 printWriter.write("</ul");
             }
         }
+    }
+
+    private String getPhoneNumber(List<Phone> phones) {
+        StringBuilder sb = new StringBuilder();
+        for (Phone phone : phones) {
+            sb.append(phone.getNumber()).append(", ");
+        }
+        String str = sb.toString().trim();
+        if (str.length() > 0 && str.charAt(str.length() - 1) == ',') {
+            str = str.substring(0, str.length() - 1);
+        }
+        return str;
     }
 
 }

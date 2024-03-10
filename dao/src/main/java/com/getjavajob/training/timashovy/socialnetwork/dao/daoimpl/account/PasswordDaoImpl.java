@@ -1,8 +1,8 @@
-package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl;
+package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Password;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.PasswordDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PasswordDao;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

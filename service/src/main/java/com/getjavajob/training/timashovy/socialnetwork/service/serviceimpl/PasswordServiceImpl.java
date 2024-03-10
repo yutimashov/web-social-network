@@ -1,7 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.Account;
-import com.getjavajob.training.timashovy.socialnetwork.common.Password;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.Password;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
 
@@ -9,7 +9,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.PasswordDaoImpl.getPasswordDaoInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PasswordDaoImpl.getPasswordDaoInstance;
 import static java.lang.String.format;
 
 public class PasswordServiceImpl implements PasswordService {

@@ -1,10 +1,10 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.Account;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 
 import java.io.InputStream;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.AvatarDaoImpl.getAvatarDaoImpl;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AvatarDaoImpl.getAvatarDaoImpl;
 
 public class AvatarServiceImpl {
 

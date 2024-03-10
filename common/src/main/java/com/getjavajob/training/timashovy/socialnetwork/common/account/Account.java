@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.common;
+package com.getjavajob.training.timashovy.socialnetwork.common.account;
 
 import java.time.LocalDate;
 import java.util.List;

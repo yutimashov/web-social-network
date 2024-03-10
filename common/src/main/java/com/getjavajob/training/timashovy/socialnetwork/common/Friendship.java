@@ -1,5 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.common;
 
+import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
+
 import java.util.Objects;
 
 import static java.util.Objects.hash;

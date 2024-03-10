@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl;
+package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.AccountGroupDao;
