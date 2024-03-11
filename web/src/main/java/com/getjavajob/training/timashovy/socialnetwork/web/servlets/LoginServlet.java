@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountServiceImpl.getAccountServiceInstance;
@@ -33,8 +34,9 @@ public class LoginServlet extends HttpServlet {
             Password password = loginService.getUserPasswordByEmail(userEnteredEmail);
             Long accountId = password.getAccountId();
             Account account = accountService.getAccountById(accountId);
-            req.getSession().setAttribute("account", account);
-            req.getRequestDispatcher(getJspPagePath("/" + account.getId())).forward(req, resp);
+            HttpSession session = req.getSession();
+            session.setAttribute("account", account);
+            resp.sendRedirect("/account");
         } else {
             resp.sendRedirect("/login?error&email=" + req.getParameter("email"));
         }

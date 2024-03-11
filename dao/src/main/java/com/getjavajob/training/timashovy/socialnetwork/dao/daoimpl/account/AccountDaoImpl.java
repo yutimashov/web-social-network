@@ -1,6 +1,8 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.AccountGroupDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
@@ -10,13 +12,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PhoneDaoImpl.getPhoneDaoInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatement;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
 import static java.util.Objects.isNull;
 
 public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraintsValidator {
 
+    private PhoneDaoImpl phoneDao = getPhoneDaoInstance();
     private static final AccountDaoImpl ACCOUNT_DAO_INSTANCE = new AccountDaoImpl();
     private static final String CREATE_ACCOUNT = "INSERT INTO account_data.account"
             + " (first_name, last_name, middle_name, birth_date, personal_address, work_address, email, icq, skype,"
@@ -92,7 +97,13 @@ public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraint
             getAccountByIdStatement.setLong(1, id);
             ResultSet accountData = getAccountByIdStatement.executeQuery();
             if (accountData.next()) {
-                return createAccountFromResultSet(accountData);
+                Account account = createAccountFromResultSet(accountData);
+                List<Phone> accountPhones = phoneDao.getPhoneNumbers(account);
+                account.setPersonalPhoneNumber(accountPhones.stream()
+                        .filter(phone -> phone.getPhoneType() == PhoneType.PERSONAL).collect(Collectors.toList()));
+                account.setWorkPhoneNumber(accountPhones.stream()
+                        .filter(phone -> phone.getPhoneType() == PhoneType.WORKING).collect(Collectors.toList()));
+                return account;
             } else {
                 throw new IllegalArgumentException("try to get non-existing account by id");
             }
