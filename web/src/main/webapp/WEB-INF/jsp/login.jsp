@@ -1,12 +1,18 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>Login</title>
 </head>
 <body>
 <form action="${pageContext.request.contextPath}/login" method="POST">
+    <c:if test="${param.error != null}">
+        <div>
+            <span style="color:red">Incorrect email or password</span>
+        </div>
+    </c:if>
     <label for="email">Email:
-        <input type="email" id="email" name="email" required>
+        <input type="email" id="email" value="${param.email}" name="email" required>
     </label>
     <br>
     <label for="password">Password:

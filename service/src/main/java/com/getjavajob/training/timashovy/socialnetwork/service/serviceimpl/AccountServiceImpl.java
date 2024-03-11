@@ -184,6 +184,11 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    public Account getAccountById(Long accountId) {
+        return accountDao.getById(accountId);
+    }
+
+    @Override
     public List<Account> getAllAccounts() {
         List<Account> accounts = accountDao.getAll();
         for (Account account : accounts) {

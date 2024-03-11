@@ -21,7 +21,7 @@ public class LoginDaoImpl implements LoginDao {
         return LOGIN_DAO_INSTANCE;
     }
 
-    private static final String GET_PASSWORD_BY_EMAIL = "SELECT pass.hash_password password, salt " +
+    private static final String GET_PASSWORD_BY_EMAIL = "SELECT pass.account_id, pass.hash_password, pass.salt " +
             "FROM account_data.account_passwords pass " +
             "INNER JOIN account_data.account acc ON acc.id = pass.account_id " +
             "WHERE acc.email = ?";
@@ -32,7 +32,8 @@ public class LoginDaoImpl implements LoginDao {
             getAccountIdByEmailStatement.setString(1, email);
             ResultSet accountData = getAccountIdByEmailStatement.executeQuery();
             if (accountData.next()) {
-                return new Password(accountData.getString("password"), accountData.getString("salt"));
+                return new Password(accountData.getLong("account_id"),
+                        accountData.getString("hash_password"), accountData.getString("salt"));
             } else {
                 throw new IllegalArgumentException("dao: user with such email does not exist");
             }

@@ -26,6 +26,7 @@
         <mockito-core.version>4.8.1</mockito-core.version>
         <mockito-junit-jupiter.version>4.8.1</mockito-junit-jupiter.version>
         <javaxservlet-api.version>4.0.1</javaxservlet-api.version>
+        <jstl.version>1.2</jstl.version>
         <!-- plugins versions -->
         <maven-clean-plugin.version>3.3.2</maven-clean-plugin.version>
         <maven-compiler-plugin.version>3.12.1</maven-compiler-plugin.version>
@@ -76,6 +77,12 @@
                 <version>${javaxservlet-api.version}</version>
                 <scope>provided</scope>
             </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>jstl</artifactId>
+                <version>${jstl.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

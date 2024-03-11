@@ -16,6 +16,8 @@ public interface AccountService {
 
     boolean deleteAccount(Long accountId);
 
+    Account getAccountById(Long accountId);
+
     List<Account> getAllAccounts();
 
     boolean addFriend(Long accountId, Long friendId);
