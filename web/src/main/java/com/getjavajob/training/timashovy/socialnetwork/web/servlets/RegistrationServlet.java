@@ -1,6 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.servlets;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.Password;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountServiceImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AvatarServiceImpl;
@@ -18,6 +19,7 @@ import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimp
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AvatarServiceImpl.getAvatarService;
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.PasswordServiceImpl.getPasswordServiceInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.PhoneServiceImpl.getPhoneServiceImpl;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.CredentialHashUtil.generateSalt;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 
 public class RegistrationServlet extends HttpServlet {
@@ -34,12 +36,12 @@ public class RegistrationServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Account registeredAccount = createAccount(req);
-        accountService.createAccount(registeredAccount);
-        avatarService.uploadAvatar(registeredAccount, req.getPart("avatar").getInputStream());
-        passwordService.savePassword(registeredAccount, req.getParameter("password"));
-        phoneService.createPhone(registeredAccount, req.getParameter("personalPhoneNumber"), PhoneType.PERSONAL);
-        phoneService.createPhone(registeredAccount, req.getParameter("workPhoneNumber"), PhoneType.WORKING);
+        Account registeringAccount = createAccount(req);
+        accountService.createAccount(registeringAccount);
+        avatarService.uploadAvatar(registeringAccount, req.getPart("avatar").getInputStream());
+        passwordService.create(new Password(registeringAccount.getId(), req.getParameter("password"), generateSalt()));
+        phoneService.createPhone(registeringAccount, req.getParameter("personalPhoneNumber"), PhoneType.PERSONAL);
+        phoneService.createPhone(registeringAccount, req.getParameter("workPhoneNumber"), PhoneType.WORKING);
         resp.sendRedirect("/login");
     }
 

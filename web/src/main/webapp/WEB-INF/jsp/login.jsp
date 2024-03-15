@@ -19,6 +19,10 @@
         <input type="password" id="password" name="password" required>
     </label>
     <br>
+    <label for="rememberMe">Remember me
+        <input type="checkbox" id="rememberMe" name="rememberMe" value="true">
+    </label>
+    <br>
     <button type="submit">Login</button>
     <br>
     <a href="${pageContext.request.contextPath}/register">
