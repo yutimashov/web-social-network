@@ -5,8 +5,8 @@
     <title>Title</title>
 </head>
 <body>
+<jsp:include page="/WEB-INF/jsp/header.jsp"/>
 <div>
-    <h2>Пользователь: ${sessionScope.account.firstName}</h2>
     <hr>
     <p>Имя: ${sessionScope.account.firstName}</p>
     <p>Фамилия: ${sessionScope.account.lastName}</p>
