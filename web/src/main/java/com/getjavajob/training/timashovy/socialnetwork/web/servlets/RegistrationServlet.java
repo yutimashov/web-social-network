@@ -38,7 +38,7 @@ public class RegistrationServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Account registeringAccount = createAccount(req);
         accountService.createAccount(registeringAccount);
-        avatarService.uploadAvatar(registeringAccount, req.getPart("avatar").getInputStream());
+        avatarService.uploadAvatar(registeringAccount.getId(), req.getPart("avatar").getInputStream());
         passwordService.create(new Password(registeringAccount.getId(), req.getParameter("password"), generateSalt()));
         phoneService.createPhone(registeringAccount, req.getParameter("personalPhoneNumber"), PhoneType.PERSONAL);
         phoneService.createPhone(registeringAccount, req.getParameter("workPhoneNumber"), PhoneType.WORKING);

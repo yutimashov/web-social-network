@@ -8,6 +8,10 @@
 <jsp:include page="/WEB-INF/jsp/header.jsp"/>
 <div>
     <hr>
+    <p>Аватар пользователя:</p>
+    <c:if test="${not empty requestScope.avatarInputStream}">
+        <img src="${pageContext.request.contextPath}/avatar?id=${requestScope.account.id}" alt="Аватар пользователя">
+    </c:if>
     <p>Имя: ${requestScope.account.firstName}</p>
     <p>Фамилия: ${requestScope.account.lastName}</p>
     <p>Отчество: ${requestScope.account.middleName}</p>

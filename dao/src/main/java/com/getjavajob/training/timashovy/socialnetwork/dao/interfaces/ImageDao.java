@@ -4,10 +4,12 @@ import java.io.InputStream;
 
 public interface ImageDao<T> {
 
-    boolean upload(T entity, InputStream imageInputStream);
+    boolean upload(Long id, InputStream imageInputStream);
 
-    boolean delete(Long imageId);
+    boolean delete(Long id);
 
-    boolean update(Long imageId);
+    boolean update(Long id, InputStream imageInputStream);
+
+    InputStream get(Long id);
 
 }

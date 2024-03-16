@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>Редактирование аккаунта</title>
@@ -6,7 +7,19 @@
 <body>
 <h2>Редактирование аккаунта: ${requestScope.account.firstName} ${requestScope.account.lastName}</h2>
 <hr>
-<form action="/account-edit" method="POST">
+<form action="/account-edit" method="POST" enctype="multipart/form-data">
+    <label for="avatar">Аватар пользователя<br>
+        Старый аватар:
+        <c:if test="${not empty requestScope.avatarInputStream}">
+            <img src="${pageContext.request.contextPath}/avatar?id=${requestScope.account.id}"
+                 alt="Аватар пользователя"
+                 width="400px"
+                 height="200px"
+            >
+        </c:if>
+        Новый аватар: <input type="file" name="avatar" id="avatar">
+    </label>
+    <hr>
     <label for="name">Имя<br>
         Старое значение: <strong>${requestScope.account.firstName}</strong><br>
         Новое значение: <input type="text" name="name" id="name">
