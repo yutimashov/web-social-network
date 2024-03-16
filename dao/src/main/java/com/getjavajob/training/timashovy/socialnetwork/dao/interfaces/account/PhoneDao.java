@@ -7,12 +7,12 @@ import java.util.List;
 
 public interface PhoneDao {
 
-    Long create(Account account, Phone phone);
+    Long create(Long accountId, Phone phone);
 
     boolean delete();
 
     boolean update();
 
-    List<Phone> getPhoneNumbers(Account account);
+    List<Phone> getPhoneNumbers(Long accountId);
 
 }

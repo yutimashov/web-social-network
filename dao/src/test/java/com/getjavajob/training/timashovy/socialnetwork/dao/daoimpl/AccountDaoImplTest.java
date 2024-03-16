@@ -173,18 +173,6 @@ class AccountDaoImplTest {
         }
 
         @Test
-        void createAccountWithBirthDateNotNullViolation() {
-            emptyTestTables();
-            TEST_ACCOUNT.setBirthDate(null);
-            Throwable exception = assertThrows(DaoException.class, () -> {
-                getAccountDaoInstance().create(TEST_ACCOUNT);
-                throw new UnsupportedOperationException("Not supported");
-            });
-            restoreTestAccountDefaultState();
-            assertTrue(exception.getMessage().contains("NULL not allowed for column \"BIRTH_DATE\""));
-        }
-
-        @Test
         void createAccountWithPersonalPhoneNumberNotNullViolation() {
             emptyTestTables();
             TEST_ACCOUNT.setPersonalPhoneNumber(null);

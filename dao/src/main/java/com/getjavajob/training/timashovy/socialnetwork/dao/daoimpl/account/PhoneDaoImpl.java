@@ -1,6 +1,5 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
@@ -31,9 +30,9 @@ public class PhoneDaoImpl implements PhoneDao {
     }
 
     @Override
-    public Long create(Account account, Phone phone) {
+    public Long create(Long accountId, Phone phone) {
         try (PreparedStatement createPhoneStatement = getPreparedStatementWithGeneratedKeys(CREATE_PHONE)) {
-            setPhoneData(account, phone, createPhoneStatement);
+            setPhoneData(accountId, phone, createPhoneStatement);
             if (createPhoneStatement.executeUpdate() > 0) {
                 ResultSet generatedKeys = createPhoneStatement.getGeneratedKeys();
                 if (generatedKeys.next()) {
@@ -49,10 +48,10 @@ public class PhoneDaoImpl implements PhoneDao {
     }
 
     @Override
-    public List<Phone> getPhoneNumbers(Account account) {
+    public List<Phone> getPhoneNumbers(Long accountId) {
         List<Phone> phones = new ArrayList<>();
         try (PreparedStatement getPhoneStatement = getPreparedStatement(GET_PHONE)) {
-            getPhoneStatement.setLong(1, account.getId());
+            getPhoneStatement.setLong(1, accountId);
             ResultSet phonesData = getPhoneStatement.executeQuery();
             while (phonesData.next()) {
                 phones.add(
@@ -68,8 +67,8 @@ public class PhoneDaoImpl implements PhoneDao {
         return phones;
     }
 
-    private void setPhoneData(Account account, Phone phone, PreparedStatement preparedStatement) throws SQLException {
-        preparedStatement.setLong(1, account.getId());
+    private void setPhoneData(Long accountId, Phone phone, PreparedStatement preparedStatement) throws SQLException {
+        preparedStatement.setLong(1, accountId);
         preparedStatement.setObject(2, phone.getPhoneType().name());
         preparedStatement.setString(3, phone.getNumber());
     }

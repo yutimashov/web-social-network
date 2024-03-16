@@ -2,7 +2,6 @@ package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
-import com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Role;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.AccountGroupDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.FriendshipChecker;
@@ -16,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
+import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.FriendshipCheckerImpl.getFriendshipCheckerInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.FriendshipDaoImpl.getFriendshipDaoInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AccountDaoImpl.getAccountDaoInstance;
@@ -71,8 +72,7 @@ public class AccountServiceImpl implements AccountService {
         if (isNull(account)) {
             throw new IllegalArgumentException("Account should not be null");
         }
-        if (isNull(account.getFirstName()) || isNull(account.getLastName()) || isNull(account.getBirthDate())
-                || isNull(account.getEmail())) {
+        if (isNull(account.getFirstName()) || isNull(account.getLastName()) || isNull(account.getEmail())) {
             throw new IllegalArgumentException("Account validation error: field not null constraint violation");
         }
         if (!isNull(account.getIcq())) {
@@ -203,11 +203,11 @@ public class AccountServiceImpl implements AccountService {
     public List<Account> getAllAccounts() {
         List<Account> accounts = accountDao.getAll();
         for (Account account : accounts) {
-            List<Phone> accountPhones = phoneDao.getPhoneNumbers(account);
-            account.setPersonalPhoneNumber(accountPhones.stream()
-                    .filter(phone -> phone.getPhoneType() == PhoneType.PERSONAL).collect(Collectors.toList()));
-            account.setWorkPhoneNumber(accountPhones.stream()
-                    .filter(phone -> phone.getPhoneType() == PhoneType.WORKING).collect(Collectors.toList()));
+            List<Phone> accountPhones = phoneDao.getPhoneNumbers(account.getId());
+            account.setPersonalPhoneNumber(accountPhones.stream().filter(phone -> phone.getPhoneType() == PERSONAL)
+                    .collect(Collectors.toList()));
+            account.setWorkPhoneNumber(accountPhones.stream().filter(phone -> phone.getPhoneType() == WORKING)
+                    .collect(Collectors.toList()));
         }
         return accounts;
     }

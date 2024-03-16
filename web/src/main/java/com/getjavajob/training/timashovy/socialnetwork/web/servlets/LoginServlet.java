@@ -18,8 +18,8 @@ import static java.util.Objects.isNull;
 
 public class LoginServlet extends HttpServlet {
 
-    LoginService loginService = getLoginServiceInstance();
-    AuthTokenServiceImpl authTokenService = getAuthTokenServiceInstance();
+    private final LoginService loginService = getLoginServiceInstance();
+    private final AuthTokenServiceImpl authTokenService = getAuthTokenServiceInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

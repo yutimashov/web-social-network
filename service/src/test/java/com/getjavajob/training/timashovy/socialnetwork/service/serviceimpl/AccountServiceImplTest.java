@@ -81,24 +81,6 @@ class AccountServiceImplTest {
         }
 
         @Test
-        void whenAccountBirthDateIsNull() {
-            Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.createAccount(new Account.Builder().birthDate(null).build());
-                throw new UnsupportedOperationException("Not supported");
-            });
-            assertEquals(IllegalArgumentException.class, exception.getClass());
-        }
-
-        @Test
-        void whenAccountPersonalPhoneNumberIsNull() {
-            Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.createAccount(new Account.Builder().personalPhoneNumber(null).build());
-                throw new UnsupportedOperationException("Not supported");
-            });
-            assertEquals(IllegalArgumentException.class, exception.getClass());
-        }
-
-        @Test
         void whenAccountEmailIsNull() {
             Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
                 accountService.createAccount(new Account.Builder().email(null).build());

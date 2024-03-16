@@ -15,19 +15,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
 
+import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
+import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountServiceImpl.getAccountServiceInstance;
-import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AvatarServiceImpl.getAvatarService;
+import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AvatarServiceImpl.getAvatarServiceInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.PasswordServiceImpl.getPasswordServiceInstance;
-import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.PhoneServiceImpl.getPhoneServiceImpl;
+import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.PhoneServiceImpl.getPhoneServiceInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.CredentialHashUtil.generateSalt;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
+import static java.time.LocalDate.parse;
 
 public class RegistrationServlet extends HttpServlet {
 
-    AccountServiceImpl accountService = getAccountServiceInstance();
-    PasswordServiceImpl passwordService = getPasswordServiceInstance();
-    AvatarServiceImpl avatarService = getAvatarService();
-    PhoneServiceImpl phoneService = getPhoneServiceImpl();
+    private final AccountServiceImpl accountService = getAccountServiceInstance();
+    private final PasswordServiceImpl passwordService = getPasswordServiceInstance();
+    private final AvatarServiceImpl avatarService = getAvatarServiceInstance();
+    private final PhoneServiceImpl phoneService = getPhoneServiceInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -38,10 +41,11 @@ public class RegistrationServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Account registeringAccount = createAccount(req);
         accountService.createAccount(registeringAccount);
+        Long accountId = registeringAccount.getId();
+        phoneService.createPhone(accountId, req.getParameter("personalPhoneNumber"), PERSONAL);
+        phoneService.createPhone(accountId, req.getParameter("workPhoneNumber"), WORKING);
         avatarService.uploadAvatar(registeringAccount.getId(), req.getPart("avatar").getInputStream());
-        passwordService.create(new Password(registeringAccount.getId(), req.getParameter("password"), generateSalt()));
-        phoneService.createPhone(registeringAccount, req.getParameter("personalPhoneNumber"), PhoneType.PERSONAL);
-        phoneService.createPhone(registeringAccount, req.getParameter("workPhoneNumber"), PhoneType.WORKING);
+        passwordService.create(new Password(accountId, req.getParameter("password"), generateSalt()));
         resp.sendRedirect("/login");
     }
 
@@ -53,7 +57,6 @@ public class RegistrationServlet extends HttpServlet {
                 .email(req.getParameter("email"))
                 .skype(req.getParameter("skype"))
                 .icq(req.getParameter("icq"))
-                .birthDate(LocalDate.parse(req.getParameter("birthDate")))
                 .build();
     }
 

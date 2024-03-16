@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AvatarServiceImpl.getAvatarService;
+import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AvatarServiceImpl.getAvatarServiceInstance;
 import static java.lang.Long.valueOf;
 
 public class AccountAvatarServlet extends HttpServlet {
@@ -16,7 +16,7 @@ public class AccountAvatarServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long accountId = valueOf(req.getParameter("id"));
-        InputStream avatarInputStream = getAvatarService().getAvatar(accountId);
+        InputStream avatarInputStream = getAvatarServiceInstance().getAvatar(accountId);
         resp.setContentType("image/jpeg");
         try (OutputStream out = resp.getOutputStream()) {
             byte[] buffer = new byte[4096];
