@@ -3,6 +3,7 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.Role;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.AccountGroupDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
@@ -21,19 +22,19 @@ import static java.util.Objects.isNull;
 
 public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraintsValidator {
 
-    private PhoneDaoImpl phoneDao = getPhoneDaoInstance();
+    private final PhoneDaoImpl phoneDao = getPhoneDaoInstance();
     private static final AccountDaoImpl ACCOUNT_DAO_INSTANCE = new AccountDaoImpl();
     private static final String CREATE_ACCOUNT = "INSERT INTO account_data.account"
             + " (first_name, last_name, middle_name, birth_date, personal_address, work_address, email, icq, skype,"
-            + " additional_info) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+            + " additional_info, role_type) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     private static final String GET_ACCOUNT = "SELECT id, first_name, last_name, middle_name, birth_date,"
-            + " personal_address, work_address, email, icq, skype, additional_info FROM account_data.account WHERE"
-            + " id = ?;";
+            + " personal_address, work_address, email, icq, skype, additional_info, role_type FROM account_data.account " +
+            " WHERE id = ?;";
     private static final String GET_ALL_ACCOUNTS = "SELECT id, first_name, last_name, middle_name, birth_date,"
-            + " personal_address, work_address, email, icq, skype, additional_info FROM account_data.account;";
+            + " personal_address, work_address, email, icq, skype, additional_info, role_type FROM account_data.account;";
     private static final String UPDATE_ACCOUNT = "UPDATE account_data.account SET first_name = ?, last_name = ?,"
             + " middle_name = ?, birth_date = ?, personal_address = ?, work_address = ?, email = ?, icq = ?, skype = ?,"
-            + " additional_info = ? WHERE id = ?;";
+            + " additional_info = ?, role_type = ? WHERE id = ?;";
     private static final String DELETE_ACCOUNT = "DELETE FROM account_data.account WHERE id = ?;";
 
     private AccountDaoImpl() {
@@ -89,6 +90,7 @@ public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraint
         preparedStatement.setString(8, account.getIcq());
         preparedStatement.setString(9, account.getSkype());
         preparedStatement.setString(10, account.getAdditionalInfo());
+        preparedStatement.setObject(11, account.getRole().name());
     }
 
     @Override
@@ -125,6 +127,7 @@ public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraint
                 .icq(resultSet.getString("icq"))
                 .skype(resultSet.getString("skype"))
                 .additionalInfo(resultSet.getString("additional_info"))
+                .role(Role.valueOf(resultSet.getString("role_type")))
                 .build();
     }
 
@@ -146,7 +149,7 @@ public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraint
     public boolean updateById(Long id, Account account) {
         try (PreparedStatement updateByIdStatement = getPreparedStatement(UPDATE_ACCOUNT)) {
             setAccountData(account, updateByIdStatement);
-            updateByIdStatement.setLong(11, id);
+            updateByIdStatement.setLong(12, id);
             return updateByIdStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DaoException("dao: update account by id method failed: ", e);

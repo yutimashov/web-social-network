@@ -28,6 +28,7 @@ public class Account {
     private String icq;
     private String skype;
     private String additionalInfo;
+    private Role role;
 
     private Account(Builder builder) {
         id = builder.id;
@@ -43,6 +44,7 @@ public class Account {
         icq = builder.icq;
         skype = builder.skype;
         additionalInfo = builder.additionalInfo;
+        role = builder.role;
     }
 
     public static final class Builder {
@@ -60,6 +62,7 @@ public class Account {
         private String icq;
         private String skype;
         private String additionalInfo;
+        private Role role;
 
         public Builder() {
         }
@@ -78,6 +81,7 @@ public class Account {
             this.icq = account.getIcq();
             this.skype = account.getSkype();
             this.additionalInfo = account.getAdditionalInfo();
+            this.role = account.getRole();
         }
 
         public Builder id(Long id) {
@@ -142,6 +146,11 @@ public class Account {
 
         public Builder additionalInfo(String additionalInfo) {
             this.additionalInfo = additionalInfo;
+            return this;
+        }
+
+        public Builder role(Role role) {
+            this.role = role;
             return this;
         }
 
@@ -255,6 +264,14 @@ public class Account {
         this.additionalInfo = additionalInfo;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -270,13 +287,14 @@ public class Account {
                 account.personalPhoneNumber) && Objects.equals(workPhoneNumber, account.workPhoneNumber)
                 && Objects.equals(personalAddress, account.personalAddress) && Objects.equals(workAddress,
                 account.workAddress) && Objects.equals(email, account.email) && Objects.equals(icq, account.icq)
-                && Objects.equals(skype, account.skype) && Objects.equals(additionalInfo, account.additionalInfo);
+                && Objects.equals(skype, account.skype) && Objects.equals(additionalInfo, account.additionalInfo)
+                && Objects.equals(role, account.role);
     }
 
     @Override
     public int hashCode() {
         return hash(id, firstName, lastName, middleName, birthDate, personalPhoneNumber, workPhoneNumber,
-                personalAddress, workAddress, email, icq, skype, additionalInfo);
+                personalAddress, workAddress, email, icq, skype, additionalInfo, role);
     }
 
     @Override
@@ -285,7 +303,7 @@ public class Account {
                 + middleName + ", birthDate=" + birthDate + ", personalPhoneNumber="
                 + personalPhoneNumber + ", workPhoneNumber=" + workPhoneNumber + ", personalAddress=" + personalAddress
                 + ", workAddress=" + workAddress + ", email=" + email + ", icq=" + icq + ", skype=" + skype
-                + ", additionalInfo=" + additionalInfo + " }";
+                + ", additionalInfo=" + additionalInfo + ", role= " + role + " }";
     }
 
 }

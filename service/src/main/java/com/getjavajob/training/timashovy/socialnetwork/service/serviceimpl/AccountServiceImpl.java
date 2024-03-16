@@ -3,7 +3,11 @@ package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.*;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.Role;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.AccountGroupDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.FriendshipChecker;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.FriendshipDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 
@@ -12,9 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AccountDaoImpl.getAccountDaoInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.FriendshipCheckerImpl.getFriendshipCheckerInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.FriendshipDaoImpl.getFriendshipDaoInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AccountDaoImpl.getAccountDaoInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PhoneDaoImpl.getPhoneDaoInstance;
 import static java.util.Objects.isNull;
 
@@ -174,6 +178,13 @@ public class AccountServiceImpl implements AccountService {
         validateAccountFieldNotNull(additionalInfo);
         Account modifiedAccount = new Account.Builder(accountDao.getById(accountId)).additionalInfo(additionalInfo)
                 .build();
+        return accountDao.updateById(accountId, modifiedAccount);
+    }
+
+    public boolean updateAccountRole(Long accountId, Role role) {
+        validateAccountId(accountId);
+        validateAccountFieldNotNull(role);
+        Account modifiedAccount = new Account.Builder(accountDao.getById(accountId)).role(role).build();
         return accountDao.updateById(accountId, modifiedAccount);
     }
 
