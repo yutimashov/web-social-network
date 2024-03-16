@@ -8,23 +8,28 @@
 <jsp:include page="/WEB-INF/jsp/header.jsp"/>
 <div>
     <hr>
-    <p>Имя: ${sessionScope.account.firstName}</p>
-    <p>Фамилия: ${sessionScope.account.lastName}</p>
-    <p>Отчество: ${sessionScope.account.middleName}</p>
-    <p>Дата рождения: ${sessionScope.account.birthDate}</p>
+    <p>Имя: ${requestScope.account.firstName}</p>
+    <p>Фамилия: ${requestScope.account.lastName}</p>
+    <p>Отчество: ${requestScope.account.middleName}</p>
+    <p>Дата рождения: ${requestScope.account.birthDate}</p>
     <p>Личный номер телефона:</p>
-    <c:forEach var="phone" items="${sessionScope.account.personalPhoneNumber}">
+    <c:forEach var="phone" items="${requestScope.account.personalPhoneNumber}">
         <p>${phone.number}</p>
     </c:forEach>
     <p>Рабочий номер телефона:</p>
-    <c:forEach var="phone" items="${sessionScope.account.workPhoneNumber}">
+    <c:forEach var="phone" items="${requestScope.account.workPhoneNumber}">
         <p>${phone.number}</p>
     </c:forEach>
-    <p>Домашний адрес: ${sessionScope.account.personalAddress}</p>
-    <p>Email: ${sessionScope.account.email}</p>
-    <p>ICQ: ${sessionScope.account.icq}</p>
-    <p>Skype: ${sessionScope.account.skype}</p>
-    <p>Прочая информация: ${sessionScope.account.additionalInfo}</p>
+    <p>Домашний адрес: ${requestScope.account.personalAddress}</p>
+    <p>Email: ${requestScope.account.email}</p>
+    <p>ICQ: ${requestScope.account.icq}</p>
+    <p>Skype: ${requestScope.account.skype}</p>
+    <p>Прочая информация: ${requestScope.account.additionalInfo}</p>
+    <c:if test="${sessionScope.account.id == param.id}">
+        <a href="${pageContext.request.contextPath}/edit-account?id=${param.id}">
+            <button>Редактировать аккаунт</button>
+        </a>
+    </c:if>
 </div>
 </body>
 </html>

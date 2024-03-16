@@ -12,14 +12,20 @@ import java.io.IOException;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 import static java.lang.Long.valueOf;
 
-public class AccountServlet extends HttpServlet {
+public class EditAccountServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long accountId = valueOf(req.getParameter("id"));
-        Account account = AccountServiceImpl.getAccountServiceInstance().getAccountById(accountId);
+        Account account = AccountServiceImpl.getAccountServiceInstance().getAccountById(
+                valueOf(req.getParameter("id"))
+        );
         req.setAttribute("account", account);
-        req.getRequestDispatcher(getJspPagePath("account")).forward(req, resp);
+        req.getRequestDispatcher(getJspPagePath("account-edit")).forward(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
     }
 
 }

@@ -46,7 +46,16 @@
         <servlet-name>Account</servlet-name>
         <url-pattern>/account</url-pattern>
     </servlet-mapping>
-
+    
+    <servlet>
+        <servlet-name>Edit Account</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.EditAccountServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Edit Account</servlet-name>
+        <url-pattern>/edit-account</url-pattern>
+    </servlet-mapping>
+    
     <session-config>
         <session-timeout>10</session-timeout>
     </session-config>

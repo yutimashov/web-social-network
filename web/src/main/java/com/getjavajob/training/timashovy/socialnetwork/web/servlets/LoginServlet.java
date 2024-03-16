@@ -46,7 +46,7 @@ public class LoginServlet extends HttpServlet {
                 resp.addCookie(tokenCookie);
                 resp.addCookie(validatorCookie);
             }
-            resp.sendRedirect("/account");
+            resp.sendRedirect("/account?id=" + account.getId());
         } else {
             resp.sendRedirect("/login?error");
         }
