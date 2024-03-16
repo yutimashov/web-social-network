@@ -5,6 +5,7 @@
     <title>Edit account</title>
 </head>
 <body>
+<jsp:include page="/WEB-INF/jsp/header.jsp"/>
 <h2>Edit account: ${requestScope.account.firstName} ${requestScope.account.lastName}</h2>
 <hr>
 <form action="${pageContext.request.contextPath}/account-edit" method="POST" enctype="multipart/form-data">

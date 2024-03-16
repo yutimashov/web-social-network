@@ -5,6 +5,7 @@
     <title>Login</title>
 </head>
 <body>
+<jsp:include page="/WEB-INF/jsp/header.jsp"/>
 <form action="${pageContext.request.contextPath}/login" method="POST">
     <c:if test="${param.error != null}">
         <div>
