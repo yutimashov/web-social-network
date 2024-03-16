@@ -3,10 +3,10 @@ package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Password;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.LoginDaoImpl;
-import com.getjavajob.training.timashovy.socialnetwork.service.util.CredentialHashUtil;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.LoginDaoImpl.getLoginDaoImpl;
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountServiceImpl.getAccountServiceInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.CredentialHashUtil.hashCredential;
 import static java.util.Objects.isNull;
 
 public class LoginService {
@@ -24,12 +24,12 @@ public class LoginService {
 
     //TODO: avoid null returning. Think about using `Optional`
     public Account checkLogin(String email, String password) {
-        if (isNull(email) || isNull(password)) {
-            throw new RuntimeException();
-        }
         Password dbPassword = loginDao.findPasswordByEmail(email);
+        if (isNull(email) || isNull(password) || isNull(dbPassword)) {
+            return null;
+        }
         String passwordSalt = dbPassword.getSalt();
-        String userEnteredPasswordValue = CredentialHashUtil.hashCredential(password, passwordSalt);
+        String userEnteredPasswordValue = hashCredential(password, passwordSalt);
         return dbPassword.getPassword().equals(userEnteredPasswordValue)
                 ? accountService.getAccountById(dbPassword.getAccountId())
                 : null;

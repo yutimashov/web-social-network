@@ -35,7 +35,7 @@ public class LoginDaoImpl implements LoginDao {
                 return new Password(accountData.getLong("account_id"),
                         accountData.getString("hash_password"), accountData.getString("salt"));
             } else {
-                throw new IllegalArgumentException("dao: user with such email does not exist");
+                return null;
             }
         } catch (SQLException e) {
             throw new DaoException("dao: get account by id method failed: " + e.getMessage());
