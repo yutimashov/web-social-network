@@ -2,36 +2,47 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Account page</title>
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/header.jsp"/>
 <div>
-    <hr>
-    <p>Аватар пользователя:</p>
-    <c:if test="${not empty requestScope.avatarInputStream}">
-        <img src="${pageContext.request.contextPath}/avatar?id=${requestScope.account.id}" alt="Аватар пользователя">
+    <p>Profile avatar:</p>
+    <c:if test="${requestScope.avatarInputStream != null}">
+        <img src="${pageContext.request.contextPath}/avatar?id=${requestScope.account.id}" alt="Profile avatar">
     </c:if>
-    <p>Имя: ${requestScope.account.firstName}</p>
-    <p>Фамилия: ${requestScope.account.lastName}</p>
-    <p>Отчество: ${requestScope.account.middleName}</p>
-    <p>Дата рождения: ${requestScope.account.birthDate}</p>
-    <p>Личный номер телефона:</p>
+    <hr>
+    <p>First name: ${requestScope.account.firstName}</p>
+    <hr>
+    <p>Last name: ${requestScope.account.lastName}</p>
+    <hr>
+    <p>Middle name: ${requestScope.account.middleName}</p>
+    <hr>
+    <p>Birthdate: ${requestScope.account.birthDate}</p>
+    <hr>
+    <p>Private phones:</p>
     <c:forEach var="phone" items="${requestScope.account.personalPhoneNumber}">
         <p>${phone.number}</p>
     </c:forEach>
-    <p>Рабочий номер телефона:</p>
+    <hr>
+    <p>Working phones:</p>
     <c:forEach var="phone" items="${requestScope.account.workPhoneNumber}">
         <p>${phone.number}</p>
     </c:forEach>
-    <p>Домашний адрес: ${requestScope.account.personalAddress}</p>
+    <hr>
+    <p>Private address: ${requestScope.account.personalAddress}</p>
+    <hr>
     <p>Email: ${requestScope.account.email}</p>
+    <hr>
     <p>ICQ: ${requestScope.account.icq}</p>
+    <hr>
     <p>Skype: ${requestScope.account.skype}</p>
-    <p>Прочая информация: ${requestScope.account.additionalInfo}</p>
-    <c:if test="${sessionScope.account.id == param.id}">
+    <hr>
+    <p>Other information: ${requestScope.account.additionalInfo}</p>
+    <hr>
+    <c:if test="${sessionScope.account.id == param.id || sessionScope.account.role == 'ADMIN'}">
         <a href="${pageContext.request.contextPath}/edit-account?id=${param.id}">
-            <button>Редактировать аккаунт</button>
+            <button>Edit account</button>
         </a>
     </c:if>
 </div>

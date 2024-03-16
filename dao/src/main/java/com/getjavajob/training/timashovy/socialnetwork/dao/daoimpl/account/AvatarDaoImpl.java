@@ -47,7 +47,8 @@ public class AvatarDaoImpl implements ImageDao<Account> {
             if(avatarRecord.next()) {
                 return avatarRecord.getBinaryStream("avatar_blob");
             } else {
-                throw new IllegalArgumentException("try to get non-existing avatar");
+                //TODO: avoid return null, use `Optional` instead
+                return null;
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
