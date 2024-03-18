@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.web.servlets;
+package com.getjavajob.training.timashovy.socialnetwork.web.servlets.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AvatarServiceImpl;
 

@@ -2,18 +2,19 @@ package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Password;
-import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.LoginDaoImpl;
+import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
+import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.LoginDaoImpl.getLoginDaoImpl;
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountServiceImpl.getAccountServiceInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.PasswordServiceImpl.getPasswordServiceInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.CredentialHashUtil.hashCredential;
 import static java.util.Objects.isNull;
 
 public class LoginService {
 
     private static final LoginService loginService = new LoginService();
-    private final LoginDaoImpl loginDao = getLoginDaoImpl();
-    private final AccountServiceImpl accountService = getAccountServiceInstance();
+    private final AccountService accountService = getAccountServiceInstance();
+    private final PasswordService passwordService = getPasswordServiceInstance();
 
     private LoginService() {
     }
@@ -22,17 +23,25 @@ public class LoginService {
         return loginService;
     }
 
-    //TODO: avoid null returning. Think about using `Optional`
-    public Account checkLogin(String email, String password) {
-        Password dbPassword = loginDao.findPasswordByEmail(email);
-        if (isNull(email) || isNull(password) || isNull(dbPassword)) {
+    public Account verifyLoginCredentials(String email, String password) {
+        Password dbPassword = passwordService.findPasswordByEmail(email);
+        if (checkDataForNull(email, password, dbPassword)) {
+            String enteredPasswordValue = hashCredential(password, dbPassword.getSalt());
+            return dbPassword.getPassword().equals(enteredPasswordValue)
+                    ? accountService.getAccountById(dbPassword.getAccountId())
+                    : null;
+        } else {
             return null;
         }
-        String passwordSalt = dbPassword.getSalt();
-        String userEnteredPasswordValue = hashCredential(password, passwordSalt);
-        return dbPassword.getPassword().equals(userEnteredPasswordValue)
-                ? accountService.getAccountById(dbPassword.getAccountId())
-                : null;
+    }
+
+    private boolean checkDataForNull(Object... data) {
+        for (Object dataValue : data) {
+            if (isNull(dataValue)) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }
