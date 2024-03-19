@@ -60,6 +60,16 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>Make Admin</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.admin.MakeAdminServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Make Admin</servlet-name>
+        <url-pattern>/make-admin</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>Account</servlet-name>
         <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.AccountServlet
         </servlet-class>

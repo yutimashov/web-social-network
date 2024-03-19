@@ -9,7 +9,8 @@
 <div>
     <p>Profile avatar:</p>
     <c:if test="${requestScope.avatarInputStream != null}">
-        <img src="${pageContext.request.contextPath}/avatar?id=${requestScope.account.id}" alt="Profile avatar">
+        <img src="${pageContext.request.contextPath}/avatar?id=${requestScope.account.id}" alt="Profile avatar"
+        width="250px" height="250px">
     </c:if>
     <hr>
     <p>First name: ${requestScope.account.firstName}</p>
@@ -43,6 +44,11 @@
     <c:if test="${sessionScope.account.id == param.id || sessionScope.account.role == 'ADMIN'}">
         <a href="${pageContext.request.contextPath}/edit-account?id=${param.id}">
             <button>Edit account</button>
+        </a>
+    </c:if>
+    <c:if test="${sessionScope.account.role == 'ADMIN' && requestScope.account.role == 'REGULAR'}">
+        <a href="${pageContext.request.contextPath}/make-admin?id=${param.id}">
+            <button>Make admin</button>
         </a>
     </c:if>
 </div>

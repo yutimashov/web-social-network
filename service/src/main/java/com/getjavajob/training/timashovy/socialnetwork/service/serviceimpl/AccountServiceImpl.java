@@ -181,6 +181,7 @@ public class AccountServiceImpl implements AccountService {
         return accountDao.updateById(accountId, modifiedAccount);
     }
 
+    @Override
     public boolean updateAccountRole(Long accountId, Role role) {
         validateAccountId(accountId);
         validateAccountFieldNotNull(role);

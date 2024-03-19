@@ -1,6 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.interfaces;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.Role;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,5 +27,7 @@ public interface AccountService {
     boolean deleteFriend(Long accountId, Long friendId);
 
     List<Account> getFriends(Long accountId);
+
+    boolean updateAccountRole(Long accountId, Role role);
 
 }
