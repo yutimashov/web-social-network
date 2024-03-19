@@ -20,8 +20,8 @@ public class PasswordServiceImpl implements PasswordService {
     }
 
     @Override
-    public Long create(Password password) {
-        return passwordDao.create(password);
+    public Long create(Long accountId, String rawPassword) {
+        return passwordDao.create(accountId, rawPassword);
     }
 
     @Override

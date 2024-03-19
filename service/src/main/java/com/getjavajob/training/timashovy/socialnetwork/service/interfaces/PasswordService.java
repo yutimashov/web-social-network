@@ -5,7 +5,7 @@ import com.getjavajob.training.timashovy.socialnetwork.common.account.Password;
 
 public interface PasswordService {
 
-    Long create(Password password);
+    Long create(Long accountId, String rawPassword);
 
     boolean verify(Password password);
 

@@ -9,6 +9,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.CredentialHashUtil.generateSalt;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.CredentialHashUtil.hashCredential;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatement;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
 
@@ -34,27 +36,18 @@ public class PasswordDaoImpl implements PasswordDao {
     }
 
     @Override
-    public Long create(Password password) {
+    public Long create(Long accountId, String rawPassword) {
         try (PreparedStatement savePasswordStatement = getPreparedStatementWithGeneratedKeys(SAVE_PASSWORD)) {
-            setPasswordData(password, savePasswordStatement);
-            if (savePasswordStatement.executeUpdate() > 0) {
-                ResultSet generatedId = savePasswordStatement.getGeneratedKeys();
-                if (generatedId.next()) {
-                    password.setId(generatedId.getLong(1));
-                }
-                return password.getId();
-            } else {
-                throw new DaoException("dao: create password method failed: no rows affected.");
-            }
+            String salt = generateSalt();
+            Password password = new Password(accountId, hashCredential(rawPassword, salt), salt);
+            savePasswordStatement.setLong(1, accountId);
+            savePasswordStatement.setString(2, password.getPassword());
+            savePasswordStatement.setString(3, salt);
+            savePasswordStatement.executeQuery(SAVE_PASSWORD);
+            return accountId;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private void setPasswordData(Password password, PreparedStatement preparedStatement) throws SQLException {
-        preparedStatement.setLong(1, password.getAccountId());
-        preparedStatement.setString(2, password.getPassword());
-        preparedStatement.setString(3, password.getSalt());
     }
 
     @Override

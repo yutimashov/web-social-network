@@ -5,7 +5,7 @@ import com.getjavajob.training.timashovy.socialnetwork.common.account.Password;
 
 public interface PasswordDao {
 
-    Long create(Password password);
+    Long create(Long accountId, String rawPassword);
 
     boolean update(Password password);
 

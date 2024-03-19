@@ -75,7 +75,7 @@ public class AccountServiceImpl implements AccountService {
         if (isNull(account.getFirstName()) || isNull(account.getLastName()) || isNull(account.getEmail())) {
             throw new IllegalArgumentException("Account validation error: field not null constraint violation");
         }
-        if (!isNull(account.getIcq())) {
+        if (!isNull(account.getIcq()) || !("".equals(account.getIcq()))) {
             ((TableConstraintsValidator) accountDao).validateEntityFieldUniqueness("icq", account.getIcq());
         }
         if (!isNull(account.getSkype())) {

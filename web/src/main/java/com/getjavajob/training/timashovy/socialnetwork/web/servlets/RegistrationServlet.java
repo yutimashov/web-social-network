@@ -2,7 +2,8 @@ package com.getjavajob.training.timashovy.socialnetwork.web.servlets;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Password;
-import com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType;
+import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
+import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountServiceImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AvatarServiceImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.PasswordServiceImpl;
@@ -13,7 +14,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDate;
 
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
@@ -23,12 +23,11 @@ import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimp
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.PhoneServiceImpl.getPhoneServiceInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.CredentialHashUtil.generateSalt;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
-import static java.time.LocalDate.parse;
 
 public class RegistrationServlet extends HttpServlet {
 
-    private final AccountServiceImpl accountService = getAccountServiceInstance();
-    private final PasswordServiceImpl passwordService = getPasswordServiceInstance();
+    private final AccountService accountService = getAccountServiceInstance();
+    private final PasswordService passwordService = getPasswordServiceInstance();
     private final AvatarServiceImpl avatarService = getAvatarServiceInstance();
     private final PhoneServiceImpl phoneService = getPhoneServiceInstance();
 
@@ -45,7 +44,7 @@ public class RegistrationServlet extends HttpServlet {
         phoneService.createPhone(accountId, req.getParameter("personalPhoneNumber"), PERSONAL);
         phoneService.createPhone(accountId, req.getParameter("workPhoneNumber"), WORKING);
         avatarService.uploadAvatar(registeringAccount.getId(), req.getPart("avatar").getInputStream());
-        passwordService.create(new Password(accountId, req.getParameter("password"), generateSalt()));
+        passwordService.create(accountId, req.getParameter("password"));
         resp.sendRedirect("/login");
     }
 

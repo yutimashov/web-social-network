@@ -2,8 +2,6 @@ package com.getjavajob.training.timashovy.socialnetwork.common.account;
 
 public class Password {
 
-    private Long id;
-
     private Long accountId;
     private String password;
     private String salt;
@@ -12,14 +10,6 @@ public class Password {
         this.accountId = accountId;
         this.password = password;
         this.salt = salt;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getPassword() {
