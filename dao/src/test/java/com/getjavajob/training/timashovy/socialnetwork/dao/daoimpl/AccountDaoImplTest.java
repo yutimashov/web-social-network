@@ -1,6 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.Role;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.AccountGroupDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 
+import static com.getjavajob.training.timashovy.socialnetwork.common.account.Role.REGULAR;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AccountDaoImpl.getAccountDaoInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static java.time.LocalDate.of;
@@ -32,6 +34,7 @@ class AccountDaoImplTest {
             .icq("")
             .skype("")
             .additionalInfo("")
+            .role(REGULAR)
             .build();
 
     private void restoreTestAccountDefaultState() {
@@ -103,17 +106,6 @@ class AccountDaoImplTest {
         }
 
         @Test
-        void createAccountWithPersonalPhoneNumberUniqueViolation() {
-            String duplicatedPersonalPhoneNumber = "test";
-            Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                ((TableConstraintsValidator) ACCOUNT_DAO_INSTANCE).validateEntityFieldUniqueness("personal_phone_number",
-                        duplicatedPersonalPhoneNumber);
-                throw new UnsupportedOperationException("Not supported");
-            });
-            assertEquals(IllegalArgumentException.class, exception.getClass());
-        }
-
-        @Test
         void createAccountWithIcqUniqueViolation() {
             String duplicatedIcq = "test";
             Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
@@ -144,8 +136,7 @@ class AccountDaoImplTest {
         @Test
         void createInEmptyTableReturnsId1() {
             emptyTestTables();
-            Long actual = getAccountDaoInstance().create(TEST_ACCOUNT);
-            assertEquals(1L, actual);
+            assertEquals(1L, getAccountDaoInstance().create(TEST_ACCOUNT));
         }
 
         @Test
@@ -170,18 +161,6 @@ class AccountDaoImplTest {
             });
             restoreTestAccountDefaultState();
             assertTrue(exception.getMessage().contains("NULL not allowed for column \"LAST_NAME\""));
-        }
-
-        @Test
-        void createAccountWithPersonalPhoneNumberNotNullViolation() {
-            emptyTestTables();
-            TEST_ACCOUNT.setPersonalPhoneNumber(null);
-            Throwable exception = assertThrows(DaoException.class, () -> {
-                getAccountDaoInstance().create(TEST_ACCOUNT);
-                throw new UnsupportedOperationException("Not supported");
-            });
-            restoreTestAccountDefaultState();
-            assertTrue(exception.getMessage().contains("NULL not allowed for column \"PERSONAL_PHONE_NUMBER\""));
         }
 
     }

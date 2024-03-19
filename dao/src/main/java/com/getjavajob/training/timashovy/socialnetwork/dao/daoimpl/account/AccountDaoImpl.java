@@ -27,7 +27,7 @@ public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraint
     private static final AccountDaoImpl ACCOUNT_DAO_INSTANCE = new AccountDaoImpl();
     private static final String CREATE_ACCOUNT = "INSERT INTO account_data.account"
             + " (first_name, last_name, middle_name, birth_date, personal_address, work_address, email, icq, skype,"
-            + " additional_info) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+            + " additional_info, role_type) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     private static final String GET_ACCOUNT = "SELECT id, first_name, last_name, middle_name, birth_date,"
             + " personal_address, work_address, email, icq, skype, additional_info, role_type FROM account_data.account " +
             " WHERE id = ?;";
@@ -91,6 +91,7 @@ public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraint
         preparedStatement.setString(8, account.getIcq());
         preparedStatement.setString(9, account.getSkype());
         preparedStatement.setString(10, account.getAdditionalInfo());
+        preparedStatement.setString(11, account.getRole().name());
     }
 
     @Override
@@ -101,10 +102,12 @@ public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraint
             if (accountData.next()) {
                 Account account = createAccountFromResultSet(accountData);
                 List<Phone> accountPhones = phoneDao.getPhoneNumbers(id);
-                account.setPersonalPhoneNumber(accountPhones.stream().filter(phone -> phone.getPhoneType() == PERSONAL)
-                        .collect(toList()));
-                account.setWorkPhoneNumber(accountPhones.stream().filter(phone -> phone.getPhoneType() == WORKING)
-                        .collect(toList()));
+                if (!accountPhones.isEmpty()) {
+                    account.setPersonalPhoneNumber(accountPhones.stream().filter(phone -> phone.getPhoneType() == PERSONAL)
+                            .collect(toList()));
+                    account.setWorkPhoneNumber(accountPhones.stream().filter(phone -> phone.getPhoneType() == WORKING)
+                            .collect(toList()));
+                }
                 return account;
             } else {
                 throw new IllegalArgumentException("try to get non-existing account by id");

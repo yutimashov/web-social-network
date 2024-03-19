@@ -3,6 +3,7 @@ package com.getjavajob.training.timashovy.socialnetwork.service.interfaces;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Interface contains all methods for organizing logic in communication with {@link Account} entity in application.

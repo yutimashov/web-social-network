@@ -204,10 +204,12 @@ public class AccountServiceImpl implements AccountService {
         List<Account> accounts = accountDao.getAll();
         for (Account account : accounts) {
             List<Phone> accountPhones = phoneDao.getPhoneNumbers(account.getId());
-            account.setPersonalPhoneNumber(accountPhones.stream().filter(phone -> phone.getPhoneType() == PERSONAL)
-                    .collect(Collectors.toList()));
-            account.setWorkPhoneNumber(accountPhones.stream().filter(phone -> phone.getPhoneType() == WORKING)
-                    .collect(Collectors.toList()));
+            if (!accountPhones.isEmpty()) {
+                account.setPersonalPhoneNumber(accountPhones.stream().filter(phone -> phone.getPhoneType() == PERSONAL)
+                        .collect(Collectors.toList()));
+                account.setWorkPhoneNumber(accountPhones.stream().filter(phone -> phone.getPhoneType() == WORKING)
+                        .collect(Collectors.toList()));
+            }
         }
         return accounts;
     }

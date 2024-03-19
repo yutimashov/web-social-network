@@ -4,6 +4,7 @@ import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AccountDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.FriendshipCheckerImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.FriendshipDaoImpl;
+import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PhoneDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -15,10 +16,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static java.time.LocalDate.of;
+import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -32,6 +33,8 @@ class AccountServiceImplTest {
     private FriendshipDaoImpl friendshipDao;
     @Mock
     private FriendshipCheckerImpl friendshipChecker;
+    @Mock
+    private PhoneDaoImpl phoneDao;
     @InjectMocks
     private AccountServiceImpl accountService;
     final Long validAccountId = 1L;
@@ -797,7 +800,7 @@ class AccountServiceImplTest {
 
         @Test
         void when2AccountsExisted() {
-            when(accountDao.getAll()).thenReturn(new ArrayList<>(Arrays.asList(TEST_ACCOUNT, TEST_ACCOUNT)));
+            when(accountDao.getAll()).thenReturn(new ArrayList<>(asList(TEST_ACCOUNT, TEST_ACCOUNT)));
             assertEquals(2, accountService.getAllAccounts().size());
         }
 
