@@ -8,7 +8,8 @@
 
     <servlet>
         <servlet-name>Accounts</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.AccountsServlet</servlet-class>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.AccountsServlet
+        </servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Accounts</servlet-name>
@@ -41,7 +42,8 @@
 
     <servlet>
         <servlet-name>Login Verification</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.LoginVerificationServlet</servlet-class>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.LoginVerificationServlet
+        </servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Login Verification</servlet-name>
@@ -49,17 +51,28 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>Logout</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.LogoutServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Logout</servlet-name>
+        <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>Account</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.AccountServlet</servlet-class>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.AccountServlet
+        </servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Account</servlet-name>
         <url-pattern>/account</url-pattern>
     </servlet-mapping>
-    
+
     <servlet>
         <servlet-name>Edit Account</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.EditAccountServlet</servlet-class>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.EditAccountServlet
+        </servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Edit Account</servlet-name>
@@ -68,13 +81,14 @@
 
     <servlet>
         <servlet-name>Account Avatar</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.AccountAvatarServlet</servlet-class>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.AccountAvatarServlet
+        </servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Account Avatar</servlet-name>
         <url-pattern>/avatar</url-pattern>
     </servlet-mapping>
-    
+
     <session-config>
         <session-timeout>10</session-timeout>
     </session-config>
