@@ -1,6 +1,5 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.ImageDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
 
@@ -11,7 +10,7 @@ import java.sql.SQLException;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatement;
 
-public class AvatarDaoImpl implements ImageDao<Account> {
+public class AvatarDaoImpl implements ImageDao {
 
     private static final AvatarDaoImpl IMAGE_DAO_IMPL = new AvatarDaoImpl();
     private static final String UPLOAD_ACCOUNT_AVATAR = "INSERT INTO account_data.account_avatars (account_id,"

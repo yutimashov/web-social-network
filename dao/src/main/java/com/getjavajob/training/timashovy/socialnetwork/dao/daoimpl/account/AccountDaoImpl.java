@@ -15,6 +15,7 @@ import java.util.List;
 
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
+import static com.getjavajob.training.timashovy.socialnetwork.common.account.Role.REGULAR;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PhoneDaoImpl.getPhoneDaoInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatement;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
@@ -91,7 +92,7 @@ public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraint
         preparedStatement.setString(8, account.getIcq());
         preparedStatement.setString(9, account.getSkype());
         preparedStatement.setString(10, account.getAdditionalInfo());
-        preparedStatement.setString(11, account.getRole().name());
+        preparedStatement.setString(11, REGULAR.name());
     }
 
     @Override
@@ -121,7 +122,6 @@ public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraint
         return new Account.Builder()
                 .id(resultSet.getLong("id"))
                 .firstName(resultSet.getString("first_name"))
-                .birthDate((resultSet.getDate("birth_date")).toLocalDate())
                 .lastName(resultSet.getString("last_name"))
                 .email(resultSet.getString("email"))
                 .middleName(resultSet.getString("middle_name"))

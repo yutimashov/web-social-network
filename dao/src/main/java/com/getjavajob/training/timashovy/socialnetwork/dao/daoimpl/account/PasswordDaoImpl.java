@@ -43,7 +43,7 @@ public class PasswordDaoImpl implements PasswordDao {
             savePasswordStatement.setLong(1, accountId);
             savePasswordStatement.setString(2, password.getPassword());
             savePasswordStatement.setString(3, salt);
-            savePasswordStatement.executeQuery(SAVE_PASSWORD);
+            savePasswordStatement.executeUpdate();
             return accountId;
         } catch (SQLException e) {
             throw new RuntimeException(e);

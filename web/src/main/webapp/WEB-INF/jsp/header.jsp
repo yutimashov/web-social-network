@@ -6,6 +6,6 @@
             <button type="submit">Logout</button>
         </form>
     </div>
-    <h2>Пользователь: ${sessionScope.account.firstName} ${sessionScope.account.lastName}</h2>
+    <h2>Account: ${sessionScope.account.firstName} ${sessionScope.account.lastName}</h2>
     <hr>
 </c:if>

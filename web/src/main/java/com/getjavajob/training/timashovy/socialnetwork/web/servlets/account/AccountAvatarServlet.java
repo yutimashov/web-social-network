@@ -21,7 +21,7 @@ public class AccountAvatarServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long accountId = valueOf(req.getParameter("id"));
-        InputStream avatarInputStream = avatarService.getAvatar(accountId);
+        InputStream avatarInputStream = avatarService.get(accountId);
         if (!(avatarInputStream == null)) {
             resp.setContentType("image/jpeg");
             try (OutputStream out = resp.getOutputStream()) {

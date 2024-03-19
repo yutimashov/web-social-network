@@ -1,12 +1,10 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.servlets;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.common.account.Password;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
+import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.ImageService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountServiceImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AvatarServiceImpl;
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.PasswordServiceImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.PhoneServiceImpl;
 
 import javax.servlet.ServletException;
@@ -21,14 +19,13 @@ import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimp
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AvatarServiceImpl.getAvatarServiceInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.PasswordServiceImpl.getPasswordServiceInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.PhoneServiceImpl.getPhoneServiceInstance;
-import static com.getjavajob.training.timashovy.socialnetwork.service.util.CredentialHashUtil.generateSalt;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 
 public class RegistrationServlet extends HttpServlet {
 
     private final AccountService accountService = getAccountServiceInstance();
     private final PasswordService passwordService = getPasswordServiceInstance();
-    private final AvatarServiceImpl avatarService = getAvatarServiceInstance();
+    private final ImageService avatarService = getAvatarServiceInstance();
     private final PhoneServiceImpl phoneService = getPhoneServiceInstance();
 
     @Override
@@ -39,13 +36,17 @@ public class RegistrationServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Account registeringAccount = createAccount(req);
+        registerAccount(registeringAccount, req);
+        resp.sendRedirect("/login");
+    }
+
+    private void registerAccount(Account registeringAccount, HttpServletRequest req) throws ServletException, IOException {
         accountService.createAccount(registeringAccount);
         Long accountId = registeringAccount.getId();
         phoneService.createPhone(accountId, req.getParameter("personalPhoneNumber"), PERSONAL);
         phoneService.createPhone(accountId, req.getParameter("workPhoneNumber"), WORKING);
-        avatarService.uploadAvatar(registeringAccount.getId(), req.getPart("avatar").getInputStream());
+        avatarService.upload(accountId, req.getPart("avatar").getInputStream());
         passwordService.create(accountId, req.getParameter("password"));
-        resp.sendRedirect("/login");
     }
 
     private Account createAccount(HttpServletRequest req) {

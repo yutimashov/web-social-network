@@ -20,7 +20,7 @@ public class AccountServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long accountId = valueOf(req.getParameter("id"));
         Account account = getAccountServiceInstance().getAccountById(accountId);
-        InputStream avatarInputStream = getAvatarServiceInstance().getAvatar(accountId);
+        InputStream avatarInputStream = getAvatarServiceInstance().get(accountId);
         req.setAttribute("account", account);
         req.setAttribute("avatarInputStream", avatarInputStream);
         req.getRequestDispatcher(getJspPagePath("account")).forward(req, resp);

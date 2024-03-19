@@ -10,10 +10,10 @@ import static java.lang.String.format;
 
 public final class CredentialHashUtil {
 
-    private static final int SALT_LENGTH = 32;
+    private static final int SALT_LENGTH = 12;
     private static final String HASH_ALGORITHM = "SHA-256";
-    private static final int ASCII_CHARACTER_COUNT = 128;
-    private static final int ASCII_STARTING_CHARACTER = 33;
+    private static final int ASCII_CHARACTER_AMOUNT = 94;
+    private static final int ASCII_STARTING_CHARACTER = 32;
 
     public static String hashCredential(String password, String salt) {
         byte[] passwordBytes = password.getBytes();
@@ -32,7 +32,7 @@ public final class CredentialHashUtil {
         StringBuilder salt = new StringBuilder();
         Random random = new Random();
         for (int i = 0; i < SALT_LENGTH; i++) {
-            int randomChar = ASCII_STARTING_CHARACTER + random.nextInt(ASCII_CHARACTER_COUNT);
+            int randomChar = ASCII_STARTING_CHARACTER + random.nextInt(ASCII_CHARACTER_AMOUNT);
             salt.append((char) randomChar);
         }
         return salt.toString();

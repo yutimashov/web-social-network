@@ -1,12 +1,13 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AvatarDaoImpl;
+import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.ImageService;
 
 import java.io.InputStream;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AvatarDaoImpl.getAvatarDaoImpl;
 
-public class AvatarServiceImpl {
+public class AvatarServiceImpl implements ImageService {
 
     private static final AvatarServiceImpl AVATAR_SERVICE = new AvatarServiceImpl();
     private final AvatarDaoImpl avatarDao = getAvatarDaoImpl();
@@ -18,15 +19,23 @@ public class AvatarServiceImpl {
         return AVATAR_SERVICE;
     }
 
-    public boolean uploadAvatar(Long accountId, InputStream avatarInputStream) {
+    @Override
+    public boolean upload(Long accountId, InputStream avatarInputStream) {
         return avatarDao.upload(accountId, avatarInputStream);
     }
 
-    public InputStream getAvatar(Long accountId) {
+    @Override
+    public boolean delete(Long id) {
+        return false;
+    }
+
+    @Override
+    public InputStream get(Long accountId) {
         return avatarDao.get(accountId);
     }
 
-    public boolean updateAvatar(Long accountId, InputStream imageInputStream) {
+    @Override
+    public boolean update(Long accountId, InputStream imageInputStream) {
         return avatarDao.update(accountId, imageInputStream);
     }
 
