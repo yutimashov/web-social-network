@@ -14,7 +14,6 @@ import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimp
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AvatarServiceImpl.getAvatarServiceInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 import static java.lang.Long.valueOf;
-import static java.util.Objects.isNull;
 
 public class EditAccountServlet extends HttpServlet {
 
@@ -45,31 +44,31 @@ public class EditAccountServlet extends HttpServlet {
     private void updateAccountData(HttpServletRequest req) {
         Long accountId = valueOf(req.getParameter("id"));
         String updatedFirstName = getParameter(req, FIRST_NAME_PARAMETER_NAME);
-        if (!isEmptyString(updatedFirstName) && !isNull(updatedFirstName)) {
+        if (checkParameterHasValue(updatedFirstName)) {
             accountService.updateFirstName(accountId, updatedFirstName);
         }
         String updatedLastName = getParameter(req, LAST_NAME_PARAMETER_NAME);
-        if (!isEmptyString(updatedLastName) && !isNull(updatedLastName)) {
+        if (checkParameterHasValue(updatedLastName)) {
             accountService.updateAccountLastName(accountId, updatedLastName);
         }
         String updatedMiddleName = getParameter(req, MIDDLE_NAME_PARAMETER_NAME);
-        if (!isEmptyString(updatedMiddleName) && !isNull(updatedMiddleName)) {
+        if (checkParameterHasValue(updatedMiddleName)) {
             accountService.updateAccountMiddleName(accountId, updatedMiddleName);
         }
         String updatedBirthDate = getParameter(req, BIRTHDATE_PARAMETER_NAME);
-        if (!isEmptyString(updatedBirthDate) && !isNull(updatedBirthDate)) {
+        if (checkParameterHasValue(updatedBirthDate)) {
             accountService.updateAccountBirthDate(accountId, LocalDate.parse(updatedBirthDate));
         }
         String updatedSkype = getParameter(req, SKYPE_PARAMETER_NAME);
-        if (!isEmptyString(updatedSkype) && !isNull(updatedSkype)) {
+        if (checkParameterHasValue(updatedSkype)) {
             accountService.updateAccountSkype(accountId, updatedSkype);
         }
         String updatedICQ = getParameter(req, ICQ_PARAMETER_NAME);
-        if (!isEmptyString(updatedICQ) && !isNull(updatedICQ)) {
+        if (checkParameterHasValue(updatedICQ)) {
             accountService.updateAccountIcq(accountId, updatedICQ);
         }
         String updatedEmail = getParameter(req, EMAIL_PARAMETER_NAME);
-        if (!isEmptyString(updatedEmail) && !isNull(updatedEmail)) {
+        if (checkParameterHasValue(updatedEmail)) {
             accountService.updateAccountEmail(accountId, updatedEmail);
         }
     }
@@ -78,8 +77,8 @@ public class EditAccountServlet extends HttpServlet {
         return req.getParameter(parameterName);
     }
 
-    private boolean isEmptyString(String str) {
-        return "".equals(str);
+    private boolean checkParameterHasValue(String parameterValue) {
+        return !"".equals(parameterValue);
     }
 
 }

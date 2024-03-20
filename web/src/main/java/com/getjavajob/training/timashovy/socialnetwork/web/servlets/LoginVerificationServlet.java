@@ -48,9 +48,9 @@ public class LoginVerificationServlet extends HttpServlet {
 
     private void createRememberMeCookies(Account account, HttpServletResponse resp) {
         Cookie loginCookie = new Cookie(LOGIN_COOKIE_NAME, account.getEmail());
-        loginCookie.setMaxAge(30);
+        loginCookie.setMaxAge(3600);
         Cookie passwordCookie = new Cookie(PASSWORD_COOKIE_NAME, passwordService.get(account).getPassword());
-        passwordCookie.setMaxAge(30);
+        passwordCookie.setMaxAge(3600);
         resp.addCookie(loginCookie);
         resp.addCookie(passwordCookie);
     }
