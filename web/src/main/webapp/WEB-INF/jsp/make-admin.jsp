@@ -5,7 +5,15 @@
 </head>
 <body>
 <p>Account with id = ${param.id} now is Admin!</p>
-<a href="${pageContext.request.contextPath}/account?id=${param.id}">New admin page</a>
-<a href="${pageContext.request.contextPath}/account?id=${sessionScope.account.id}">My page</a>
+<div>
+    <a href="${pageContext.request.contextPath}/account?id=${param.id}">
+        <button>New admin page</button>
+    </a>
+</div>
+<div>
+    <a href="${pageContext.request.contextPath}/account?id=${sessionScope.account.id}">
+        <button>My page</button>
+    </a>
+</div>
 </body>
 </html>

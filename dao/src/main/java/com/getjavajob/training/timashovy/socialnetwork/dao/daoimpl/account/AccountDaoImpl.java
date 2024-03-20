@@ -19,6 +19,7 @@ import static com.getjavajob.training.timashovy.socialnetwork.common.account.Rol
 import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PhoneDaoImpl.getPhoneDaoInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatement;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
+import static java.lang.String.valueOf;
 import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toList;
 
@@ -51,15 +52,17 @@ public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraint
         if (isNull(fieldName) || isNull(fieldValue)) {
             throw new IllegalArgumentException("uniqueness field violation: either fieldName or fieldValue is null");
         }
-        String checkRecordExistenceQuery = "SELECT id FROM account_data.account WHERE " + fieldName + " = ?";
-        try (PreparedStatement recordsSet = getPreparedStatement(checkRecordExistenceQuery)) {
-            recordsSet.setObject(1, fieldValue);
-            ResultSet existedRecords = recordsSet.executeQuery();
-            if (existedRecords.next()) {
-                throw new IllegalArgumentException("account fields uniqueness violation");
+        if (!fieldValue.equals("")) {
+            String checkRecordExistenceQuery = "SELECT id FROM account_data.account WHERE " + fieldName + " = ?";
+            try (PreparedStatement recordsSet = getPreparedStatement(checkRecordExistenceQuery)) {
+                recordsSet.setObject(1, fieldValue);
+                ResultSet existedRecords = recordsSet.executeQuery();
+                if (existedRecords.next()) {
+                    throw new IllegalArgumentException("account fields uniqueness violation");
+                }
+            } catch (SQLException e) {
+                throw new DaoException("dao: validate entity uniqueness method failed: " + e.getMessage());
             }
-        } catch (SQLException e) {
-            throw new DaoException("dao: validate entity uniqueness method failed: " + e.getMessage());
         }
     }
 
@@ -92,7 +95,11 @@ public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraint
         preparedStatement.setString(8, account.getIcq());
         preparedStatement.setString(9, account.getSkype());
         preparedStatement.setString(10, account.getAdditionalInfo());
-        preparedStatement.setString(11, REGULAR.name());
+        if (isNull(account.getRole())) {
+            preparedStatement.setString(11, valueOf(REGULAR));
+        } else {
+            preparedStatement.setString(11, account.getRole().name());
+        }
     }
 
     @Override
