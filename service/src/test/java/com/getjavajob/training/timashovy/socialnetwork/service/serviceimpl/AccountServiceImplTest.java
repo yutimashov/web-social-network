@@ -151,7 +151,7 @@ class AccountServiceImplTest {
         @Test
         void whenAccountIdIsNull() {
             Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.updateAccountFirstName(null, "name");
+                accountService.updateFirstName(null, "name");
                 throw new UnsupportedOperationException("Not supported");
             });
             assertEquals(IllegalArgumentException.class, exception.getClass());
@@ -160,7 +160,7 @@ class AccountServiceImplTest {
         @Test
         void whenFirstNameIsNull() {
             Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.updateAccountFirstName(validAccountId, null);
+                accountService.updateFirstName(validAccountId, null);
                 throw new UnsupportedOperationException("Not supported");
             });
             assertEquals(IllegalArgumentException.class, exception.getClass());
@@ -174,7 +174,7 @@ class AccountServiceImplTest {
             when(accountDao.getById(validAccountId)).thenReturn(accountOriginal);
             Account accountChanged = new Account.Builder(accountOriginal).firstName(newName).build();
             when(accountDao.updateById(validAccountId, accountChanged)).thenReturn(true);
-            assertTrue(accountService.updateAccountFirstName(validAccountId, newName));
+            assertTrue(accountService.updateFirstName(validAccountId, newName));
         }
 
     }

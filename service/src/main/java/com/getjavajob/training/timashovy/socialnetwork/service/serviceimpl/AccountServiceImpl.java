@@ -109,7 +109,8 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
-    public boolean updateAccountFirstName(Long accountId, String firstName) {
+    @Override
+    public boolean updateFirstName(Long accountId, String firstName) {
         validateAccountId(accountId);
         validateAccountFieldNotNull(firstName);
         Account modifiedAccount = new Account.Builder(accountDao.getById(accountId)).firstName(firstName).build();

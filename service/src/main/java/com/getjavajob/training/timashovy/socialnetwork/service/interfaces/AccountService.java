@@ -4,7 +4,6 @@ import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Role;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Interface contains all methods for organizing logic in communication with {@link Account} entity in application.
@@ -29,5 +28,7 @@ public interface AccountService {
     List<Account> getFriends(Long accountId);
 
     boolean updateAccountRole(Long accountId, Role role);
+
+    boolean updateFirstName(Long accountId, String firstName);
 
 }

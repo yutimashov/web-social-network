@@ -8,18 +8,19 @@
 <jsp:include page="/WEB-INF/jsp/header.jsp"/>
 <h2>Edit account: ${requestScope.account.firstName} ${requestScope.account.lastName}</h2>
 <hr>
-<form action="${pageContext.request.contextPath}/account-edit" method="POST" enctype="multipart/form-data">
+<form action="${pageContext.request.contextPath}/edit-account?id=${requestScope.account.id}" method="POST"
+      enctype="multipart/form-data">
     <label for="avatar">Profile avatar<br>
-        Current:
+        Current account avatar:
         <c:if test="${requestScope.avatarInputStream != null}">
             <img src="${pageContext.request.contextPath}/avatar?id=${requestScope.account.id}"
                  alt="Profile avatar"
-                 width="400px"
-                 height="200px"
+                 width="250px"
+                 height="250px"
             >
         </c:if>
         <br>
-        New: <input type="file" name="avatar" id="avatar">
+        New account avatar: <input type="file" name="avatar" id="avatar">
     </label>
     <hr>
     <label for="name">First name<br>
