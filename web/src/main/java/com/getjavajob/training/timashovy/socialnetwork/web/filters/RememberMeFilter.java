@@ -30,8 +30,8 @@ public class RememberMeFilter implements Filter {
             String email = emailCookie.getValue();
             String password = passwordCookie.getValue();
             Account loggedInAccount = loginService.verifyLoginCredentials(email, password);
-            if (loggedInAccount != null) {
-                req.getSession().setAttribute("account", loggedInAccount);
+            if (loggedInAccount != null && req.getSession(false).getAttribute("account") == null) {
+                req.getSession(false).setAttribute("account", loggedInAccount);
             }
         }
         filterChain.doFilter(req, resp);
