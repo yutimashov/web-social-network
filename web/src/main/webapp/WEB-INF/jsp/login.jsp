@@ -7,9 +7,14 @@
 <body>
 <jsp:include page="/WEB-INF/jsp/header.jsp"/>
 <form action="${pageContext.request.contextPath}/login" method="POST">
-    <c:if test="${param.error != null}">
+    <c:if test="${param.error == 'auth-data'}">
         <div>
             <span style="color:red">Incorrect email or password</span>
+        </div>
+    </c:if>
+    <c:if test="${param.error == 'authorization'}">
+        <div>
+            <span style="color:red">You are not authorized!</span>
         </div>
     </c:if>
     <label for="email">Email:

@@ -33,7 +33,7 @@ public class LoginVerificationServlet extends HttpServlet {
             }
             resp.sendRedirect("/account?id=" + account.getId());
         } else {
-            resp.sendRedirect("/login?error");
+            resp.sendRedirect("/login?error=auth-data");
         }
     }
 
