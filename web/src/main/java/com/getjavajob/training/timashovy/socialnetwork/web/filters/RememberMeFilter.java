@@ -7,6 +7,7 @@ import javax.servlet.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.LoginService.getLoginServiceInstance;
@@ -27,11 +28,11 @@ public class RememberMeFilter implements Filter {
         Cookie emailCookie = findCookieByName(cookies, LOGIN_COOKIE_NAME);
         Cookie passwordCookie = findCookieByName(cookies, PASSWORD_COOKIE_NAME);
         if (emailCookie != null && passwordCookie != null) {
-            String email = emailCookie.getValue();
-            String password = passwordCookie.getValue();
-            Account loggedInAccount = loginService.verifyLoginCredentials(email, password);
-            if (loggedInAccount != null && req.getSession(false).getAttribute("account") == null) {
-                req.getSession(false).setAttribute("account", loggedInAccount);
+            Account loggedInAccount = loginService.verifyLoginCredentials(emailCookie.getValue(),
+                    passwordCookie.getValue());
+            HttpSession currentSession = req.getSession(false);
+            if (currentSession == null && loggedInAccount != null) {
+                req.getSession().setAttribute("account", loggedInAccount);
             }
         }
         filterChain.doFilter(req, resp);

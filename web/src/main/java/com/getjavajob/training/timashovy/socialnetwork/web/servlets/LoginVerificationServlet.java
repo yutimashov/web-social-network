@@ -43,7 +43,7 @@ public class LoginVerificationServlet extends HttpServlet {
         if (isNull(enteredEmail) || isNull(enteredPassword)) {
             return empty();
         }
-        return ofNullable(loginService.verifyLoginCredentials(enteredEmail, enteredPassword));
+        return ofNullable(loginService.verifyRawLoginCredentials(enteredEmail, enteredPassword));
     }
 
     private void createRememberMeCookies(Account account, HttpServletResponse resp) {

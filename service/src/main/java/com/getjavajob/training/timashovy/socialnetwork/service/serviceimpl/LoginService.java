@@ -23,16 +23,28 @@ public class LoginService {
         return loginService;
     }
 
+    public Account verifyRawLoginCredentials(String email, String rawPassword) {
+        Password dbPassword = passwordService.findPasswordByEmail(email);
+        String passwordValue = dbPassword.getPassword();
+        String salt = dbPassword.getSalt();
+        if (checkDataForNull(email, rawPassword, dbPassword)) {
+            String hashedPasswordValue = hashCredential(rawPassword, salt);
+            return passwordValue.equals(hashedPasswordValue) ? accountService.getAccountById(dbPassword.getAccountId())
+                    : null;
+        }
+        return null;
+    }
+
     public Account verifyLoginCredentials(String email, String password) {
         Password dbPassword = passwordService.findPasswordByEmail(email);
-        if (checkDataForNull(email, password, dbPassword)) {
-            String enteredPasswordValue = hashCredential(password, dbPassword.getSalt());
-            return dbPassword.getPassword().equals(enteredPasswordValue)
-                    ? accountService.getAccountById(dbPassword.getAccountId())
-                    : null;
-        } else {
+        if (dbPassword == null) {
             return null;
         }
+        String passwordValue = dbPassword.getPassword();
+        if (passwordValue.equals(password)) {
+            return accountService.getAccountById(dbPassword.getAccountId());
+        }
+        return null;
     }
 
     private boolean checkDataForNull(Object... data) {
