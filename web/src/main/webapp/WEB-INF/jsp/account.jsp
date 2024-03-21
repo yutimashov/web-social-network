@@ -45,6 +45,10 @@
         <a href="${pageContext.request.contextPath}/edit-account?id=${param.id}">
             <button>Edit account</button>
         </a>
+        <br>
+        <a href="${pageContext.request.contextPath}/delete-account?id=${param.id}">
+            <button>Delete account</button>
+        </a>
     </c:if>
     <c:if test="${sessionScope.account.role == 'ADMIN' && requestScope.account.role == 'REGULAR'}">
         <a href="${pageContext.request.contextPath}/make-admin?id=${param.id}">

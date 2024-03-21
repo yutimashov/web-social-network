@@ -99,6 +99,16 @@
         <url-pattern>/avatar</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>Delete Account</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.admin.DeleteAccountServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Delete Account</servlet-name>
+        <url-pattern>/delete-account</url-pattern>
+    </servlet-mapping>
+
     <session-config>
         <session-timeout>10</session-timeout>
     </session-config>

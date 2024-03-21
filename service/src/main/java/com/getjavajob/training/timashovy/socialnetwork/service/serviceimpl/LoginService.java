@@ -25,6 +25,9 @@ public class LoginService {
 
     public Account verifyRawLoginCredentials(String email, String rawPassword) {
         Password dbPassword = passwordService.findPasswordByEmail(email);
+        if (dbPassword == null) {
+            return null;
+        }
         String passwordValue = dbPassword.getPassword();
         String salt = dbPassword.getSalt();
         if (checkDataForNull(email, rawPassword, dbPassword)) {
