@@ -20,6 +20,7 @@ public class LoginVerificationServlet extends HttpServlet {
     private final PasswordService passwordService = getPasswordServiceInstance();
     private static final String LOGIN_COOKIE_NAME = "login";
     private static final String PASSWORD_COOKIE_NAME = "password";
+    private static final int LOGIN_CREDENTIAL_COOKIES_LIFETIME = 3600;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -48,9 +49,9 @@ public class LoginVerificationServlet extends HttpServlet {
 
     private void createRememberMeCookies(Account account, HttpServletResponse resp) {
         Cookie loginCookie = new Cookie(LOGIN_COOKIE_NAME, account.getEmail());
-        loginCookie.setMaxAge(3600);
+        loginCookie.setMaxAge(LOGIN_CREDENTIAL_COOKIES_LIFETIME);
         Cookie passwordCookie = new Cookie(PASSWORD_COOKIE_NAME, passwordService.get(account).getPassword());
-        passwordCookie.setMaxAge(3600);
+        passwordCookie.setMaxAge(LOGIN_CREDENTIAL_COOKIES_LIFETIME);
         resp.addCookie(loginCookie);
         resp.addCookie(passwordCookie);
     }

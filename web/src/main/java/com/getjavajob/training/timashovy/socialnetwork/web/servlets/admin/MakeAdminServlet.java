@@ -18,9 +18,13 @@ public class MakeAdminServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String accountId = req.getParameter("id");
-        adminService.makeAdmin(valueOf(accountId));
+        makeAdmin(req);
         req.getRequestDispatcher(getJspPagePath("make-admin")).forward(req, resp);
+    }
+
+    private void makeAdmin(HttpServletRequest req) {
+        String newAdminAccountId = req.getParameter("id");
+        adminService.makeAdmin(valueOf(newAdminAccountId));
     }
 
 }
