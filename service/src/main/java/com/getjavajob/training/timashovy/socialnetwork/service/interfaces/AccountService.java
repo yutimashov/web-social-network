@@ -31,4 +31,6 @@ public interface AccountService {
 
     boolean updateFirstName(Long accountId, String firstName);
 
+    List<Account> getFriendsRequests(Long accountId);
+
 }

@@ -7,9 +7,14 @@
 <body>
 <jsp:include page="/WEB-INF/jsp/header.jsp"/>
 <div>
-    <a href="${pageContext.request.contextPath}/account-friends?id=${param.id}">
+    <a href="${pageContext.request.contextPath}/friends?id=${param.id}">
         <button>Friends list</button>
     </a>
+    <c:if test="${sessionScope.account.id == param.id}">
+        <a href="${pageContext.request.contextPath}/friends-requests?id=${param.id}">
+            <button>Friend requests</button>
+        </a>
+    </c:if>
     <p>Profile avatar:</p>
     <c:if test="${requestScope.avatarInputStream != null}">
         <img src="${pageContext.request.contextPath}/avatar?id=${requestScope.account.id}" alt="Profile avatar"

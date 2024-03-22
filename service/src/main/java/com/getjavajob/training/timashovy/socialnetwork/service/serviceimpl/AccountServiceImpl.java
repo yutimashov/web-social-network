@@ -271,4 +271,10 @@ public class AccountServiceImpl implements AccountService {
         return friends;
     }
 
+    @Override
+    public List<Account> getFriendsRequests(Long accountId) {
+        //TODO: implement method!
+        return null;
+    }
+
 }
