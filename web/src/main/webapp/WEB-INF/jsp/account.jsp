@@ -7,6 +7,9 @@
 <body>
 <jsp:include page="/WEB-INF/jsp/header.jsp"/>
 <div>
+    <a href="${pageContext.request.contextPath}/account-friends?id=${param.id}">
+        <button>Friends list</button>
+    </a>
     <p>Profile avatar:</p>
     <c:if test="${requestScope.avatarInputStream != null}">
         <img src="${pageContext.request.contextPath}/avatar?id=${requestScope.account.id}" alt="Profile avatar"
