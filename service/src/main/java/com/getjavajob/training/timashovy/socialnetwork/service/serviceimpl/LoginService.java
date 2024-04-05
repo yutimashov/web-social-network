@@ -5,10 +5,13 @@ import com.getjavajob.training.timashovy.socialnetwork.common.account.Password;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
 
+import java.util.Optional;
+
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountServiceImpl.getAccountServiceInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.PasswordServiceImpl.getPasswordServiceInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.CredentialHashUtil.hashCredential;
 import static java.util.Objects.isNull;
+import static java.util.Optional.empty;
 
 public class LoginService {
 
@@ -23,40 +26,18 @@ public class LoginService {
         return loginService;
     }
 
-    public Account verifyRawLoginCredentials(String email, String rawPassword) {
-        Password dbPassword = passwordService.findPasswordByEmail(email);
-        if (dbPassword == null) {
-            return null;
+    public Optional<Account> getLoggedInAccount(String verifyingEmail, String verifyingPassword) {
+        if (isNull(verifyingEmail) || isNull(verifyingPassword)) {
+            return empty();
         }
-        String passwordValue = dbPassword.getPassword();
-        String salt = dbPassword.getSalt();
-        if (checkDataForNull(email, rawPassword, dbPassword)) {
-            String hashedPasswordValue = hashCredential(rawPassword, salt);
-            return passwordValue.equals(hashedPasswordValue) ? accountService.getAccountById(dbPassword.getAccountId())
-                    : null;
+        Password dbPassword = passwordService.findPasswordByEmail(verifyingEmail);
+        if (isNull(dbPassword)) {
+            return empty();
         }
-        return null;
-    }
-
-    public Account verifyLoginCredentials(String email, String password) {
-        Password dbPassword = passwordService.findPasswordByEmail(email);
-        if (dbPassword == null) {
-            return null;
-        }
-        String passwordValue = dbPassword.getPassword();
-        if (passwordValue.equals(password)) {
-            return accountService.getAccountById(dbPassword.getAccountId());
-        }
-        return null;
-    }
-
-    private boolean checkDataForNull(Object... data) {
-        for (Object dataValue : data) {
-            if (isNull(dataValue)) {
-                return false;
-            }
-        }
-        return true;
+        String dbPasswordValue = dbPassword.getPassword();
+        String verifyingSaltedPasswordValue = hashCredential(verifyingPassword, dbPassword.getSalt());
+        return dbPasswordValue.equals(verifyingSaltedPasswordValue)
+                ? accountService.getAccountById(dbPassword.getAccountId()) : empty();
     }
 
 }

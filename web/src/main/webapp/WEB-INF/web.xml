@@ -18,7 +18,7 @@
 
     <servlet>
         <servlet-name>Registration</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.RegistrationServlet</servlet-class>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.auth.RegistrationServlet</servlet-class>
         <multipart-config>
             <max-file-size>10485760</max-file-size>
             <max-request-size>20971520</max-request-size>
@@ -32,7 +32,7 @@
 
     <servlet>
         <servlet-name>Login</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.LoginServlet</servlet-class>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.auth.LoginServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
@@ -42,7 +42,7 @@
 
     <servlet>
         <servlet-name>Login Verification</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.LoginVerificationServlet
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.auth.LoginVerificationServlet
         </servlet-class>
     </servlet>
     <servlet-mapping>
@@ -52,7 +52,7 @@
 
     <servlet>
         <servlet-name>Logout</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.LogoutServlet</servlet-class>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.auth.LogoutServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Logout</servlet-name>

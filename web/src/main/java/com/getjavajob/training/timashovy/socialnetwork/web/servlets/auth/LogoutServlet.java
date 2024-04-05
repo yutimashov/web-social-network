@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.web.servlets;
+package com.getjavajob.training.timashovy.socialnetwork.web.servlets.auth;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;

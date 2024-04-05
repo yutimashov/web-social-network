@@ -1,6 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Interface contains general dao-methods, which describes common behaviour of dao operations with entities.
@@ -11,7 +12,7 @@ public interface AccountGroupDao<T> {
 
     Long create(T t);
 
-    T getById(Long id);
+    Optional<T> getById(Long id);
 
     List<T> getAll();
 

@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
@@ -21,6 +22,8 @@ import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnect
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
 import static java.lang.String.valueOf;
 import static java.util.Objects.isNull;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
 
 public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraintsValidator {
@@ -103,7 +106,7 @@ public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraint
     }
 
     @Override
-    public Account getById(Long id) {
+    public Optional<Account> getById(Long id) {
         try (PreparedStatement getAccountByIdStatement = getPreparedStatement(GET_ACCOUNT)) {
             getAccountByIdStatement.setLong(1, id);
             ResultSet accountData = getAccountByIdStatement.executeQuery();
@@ -116,9 +119,9 @@ public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraint
                     account.setWorkPhoneNumber(accountPhones.stream().filter(phone -> phone.getPhoneType() == WORKING)
                             .collect(toList()));
                 }
-                return account;
+                return of(account);
             } else {
-                throw new IllegalArgumentException("try to get non-existing account by id");
+                return empty();
             }
         } catch (SQLException e) {
             throw new DaoException("dao: get account by id method failed: " + e.getMessage());

@@ -7,16 +7,16 @@
 <body>
 <jsp:include page="/WEB-INF/jsp/header.jsp"/>
 <form action="${pageContext.request.contextPath}/login" method="POST">
-    <c:if test="${param.error == 'auth-data'}">
-        <div>
-            <span style="color:red">Incorrect email or password</span>
-        </div>
-    </c:if>
-    <c:if test="${param.error == 'authorization'}">
-        <div>
-            <span style="color:red">You are not authorized!</span>
-        </div>
-    </c:if>
+    <div>
+        <c:choose>
+            <c:when test="${param.error == 'auth-data'}">
+                <span style="color:red">Incorrect email or password</span>
+            </c:when>
+            <c:when test="${param.error == 'authorization'}">
+                <span style="color:red">You are not authorized!</span>
+            </c:when>
+        </c:choose>
+    </div>
     <label for="email">Email:
         <input type="email" id="email" value="${param.email}" name="email" required>
     </label>

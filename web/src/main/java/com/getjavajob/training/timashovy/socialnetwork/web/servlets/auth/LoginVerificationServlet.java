@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.web.servlets;
+package com.getjavajob.training.timashovy.socialnetwork.web.servlets.auth;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
@@ -11,8 +11,6 @@ import java.util.Optional;
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.LoginService.getLoginServiceInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.PasswordServiceImpl.getPasswordServiceInstance;
 import static java.util.Objects.isNull;
-import static java.util.Optional.empty;
-import static java.util.Optional.ofNullable;
 
 public class LoginVerificationServlet extends HttpServlet {
 
@@ -24,7 +22,8 @@ public class LoginVerificationServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        Optional<Account> loggedInAccount = getLoggedInAccount(req);
+        Optional<Account> loggedInAccount = loginService.getLoggedInAccount(req.getParameter("email"),
+                req.getParameter("password"));
         if (loggedInAccount.isPresent()) {
             HttpSession session = req.getSession();
             Account account = loggedInAccount.get();
@@ -36,15 +35,6 @@ public class LoginVerificationServlet extends HttpServlet {
         } else {
             resp.sendRedirect("/login?error=auth-data");
         }
-    }
-
-    private Optional<Account> getLoggedInAccount(HttpServletRequest req) {
-        String enteredEmail = req.getParameter("email");
-        String enteredPassword = req.getParameter("password");
-        if (isNull(enteredEmail) || isNull(enteredPassword)) {
-            return empty();
-        }
-        return ofNullable(loginService.verifyRawLoginCredentials(enteredEmail, enteredPassword));
     }
 
     private void createRememberMeCookies(Account account, HttpServletResponse resp) {

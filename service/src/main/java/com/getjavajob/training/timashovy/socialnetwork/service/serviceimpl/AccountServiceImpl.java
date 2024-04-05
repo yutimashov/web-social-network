@@ -13,6 +13,7 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.Accoun
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
@@ -113,81 +114,79 @@ public class AccountServiceImpl implements AccountService {
     public boolean updateFirstName(Long accountId, String firstName) {
         validateAccountId(accountId);
         validateAccountFieldNotNull(firstName);
-        Account modifiedAccount = new Account.Builder(accountDao.getById(accountId)).firstName(firstName).build();
-        return accountDao.updateById(accountId, modifiedAccount);
+        return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
+                new Account.Builder(accountDao.getById(accountId).get()).firstName(firstName).build());
     }
 
     public boolean updateAccountLastName(Long accountId, String lastName) {
         validateAccountId(accountId);
         validateAccountFieldNotNull(lastName);
-        Account modifiedAccount = new Account.Builder(accountDao.getById(accountId)).lastName(lastName).build();
-        return accountDao.updateById(accountId, modifiedAccount);
+        return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
+                new Account.Builder(accountDao.getById(accountId).get()).lastName(lastName).build());
     }
 
     public boolean updateAccountMiddleName(Long accountId, String middleName) {
         validateAccountId(accountId);
         validateAccountFieldNotNull(middleName);
-        Account modifiedAccount = new Account.Builder(accountDao.getById(accountId)).middleName(middleName).build();
-        return accountDao.updateById(accountId, modifiedAccount);
+        return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
+                new Account.Builder(accountDao.getById(accountId).get()).middleName(middleName).build());
     }
 
     public boolean updateAccountBirthDate(Long accountId, LocalDate birthDate) {
         validateAccountId(accountId);
         validateAccountFieldNotNull(birthDate);
-        Account modifiedAccount = new Account.Builder(accountDao.getById(accountId)).birthDate(birthDate).build();
-        return accountDao.updateById(accountId, modifiedAccount);
+        return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
+                new Account.Builder(accountDao.getById(accountId).get()).birthDate(birthDate).build());
     }
 
     public boolean updateAccountWorkAddress(Long accountId, String workAddress) {
         validateAccountId(accountId);
         validateAccountFieldNotNull(workAddress);
-        Account modifiedAccount = new Account.Builder(accountDao.getById(accountId)).workAddress(workAddress).build();
-        return accountDao.updateById(accountId, modifiedAccount);
+        return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
+                new Account.Builder(accountDao.getById(accountId).get()).workAddress(workAddress).build());
     }
 
     public boolean updateAccountPersonalAddress(Long accountId, String personalAddress) {
         validateAccountId(accountId);
         validateAccountFieldNotNull(personalAddress);
-        Account modifiedAccount = new Account.Builder(accountDao.getById(accountId)).personalAddress(personalAddress)
-                .build();
-        return accountDao.updateById(accountId, modifiedAccount);
+        return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
+                new Account.Builder(accountDao.getById(accountId).get()).personalAddress(personalAddress).build());
     }
 
     public boolean updateAccountEmail(Long accountId, String email) {
         validateAccountId(accountId);
         validateAccountFieldNotNull(email);
-        Account modifiedAccount = new Account.Builder(accountDao.getById(accountId)).email(email).build();
-        return accountDao.updateById(accountId, modifiedAccount);
+        return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
+                new Account.Builder(accountDao.getById(accountId).get()).email(email).build());
     }
 
     public boolean updateAccountIcq(Long accountId, String icq) {
         validateAccountId(accountId);
         validateAccountFieldNotNull(icq);
-        Account modifiedAccount = new Account.Builder(accountDao.getById(accountId)).icq(icq).build();
-        return accountDao.updateById(accountId, modifiedAccount);
+        return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
+                new Account.Builder(accountDao.getById(accountId).get()).icq(icq).build());
     }
 
     public boolean updateAccountSkype(Long accountId, String skype) {
         validateAccountId(accountId);
         validateAccountFieldNotNull(skype);
-        Account modifiedAccount = new Account.Builder(accountDao.getById(accountId)).skype(skype).build();
-        return accountDao.updateById(accountId, modifiedAccount);
+        return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
+                new Account.Builder(accountDao.getById(accountId).get()).skype(skype).build());
     }
 
     public boolean updateAccountAdditionalInfo(Long accountId, String additionalInfo) {
         validateAccountId(accountId);
         validateAccountFieldNotNull(additionalInfo);
-        Account modifiedAccount = new Account.Builder(accountDao.getById(accountId)).additionalInfo(additionalInfo)
-                .build();
-        return accountDao.updateById(accountId, modifiedAccount);
+        return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
+                new Account.Builder(accountDao.getById(accountId).get()).additionalInfo(additionalInfo).build());
     }
 
     @Override
     public boolean updateAccountRole(Long accountId, Role role) {
         validateAccountId(accountId);
         validateAccountFieldNotNull(role);
-        Account modifiedAccount = new Account.Builder(accountDao.getById(accountId)).role(role).build();
-        return accountDao.updateById(accountId, modifiedAccount);
+        return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
+                new Account.Builder(accountDao.getById(accountId).get()).role(role).build());
     }
 
     @Override
@@ -197,7 +196,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account getAccountById(Long accountId) {
+    public Optional<Account> getAccountById(Long accountId) {
         return accountDao.getById(accountId);
     }
 
@@ -266,7 +265,9 @@ public class AccountServiceImpl implements AccountService {
         List<Long> friendsId = friendshipDao.getFriendsIds(accountId);
         List<Account> friends = new ArrayList<>();
         for (Long friendId : friendsId) {
-            friends.add((accountDao.getById(friendId)));
+            if (accountDao.getById(friendId).isPresent()) {
+                friends.add(accountDao.getById(friendId).get());
+            }
         }
         return friends;
     }

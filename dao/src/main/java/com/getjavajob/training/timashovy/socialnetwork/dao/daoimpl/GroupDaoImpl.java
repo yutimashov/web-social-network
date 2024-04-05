@@ -10,10 +10,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatement;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
 import static java.util.Objects.isNull;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 
 public class GroupDaoImpl implements AccountGroupDao<Group>, TableConstraintsValidator {
 
@@ -51,7 +54,7 @@ public class GroupDaoImpl implements AccountGroupDao<Group>, TableConstraintsVal
     }
 
     @Override
-    public Group getById(Long id) {
+    public Optional<Group> getById(Long id) {
         try (PreparedStatement preparedStatement = getPreparedStatement(GET_GROUP_BY_ID)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -64,10 +67,10 @@ public class GroupDaoImpl implements AccountGroupDao<Group>, TableConstraintsVal
                         resultSet.getLong("owner_id"),
                         resultSet.getString("group_status")
                 );
+                return of(receivedGroup);
             } else {
-                throw new DaoException("try to get non-existing group by id");
+                return empty();
             }
-            return receivedGroup;
         } catch (SQLException e) {
             throw new DaoException("dao: get group by id method failed: " + e.getMessage());
         }

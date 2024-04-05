@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static java.time.LocalDate.of;
 import static java.util.Arrays.asList;
@@ -171,7 +172,7 @@ class AccountServiceImplTest {
             String originalName = "John";
             String newName = "Robert";
             Account accountOriginal = new Account.Builder().id(validAccountId).firstName(originalName).build();
-            when(accountDao.getById(validAccountId)).thenReturn(accountOriginal);
+            when(accountDao.getById(validAccountId)).thenReturn(Optional.of(accountOriginal));
             Account accountChanged = new Account.Builder(accountOriginal).firstName(newName).build();
             when(accountDao.updateById(validAccountId, accountChanged)).thenReturn(true);
             assertTrue(accountService.updateFirstName(validAccountId, newName));
@@ -206,7 +207,7 @@ class AccountServiceImplTest {
             String originalLastName = "Ivanov";
             String newLastName = "Petrov";
             Account accountOriginal = new Account.Builder().id(validAccountId).lastName(originalLastName).build();
-            when(accountDao.getById(validAccountId)).thenReturn(accountOriginal);
+            when(accountDao.getById(validAccountId)).thenReturn(Optional.of(accountOriginal));
             Account accountChanged = new Account.Builder(accountOriginal).lastName(newLastName).build();
             when(accountDao.updateById(validAccountId, accountChanged)).thenReturn(true);
             assertTrue(accountService.updateAccountLastName(validAccountId, newLastName));
@@ -241,7 +242,7 @@ class AccountServiceImplTest {
             String originalMiddleName = "Ivanovich";
             String newMiddleName = "Petrovich";
             Account accountOriginal = new Account.Builder().id(validAccountId).middleName(originalMiddleName).build();
-            when(accountDao.getById(validAccountId)).thenReturn(accountOriginal);
+            when(accountDao.getById(validAccountId)).thenReturn(Optional.of(accountOriginal));
             Account accountChanged = new Account.Builder(accountOriginal).middleName(newMiddleName).build();
             when(accountDao.updateById(validAccountId, accountChanged)).thenReturn(true);
             assertTrue(accountService.updateAccountMiddleName(validAccountId, newMiddleName));
@@ -277,7 +278,7 @@ class AccountServiceImplTest {
         void successfulBirthDateUpdating() {
             LocalDate newBirthDate = of(2000, 2, 24);
             Account accountOriginal = new Account.Builder().id(validAccountId).birthDate(validAccountBirthDate).build();
-            when(accountDao.getById(validAccountId)).thenReturn(accountOriginal);
+            when(accountDao.getById(validAccountId)).thenReturn(Optional.of(accountOriginal));
             Account accountChanged = new Account.Builder(accountOriginal).birthDate(newBirthDate).build();
             when(accountDao.updateById(validAccountId, accountChanged)).thenReturn(true);
             assertTrue(accountService.updateAccountBirthDate(validAccountId, newBirthDate));
@@ -387,7 +388,7 @@ class AccountServiceImplTest {
             String originalWorkAddress = "work_old";
             String newWorkAddress = "work_new";
             Account accountOriginal = new Account.Builder().id(validAccountId).workAddress(originalWorkAddress).build();
-            when(accountDao.getById(validAccountId)).thenReturn(accountOriginal);
+            when(accountDao.getById(validAccountId)).thenReturn(Optional.of(accountOriginal));
             Account accountChanged = new Account.Builder(accountOriginal).workAddress(newWorkAddress).build();
             when(accountDao.updateById(validAccountId, accountChanged)).thenReturn(true);
             assertTrue(accountService.updateAccountWorkAddress(validAccountId, newWorkAddress));
@@ -423,7 +424,7 @@ class AccountServiceImplTest {
             String newWorkAddress = "work_new";
             Account accountOriginal = new Account.Builder().id(validAccountId).personalAddress(originalWorkAddress)
                     .build();
-            when(accountDao.getById(validAccountId)).thenReturn(accountOriginal);
+            when(accountDao.getById(validAccountId)).thenReturn(Optional.of(accountOriginal));
             Account accountChanged = new Account.Builder(accountOriginal).personalAddress(newWorkAddress).build();
             when(accountDao.updateById(validAccountId, accountChanged)).thenReturn(true);
             assertTrue(accountService.updateAccountPersonalAddress(validAccountId, newWorkAddress));
@@ -458,7 +459,7 @@ class AccountServiceImplTest {
             String originalEmail = "email_old";
             String newEmail = "email_new";
             Account accountOriginal = new Account.Builder().id(validAccountId).email(originalEmail).build();
-            when(accountDao.getById(validAccountId)).thenReturn(accountOriginal);
+            when(accountDao.getById(validAccountId)).thenReturn(Optional.of(accountOriginal));
             Account accountChanged = new Account.Builder(accountOriginal).email(newEmail).build();
             when(accountDao.updateById(validAccountId, accountChanged)).thenReturn(true);
             assertTrue(accountService.updateAccountEmail(validAccountId, newEmail));
@@ -493,7 +494,7 @@ class AccountServiceImplTest {
             String originalIcq = "icq_old";
             String newIcq = "icq_new";
             Account accountOriginal = new Account.Builder().id(validAccountId).icq(originalIcq).build();
-            when(accountDao.getById(validAccountId)).thenReturn(accountOriginal);
+            when(accountDao.getById(validAccountId)).thenReturn(Optional.of(accountOriginal));
             Account accountChanged = new Account.Builder(accountOriginal).icq(newIcq).build();
             when(accountDao.updateById(validAccountId, accountChanged)).thenReturn(true);
             assertTrue(accountService.updateAccountIcq(validAccountId, newIcq));
@@ -528,7 +529,7 @@ class AccountServiceImplTest {
             String originalSkype = "skype_old";
             String newSkype = "skype_new";
             Account accountOriginal = new Account.Builder().id(validAccountId).skype(originalSkype).build();
-            when(accountDao.getById(validAccountId)).thenReturn(accountOriginal);
+            when(accountDao.getById(validAccountId)).thenReturn(Optional.of(accountOriginal));
             Account accountChanged = new Account.Builder(accountOriginal).skype(newSkype).build();
             when(accountDao.updateById(validAccountId, accountChanged)).thenReturn(true);
             assertTrue(accountService.updateAccountSkype(validAccountId, newSkype));
@@ -563,7 +564,7 @@ class AccountServiceImplTest {
             String originalAdditionalInfo = "additional_info_old";
             String newAdditionalInfo = "additional_info_new";
             Account accountOriginal = new Account.Builder().id(validAccountId).additionalInfo(originalAdditionalInfo).build();
-            when(accountDao.getById(validAccountId)).thenReturn(accountOriginal);
+            when(accountDao.getById(validAccountId)).thenReturn(Optional.of(accountOriginal));
             Account accountChanged = new Account.Builder(accountOriginal).additionalInfo(newAdditionalInfo).build();
             when(accountDao.updateById(validAccountId, accountChanged)).thenReturn(true);
             assertTrue(accountService.updateAccountAdditionalInfo(validAccountId, newAdditionalInfo));
@@ -596,7 +597,7 @@ class AccountServiceImplTest {
 
         @Test
         void successfulAccountDeleting() {
-            when(accountDao.getById(validAccountId)).thenReturn(TEST_ACCOUNT);
+            when(accountDao.getById(validAccountId)).thenReturn(Optional.of(TEST_ACCOUNT));
             when(accountDao.deleteById(validAccountId)).thenReturn(true);
             assertTrue(accountService.deleteAccount(validAccountId));
         }
@@ -649,7 +650,7 @@ class AccountServiceImplTest {
 
         @Test
         void whenAccepterAccountIsNotExisted() {
-            when(accountDao.getById(requesterId)).thenReturn(TEST_ACCOUNT);
+            when(accountDao.getById(requesterId)).thenReturn(Optional.of(TEST_ACCOUNT));
             when(accountDao.getById(accepterId)).thenThrow(DaoException.class);
             Throwable exception = assertThrows(DaoException.class, () -> {
                 accountService.addFriend(requesterId, accepterId);
@@ -736,7 +737,7 @@ class AccountServiceImplTest {
 
         @Test
         void whenDeletingFriendAccountIsNotExisted() {
-            when(accountDao.getById(validAccountId)).thenReturn(TEST_ACCOUNT);
+            when(accountDao.getById(validAccountId)).thenReturn(Optional.of(TEST_ACCOUNT));
             when(accountDao.getById(deletingFriendId)).thenThrow(DaoException.class);
             Throwable exception = assertThrows(DaoException.class, () -> {
                 accountService.deleteFriend(validAccountId, deletingFriendId);
@@ -782,7 +783,7 @@ class AccountServiceImplTest {
             friends.add(1L);
             friends.add(2L);
             when(friendshipDao.getFriendsIds(validAccountId)).thenReturn(friends);
-            when(accountDao.getById(anyLong())).thenReturn(TEST_ACCOUNT);
+            when(accountDao.getById(anyLong())).thenReturn(Optional.of(TEST_ACCOUNT));
             assertEquals(2, accountService.getFriends(validAccountId).size());
         }
 
