@@ -11,6 +11,7 @@ import java.util.Optional;
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.LoginService.getLoginServiceInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.PasswordServiceImpl.getPasswordServiceInstance;
 import static java.util.Objects.isNull;
+import static java.util.concurrent.TimeUnit.HOURS;
 
 public class LoginVerificationServlet extends HttpServlet {
 
@@ -18,7 +19,7 @@ public class LoginVerificationServlet extends HttpServlet {
     private final PasswordService passwordService = getPasswordServiceInstance();
     private static final String LOGIN_COOKIE_NAME = "login";
     private static final String PASSWORD_COOKIE_NAME = "password";
-    private static final int LOGIN_CREDENTIAL_COOKIES_LIFETIME = 3600;
+    private static final int REMEMBER_ME_COOKIE_LIFETIME = (int) HOURS.toSeconds(1);
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -38,12 +39,14 @@ public class LoginVerificationServlet extends HttpServlet {
     }
 
     private void createRememberMeCookies(Account account, HttpServletResponse resp) {
-        Cookie loginCookie = new Cookie(LOGIN_COOKIE_NAME, account.getEmail());
-        loginCookie.setMaxAge(LOGIN_CREDENTIAL_COOKIES_LIFETIME);
-        Cookie passwordCookie = new Cookie(PASSWORD_COOKIE_NAME, passwordService.get(account).getPassword());
-        passwordCookie.setMaxAge(LOGIN_CREDENTIAL_COOKIES_LIFETIME);
-        resp.addCookie(loginCookie);
-        resp.addCookie(passwordCookie);
+        prepareCookie(resp, LOGIN_COOKIE_NAME, account.getEmail());
+        prepareCookie(resp, PASSWORD_COOKIE_NAME, passwordService.get(account).getPassword());
+    }
+
+    private void prepareCookie(HttpServletResponse resp, String cookieName, String cookieValue) {
+        Cookie cookie = new Cookie(cookieName, cookieValue);
+        cookie.setMaxAge(REMEMBER_ME_COOKIE_LIFETIME);
+        resp.addCookie(cookie);
     }
 
 }

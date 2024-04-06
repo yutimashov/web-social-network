@@ -30,9 +30,9 @@ public class PhoneDaoImpl implements PhoneDao {
     }
 
     @Override
-    public Long create(Long accountId, Phone phone) {
+    public Long create(Phone phone) {
         try (PreparedStatement createPhoneStatement = getPreparedStatementWithGeneratedKeys(CREATE_PHONE)) {
-            setPhoneData(accountId, phone, createPhoneStatement);
+            setPhoneData(phone, createPhoneStatement);
             if (createPhoneStatement.executeUpdate() > 0) {
                 ResultSet generatedKeys = createPhoneStatement.getGeneratedKeys();
                 if (generatedKeys.next()) {
@@ -45,6 +45,12 @@ public class PhoneDaoImpl implements PhoneDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void setPhoneData(Phone phone, PreparedStatement preparedStatement) throws SQLException {
+        preparedStatement.setLong(1, phone.getAccountId());
+        preparedStatement.setObject(2, phone.getPhoneType().name());
+        preparedStatement.setString(3, phone.getNumber());
     }
 
     @Override
@@ -65,12 +71,6 @@ public class PhoneDaoImpl implements PhoneDao {
             throw new DaoException("dao: get phone failed: " + e.getMessage());
         }
         return phones;
-    }
-
-    private void setPhoneData(Long accountId, Phone phone, PreparedStatement preparedStatement) throws SQLException {
-        preparedStatement.setLong(1, accountId);
-        preparedStatement.setObject(2, phone.getPhoneType().name());
-        preparedStatement.setString(3, phone.getNumber());
     }
 
     @Override

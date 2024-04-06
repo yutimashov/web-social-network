@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface PhoneDao {
 
-    Long create(Long accountId, Phone phone);
+    Long create(Phone phone);
 
     boolean delete();
 

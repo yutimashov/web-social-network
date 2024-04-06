@@ -22,8 +22,7 @@ public class PhoneServiceImpl {
     public void createPhone(Long accountId, String phoneNumbers, PhoneType phoneType) {
         String[] phoneNumbersSeparated = phoneNumbers.split(",");
         for (String phoneNumber : phoneNumbersSeparated) {
-            Phone phone = new Phone(phoneType, phoneNumber, accountId);
-            phoneDao.create(accountId, phone);
+            phoneDao.create(new Phone(phoneType, phoneNumber, accountId));
         }
     }
     
