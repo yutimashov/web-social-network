@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static java.util.Objects.isNull;
+
 public class LogoutServlet extends HttpServlet {
 
     private static final int EXPIRATION_COOKIE_TIME = 0;
@@ -19,7 +21,7 @@ public class LogoutServlet extends HttpServlet {
 
     private void invalidateCookies(HttpServletRequest req, HttpServletResponse resp) {
         Cookie[] cookies = req.getCookies();
-        if (cookies != null) {
+        if (!isNull(cookies)) {
             for (Cookie cookie : cookies) {
                 cookie.setMaxAge(EXPIRATION_COOKIE_TIME);
                 resp.addCookie(cookie);
