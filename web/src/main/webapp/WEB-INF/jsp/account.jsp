@@ -49,7 +49,7 @@
     <hr>
     <p>Other information: ${requestScope.account.additionalInfo}</p>
     <hr>
-    <c:if test="${sessionScope.account.id == param.id || sessionScope.account.role == 'ADMIN'}">
+    <c:if test="${sessionScope.account.id eq param.id || sessionScope.account.role eq 'ADMIN'}">
         <a href="${pageContext.request.contextPath}/edit-account?id=${param.id}">
             <button>Edit account</button>
         </a>
@@ -58,7 +58,7 @@
             <button>Delete account</button>
         </a>
     </c:if>
-    <c:if test="${sessionScope.account.role == 'ADMIN' && requestScope.account.role == 'REGULAR'}">
+    <c:if test="${sessionScope.account.role eq 'ADMIN' && requestScope.account.role eq 'REGULAR'}">
         <a href="${pageContext.request.contextPath}/make-admin?id=${param.id}">
             <button>Make admin</button>
         </a>
