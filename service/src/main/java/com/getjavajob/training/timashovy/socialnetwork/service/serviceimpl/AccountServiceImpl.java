@@ -261,7 +261,6 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public List<Account> getFriends(Long accountId) {
         validateAccountId(accountId);
-        validateAccountId(accountId);
         List<Long> friendsId = friendshipDao.getFriendsIds(accountId);
         List<Account> friends = new ArrayList<>();
         for (Long friendId : friendsId) {
@@ -274,8 +273,15 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public List<Account> getFriendsRequests(Long accountId) {
-        //TODO: implement method!
-        return null;
+        validateAccountId(accountId);
+        List<Long> friendRequestsId = friendshipDao.getFriendRequests(accountId);
+        List<Account> followers = new ArrayList<>();
+        for (Long followerId : friendRequestsId) {
+            if (accountDao.getById(followerId).isPresent()) {
+                followers.add(accountDao.getById(followerId).get());
+            }
+        }
+        return followers;
     }
 
 }

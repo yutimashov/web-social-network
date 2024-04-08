@@ -111,7 +111,7 @@
 
     <servlet>
         <servlet-name>Friend Requests</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.AccountFriendsServlet
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.AccountFriendsRequestsServlet
         </servlet-class>
     </servlet>
     <servlet-mapping>
@@ -119,10 +119,12 @@
         <url-pattern>/friends-requests</url-pattern>
     </servlet-mapping>
 
+    <!-- session config -->
     <session-config>
         <session-timeout>10</session-timeout>
     </session-config>
 
+    <!-- filters -->
     <filter>
         <filter-name>Remember Me</filter-name>
         <filter-class>com.getjavajob.training.timashovy.socialnetwork.web.filters.RememberMeFilter</filter-class>

@@ -18,7 +18,7 @@ public class AccountFriendsRequestsServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("friends-requests", accountService.getFriendsRequests(valueOf(req.getParameter("id"))));
+        req.setAttribute("friendRequests", accountService.getFriendsRequests(valueOf(req.getParameter("id"))));
         req.getRequestDispatcher(getJspPagePath("friends-requests")).forward(req, resp);
     }
 
