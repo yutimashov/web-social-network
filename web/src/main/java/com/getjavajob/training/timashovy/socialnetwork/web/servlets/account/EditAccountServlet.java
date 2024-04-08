@@ -14,6 +14,7 @@ import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimp
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AvatarServiceImpl.getAvatarServiceInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 import static java.lang.Long.valueOf;
+import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 
 public class EditAccountServlet extends HttpServlet {
 
@@ -30,9 +31,13 @@ public class EditAccountServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long accountId = valueOf(req.getParameter("id"));
-        req.setAttribute("account", accountService.getAccountById(accountId));
-        req.setAttribute("avatarInputStream", avatarService.get(accountId));
-        req.getRequestDispatcher(getJspPagePath("account-edit")).forward(req, resp);
+        if (accountService.getAccountById(accountId).isPresent()) {
+            req.setAttribute("account", accountService.getAccountById(accountId).get());
+            req.setAttribute("avatarInputStream", avatarService.get(accountId));
+            req.getRequestDispatcher(getJspPagePath("account-edit")).forward(req, resp);
+        } else {
+            req.getRequestDispatcher("/WEB-INF/jsp/error/404.jsp").forward(req, resp);
+        }
     }
 
     @Override
