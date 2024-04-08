@@ -119,6 +119,26 @@
         <url-pattern>/friends-requests</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>Send Friend Request</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.SendFriendRequestServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Send Friend Request</servlet-name>
+        <url-pattern>/send-friend-request</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Delete Friend</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.DeleteFriendServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Delete Friend</servlet-name>
+        <url-pattern>/delete-friend</url-pattern>
+    </servlet-mapping>
+
     <!-- session config -->
     <session-config>
         <session-timeout>10</session-timeout>

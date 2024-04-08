@@ -19,7 +19,8 @@ public class FriendshipDaoImpl implements FriendshipDao {
     private static final String GET_FRIENDS = "SELECT id_1 FROM friend_data.friendship WHERE id_2 = ? "
             + "AND status = TRUE UNION SELECT id_2 FROM friend_data.friendship WHERE id_1 = ? AND status = TRUE;";
     private static final String DELETE_FRIEND = "DELETE FROM friend_data.friendship WHERE id_1 = ? AND id_2 = ?;";
-    private static final String SEND_FRIEND_REQUEST = "INSERT INTO friend_data.friendship (id_1, id_2) VALUES(?, ?);";
+    private static final String SEND_FRIEND_REQUEST = "INSERT INTO friend_data.friendship (id_1, id_2, requester_id, " +
+            "accepter_id) VALUES(?, ?, ?, ?);";
     private static final String GET_FRIEND_REQUESTS = "SELECT requester_id FROM friend_data.friendship WHERE " +
             "status = FALSE AND accepter_id = ?;";
 
@@ -46,9 +47,13 @@ public class FriendshipDaoImpl implements FriendshipDao {
             if (requesterId < accepterId) {
                 friendshipRequest.setLong(1, requesterId);
                 friendshipRequest.setLong(2, accepterId);
+                friendshipRequest.setLong(3, requesterId);
+                friendshipRequest.setLong(4, accepterId);
             } else {
                 friendshipRequest.setLong(1, accepterId);
                 friendshipRequest.setLong(2, requesterId);
+                friendshipRequest.setLong(3, requesterId);
+                friendshipRequest.setLong(4, accepterId);
             }
             return friendshipRequest.executeUpdate() > 0;
         } catch (SQLException e) {

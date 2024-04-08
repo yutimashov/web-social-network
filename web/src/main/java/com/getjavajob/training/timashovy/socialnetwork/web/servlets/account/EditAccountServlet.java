@@ -14,7 +14,6 @@ import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimp
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AvatarServiceImpl.getAvatarServiceInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 import static java.lang.Long.valueOf;
-import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 
 public class EditAccountServlet extends HttpServlet {
 

@@ -9,7 +9,10 @@
 <p>Account has ${requestScope.friends.size()} friends</p>
 <c:forEach items="${requestScope.friends}" var="account">
     <a href="${pageContext.request.contextPath}/account?id=${account.id}">${account.firstName} ${account.lastName}</a>
-    <br>
+    <a href="${pageContext.request.contextPath}/delete-friend?id=${account.id}">
+        <button>Delete friendship</button>
+    </a>
+    <hr>
 </c:forEach>
 </body>
 </html>

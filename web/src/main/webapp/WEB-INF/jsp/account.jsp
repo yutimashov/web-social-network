@@ -15,6 +15,11 @@
             <button>Friend requests</button>
         </a>
     </c:if>
+    <c:if test="${sessionScope.account.id != param.id}">
+        <a href="${pageContext.request.contextPath}/send-friend-request?id=${param.id}">
+            <button>Send friend request</button>
+        </a>
+    </c:if>
     <p>Profile avatar:</p>
     <c:if test="${requestScope.avatarInputStream != null}">
         <img src="${pageContext.request.contextPath}/avatar?id=${requestScope.account.id}" alt="Profile avatar"

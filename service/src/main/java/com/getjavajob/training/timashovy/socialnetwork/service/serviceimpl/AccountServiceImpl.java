@@ -252,9 +252,6 @@ public class AccountServiceImpl implements AccountService {
     public boolean deleteFriend(Long accountId, Long deletingFriendId) {
         validateAccountId(accountId);
         validateAccountId(deletingFriendId);
-        if (accountId.equals(deletingFriendId)) {
-            throw new IllegalArgumentException("Account cannot delete themselves from friends list");
-        }
         return friendshipDao.deleteFriend(accountId, deletingFriendId);
     }
 
