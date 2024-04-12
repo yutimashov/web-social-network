@@ -34,4 +34,6 @@ public interface AccountService {
 
     List<Account> getIncomingFriendRequests(Long accountId);
 
+    List<Account> getOutgoingFriendRequests(Long accountId);
+
 }

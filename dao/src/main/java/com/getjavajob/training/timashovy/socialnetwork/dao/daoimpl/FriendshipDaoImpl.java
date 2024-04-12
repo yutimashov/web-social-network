@@ -23,6 +23,8 @@ public class FriendshipDaoImpl implements FriendshipDao {
             "accepter_id) VALUES(?, ?, ?, ?);";
     private static final String GET_INCOMING_FRIEND_REQUESTS = "SELECT requester_id FROM friend_data.friendship " +
             "WHERE status = FALSE AND accepter_id = ?;";
+    private static final String GET_OUTGOING_FRIEND_REQUESTS = "SELECT accepter_id FROM friend_data.friendship " +
+            "WHERE status = FALSE AND requester_id = ?;";
 
     private FriendshipDaoImpl() {
     }
@@ -105,7 +107,22 @@ public class FriendshipDaoImpl implements FriendshipDao {
             }
             return friendRequests;
         } catch (SQLException e) {
-            throw new DaoException("dao: getFriendRequests method failed: " + e.getMessage());
+            throw new DaoException("dao: getIncomingFriendRequests method failed: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public List<Long> getOutgoingFriendRequests(Long accountId) {
+        try (PreparedStatement getFriendRequests = getPreparedStatement(GET_OUTGOING_FRIEND_REQUESTS)) {
+            List<Long> friendRequests = new ArrayList<>();
+            getFriendRequests.setLong(1, accountId);
+            ResultSet friendRequestsResult = getFriendRequests.executeQuery();
+            while (friendRequestsResult.next()) {
+                friendRequests.add(friendRequestsResult.getLong(1));
+            }
+            return friendRequests;
+        } catch (SQLException e) {
+            throw new DaoException("dao: getOutgoingFriendRequests method failed: " + e.getMessage());
         }
     }
 

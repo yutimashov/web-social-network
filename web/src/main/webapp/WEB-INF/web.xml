@@ -129,6 +129,16 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>Outgoing Friend Requests</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.OutgoingFriendRequestServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Outgoing Friend Requests</servlet-name>
+        <url-pattern>/outgoing-friend-requests</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>Send Friend Request</servlet-name>
         <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.SendFriendRequestServlet
         </servlet-class>

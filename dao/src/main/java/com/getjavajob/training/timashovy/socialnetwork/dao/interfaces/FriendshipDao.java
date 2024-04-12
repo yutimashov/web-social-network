@@ -14,4 +14,6 @@ public interface FriendshipDao {
 
     List<Long> getIncomingFriendRequests(Long accountId);
 
+    List<Long> getOutgoingFriendRequests(Long accountId);
+
 }
