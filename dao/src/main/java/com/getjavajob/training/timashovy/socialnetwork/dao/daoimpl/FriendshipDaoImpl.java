@@ -119,8 +119,13 @@ public class FriendshipDaoImpl implements FriendshipDao {
     @Override
     public boolean deleteFriend(Long accountId, Long deletingFriendId) {
         try (PreparedStatement deleteFriend = getPreparedStatement(DELETE_FRIEND)) {
-            deleteFriend.setLong(1, accountId);
-            deleteFriend.setLong(2, deletingFriendId);
+            if (accountId < deletingFriendId) {
+                deleteFriend.setLong(1, accountId);
+                deleteFriend.setLong(2, deletingFriendId);
+            } else {
+                deleteFriend.setLong(1, deletingFriendId);
+                deleteFriend.setLong(2, accountId);
+            }
             return deleteFriend.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DaoException("dao: delete friend method failed: " + e.getMessage());
