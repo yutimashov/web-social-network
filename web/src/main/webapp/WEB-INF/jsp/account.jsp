@@ -7,7 +7,7 @@
 <body>
 <jsp:include page="/WEB-INF/jsp/header.jsp"/>
 <div>
-    <a href="${pageContext.request.contextPath}/friends">
+    <a href="${pageContext.request.contextPath}/friends?id=${param.id}">
         <button>Friends list</button>
     </a>
     <c:if test="${sessionScope.account.id == param.id}">
@@ -21,7 +21,7 @@
     <p>Profile avatar:</p>
     <c:if test="${requestScope.avatarInputStream != null}">
         <img src="${pageContext.request.contextPath}/avatar?id=${requestScope.account.id}" alt="Profile avatar"
-             width="250px" height="250px">
+        width="250px" height="250px">
     </c:if>
     <hr>
     <p>First name: ${requestScope.account.firstName}</p>
