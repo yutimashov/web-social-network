@@ -265,9 +265,9 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<Account> getFriendsRequests(Long accountId) {
+    public List<Account> getIncomingFriendRequests(Long accountId) {
         validateAccountId(accountId);
-        List<Long> friendRequestsId = friendshipDao.getFriendRequests(accountId);
+        List<Long> friendRequestsId = friendshipDao.getIncomingFriendRequests(accountId);
         List<Account> followers = new ArrayList<>();
         for (Long followerId : friendRequestsId) {
             if (accountDao.getById(followerId).isPresent()) {

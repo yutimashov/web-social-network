@@ -21,8 +21,8 @@ public class FriendshipDaoImpl implements FriendshipDao {
     private static final String DELETE_FRIEND = "DELETE FROM friend_data.friendship WHERE id_1 = ? AND id_2 = ?;";
     private static final String SEND_FRIEND_REQUEST = "INSERT INTO friend_data.friendship (id_1, id_2, requester_id, " +
             "accepter_id) VALUES(?, ?, ?, ?);";
-    private static final String GET_FRIEND_REQUESTS = "SELECT requester_id FROM friend_data.friendship WHERE " +
-            "status = FALSE AND accepter_id = ?;";
+    private static final String GET_INCOMING_FRIEND_REQUESTS = "SELECT requester_id FROM friend_data.friendship " +
+            "WHERE status = FALSE AND accepter_id = ?;";
 
     private FriendshipDaoImpl() {
     }
@@ -95,8 +95,8 @@ public class FriendshipDaoImpl implements FriendshipDao {
     }
 
     @Override
-    public List<Long> getFriendRequests(Long accountId) {
-        try (PreparedStatement getFriendRequests = getPreparedStatement(GET_FRIEND_REQUESTS)) {
+    public List<Long> getIncomingFriendRequests(Long accountId) {
+        try (PreparedStatement getFriendRequests = getPreparedStatement(GET_INCOMING_FRIEND_REQUESTS)) {
             List<Long> friendRequests = new ArrayList<>();
             getFriendRequests.setLong(1, accountId);
             ResultSet friendRequestsResult = getFriendRequests.executeQuery();

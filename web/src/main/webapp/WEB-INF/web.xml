@@ -111,12 +111,21 @@
 
     <servlet>
         <servlet-name>Friend Requests</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.AccountFriendsRequestsServlet
-        </servlet-class>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.FriendRequestsServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Friend Requests</servlet-name>
-        <url-pattern>/friends-requests</url-pattern>
+        <url-pattern>/friend-requests</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Incoming Friend Requests</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.IncomingFriendsRequestsServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Incoming Friend Requests</servlet-name>
+        <url-pattern>/incoming-friend-requests</url-pattern>
     </servlet-mapping>
 
     <servlet>
