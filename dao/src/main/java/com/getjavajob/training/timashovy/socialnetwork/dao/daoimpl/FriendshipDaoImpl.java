@@ -15,7 +15,7 @@ public class FriendshipDaoImpl implements FriendshipDao {
 
     private static final FriendshipDaoImpl FRIENDSHIP_DAO_INSTANCE = new FriendshipDaoImpl();
     private static final String ACCEPT_FRIEND_REQUEST = "UPDATE friend_data.friendship SET status = TRUE "
-            + "WHERE id_1 = ? AND id_2 = ?;";
+            + "WHERE accepter_id = ? AND requester_id = ?;";
     private static final String GET_FRIENDS = "SELECT id_1 FROM friend_data.friendship WHERE id_2 = ? "
             + "AND status = TRUE UNION SELECT id_2 FROM friend_data.friendship WHERE id_1 = ? AND status = TRUE;";
     private static final String DELETE_FRIEND = "DELETE FROM friend_data.friendship WHERE id_1 = ? AND id_2 = ?;";
@@ -63,15 +63,10 @@ public class FriendshipDaoImpl implements FriendshipDao {
 
     @Override
     public boolean acceptFriendRequest(Long requesterId, Long accepterId) {
-        try (PreparedStatement addFriend = getPreparedStatement(ACCEPT_FRIEND_REQUEST)) {
-            if (requesterId < accepterId) {
-                addFriend.setLong(1, requesterId);
-                addFriend.setLong(2, accepterId);
-            } else {
-                addFriend.setLong(1, accepterId);
-                addFriend.setLong(2, requesterId);
-            }
-            return addFriend.executeUpdate() > 0;
+        try (PreparedStatement acceptFriendRequest = getPreparedStatement(ACCEPT_FRIEND_REQUEST)) {
+            acceptFriendRequest.setLong(1, accepterId);
+            acceptFriendRequest.setLong(2, requesterId);
+            return acceptFriendRequest.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DaoException("dao: acceptFriendRequest method failed: " + e.getMessage());
         }

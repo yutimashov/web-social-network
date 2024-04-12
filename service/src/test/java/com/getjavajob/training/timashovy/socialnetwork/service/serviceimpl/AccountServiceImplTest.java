@@ -673,23 +673,6 @@ class AccountServiceImplTest {
             assertFalse(accountService.addFriend(requesterId, accepterId));
         }
 
-        @Test
-        void whenAccountsTriesDuplicateAlreadyExistedFriendRequest() {
-            when(friendshipChecker.checkFriendshipRecordExistence(requesterId, accepterId)).thenReturn(true);
-            when(friendshipChecker.checkUsersAreFriends(requesterId, accepterId)).thenReturn(false);
-            when(friendshipChecker.checkFriendRequestAlreadyExist(requesterId, accepterId)).thenReturn(true);
-            assertFalse(accountService.addFriend(requesterId, accepterId));
-        }
-
-        @Test
-        void whenAccountAcceptFriendRequest() {
-            when(friendshipChecker.checkFriendshipRecordExistence(requesterId, accepterId)).thenReturn(true);
-            when(friendshipChecker.checkUsersAreFriends(requesterId, accepterId)).thenReturn(false);
-            when(friendshipChecker.checkFriendRequestAlreadyExist(requesterId, accepterId)).thenReturn(false);
-            when(friendshipDao.acceptFriendRequest(requesterId, accepterId)).thenReturn(true);
-            assertTrue(accountService.addFriend(requesterId, accepterId));
-        }
-
     }
 
     @Nested

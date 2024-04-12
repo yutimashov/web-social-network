@@ -139,6 +139,16 @@
         <url-pattern>/delete-friend</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>Accept Friend Request</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.AcceptFriendRequestServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Accept Friend Request</servlet-name>
+        <url-pattern>/accept-friend-request</url-pattern>
+    </servlet-mapping>
+
     <!-- session config -->
     <session-config>
         <session-timeout>10</session-timeout>

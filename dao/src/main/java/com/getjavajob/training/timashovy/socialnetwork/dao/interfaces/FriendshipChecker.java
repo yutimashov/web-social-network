@@ -6,6 +6,4 @@ public interface FriendshipChecker {
 
     boolean checkUsersAreFriends(Long requesterId, Long accepterId);
 
-    boolean checkFriendRequestAlreadyExist(Long requesterId, Long accepterId);
-
 }

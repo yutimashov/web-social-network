@@ -78,25 +78,4 @@ class FriendshipCheckerImplTest {
 
     }
 
-    @Nested
-    @DisplayName("boolean checkFriendRequestAlreadyExist(Long requesterId, Long accepterId)")
-    class TestFriendRequestAlreadyExist {
-
-        @Test
-        void whenFriendRequestAlreadyExistRequesterIdLessThanAccepterId() {
-            assertTrue(FRIENDSHIP_CHECKER_INSTANCE.checkFriendRequestAlreadyExist(3L, 4L));
-        }
-
-        @Test
-        void whenFriendRequestAlreadyExistRequesterIdGreaterThanAccepterId() {
-            assertTrue(FRIENDSHIP_CHECKER_INSTANCE.checkFriendRequestAlreadyExist(4L, 3L));
-        }
-
-        @Test
-        void whenFriendRequestIsNotExisted() {
-            assertFalse(FRIENDSHIP_CHECKER_INSTANCE.checkFriendRequestAlreadyExist(-1L, 1L));
-        }
-
-    }
-
 }

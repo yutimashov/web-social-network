@@ -16,8 +16,6 @@ public class FriendshipCheckerImpl implements FriendshipChecker {
             + "AND id_2 = ?;";
     private static final String ARE_USERS_FRIENDS = "SELECT 1 FROM friend_data.friendship WHERE id_1 = ? AND id_2 = ? "
             + "AND status = TRUE;";
-    private static final String REQUESTERS_EQUALITY = "SELECT 1 FROM friend_data.friendship WHERE ? = requester_id "
-            + "AND ? = accepter_id;";
 
     private FriendshipCheckerImpl() {
     }
@@ -29,7 +27,7 @@ public class FriendshipCheckerImpl implements FriendshipChecker {
     @Override
     public boolean checkFriendshipRecordExistence(Long requesterId, Long accepterId) {
         try (PreparedStatement friendshipExistence = getPreparedStatement(FRIENDSHIP_RECORD_EXISTENCE)) {
-            return followConstraintReqIdIsLessThanAcceptId(requesterId, accepterId, friendshipExistence);
+            return verifyOrderOfAccountIdsInQuery(requesterId, accepterId, friendshipExistence);
         } catch (SQLException e) {
             throw new DaoException("dao: friendship record existence method failed: " + e.getMessage());
         }
@@ -38,14 +36,14 @@ public class FriendshipCheckerImpl implements FriendshipChecker {
     @Override
     public boolean checkUsersAreFriends(Long requesterId, Long accepterId) {
         try (PreparedStatement checkFriends = getPreparedStatement(ARE_USERS_FRIENDS)) {
-            return followConstraintReqIdIsLessThanAcceptId(requesterId, accepterId, checkFriends);
+            return verifyOrderOfAccountIdsInQuery(requesterId, accepterId, checkFriends);
         } catch (SQLException e) {
             throw new DaoException("dao: areUsersFriends method failed: " + e.getMessage());
         }
     }
 
-    private boolean followConstraintReqIdIsLessThanAcceptId(Long requesterId, Long accepterId,
-                                                            PreparedStatement checkFriends) throws SQLException {
+    private boolean verifyOrderOfAccountIdsInQuery(Long requesterId, Long accepterId,
+                                                   PreparedStatement checkFriends) throws SQLException {
         if (requesterId < accepterId) {
             checkFriends.setLong(1, requesterId);
             checkFriends.setLong(2, accepterId);
@@ -55,15 +53,6 @@ public class FriendshipCheckerImpl implements FriendshipChecker {
         }
         ResultSet resultSet = checkFriends.executeQuery();
         return resultSet.next();
-    }
-
-    @Override
-    public boolean checkFriendRequestAlreadyExist(Long requesterId, Long accepterId) {
-        try (PreparedStatement checkFriendRequest = getPreparedStatement(REQUESTERS_EQUALITY)) {
-            return followConstraintReqIdIsLessThanAcceptId(requesterId, accepterId, checkFriendRequest);
-        } catch (SQLException e) {
-            throw new DaoException("dao: checkFriendRequestAlreadyExist method failed: " + e.getMessage());
-        }
     }
 
 }

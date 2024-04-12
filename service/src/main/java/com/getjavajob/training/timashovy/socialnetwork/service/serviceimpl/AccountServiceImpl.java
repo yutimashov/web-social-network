@@ -241,11 +241,7 @@ public class AccountServiceImpl implements AccountService {
         if (friendshipChecker.checkUsersAreFriends(requesterId, accepterId)) {
             return false;
         }
-        if (friendshipChecker.checkFriendRequestAlreadyExist(requesterId, accepterId)) {
-            return false;
-        } else {
-            return friendshipDao.acceptFriendRequest(requesterId, accepterId);
-        }
+        return friendshipDao.acceptFriendRequest(requesterId, accepterId);
     }
 
     @Override

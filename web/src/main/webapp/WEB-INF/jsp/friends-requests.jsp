@@ -9,7 +9,10 @@
 <p>Account has ${requestScope.friendRequests.size()} friend requests</p>
 <c:forEach items="${requestScope.friendRequests}" var="account">
     <a href="${pageContext.request.contextPath}/account?id=${account.id}">${account.firstName} ${account.lastName}</a>
-    <br>
+    <span>&nbsp;&nbsp;</span>
+    <a href="${pageContext.request.contextPath}/accept-friend-request?id=${account.id}">
+        <button>Accept request</button>
+    </a>
 </c:forEach>
 </body>
 </html>
