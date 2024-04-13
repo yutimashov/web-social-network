@@ -203,6 +203,26 @@
         <url-pattern>/group/send-request</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>Group Info</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.GroupInfoServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Group Info</servlet-name>
+        <url-pattern>/group</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Group Avatar</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.GroupAvatarServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Group Avatar</servlet-name>
+        <url-pattern>/group-avatar</url-pattern>
+    </servlet-mapping>
+
     <!-- session config -->
     <session-config>
         <session-timeout>10</session-timeout>

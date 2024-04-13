@@ -5,6 +5,7 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.AccountGro
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupService;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.GroupDaoImpl.getGroupDaoInstance;
 
@@ -34,6 +35,11 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public boolean addUser(Long groupId, Long accountId) {
         return groupDaoInstance.addUser(groupId, accountId);
+    }
+
+    @Override
+    public Optional<Group> getById(Long groupId) {
+        return groupDaoInstance.getById(groupId);
     }
 
 }
