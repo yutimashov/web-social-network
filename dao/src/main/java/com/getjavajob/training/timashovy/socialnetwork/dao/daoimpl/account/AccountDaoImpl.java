@@ -179,4 +179,9 @@ public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraint
         }
     }
 
+    @Override
+    public boolean addUser(Long groupId, Long accountId) {
+        return false;
+    }
+
 }

@@ -8,9 +8,12 @@
 <jsp:include page="/WEB-INF/jsp/header.jsp"/>
 <p>There are ${requestScope.groups.size()} groups</p>
 <c:forEach items="${requestScope.groups}" var="group">
-    <%--  ${pageContext.request.contextPath}/group?id=${group.id}  --%>
+    <%-- ${pageContext.request.contextPath}/group?id=${group.id}   --%>
     <a href="#">${group.groupName}</a>
-    <span>${group.description}</span>
+    <span>&nbsp;&nbsp;${group.description}&nbsp;&nbsp;</span>
+    <a href="${pageContext.request.contextPath}/group/send-request?id=${group.id}">
+        <button>Send join request</button>
+    </a>
     <hr>
 </c:forEach>
 </body>

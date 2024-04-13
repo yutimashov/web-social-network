@@ -193,6 +193,16 @@
         <url-pattern>/group/all</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>Send Group Request</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.SendGroupRequestServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Send Group Request</servlet-name>
+        <url-pattern>/group/send-request</url-pattern>
+    </servlet-mapping>
+
     <!-- session config -->
     <session-config>
         <session-timeout>10</session-timeout>

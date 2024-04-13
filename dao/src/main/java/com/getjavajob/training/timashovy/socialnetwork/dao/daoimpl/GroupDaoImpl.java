@@ -30,6 +30,8 @@ public class GroupDaoImpl implements AccountGroupDao<Group>, TableConstraintsVal
     private static final String UPDATE_GROUP_BY_ID = "UPDATE group_data.\"group\" SET group_name = ?, description = ?,"
             + " owner_id = ? WHERE id = ?";
     private static final String DELETE_GROUP_BY_ID = "DELETE FROM group_data.\"group\" WHERE id = ?";
+    private static final String ADD_USER = "INSERT INTO group_data.group_members (account_id, group_id) " +
+            "VALUES(?, ?);";
 
     private GroupDaoImpl() {
     }
@@ -121,6 +123,17 @@ public class GroupDaoImpl implements AccountGroupDao<Group>, TableConstraintsVal
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DaoException("dao: delete group by id method failed: ", e);
+        }
+    }
+
+    @Override
+    public boolean addUser(Long groupId, Long accountId) {
+        try (PreparedStatement preparedStatement = getPreparedStatement(ADD_USER)) {
+            preparedStatement.setLong(1, accountId);
+            preparedStatement.setLong(2, groupId);
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new DaoException("dao: create group method failed: " + e.getMessage());
         }
     }
 

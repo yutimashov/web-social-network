@@ -20,4 +20,6 @@ public interface AccountGroupDao<T> {
 
     boolean deleteById(Long id);
 
+    boolean addUser(Long groupId, Long accountId);
+
 }

@@ -31,4 +31,9 @@ public class GroupServiceImpl implements GroupService {
         return groupDaoInstance.getAll();
     }
 
+    @Override
+    public boolean addUser(Long groupId, Long accountId) {
+        return groupDaoInstance.addUser(groupId, accountId);
+    }
+
 }

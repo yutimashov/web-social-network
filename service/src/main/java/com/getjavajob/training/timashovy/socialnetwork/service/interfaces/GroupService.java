@@ -8,5 +8,6 @@ public interface GroupService {
 
     Long createGroup(Group group);
     List<Group> listGroups();
+    boolean addUser(Long groupId, Long accountId);
 
 }
