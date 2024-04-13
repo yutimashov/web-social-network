@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountServiceImpl.getAccountServiceInstance;
-import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AvatarServiceImpl.getAvatarServiceInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountAvatarServiceImpl.getAccountAvatarServiceInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 import static java.lang.Long.valueOf;
 
@@ -21,7 +21,7 @@ public class AccountServlet extends HttpServlet {
         Long accountId = valueOf(req.getParameter("id"));
         if (getAccountServiceInstance().getAccountById(accountId).isPresent()) {
             Account account = getAccountServiceInstance().getAccountById(accountId).get();
-            InputStream avatarInputStream = getAvatarServiceInstance().get(accountId);
+            InputStream avatarInputStream = getAccountAvatarServiceInstance().get(accountId);
             req.setAttribute("account", account);
             req.setAttribute("avatarInputStream", avatarInputStream);
         }

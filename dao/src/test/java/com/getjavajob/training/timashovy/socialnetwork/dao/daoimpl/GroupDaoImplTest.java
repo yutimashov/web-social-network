@@ -19,13 +19,12 @@ class GroupDaoImplTest {
     private static final String EMPTY_TEST_TABLES_FILEPATH = "scripts/clear_test_db.sql";
     private static final String DROP_TEST_DB_FILEPATH = "scripts/drop_test_db.sql";
     private static final AccountGroupDao<Group> GROUP_DAO_INSTANCE = getGroupDaoInstance();
-    private static final Group TEST_GROUP = new Group("", "", 1L, "");
+    private static final Group TEST_GROUP = new Group("", "", 1L);
 
     private void restoreTestGroupDefaultState() {
         TEST_GROUP.setGroupName("");
         TEST_GROUP.setDescription("");
         TEST_GROUP.setOwnerId(1L);
-        TEST_GROUP.setGroupStatus("");
     }
 
     private void setTestGroupEqualsToRecordInTestTable() {
@@ -33,7 +32,6 @@ class GroupDaoImplTest {
         TEST_GROUP.setGroupName("test");
         TEST_GROUP.setDescription("test");
         TEST_GROUP.setOwnerId(1L);
-        TEST_GROUP.setGroupStatus("test");
     }
 
     @BeforeAll

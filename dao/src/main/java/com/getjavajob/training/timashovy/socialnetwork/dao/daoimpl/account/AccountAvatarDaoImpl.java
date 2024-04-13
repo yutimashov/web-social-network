@@ -10,9 +10,9 @@ import java.sql.SQLException;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatement;
 
-public class AvatarDaoImpl implements ImageDao {
+public class AccountAvatarDaoImpl implements ImageDao {
 
-    private static final AvatarDaoImpl IMAGE_DAO_IMPL = new AvatarDaoImpl();
+    private static final AccountAvatarDaoImpl IMAGE_DAO_IMPL = new AccountAvatarDaoImpl();
     private static final String UPLOAD_ACCOUNT_AVATAR = "INSERT INTO account_data.account_avatars (account_id,"
             + " avatar_blob) VALUES (?, ?)";
     private static final String GET_ACCOUNT_AVATAR = "SELECT avatar_blob FROM account_data.account_avatars WHERE "
@@ -20,10 +20,10 @@ public class AvatarDaoImpl implements ImageDao {
     private static final String UPDATE_ACCOUNT_AVATAR = "UPDATE account_data.account_avatars SET avatar_blob = ? "
             + "WHERE account_id = ?;";
 
-    private AvatarDaoImpl() {
+    private AccountAvatarDaoImpl() {
     }
 
-    public static AvatarDaoImpl getAvatarDaoImpl() {
+    public static AccountAvatarDaoImpl getAvatarDaoImpl() {
         return IMAGE_DAO_IMPL;
     }
 
@@ -43,7 +43,7 @@ public class AvatarDaoImpl implements ImageDao {
         try (PreparedStatement getAvatarStatement = getPreparedStatement(GET_ACCOUNT_AVATAR)) {
             getAvatarStatement.setLong(1, accountId);
             ResultSet avatarRecord = getAvatarStatement.executeQuery();
-            if(avatarRecord.next()) {
+            if (avatarRecord.next()) {
                 return avatarRecord.getBinaryStream("avatar_blob");
             } else {
                 //TODO: avoid return null, use `Optional` instead

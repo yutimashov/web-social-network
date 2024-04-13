@@ -21,14 +21,14 @@ import static java.util.Optional.of;
 public class GroupDaoImpl implements AccountGroupDao<Group>, TableConstraintsValidator {
 
     private static final GroupDaoImpl GROUP_DAO_INSTANCE = new GroupDaoImpl();
-    private static final String SAVE_GROUP = "INSERT INTO group_data.\"group\" (group_name, description, owner_id,"
-            + " group_status) VALUES(?, ?, ?, ?)";
+    private static final String SAVE_GROUP = "INSERT INTO group_data.\"group\" (group_name, description, owner_id) "
+            + "VALUES(?, ?, ?)";
     private static final String GET_GROUP_BY_ID = "SELECT id, group_name, description, owner_id,"
-            + " group_status FROM group_data.\"group\" WHERE id = ?";
+            + " FROM group_data.\"group\" WHERE id = ?";
     private static final String GET_ALL_GROUPS = "SELECT id, group_name, description, owner_id,"
-            + " group_status FROM group_data.\"group\"";
+            + " FROM group_data.\"group\"";
     private static final String UPDATE_GROUP_BY_ID = "UPDATE group_data.\"group\" SET group_name = ?, description = ?,"
-            + " owner_id = ?, group_status = ? WHERE id = ?";
+            + " owner_id = ? WHERE id = ?";
     private static final String DELETE_GROUP_BY_ID = "DELETE FROM group_data.\"group\" WHERE id = ?";
 
     private GroupDaoImpl() {
@@ -42,15 +42,24 @@ public class GroupDaoImpl implements AccountGroupDao<Group>, TableConstraintsVal
     public Long create(Group group) {
         try (PreparedStatement preparedStatement = getPreparedStatementWithGeneratedKeys(SAVE_GROUP)) {
             setGroupData(group, preparedStatement);
-            preparedStatement.executeUpdate();
-            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                group.setId(generatedKeys.getLong(1));
+            if (preparedStatement.executeUpdate() > 0) {
+                ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    group.setId(generatedKeys.getLong(1));
+                }
+                return group.getId();
+            } else {
+                throw new DaoException("dao: create group method failed: no rows affected.");
             }
-            return group.getId();
         } catch (SQLException e) {
             throw new DaoException("dao: create group method failed: " + e.getMessage());
         }
+    }
+
+    private void setGroupData(Group group, PreparedStatement preparedStatement) throws SQLException {
+        preparedStatement.setString(1, group.getGroupName());
+        preparedStatement.setString(2, group.getDescription());
+        preparedStatement.setLong(3, group.getOwnerId());
     }
 
     @Override
@@ -64,8 +73,7 @@ public class GroupDaoImpl implements AccountGroupDao<Group>, TableConstraintsVal
                         resultSet.getLong("id"),
                         resultSet.getString("group_name"),
                         resultSet.getString("description"),
-                        resultSet.getLong("owner_id"),
-                        resultSet.getString("group_status")
+                        resultSet.getLong("owner_id")
                 );
                 return of(receivedGroup);
             } else {
@@ -86,8 +94,7 @@ public class GroupDaoImpl implements AccountGroupDao<Group>, TableConstraintsVal
                         resultSet.getLong("id"),
                         resultSet.getString("group_name"),
                         resultSet.getString("description"),
-                        resultSet.getLong("owner_id"),
-                        resultSet.getString("group_status")
+                        resultSet.getLong("owner_id")
                 ));
             }
             return receivedGroups;
@@ -100,18 +107,11 @@ public class GroupDaoImpl implements AccountGroupDao<Group>, TableConstraintsVal
     public boolean updateById(Long id, Group group) {
         try (PreparedStatement preparedStatement = getPreparedStatement(UPDATE_GROUP_BY_ID)) {
             setGroupData(group, preparedStatement);
-            preparedStatement.setLong(5, id);
+            preparedStatement.setLong(4, id);
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DaoException("dao: update group by id method failed: " + e.getMessage());
         }
-    }
-
-    private void setGroupData(Group group, PreparedStatement preparedStatement) throws SQLException {
-        preparedStatement.setString(1, group.getGroupName());
-        preparedStatement.setString(2, group.getDescription());
-        preparedStatement.setLong(3, group.getOwnerId());
-        preparedStatement.setString(4, group.getGroupStatus());
     }
 
     @Override

@@ -18,17 +18,15 @@ public class Group {
     private String groupName;
     private String description;
     private Long ownerId;
-    private String groupStatus;
 
-    public Group(String groupName, String description, Long ownerId, String groupStatus) {
+    public Group(String groupName, String description, Long ownerId) {
         this.groupName = groupName;
         this.description = description;
         this.ownerId = ownerId;
-        this.groupStatus = groupStatus;
     }
 
-    public Group(Long id, String groupName, String description, Long ownerId, String groupStatus) {
-        this(groupName, description, ownerId, groupStatus);
+    public Group(Long id, String groupName, String description, Long ownerId) {
+        this(groupName, description, ownerId);
         this.id = id;
     }
 
@@ -64,14 +62,6 @@ public class Group {
         this.ownerId = ownerId;
     }
 
-    public String getGroupStatus() {
-        return groupStatus;
-    }
-
-    public void setGroupStatus(String groupStatus) {
-        this.groupStatus = groupStatus;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -82,19 +72,18 @@ public class Group {
         }
         Group group = (Group) o;
         return Objects.equals(id, group.id) && Objects.equals(groupName, group.groupName) && Objects.equals(description,
-                group.description) && Objects.equals(ownerId, group.ownerId) && Objects.equals(groupStatus,
-                group.groupStatus);
+                group.description) && Objects.equals(ownerId, group.ownerId);
     }
 
     @Override
     public int hashCode() {
-        return hash(id, groupName, description, ownerId, groupStatus);
+        return hash(id, groupName, description, ownerId);
     }
 
     @Override
     public String toString() {
         return "Group {id=" + id + ", groupName=" + groupName + ", description=" + description + ", ownerId=" + ownerId
-                + ", groupStatus=" + groupStatus + " }";
+                + "}";
     }
 
 }

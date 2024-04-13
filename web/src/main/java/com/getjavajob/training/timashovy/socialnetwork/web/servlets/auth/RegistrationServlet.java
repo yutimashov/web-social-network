@@ -15,7 +15,7 @@ import java.io.IOException;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountServiceImpl.getAccountServiceInstance;
-import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AvatarServiceImpl.getAvatarServiceInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountAvatarServiceImpl.getAccountAvatarServiceInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.PasswordServiceImpl.getPasswordServiceInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.PhoneServiceImpl.getPhoneServiceInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
@@ -24,7 +24,7 @@ public class RegistrationServlet extends HttpServlet {
 
     private final AccountService accountService = getAccountServiceInstance();
     private final PasswordService passwordService = getPasswordServiceInstance();
-    private final ImageService avatarService = getAvatarServiceInstance();
+    private final ImageService avatarService = getAccountAvatarServiceInstance();
     private final PhoneServiceImpl phoneService = getPhoneServiceInstance();
 
     @Override

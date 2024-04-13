@@ -168,6 +168,21 @@
         <url-pattern>/accept-friend-request</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>Create Group</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.CreateGroupServlet
+        </servlet-class>
+        <multipart-config>
+            <max-file-size>10485760</max-file-size>
+            <max-request-size>20971520</max-request-size>
+            <file-size-threshold>5242880</file-size-threshold>
+        </multipart-config>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Create Group</servlet-name>
+        <url-pattern>/group-create</url-pattern>
+    </servlet-mapping>
+
     <!-- session config -->
     <session-config>
         <session-timeout>10</session-timeout>

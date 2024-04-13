@@ -4,12 +4,12 @@ import java.io.InputStream;
 
 public interface ImageService {
 
-    boolean upload(Long accountId, InputStream avatarInputStream);
+    boolean upload(Long id, InputStream avatarInputStream);
 
     boolean delete(Long id);
 
-    InputStream get(Long accountId);
+    InputStream get(Long id);
 
-    boolean update(Long accountId, InputStream imageInputStream);
+    boolean update(Long id, InputStream imageInputStream);
 
 }

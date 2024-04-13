@@ -18,6 +18,9 @@
             <button>Send friend request</button>
         </a>
     </c:if>
+    <a href="${pageContext.request.contextPath}/group-create">
+        <button>Create group</button>
+    </a>
     <p>Profile avatar:</p>
     <c:if test="${requestScope.avatarInputStream != null}">
         <img src="${pageContext.request.contextPath}/avatar?id=${requestScope.account.id}" alt="Profile avatar"

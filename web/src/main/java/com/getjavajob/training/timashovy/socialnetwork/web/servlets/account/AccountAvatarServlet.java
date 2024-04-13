@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.servlets.account;
 
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AvatarServiceImpl;
+import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountAvatarServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -10,12 +10,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AvatarServiceImpl.getAvatarServiceInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountAvatarServiceImpl.getAccountAvatarServiceInstance;
 import static java.lang.Long.valueOf;
 
 public class AccountAvatarServlet extends HttpServlet {
 
-    private final AvatarServiceImpl avatarService = getAvatarServiceInstance();
+    private final AccountAvatarServiceImpl avatarService = getAccountAvatarServiceInstance();
     private static final int BUFFER_SIZE = 4096;
 
     @Override
