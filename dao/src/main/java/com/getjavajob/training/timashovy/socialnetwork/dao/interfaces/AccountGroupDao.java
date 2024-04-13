@@ -30,4 +30,6 @@ public interface AccountGroupDao<T> {
 
     boolean deleteGroupMember(Long groupId, Long accountId);
 
+    boolean isAccountAdmin(Long accountId);
+
 }

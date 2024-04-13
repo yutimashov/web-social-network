@@ -40,6 +40,8 @@ public class GroupDaoImpl implements AccountGroupDao<Group>, TableConstraintsVal
             "WHERE group_id = ? AND is_member = FALSE ORDER BY registration_date DESC;";
     private static final String DELETE_GROUP_MEMBER = "DELETE FROM group_data.group_members " +
             "WHERE group_id = ? AND account_id = ?;";
+    private static final String CHECK_ACCOUNT_ADMIN = "SELECT id FROM group_data.group_members " +
+            "WHERE account_id = ? AND is_admin = TRUE;";
 
     private GroupDaoImpl() {
     }
@@ -179,6 +181,17 @@ public class GroupDaoImpl implements AccountGroupDao<Group>, TableConstraintsVal
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DaoException("dao: delete group by id method failed: ", e);
+        }
+    }
+
+    @Override
+    public boolean isAccountAdmin(Long accountId) {
+        try (PreparedStatement preparedStatement = getPreparedStatement(CHECK_ACCOUNT_ADMIN)) {
+            preparedStatement.setLong(1, accountId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.next();
+        } catch (SQLException e) {
+            throw new DaoException("dao: check account is group admin method failed: ", e);
         }
     }
 

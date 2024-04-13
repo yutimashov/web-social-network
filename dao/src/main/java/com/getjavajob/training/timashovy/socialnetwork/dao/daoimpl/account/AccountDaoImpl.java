@@ -204,4 +204,9 @@ public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraint
         return false;
     }
 
+    @Override
+    public boolean isAccountAdmin(Long accountId) {
+        return false;
+    }
+
 }

@@ -70,6 +70,11 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public boolean isAccountAdmin(Long accountId) {
+        return groupDaoInstance.isAccountAdmin(accountId);
+    }
+
+    @Override
     public Optional<Group> getById(Long groupId) {
         return groupDaoInstance.getById(groupId);
     }

@@ -1,5 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.servlets.group;
 
+import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupService;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.GroupAvatarServiceImpl;
 
@@ -25,6 +26,10 @@ public class GroupInfoServlet extends HttpServlet {
         if (groupService.getById(groupId).isPresent()) {
             req.setAttribute("group", groupService.getById(groupId).get());
             req.setAttribute("avatarInputStream", avatarService.get(groupId));
+            Long accountId = ((Account) req.getSession(false).getAttribute("account")).getId();
+            if (groupService.isAccountAdmin(accountId)) {
+                req.setAttribute("isAccountAdmin", true);
+            }
         }
         req.getRequestDispatcher(getJspPagePath("group")).forward(req, resp);
     }
