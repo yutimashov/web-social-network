@@ -9,19 +9,17 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.GroupServiceImpl.getGroupServiceImplInstance;
-import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 import static java.lang.Long.valueOf;
 
-public class IncomingGroupRequestsServlet extends HttpServlet {
+public class AcceptGroupRequestServlet extends HttpServlet {
 
     private final GroupService groupService = getGroupServiceImplInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long groupId = valueOf(req.getParameter("id"));
-        req.setAttribute("groupRequests", groupService.getIncomingGroupRequests(groupId));
-        req.setAttribute("groupId", groupId);
-        req.getRequestDispatcher(getJspPagePath("incoming-group-requests")).forward(req, resp);
+        Long groupId = valueOf(req.getParameter("groupId"));
+        groupService.makeAccountGroupMember(groupId, valueOf(req.getParameter("accountId")));
+        resp.sendRedirect("/group?id=" + groupId);
     }
 
 }

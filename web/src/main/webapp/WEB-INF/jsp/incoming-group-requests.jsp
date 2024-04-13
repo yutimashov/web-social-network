@@ -10,8 +10,7 @@
 <c:forEach items="${requestScope.groupRequests}" var="account">
   <a href="${pageContext.request.contextPath}/account?id=${account.id}">${account.firstName} ${account.lastName}</a>
   <span>&nbsp;&nbsp;</span>
-<%--  ${pageContext.request.contextPath}/accept-group-request?id=${account.id}--%>
-  <a href="#">
+  <a href="${pageContext.request.contextPath}/group/accept-request?groupId=${param.id}&accountId=${account.id}">
     <button>Accept request</button>
   </a>
   <span>&nbsp;&nbsp;</span>
