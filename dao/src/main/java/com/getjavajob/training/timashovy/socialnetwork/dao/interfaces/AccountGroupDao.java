@@ -26,4 +26,6 @@ public interface AccountGroupDao<T> {
 
     boolean makeAccountGroupMember(Long groupId, Long accountId);
 
+    List<Long> getIncomingGroupRequests(Long groupId);
+
 }

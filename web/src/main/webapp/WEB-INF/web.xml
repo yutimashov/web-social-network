@@ -223,6 +223,16 @@
         <url-pattern>/group-avatar</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>Account Group Requests</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.IncomingGroupRequestsServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Account Group Requests</servlet-name>
+        <url-pattern>/group/requests</url-pattern>
+    </servlet-mapping>
+
     <!-- session config -->
     <session-config>
         <session-timeout>10</session-timeout>

@@ -36,6 +36,8 @@ public class GroupDaoImpl implements AccountGroupDao<Group>, TableConstraintsVal
             "group_id = ? AND account_id = ?;";
     private static final String MAKE_USER_GROUP_MEMBER = "UPDATE group_data.group_members SET is_member = TRUE " +
             "WHERE group_id = ? AND account_id = ?;";
+    private static final String GET_GROUP_FOLLOWERS = "SELECT account_id FROM group_data.group_members " +
+            "WHERE group_id = ? AND is_member = FALSE ORDER BY registration_date DESC;";
 
     private GroupDaoImpl() {
     }
@@ -149,6 +151,21 @@ public class GroupDaoImpl implements AccountGroupDao<Group>, TableConstraintsVal
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DaoException("dao: make user group member method failed: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public List<Long> getIncomingGroupRequests(Long groupId) {
+        try (PreparedStatement preparedStatement = getPreparedStatement(GET_GROUP_FOLLOWERS)) {
+            List<Long> groupFollowers = new ArrayList<>();
+            preparedStatement.setLong(1, groupId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                groupFollowers.add(resultSet.getLong(1));
+            }
+            return groupFollowers;
+        } catch (SQLException e) {
+            throw new DaoException("dao: get group followers method failed: " + e.getMessage());
         }
     }
 

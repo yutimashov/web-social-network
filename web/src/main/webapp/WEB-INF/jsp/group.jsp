@@ -14,5 +14,9 @@
 <hr>
 <p>Description: ${requestScope.group.description}</p>
 <hr>
+<a href="${pageContext.request.contextPath}/group/requests?id=${requestScope.group.id}">
+    <button>Account requests</button>
+</a>
+<hr>
 </body>
 </html>

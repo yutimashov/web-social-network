@@ -1,13 +1,17 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.Group;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.AccountGroupDao;
+import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.GroupDaoImpl.getGroupDaoInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountServiceImpl.getAccountServiceInstance;
 
 public class GroupServiceImpl implements GroupService {
 
@@ -45,6 +49,19 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public boolean makeAccountGroupMember(Long groupId, Long accountId) {
         return groupDaoInstance.makeAccountGroupMember(groupId, accountId);
+    }
+
+    @Override
+    public List<Account> getIncomingGroupRequests(Long groupId) {
+        List<Long> accountsId = groupDaoInstance.getIncomingGroupRequests(groupId);
+        List<Account> accounts = new ArrayList<>();
+        AccountService accountService = getAccountServiceInstance();
+        for (Long accountId : accountsId) {
+            if (accountService.getAccountById(accountId).isPresent()) {
+                accounts.add(accountService.getAccountById(accountId).get());
+            }
+        }
+        return accounts;
     }
 
     @Override

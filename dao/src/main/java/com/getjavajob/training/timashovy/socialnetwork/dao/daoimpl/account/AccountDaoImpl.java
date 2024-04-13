@@ -194,4 +194,9 @@ public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraint
         return false;
     }
 
+    @Override
+    public List<Long> getIncomingGroupRequests(Long groupId) {
+        return null;
+    }
+
 }
