@@ -4,6 +4,8 @@ import com.getjavajob.training.timashovy.socialnetwork.common.Group;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.AccountGroupDao;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupService;
 
+import java.util.List;
+
 import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.GroupDaoImpl.getGroupDaoInstance;
 
 public class GroupServiceImpl implements GroupService {
@@ -22,6 +24,11 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public Long createGroup(Group group) {
         return groupDaoInstance.create(group);
+    }
+
+    @Override
+    public List<Group> listGroups() {
+        return groupDaoInstance.getAll();
     }
 
 }

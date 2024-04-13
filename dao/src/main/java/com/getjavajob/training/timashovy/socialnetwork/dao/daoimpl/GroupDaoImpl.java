@@ -23,10 +23,10 @@ public class GroupDaoImpl implements AccountGroupDao<Group>, TableConstraintsVal
     private static final GroupDaoImpl GROUP_DAO_INSTANCE = new GroupDaoImpl();
     private static final String SAVE_GROUP = "INSERT INTO group_data.\"group\" (group_name, description, owner_id) "
             + "VALUES(?, ?, ?)";
-    private static final String GET_GROUP_BY_ID = "SELECT id, group_name, description, owner_id,"
-            + " FROM group_data.\"group\" WHERE id = ?";
-    private static final String GET_ALL_GROUPS = "SELECT id, group_name, description, owner_id,"
-            + " FROM group_data.\"group\"";
+    private static final String GET_GROUP_BY_ID = "SELECT id, group_name, description, owner_id "
+            + "FROM group_data.\"group\" WHERE id = ?";
+    private static final String GET_ALL_GROUPS = "SELECT id, group_name, description, owner_id "
+            + "FROM group_data.\"group\"";
     private static final String UPDATE_GROUP_BY_ID = "UPDATE group_data.\"group\" SET group_name = ?, description = ?,"
             + " owner_id = ? WHERE id = ?";
     private static final String DELETE_GROUP_BY_ID = "DELETE FROM group_data.\"group\" WHERE id = ?";
