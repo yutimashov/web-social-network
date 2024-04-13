@@ -243,6 +243,16 @@
         <url-pattern>/group/accept-request</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>Delete Group Member</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.DeleteGroupMemberServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Delete Group Member</servlet-name>
+        <url-pattern>/group/decline-request</url-pattern>
+    </servlet-mapping>
+
     <!-- session config -->
     <session-config>
         <session-timeout>10</session-timeout>

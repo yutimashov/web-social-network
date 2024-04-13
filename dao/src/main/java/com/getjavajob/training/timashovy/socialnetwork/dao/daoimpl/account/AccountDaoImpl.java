@@ -199,4 +199,9 @@ public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraint
         return null;
     }
 
+    @Override
+    public boolean deleteGroupMember(Long groupId, Long accountId) {
+        return false;
+    }
+
 }

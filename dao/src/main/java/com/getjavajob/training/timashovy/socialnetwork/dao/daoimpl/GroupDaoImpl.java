@@ -38,6 +38,8 @@ public class GroupDaoImpl implements AccountGroupDao<Group>, TableConstraintsVal
             "WHERE group_id = ? AND account_id = ?;";
     private static final String GET_GROUP_FOLLOWERS = "SELECT account_id FROM group_data.group_members " +
             "WHERE group_id = ? AND is_member = FALSE ORDER BY registration_date DESC;";
+    private static final String DELETE_GROUP_MEMBER = "DELETE FROM group_data.group_members " +
+            "WHERE group_id = ? AND account_id = ?;";
 
     private GroupDaoImpl() {
     }
@@ -166,6 +168,17 @@ public class GroupDaoImpl implements AccountGroupDao<Group>, TableConstraintsVal
             return groupFollowers;
         } catch (SQLException e) {
             throw new DaoException("dao: get group followers method failed: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean deleteGroupMember(Long groupId, Long accountId) {
+        try (PreparedStatement preparedStatement = getPreparedStatement(DELETE_GROUP_MEMBER)) {
+            preparedStatement.setLong(1, groupId);
+            preparedStatement.setLong(2, accountId);
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new DaoException("dao: delete group by id method failed: ", e);
         }
     }
 

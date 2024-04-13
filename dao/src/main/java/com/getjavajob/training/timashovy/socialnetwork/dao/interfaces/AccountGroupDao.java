@@ -28,4 +28,6 @@ public interface AccountGroupDao<T> {
 
     List<Long> getIncomingGroupRequests(Long groupId);
 
+    boolean deleteGroupMember(Long groupId, Long accountId);
+
 }

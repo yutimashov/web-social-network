@@ -14,8 +14,7 @@
     <button>Accept request</button>
   </a>
   <span>&nbsp;&nbsp;</span>
-<%--  ${pageContext.request.contextPath}/delete-group-request?id=${account.id}--%>
-  <a href="#">
+  <a href="${pageContext.request.contextPath}/group/decline-request?groupId=${param.id}&accountId=${account.id}">
     <button>Decline request</button>
   </a>
 </c:forEach>

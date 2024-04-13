@@ -15,5 +15,6 @@ public interface GroupService {
     Optional<Group> getById(Long groupId);
     boolean makeAccountGroupMember(Long groupId, Long accountId);
     List<Account> getIncomingGroupRequests(Long groupId);
+    boolean deleteGroupMember(Long groupId, Long accountId);
 
 }

@@ -65,6 +65,11 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public boolean deleteGroupMember(Long groupId, Long accountId) {
+        return groupDaoInstance.deleteGroupMember(groupId, accountId);
+    }
+
+    @Override
     public Optional<Group> getById(Long groupId) {
         return groupDaoInstance.getById(groupId);
     }
