@@ -27,18 +27,17 @@ public class CreateGroupServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String name = req.getParameter("name");
-        String description = req.getParameter("description");
-        Long accountCreatorId = ((Account) req.getSession(false).getAttribute("account")).getId();
-        Group group = new Group(name, description, accountCreatorId);
-        registerGroup(group, req);
-        resp.sendRedirect("/account?id=" + ((Account) req.getSession(false).getAttribute("account")).getId());
-    }
-
-    private void registerGroup(Group group, HttpServletRequest req) throws ServletException, IOException {
-        groupService.createGroup(group);
-        Long groupId = group.getId();
+        Long accountId = ((Account) req.getSession(false).getAttribute("account")).getId();
+        Group group = new Group(
+                req.getParameter("name"),
+                req.getParameter("description"),
+                accountId
+        );
+        Long groupId = groupService.createGroup(group);
         avatarService.upload(groupId, req.getPart("avatar").getInputStream());
+        groupService.addUser(groupId, accountId);
+        groupService.makeUserGroupAdmin(groupId, accountId);
+        resp.sendRedirect("/account?id=" + ((Account) req.getSession(false).getAttribute("account")).getId());
     }
 
 }

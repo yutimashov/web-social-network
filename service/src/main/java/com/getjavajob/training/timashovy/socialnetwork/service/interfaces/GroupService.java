@@ -10,6 +10,7 @@ public interface GroupService {
     Long createGroup(Group group);
     List<Group> listGroups();
     boolean addUser(Long groupId, Long accountId);
+    boolean makeUserGroupAdmin(Long groupId, Long accountId);
     Optional<Group> getById(Long groupId);
 
 }

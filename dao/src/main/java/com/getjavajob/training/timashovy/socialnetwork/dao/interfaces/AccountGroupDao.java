@@ -22,4 +22,6 @@ public interface AccountGroupDao<T> {
 
     boolean addUser(Long groupId, Long accountId);
 
+    boolean makeUserGroupAdmin(Long groupId, Long accountId);
+
 }

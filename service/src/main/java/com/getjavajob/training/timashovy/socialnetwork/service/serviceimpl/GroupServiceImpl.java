@@ -38,6 +38,11 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public boolean makeUserGroupAdmin(Long groupId, Long accountId) {
+        return groupDaoInstance.makeUserGroupAdmin(groupId, accountId);
+    }
+
+    @Override
     public Optional<Group> getById(Long groupId) {
         return groupDaoInstance.getById(groupId);
     }
