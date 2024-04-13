@@ -35,7 +35,8 @@ public class CreateGroupServlet extends HttpServlet {
         );
         Long groupId = groupService.createGroup(group);
         avatarService.upload(groupId, req.getPart("avatar").getInputStream());
-        groupService.addUser(groupId, accountId);
+        groupService.sendGroupMemberRequest(groupId, accountId);
+        groupService.makeAccountGroupMember(groupId, accountId);
         groupService.makeUserGroupAdmin(groupId, accountId);
         resp.sendRedirect("/account?id=" + ((Account) req.getSession(false).getAttribute("account")).getId());
     }

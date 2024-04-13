@@ -180,12 +180,17 @@ public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraint
     }
 
     @Override
-    public boolean addUser(Long groupId, Long accountId) {
+    public boolean sendGroupMemberRequest(Long groupId, Long accountId) {
         return false;
     }
 
     @Override
     public boolean makeUserGroupAdmin(Long groupId, Long accountId) {
+        return false;
+    }
+
+    @Override
+    public boolean makeAccountGroupMember(Long groupId, Long accountId) {
         return false;
     }
 

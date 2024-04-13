@@ -20,8 +20,10 @@ public interface AccountGroupDao<T> {
 
     boolean deleteById(Long id);
 
-    boolean addUser(Long groupId, Long accountId);
+    boolean sendGroupMemberRequest(Long groupId, Long accountId);
 
     boolean makeUserGroupAdmin(Long groupId, Long accountId);
+
+    boolean makeAccountGroupMember(Long groupId, Long accountId);
 
 }

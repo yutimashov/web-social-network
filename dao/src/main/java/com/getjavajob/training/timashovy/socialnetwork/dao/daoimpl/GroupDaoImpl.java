@@ -14,7 +14,6 @@ import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatement;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
-import static java.lang.Boolean.TRUE;
 import static java.util.Objects.isNull;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -35,6 +34,8 @@ public class GroupDaoImpl implements AccountGroupDao<Group>, TableConstraintsVal
             "VALUES(?, ?);";
     private static final String MAKE_USER_GROUP_ADMIN = "UPDATE group_data.group_members SET is_admin = TRUE WHERE " +
             "group_id = ? AND account_id = ?;";
+    private static final String MAKE_USER_GROUP_MEMBER = "UPDATE group_data.group_members SET is_member = TRUE " +
+            "WHERE group_id = ? AND account_id = ?;";
 
     private GroupDaoImpl() {
     }
@@ -130,13 +131,24 @@ public class GroupDaoImpl implements AccountGroupDao<Group>, TableConstraintsVal
     }
 
     @Override
-    public boolean addUser(Long groupId, Long accountId) {
+    public boolean sendGroupMemberRequest(Long groupId, Long accountId) {
         try (PreparedStatement preparedStatement = getPreparedStatement(ADD_USER)) {
             preparedStatement.setLong(1, accountId);
             preparedStatement.setLong(2, groupId);
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DaoException("dao: create group method failed: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean makeAccountGroupMember(Long groupId, Long accountId) {
+        try (PreparedStatement preparedStatement = getPreparedStatement(MAKE_USER_GROUP_MEMBER)) {
+            preparedStatement.setLong(1, groupId);
+            preparedStatement.setLong(2, accountId);
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new DaoException("dao: make user group member method failed: " + e.getMessage());
         }
     }
 
