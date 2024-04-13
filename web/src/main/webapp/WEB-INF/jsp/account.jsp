@@ -7,24 +7,31 @@
 <body>
 <jsp:include page="/WEB-INF/jsp/header.jsp"/>
 <div>
-    <a href="${pageContext.request.contextPath}/friends?id=${param.id}">
-        <button>Friends list</button>
-    </a>
+    <h3>Friends section</h3>
+    <a href="${pageContext.request.contextPath}/friends?id=${param.id}">Friends list</a><br>
     <c:if test="${sessionScope.account.id == param.id}">
-        <a href="${pageContext.request.contextPath}/friend-requests">Friend requests</a>
+        <a href="${pageContext.request.contextPath}/friend-requests">Friend requests</a><br>
     </c:if>
     <c:if test="${sessionScope.account.id != param.id}">
         <a href="${pageContext.request.contextPath}/send-friend-request?id=${param.id}">
             <button>Send friend request</button>
         </a>
     </c:if>
+    <hr>
+</div>
+<div>
+    <h3>Groups section</h3>
     <a href="${pageContext.request.contextPath}/group-create">
         <button>Create group</button>
     </a>
+    <hr>
+</div>
+<div>
+    <h3>Account info section</h3>
     <p>Profile avatar:</p>
     <c:if test="${requestScope.avatarInputStream != null}">
         <img src="${pageContext.request.contextPath}/avatar?id=${requestScope.account.id}" alt="Profile avatar"
-        width="250px" height="250px">
+             width="250px" height="250px">
     </c:if>
     <hr>
     <p>First name: ${requestScope.account.firstName}</p>
