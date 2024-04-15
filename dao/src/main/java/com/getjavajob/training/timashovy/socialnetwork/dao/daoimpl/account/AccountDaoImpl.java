@@ -134,6 +134,7 @@ public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraint
                 .firstName(resultSet.getString("first_name"))
                 .lastName(resultSet.getString("last_name"))
                 .email(resultSet.getString("email"))
+                .birthDate(resultSet.getDate("birth_date").toLocalDate())
                 .middleName(resultSet.getString("middle_name"))
                 .personalAddress(resultSet.getString("personal_address"))
                 .workAddress(resultSet.getString("work_address"))

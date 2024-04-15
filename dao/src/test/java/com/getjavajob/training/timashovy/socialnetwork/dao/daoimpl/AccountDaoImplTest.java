@@ -8,6 +8,7 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoEx
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.Role.REGULAR;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AccountDaoImpl.getAccountDaoInstance;
@@ -172,17 +173,14 @@ class AccountDaoImplTest {
         @Test
         void getByIdGetExistingAccount() {
             setTestAccountEqualsToRecordInTestTable();
-            assertEquals(TEST_ACCOUNT, getAccountDaoInstance().getById(1L));
+            System.out.println(TEST_ACCOUNT);
+            assertEquals(Optional.of(TEST_ACCOUNT), ACCOUNT_DAO_INSTANCE.getById(1L));
         }
 
         @Test
         void getByIdGetNonExistingAccount() {
             emptyTestTables();
-            Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                getAccountDaoInstance().getById(1L);
-                throw new UnsupportedOperationException("Not supported");
-            });
-            assertEquals(IllegalArgumentException.class, exception.getClass());
+            assertEquals(Optional.empty(), ACCOUNT_DAO_INSTANCE.getById(1L));
         }
 
     }
