@@ -20,16 +20,4 @@ public interface AccountGroupDao<T> {
 
     boolean deleteById(Long id);
 
-    boolean sendGroupMemberRequest(Long groupId, Long accountId);
-
-    boolean makeUserGroupAdmin(Long groupId, Long accountId);
-
-    boolean makeAccountGroupMember(Long groupId, Long accountId);
-
-    List<Long> getIncomingGroupRequests(Long groupId);
-
-    boolean deleteGroupMember(Long groupId, Long accountId);
-
-    boolean isAccountAdmin(Long accountId);
-
 }

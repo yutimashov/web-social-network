@@ -21,9 +21,9 @@ public class Friendship {
 
     private Account requester;
     private Account receiver;
-    private Boolean friendshipStatus;
+    private boolean friendshipStatus;
 
-    public Friendship(Account requester, Account receiver, Boolean friendshipStatus) {
+    public Friendship(Account requester, Account receiver, boolean friendshipStatus) {
         this.requester = requester;
         this.receiver = receiver;
         this.friendshipStatus = friendshipStatus;
@@ -45,11 +45,11 @@ public class Friendship {
         this.receiver = receiver;
     }
 
-    public Boolean getFriendshipStatus() {
+    public boolean getFriendshipStatus() {
         return friendshipStatus;
     }
 
-    public void setFriendshipStatus(Boolean friendshipStatus) {
+    public void setFriendshipStatus(boolean friendshipStatus) {
         this.friendshipStatus = friendshipStatus;
     }
 

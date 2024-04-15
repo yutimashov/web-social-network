@@ -2,7 +2,7 @@ package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.Group;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.AccountGroupDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.GroupDao;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupService;
 
@@ -17,7 +17,7 @@ public class GroupServiceImpl implements GroupService {
 
     private static final GroupServiceImpl GROUP_SERVICE_INSTANCE = new GroupServiceImpl();
 
-    private final AccountGroupDao<Group> groupDaoInstance = getGroupDaoInstance();
+    private final GroupDao groupDaoInstance = getGroupDaoInstance();
 
     private GroupServiceImpl() {
     }

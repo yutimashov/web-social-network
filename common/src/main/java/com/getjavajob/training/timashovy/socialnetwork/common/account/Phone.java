@@ -56,12 +56,7 @@ public class Phone {
 
     @Override
     public String toString() {
-        return "Phone{" +
-                "id=" + id +
-                ", phoneType=" + phoneType +
-                ", number='" + number + '\'' +
-                ", accountId=" + accountId +
-                '}';
+        return "Phone{id=" + id + ", phoneType=" + phoneType + ", number=" + number + ", accountId=" + accountId + "}";
     }
 
 }

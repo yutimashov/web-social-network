@@ -28,20 +28,20 @@ import static java.util.stream.Collectors.toList;
 
 public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraintsValidator {
 
-    private final PhoneDaoImpl phoneDao = getPhoneDaoInstance();
-    private static final AccountDaoImpl ACCOUNT_DAO_INSTANCE = new AccountDaoImpl();
-    private static final String CREATE_ACCOUNT = "INSERT INTO account_data.account"
-            + " (first_name, last_name, middle_name, birth_date, personal_address, work_address, email, icq, skype,"
-            + " additional_info, role_type) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-    private static final String GET_ACCOUNT = "SELECT id, first_name, last_name, middle_name, birth_date,"
-            + " personal_address, work_address, email, icq, skype, additional_info, role_type FROM account_data.account " +
-            " WHERE id = ?;";
-    private static final String GET_ALL_ACCOUNTS = "SELECT id, first_name, last_name, middle_name, birth_date,"
-            + " personal_address, work_address, email, icq, skype, additional_info, role_type FROM account_data.account;";
-    private static final String UPDATE_ACCOUNT = "UPDATE account_data.account SET first_name = ?, last_name = ?,"
-            + " middle_name = ?, birth_date = ?, personal_address = ?, work_address = ?, email = ?, icq = ?, skype = ?,"
-            + " additional_info = ?, role_type = ? WHERE id = ?;";
+    private static final String CREATE_ACCOUNT = "INSERT INTO account_data.account (first_name, last_name, " +
+            "middle_name, birth_date, personal_address, work_address, email, icq, skype, additional_info, role_type) " +
+            "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    private static final String GET_ACCOUNT = "SELECT id, first_name, last_name, middle_name, birth_date, " +
+            "personal_address, work_address, email, icq, skype, additional_info, role_type FROM account_data.account " +
+            "WHERE id = ?;";
+    private static final String GET_ALL_ACCOUNTS = "SELECT id, first_name, last_name, middle_name, birth_date, "
+            + "personal_address, work_address, email, icq, skype, additional_info, role_type FROM account_data.account;";
+    private static final String UPDATE_ACCOUNT = "UPDATE account_data.account SET first_name = ?, last_name = ?, "
+            + "middle_name = ?, birth_date = ?, personal_address = ?, work_address = ?, email = ?, icq = ?, skype = ?, "
+            + "additional_info = ?, role_type = ? WHERE id = ?;";
     private static final String DELETE_ACCOUNT = "DELETE FROM account_data.account WHERE id = ?;";
+    private static final AccountDaoImpl ACCOUNT_DAO_INSTANCE = new AccountDaoImpl();
+    private final PhoneDaoImpl phoneDao = getPhoneDaoInstance();
 
     private AccountDaoImpl() {
     }
@@ -177,36 +177,6 @@ public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraint
         } catch (SQLException e) {
             throw new DaoException("dao: delete account by id method failed: " + e.getMessage());
         }
-    }
-
-    @Override
-    public boolean sendGroupMemberRequest(Long groupId, Long accountId) {
-        return false;
-    }
-
-    @Override
-    public boolean makeUserGroupAdmin(Long groupId, Long accountId) {
-        return false;
-    }
-
-    @Override
-    public boolean makeAccountGroupMember(Long groupId, Long accountId) {
-        return false;
-    }
-
-    @Override
-    public List<Long> getIncomingGroupRequests(Long groupId) {
-        return null;
-    }
-
-    @Override
-    public boolean deleteGroupMember(Long groupId, Long accountId) {
-        return false;
-    }
-
-    @Override
-    public boolean isAccountAdmin(Long accountId) {
-        return false;
     }
 
 }
