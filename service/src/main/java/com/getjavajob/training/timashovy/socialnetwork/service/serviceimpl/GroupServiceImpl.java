@@ -75,6 +75,16 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public boolean isAccountGroupSubscriber(Long groupId, Long accountId) {
+        return groupDaoInstance.isAccountGroupSubscriber(groupId, accountId);
+    }
+
+    @Override
+    public boolean isAccountGroupMember(Long groupId, Long accountId) {
+        return groupDaoInstance.isAccountGroupMember(groupId, accountId);
+    }
+
+    @Override
     public Optional<Group> getById(Long groupId) {
         return groupDaoInstance.getById(groupId);
     }

@@ -43,6 +43,10 @@ public class GroupDaoImpl implements AccountGroupDao<Group>, GroupDao, TableCons
             "WHERE group_id = ? AND account_id = ?;";
     private static final String CHECK_ACCOUNT_ADMIN = "SELECT id FROM group_data.group_members " +
             "WHERE account_id = ? AND is_admin = TRUE;";
+    private static final String CHECK_ACCOUNT_SUBSCRIBER = "SELECT id FROM group_data.group_members "
+            + "WHERE group_id = ? AND account_id = ? AND is_member = FALSE;";
+    private static final String CHECK_ACCOUNT_MEMBER = "SELECT id FROM group_data.group_members "
+            + "WHERE group_id = ? AND account_id = ? AND is_member = TRUE;";;
 
     private GroupDaoImpl() {
     }
@@ -193,6 +197,30 @@ public class GroupDaoImpl implements AccountGroupDao<Group>, GroupDao, TableCons
             return resultSet.next();
         } catch (SQLException e) {
             throw new DaoException("dao: check account is group admin method failed: ", e);
+        }
+    }
+
+    @Override
+    public boolean isAccountGroupSubscriber(Long groupId, Long accountId) {
+        try (PreparedStatement preparedStatement = getPreparedStatement(CHECK_ACCOUNT_SUBSCRIBER)) {
+            preparedStatement.setLong(1, groupId);
+            preparedStatement.setLong(2, accountId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.next();
+        } catch (SQLException e) {
+            throw new DaoException("dao: check account is group subscriber method failed: ", e);
+        }
+    }
+
+    @Override
+    public boolean isAccountGroupMember(Long groupId, Long accountId) {
+        try (PreparedStatement preparedStatement = getPreparedStatement(CHECK_ACCOUNT_MEMBER)) {
+            preparedStatement.setLong(1, groupId);
+            preparedStatement.setLong(2, accountId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.next();
+        } catch (SQLException e) {
+            throw new DaoException("dao: check account is group member method failed: ", e);
         }
     }
 

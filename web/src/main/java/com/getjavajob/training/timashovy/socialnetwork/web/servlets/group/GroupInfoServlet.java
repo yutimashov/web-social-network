@@ -30,6 +30,12 @@ public class GroupInfoServlet extends HttpServlet {
             if (groupService.isAccountAdmin(accountId)) {
                 req.setAttribute("isAccountAdmin", true);
             }
+            if (groupService.isAccountGroupSubscriber(groupId, accountId)) {
+                req.setAttribute("isSubscriber", true);
+            }
+            if (groupService.isAccountGroupMember(groupId, accountId)) {
+                req.setAttribute("isMember", true);
+            }
         }
         req.getRequestDispatcher(getJspPagePath("group")).forward(req, resp);
     }

@@ -18,4 +18,8 @@ public interface GroupDao extends AccountGroupDao<Group> {
 
     boolean isAccountAdmin(Long accountId);
 
+    boolean isAccountGroupSubscriber(Long groupId, Long accountId);
+
+    boolean isAccountGroupMember(Long groupId, Long accountId);
+
 }

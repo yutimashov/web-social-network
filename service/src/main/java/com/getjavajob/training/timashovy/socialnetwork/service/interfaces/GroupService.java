@@ -17,5 +17,8 @@ public interface GroupService {
     List<Account> getIncomingGroupRequests(Long groupId);
     boolean deleteGroupMember(Long groupId, Long accountId);
     boolean isAccountAdmin(Long accountId);
+    boolean isAccountGroupSubscriber(Long groupId, Long accountId);
+
+    boolean isAccountGroupMember(Long groupId, Long accountId);
 
 }

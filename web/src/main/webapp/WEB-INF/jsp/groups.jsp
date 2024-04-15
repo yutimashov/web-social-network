@@ -10,9 +10,6 @@
 <c:forEach items="${requestScope.groups}" var="group">
     <a href="${pageContext.request.contextPath}/group?id=${group.id}">${group.groupName}</a>
     <span>&nbsp;&nbsp;${group.description}&nbsp;&nbsp;</span>
-    <a href="${pageContext.request.contextPath}/group/send-request?id=${group.id}">
-        <button>Send join request</button>
-    </a>
     <hr>
 </c:forEach>
 </body>
