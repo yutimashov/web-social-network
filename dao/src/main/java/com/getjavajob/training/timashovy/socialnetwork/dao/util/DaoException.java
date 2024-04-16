@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions;
+package com.getjavajob.training.timashovy.socialnetwork.dao.util;
 
 /**
  * Exception for detecting problems related to dao layer.

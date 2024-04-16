@@ -1,14 +1,12 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.util;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
 import static java.lang.String.format;
 
-public final class CredentialHashUtil {
+public final class PasswordUtil {
 
     private static final int SALT_LENGTH = 32;
     private static final String HASH_ALGORITHM = "SHA-256";

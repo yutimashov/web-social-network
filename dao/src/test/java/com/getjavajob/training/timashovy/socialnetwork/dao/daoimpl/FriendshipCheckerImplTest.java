@@ -3,7 +3,7 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipChecker;
 import org.junit.jupiter.api.*;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.FriendshipCheckerImpl.getInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship.FriendshipCheckerImpl.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;

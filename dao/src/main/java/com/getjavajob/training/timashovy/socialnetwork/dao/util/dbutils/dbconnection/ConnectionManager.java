@@ -1,6 +1,6 @@
-package com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection;
+package com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
+import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.PropertiesUtil.get;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.PropertiesUtil.get;
 import static java.lang.Class.forName;
 import static java.lang.Integer.parseInt;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;

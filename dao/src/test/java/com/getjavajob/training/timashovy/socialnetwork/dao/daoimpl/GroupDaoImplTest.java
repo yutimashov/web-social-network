@@ -2,13 +2,13 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.Group;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.AccountGroupDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
+import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.GroupDaoImpl.getInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group.GroupDaoImpl.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static org.junit.jupiter.api.Assertions.*;
 

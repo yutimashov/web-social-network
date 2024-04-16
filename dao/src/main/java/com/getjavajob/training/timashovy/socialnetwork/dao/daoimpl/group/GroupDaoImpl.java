@@ -1,10 +1,10 @@
-package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl;
+package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.Group;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.AccountGroupDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.group.GroupDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.util.TableConstraintsValidator;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.GroupDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
+import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,10 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.TableNames.GROUP_MEMBERS_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.TableNames.GROUP_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatement;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.GROUP_MEMBERS_TABLE;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.GROUP_TABLE;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
 import static java.util.Objects.isNull;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;

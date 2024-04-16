@@ -1,13 +1,13 @@
-package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl;
+package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipChecker;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
+import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatement;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
 
 public class FriendshipCheckerImpl implements FriendshipChecker {
 

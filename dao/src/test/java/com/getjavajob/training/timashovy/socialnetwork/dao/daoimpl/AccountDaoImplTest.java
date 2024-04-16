@@ -2,8 +2,8 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.AccountGroupDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.util.TableConstraintsValidator;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
+import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;

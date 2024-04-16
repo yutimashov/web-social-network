@@ -6,7 +6,7 @@ import org.junit.jupiter.api.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.FriendshipDaoImpl.getInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship.FriendshipDaoImpl.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static org.junit.jupiter.api.Assertions.*;
 

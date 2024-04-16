@@ -3,14 +3,14 @@ package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Role;
-import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.FriendshipCheckerImpl;
-import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.FriendshipDaoImpl;
+import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship.FriendshipCheckerImpl;
+import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship.FriendshipDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AccountDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PhoneDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.AccountGroupDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipChecker;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.util.TableConstraintsValidator;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 

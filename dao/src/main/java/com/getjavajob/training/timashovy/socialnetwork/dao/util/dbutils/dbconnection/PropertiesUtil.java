@@ -1,6 +1,6 @@
-package com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection;
+package com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
+import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 
 import java.io.IOException;
 import java.io.InputStream;

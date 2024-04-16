@@ -3,7 +3,7 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
+import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,9 +11,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.TableNames.ACCOUNT_PHONES_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatement;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNT_PHONES_TABLE;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
 
 public class PhoneDaoImpl implements PhoneDao {
 

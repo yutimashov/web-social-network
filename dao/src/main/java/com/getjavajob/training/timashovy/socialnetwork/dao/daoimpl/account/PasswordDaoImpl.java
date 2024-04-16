@@ -3,17 +3,17 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Password;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PasswordDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
+import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.CredentialHashUtil.generateSalt;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.CredentialHashUtil.hashCredential;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.TableNames.ACCOUNT_PASSWORDS_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatement;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.PasswordUtil.generateSalt;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.PasswordUtil.hashCredential;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNT_PASSWORDS_TABLE;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
 
 public class PasswordDaoImpl implements PasswordDao {
 

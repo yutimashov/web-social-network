@@ -2,10 +2,10 @@ package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AccountDaoImpl;
-import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.FriendshipCheckerImpl;
-import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.FriendshipDaoImpl;
+import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship.FriendshipCheckerImpl;
+import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship.FriendshipDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PhoneDaoImpl;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
+import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

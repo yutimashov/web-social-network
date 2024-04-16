@@ -1,11 +1,11 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.GroupAvatarDaoImpl;
+import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group.GroupAvatarDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.ImageService;
 
 import java.io.InputStream;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.GroupAvatarDaoImpl.getInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group.GroupAvatarDaoImpl.getInstance;
 
 public class GroupAvatarServiceImpl implements ImageService {
 

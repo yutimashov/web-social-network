@@ -2,8 +2,8 @@ package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.Group;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.GroupDaoImpl;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.group.GroupDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group.GroupDaoImpl;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.GroupDao;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupService;
 

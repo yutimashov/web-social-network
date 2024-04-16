@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection;
+package com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection;
 
 import java.sql.*;
 import java.util.Map;

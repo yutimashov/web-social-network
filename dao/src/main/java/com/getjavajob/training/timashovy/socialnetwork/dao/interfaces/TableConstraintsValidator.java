@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.util;
+package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces;
 
 /**
  * Interface for checking table constraints.
