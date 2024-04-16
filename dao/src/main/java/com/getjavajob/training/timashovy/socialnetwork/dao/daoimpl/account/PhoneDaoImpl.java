@@ -25,7 +25,7 @@ public class PhoneDaoImpl implements PhoneDao {
     private PhoneDaoImpl() {
     }
 
-    public static PhoneDaoImpl getPhoneDaoInstance() {
+    public static PhoneDaoImpl getInstance() {
         return PHONE_DAO_IMPL;
     }
 
@@ -54,7 +54,7 @@ public class PhoneDaoImpl implements PhoneDao {
     }
 
     @Override
-    public List<Phone> getPhoneNumbers(Long accountId) {
+    public List<Phone> getAll(Long accountId) {
         List<Phone> phones = new ArrayList<>();
         try (PreparedStatement getPhoneStatement = getPreparedStatement(GET_PHONE)) {
             getPhoneStatement.setLong(1, accountId);

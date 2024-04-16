@@ -4,11 +4,11 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.Accoun
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AdminService;
 
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.Role.ADMIN;
-import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountServiceImpl.getAccountServiceInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountServiceImpl.getInstance;
 
 public class AdminServiceImpl implements AdminService {
 
-    private final AccountService accountService = getAccountServiceInstance();
+    private final AccountService accountService = getInstance();
     private static final AdminServiceImpl ADMIN_SERVICE = new AdminServiceImpl();
 
     private AdminServiceImpl() {

@@ -1,10 +1,9 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.Group;
-import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.AccountGroupDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.GroupDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.group.GroupDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.util.TableConstraintsValidator;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
 
 import java.sql.PreparedStatement;
@@ -54,7 +53,7 @@ public class GroupDaoImpl implements AccountGroupDao<Group>, GroupDao, TableCons
     private GroupDaoImpl() {
     }
 
-    public static GroupDaoImpl getGroupDaoInstance() {
+    public static GroupDaoImpl getInstance() {
         return GROUP_DAO_INSTANCE;
     }
 

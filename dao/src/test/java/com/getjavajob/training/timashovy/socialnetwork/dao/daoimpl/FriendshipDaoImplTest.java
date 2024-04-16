@@ -1,12 +1,12 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.FriendshipDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipDao;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.FriendshipDaoImpl.getFriendshipDaoInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.FriendshipDaoImpl.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,7 +16,7 @@ class FriendshipDaoImplTest {
     private static final String LOAD_TEST_TABLES_FILEPATH = "scripts/load_test_data.sql";
     private static final String CLEAR_TEST_TABLES_FILEPATH = "scripts/clear_test_db.sql";
     private static final String DROP_TEST_DB_FILEPATH = "scripts/drop_test_db.sql";
-    private static final FriendshipDao FRIENDSHIP_DAO_INSTANCE = getFriendshipDaoInstance();
+    private static final FriendshipDao FRIENDSHIP_DAO_INSTANCE = getInstance();
 
     @BeforeAll
     public static void createTestTables() {

@@ -1,9 +1,9 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.FriendshipChecker;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipChecker;
 import org.junit.jupiter.api.*;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.FriendshipCheckerImpl.getFriendshipCheckerInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.FriendshipCheckerImpl.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -14,7 +14,7 @@ class FriendshipCheckerImplTest {
     private static final String LOAD_TEST_TABLES_FILEPATH = "scripts/load_test_data.sql";
     private static final String CLEAR_TEST_TABLES_FILEPATH = "scripts/clear_test_db.sql";
     private static final String DROP_TEST_DB_FILEPATH = "scripts/drop_test_db.sql";
-    private static final FriendshipChecker FRIENDSHIP_CHECKER_INSTANCE = getFriendshipCheckerInstance();
+    private static final FriendshipChecker FRIENDSHIP_CHECKER_INSTANCE = getInstance();
 
     @BeforeAll
     public static void createTestTables() {

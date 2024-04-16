@@ -1,6 +1,5 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 
 import java.util.List;
@@ -13,6 +12,6 @@ public interface PhoneDao {
 
     boolean update();
 
-    List<Phone> getPhoneNumbers(Long accountId);
+    List<Phone> getAll(Long accountId);
 
 }

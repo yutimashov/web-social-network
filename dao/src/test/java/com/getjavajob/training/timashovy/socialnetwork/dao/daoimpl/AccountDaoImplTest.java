@@ -1,19 +1,20 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.common.account.Role;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.AccountGroupDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.util.TableConstraintsValidator;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.Role.REGULAR;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AccountDaoImpl.getAccountDaoInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AccountDaoImpl.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static java.time.LocalDate.of;
+import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.*;
 
 class AccountDaoImplTest {
@@ -22,7 +23,7 @@ class AccountDaoImplTest {
     private static final String LOAD_DATA_INTO_TEST_TABLES_FILEPATH = "scripts/load_test_data.sql";
     private static final String EMPTY_TEST_TABLES_FILEPATH = "scripts/clear_test_db.sql";
     private static final String DROP_TEST_DB_FILEPATH = "scripts/drop_test_db.sql";
-    private static final AccountGroupDao<Account> ACCOUNT_DAO_INSTANCE = getAccountDaoInstance();
+    private static final AccountGroupDao<Account> ACCOUNT_DAO_INSTANCE = getInstance();
     private static final Account TEST_ACCOUNT = new Account.Builder()
             .id(1L)
             .firstName("")
@@ -96,7 +97,7 @@ class AccountDaoImplTest {
     class TestValidateUniquenessFieldConstraint {
 
         @Test
-        void whenAccountEmailIsNotUnique() {
+        void shouldThrowExceptionWhenEmailIsNotUnique() {
             String duplicatedEmail = "test";
             Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
                 ((TableConstraintsValidator) ACCOUNT_DAO_INSTANCE).validateEntityFieldUniqueness("email",
@@ -107,7 +108,7 @@ class AccountDaoImplTest {
         }
 
         @Test
-        void createAccountWithIcqUniqueViolation() {
+        void shouldThrowExceptionWhenICQIsNotUnique() {
             String duplicatedIcq = "test";
             Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
                 ((TableConstraintsValidator) ACCOUNT_DAO_INSTANCE).validateEntityFieldUniqueness("icq",
@@ -118,7 +119,7 @@ class AccountDaoImplTest {
         }
 
         @Test
-        void createAccountWithSkypeUniqueViolation() {
+        void shouldThrowExceptionWhenSkypeIsNotUnique() {
             String duplicatedSkype = "test";
             Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
                 ((TableConstraintsValidator) ACCOUNT_DAO_INSTANCE).validateEntityFieldUniqueness("skype",
@@ -135,17 +136,17 @@ class AccountDaoImplTest {
     class TestCreateAccount {
 
         @Test
-        void createInEmptyTableReturnsId1() {
+        void shouldReturn1LWhenAccountCreatedInEmptyTable() {
             emptyTestTables();
-            assertEquals(1L, getAccountDaoInstance().create(TEST_ACCOUNT));
+            assertEquals(1L, ACCOUNT_DAO_INSTANCE.create(TEST_ACCOUNT));
         }
 
         @Test
-        void createAccountWithFirstNameNotNullViolation() {
+        void shouldThrowExceptionWhenFirstNameIsNull() {
             emptyTestTables();
             TEST_ACCOUNT.setFirstName(null);
             Throwable exception = assertThrows(DaoException.class, () -> {
-                getAccountDaoInstance().create(TEST_ACCOUNT);
+                ACCOUNT_DAO_INSTANCE.create(TEST_ACCOUNT);
                 throw new UnsupportedOperationException("Not supported");
             });
             restoreTestAccountDefaultState();
@@ -153,11 +154,11 @@ class AccountDaoImplTest {
         }
 
         @Test
-        void createAccountWithLastNameNotNullViolation() {
+        void shouldThrowExceptionWhenLastNameIsNull() {
             emptyTestTables();
             TEST_ACCOUNT.setLastName(null);
             Throwable exception = assertThrows(DaoException.class, () -> {
-                getAccountDaoInstance().create(TEST_ACCOUNT);
+                ACCOUNT_DAO_INSTANCE.create(TEST_ACCOUNT);
                 throw new UnsupportedOperationException("Not supported");
             });
             restoreTestAccountDefaultState();
@@ -171,16 +172,15 @@ class AccountDaoImplTest {
     class TestGetById {
 
         @Test
-        void getByIdGetExistingAccount() {
+        void shouldReturnOptionalWithAccountWhenAccountExists() {
             setTestAccountEqualsToRecordInTestTable();
-            System.out.println(TEST_ACCOUNT);
             assertEquals(Optional.of(TEST_ACCOUNT), ACCOUNT_DAO_INSTANCE.getById(1L));
         }
 
         @Test
-        void getByIdGetNonExistingAccount() {
+        void shouldReturnEmptyOptionalWhenAccountNotExists() {
             emptyTestTables();
-            assertEquals(Optional.empty(), ACCOUNT_DAO_INSTANCE.getById(1L));
+            assertEquals(empty(), ACCOUNT_DAO_INSTANCE.getById(1L));
         }
 
     }
@@ -190,9 +190,27 @@ class AccountDaoImplTest {
     class TestGetAll {
 
         @Test
-        void getAllOnEmptyTable() {
+        void shouldReturnEmptyListWhenTableIsEmpty() {
             emptyTestTables();
-            assertEquals(new ArrayList<Account>(), getAccountDaoInstance().getAll());
+            assertEquals(new ArrayList<Account>(), ACCOUNT_DAO_INSTANCE.getAll());
+        }
+
+        @Test
+        void shouldReturnActualListWhenTableIsNotEmpty() {
+            List<Account> accounts = new ArrayList<>();
+            accounts.add(new Account.Builder().id(1L).firstName("test").middleName("test").lastName("test")
+                    .birthDate(of(1800, 1, 1)).personalAddress("test").workAddress("test")
+                    .email("test").icq("test").skype("test").additionalInfo("test").role(REGULAR).build());
+            accounts.add(new Account.Builder().id(2L).firstName("test1").middleName("test1").lastName("test1")
+                    .birthDate(of(1800, 1, 1)).personalAddress("test1").workAddress("test1")
+                    .email("test1").icq("test1").skype("test1").additionalInfo("test1").role(REGULAR).build());
+            accounts.add(new Account.Builder().id(3L).firstName("test2").middleName("test2").lastName("test2")
+                    .birthDate(of(1800, 1, 1)).personalAddress("test2").workAddress("test2")
+                    .email("test2").icq("test2").skype("test2").additionalInfo("test2").role(REGULAR).build());
+            accounts.add(new Account.Builder().id(4L).firstName("test3").middleName("test3").lastName("test3")
+                    .birthDate(of(1800, 1, 1)).personalAddress("test3").workAddress("test3")
+                    .email("test3").icq("test3").skype("test3").additionalInfo("test3").role(REGULAR).build());
+            assertEquals(accounts, ACCOUNT_DAO_INSTANCE.getAll());
         }
 
     }
@@ -202,13 +220,13 @@ class AccountDaoImplTest {
     class TestUpdateById {
 
         @Test
-        void updateByIdUpdateNonExistingId() {
-            assertFalse(getAccountDaoInstance().updateById(-1L, TEST_ACCOUNT));
+        void shouldReturnFalseWhenAccountNotExists() {
+            assertFalse(ACCOUNT_DAO_INSTANCE.updateById(-1L, TEST_ACCOUNT));
         }
 
         @Test
-        void updateByIdUpdateExistingAccount() {
-            assertTrue(getAccountDaoInstance().updateById(1L, TEST_ACCOUNT));
+        void shouldReturnTrueWhenAccountExists() {
+            assertTrue(ACCOUNT_DAO_INSTANCE.updateById(1L, TEST_ACCOUNT));
         }
 
     }
@@ -218,13 +236,13 @@ class AccountDaoImplTest {
     class TestDeleteById {
 
         @Test
-        void deleteByIdNonExistingId() {
-            assertFalse(getAccountDaoInstance().deleteById(-1L));
+        void shouldReturnFalseWhenAccountNotExists() {
+            assertFalse(ACCOUNT_DAO_INSTANCE.deleteById(-1L));
         }
 
         @Test
-        void deleteByIdDeleteExistingAccount() {
-            assertTrue(getAccountDaoInstance().deleteById(1L));
+        void shouldReturnTrueWhenAccountExists() {
+            assertTrue(ACCOUNT_DAO_INSTANCE.deleteById(1L));
         }
 
     }

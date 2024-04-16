@@ -11,11 +11,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountServiceImpl.getAccountServiceInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountServiceImpl.getInstance;
 
 public class AccountsServlet extends HttpServlet {
 
-    private final AccountServiceImpl accountService = getAccountServiceInstance();
+    private final AccountServiceImpl accountService = getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {

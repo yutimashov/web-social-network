@@ -5,12 +5,12 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.ImageS
 
 import java.io.InputStream;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.GroupAvatarDaoImpl.getGroupAvatarDaoImpl;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.GroupAvatarDaoImpl.getInstance;
 
 public class GroupAvatarServiceImpl implements ImageService {
 
     private static final GroupAvatarServiceImpl GROUP_AVATAR_SERVICE = new GroupAvatarServiceImpl();
-    private final GroupAvatarDaoImpl avatarDao = getGroupAvatarDaoImpl();
+    private final GroupAvatarDaoImpl avatarDao = getInstance();
 
     private GroupAvatarServiceImpl() {
     }

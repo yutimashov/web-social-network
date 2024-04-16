@@ -7,8 +7,6 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.Passwo
 
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountServiceImpl.getAccountServiceInstance;
-import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.PasswordServiceImpl.getPasswordServiceInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.CredentialHashUtil.hashCredential;
 import static java.util.Objects.isNull;
 import static java.util.Optional.empty;
@@ -16,8 +14,8 @@ import static java.util.Optional.empty;
 public class LoginService {
 
     private static final LoginService loginService = new LoginService();
-    private final AccountService accountService = getAccountServiceInstance();
-    private final PasswordService passwordService = getPasswordServiceInstance();
+    private final AccountService accountService = AccountServiceImpl.getInstance();
+    private final PasswordService passwordService = PasswordServiceImpl.getInstance();
 
     private LoginService() {
     }

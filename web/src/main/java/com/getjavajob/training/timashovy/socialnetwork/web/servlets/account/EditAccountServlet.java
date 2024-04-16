@@ -10,14 +10,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
 
-import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountServiceImpl.getAccountServiceInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountServiceImpl.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountAvatarServiceImpl.getAccountAvatarServiceInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 import static java.lang.Long.valueOf;
 
 public class EditAccountServlet extends HttpServlet {
 
-    private final AccountServiceImpl accountService = getAccountServiceInstance();
+    private final AccountServiceImpl accountService = getInstance();
     private final ImageService avatarService = getAccountAvatarServiceInstance();
     private static final String FIRST_NAME_PARAMETER_NAME = "name";
     private static final String LAST_NAME_PARAMETER_NAME = "lastName";

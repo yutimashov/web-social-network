@@ -5,17 +5,15 @@ import com.getjavajob.training.timashovy.socialnetwork.common.account.Password;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PasswordDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PasswordDaoImpl.getPasswordDaoInstance;
-
 public class PasswordServiceImpl implements PasswordService {
 
     private static final PasswordServiceImpl passwordServiceImpl = new PasswordServiceImpl();
-    private final PasswordDaoImpl passwordDao = getPasswordDaoInstance();
+    private final PasswordDaoImpl passwordDao = PasswordDaoImpl.getInstance();
 
     private PasswordServiceImpl() {
     }
 
-    public static PasswordServiceImpl getPasswordServiceInstance() {
+    public static PasswordServiceImpl getInstance() {
         return passwordServiceImpl;
     }
 

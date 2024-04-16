@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.ImageDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.image.ImageDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
 
 import java.io.InputStream;
@@ -23,7 +23,7 @@ public class GroupAvatarDaoImpl implements ImageDao {
     private GroupAvatarDaoImpl() {
     }
 
-    public static GroupAvatarDaoImpl getGroupAvatarDaoImpl() {
+    public static GroupAvatarDaoImpl getInstance() {
         return GROUP_AVATAR_DAO;
     }
 

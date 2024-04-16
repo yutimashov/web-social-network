@@ -2,7 +2,8 @@ package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.Group;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.GroupDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.GroupDaoImpl;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.group.GroupDao;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupService;
 
@@ -10,14 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.GroupDaoImpl.getGroupDaoInstance;
-import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountServiceImpl.getAccountServiceInstance;
-
 public class GroupServiceImpl implements GroupService {
 
     private static final GroupServiceImpl GROUP_SERVICE_INSTANCE = new GroupServiceImpl();
 
-    private final GroupDao groupDaoInstance = getGroupDaoInstance();
+    private final GroupDao groupDaoInstance = GroupDaoImpl.getInstance();
 
     private GroupServiceImpl() {
     }
@@ -55,7 +53,7 @@ public class GroupServiceImpl implements GroupService {
     public List<Account> getIncomingGroupRequests(Long groupId) {
         List<Long> accountsId = groupDaoInstance.getIncomingGroupRequests(groupId);
         List<Account> accounts = new ArrayList<>();
-        AccountService accountService = getAccountServiceInstance();
+        AccountService accountService = AccountServiceImpl.getInstance();
         for (Long accountId : accountsId) {
             if (accountService.getAccountById(accountId).isPresent()) {
                 accounts.add(accountService.getAccountById(accountId).get());
@@ -88,7 +86,7 @@ public class GroupServiceImpl implements GroupService {
     public List<Account> getGroupMembers(Long groupId) {
         List<Long> accountsId = groupDaoInstance.getGroupMembers(groupId);
         List<Account> groupMembers = new ArrayList<>();
-        AccountService accountService = getAccountServiceInstance();
+        AccountService accountService = AccountServiceImpl.getInstance();
         for (Long accountId : accountsId) {
             if (accountService.getAccountById(accountId).isPresent()) {
                 groupMembers.add(accountService.getAccountById(accountId).get());

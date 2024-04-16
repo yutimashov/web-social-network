@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.FriendshipDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
 
 import java.sql.PreparedStatement;
@@ -29,7 +29,7 @@ public class FriendshipDaoImpl implements FriendshipDao {
     private FriendshipDaoImpl() {
     }
 
-    public static FriendshipDaoImpl getFriendshipDaoInstance() {
+    public static FriendshipDaoImpl getInstance() {
         return FRIENDSHIP_DAO_INSTANCE;
     }
 

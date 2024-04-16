@@ -3,10 +3,14 @@ package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Role;
+import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.FriendshipCheckerImpl;
+import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.FriendshipDaoImpl;
+import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AccountDaoImpl;
+import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PhoneDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.AccountGroupDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.FriendshipChecker;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.FriendshipDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipChecker;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.util.TableConstraintsValidator;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 
@@ -18,10 +22,6 @@ import java.util.stream.Collectors;
 
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.FriendshipCheckerImpl.getFriendshipCheckerInstance;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.FriendshipDaoImpl.getFriendshipDaoInstance;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AccountDaoImpl.getAccountDaoInstance;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PhoneDaoImpl.getPhoneDaoInstance;
 import static java.util.Objects.isNull;
 
 public class AccountServiceImpl implements AccountService {
@@ -44,16 +44,16 @@ public class AccountServiceImpl implements AccountService {
         private static final AccountServiceImpl INSTANCE;
 
         static {
-            AccountGroupDao<Account> accountDao = getAccountDaoInstance();
-            FriendshipDao friendshipDao = getFriendshipDaoInstance();
-            FriendshipChecker friendshipChecker = getFriendshipCheckerInstance();
-            PhoneDao phoneDao = getPhoneDaoInstance();
+            AccountGroupDao<Account> accountDao = AccountDaoImpl.getInstance();
+            FriendshipDao friendshipDao = FriendshipDaoImpl.getInstance();
+            FriendshipChecker friendshipChecker = FriendshipCheckerImpl.getInstance();
+            PhoneDao phoneDao = PhoneDaoImpl.getInstance();
             INSTANCE = new AccountServiceImpl(accountDao, friendshipDao, friendshipChecker, phoneDao);
         }
 
     }
 
-    public static AccountServiceImpl getAccountServiceInstance() {
+    public static AccountServiceImpl getInstance() {
         return SingletonHolder.INSTANCE;
     }
 
@@ -204,7 +204,7 @@ public class AccountServiceImpl implements AccountService {
     public List<Account> getAllAccounts() {
         List<Account> accounts = accountDao.getAll();
         for (Account account : accounts) {
-            List<Phone> accountPhones = phoneDao.getPhoneNumbers(account.getId());
+            List<Phone> accountPhones = phoneDao.getAll(account.getId());
             if (!accountPhones.isEmpty()) {
                 account.setPersonalPhoneNumber(accountPhones.stream().filter(phone -> phone.getPhoneType() == PERSONAL)
                         .collect(Collectors.toList()));

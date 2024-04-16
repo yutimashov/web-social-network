@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.LoginService.getLoginServiceInstance;
-import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.PasswordServiceImpl.getPasswordServiceInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.PasswordServiceImpl.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 import static java.util.Objects.isNull;
 import static java.util.concurrent.TimeUnit.HOURS;
@@ -18,7 +18,7 @@ import static java.util.concurrent.TimeUnit.HOURS;
 public class LoginServlet extends HttpServlet {
 
     private final LoginService loginService = getLoginServiceInstance();
-    private final PasswordService passwordService = getPasswordServiceInstance();
+    private final PasswordService passwordService = getInstance();
     private static final String LOGIN_COOKIE_NAME = "login";
     private static final String PASSWORD_COOKIE_NAME = "password";
     private static final int REMEMBER_ME_COOKIE_LIFETIME = (int) HOURS.toSeconds(1);

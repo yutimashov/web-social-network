@@ -10,7 +10,7 @@ import java.util.List;
 public class PhoneServiceImpl {
 
     private static final PhoneServiceImpl PHONE_SERVICE_IMPL = new PhoneServiceImpl();
-    private final PhoneDao phoneDao = PhoneDaoImpl.getPhoneDaoInstance();
+    private final PhoneDao phoneDao = PhoneDaoImpl.getInstance();
 
     private PhoneServiceImpl() {
     }
@@ -27,7 +27,7 @@ public class PhoneServiceImpl {
     }
     
     public List<Phone> getPhoneNumbers(Long accountId) {
-        return phoneDao.getPhoneNumbers(accountId);
+        return phoneDao.getAll(accountId);
     }
 
 }
