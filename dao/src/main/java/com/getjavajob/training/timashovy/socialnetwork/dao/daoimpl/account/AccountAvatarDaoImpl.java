@@ -8,16 +8,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.TableNames.ACCOUNT_AVATARS_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatement;
 
 public class AccountAvatarDaoImpl implements ImageDao {
 
     private static final AccountAvatarDaoImpl IMAGE_DAO_IMPL = new AccountAvatarDaoImpl();
-    private static final String UPLOAD_ACCOUNT_AVATAR = "INSERT INTO account_data.account_avatars (account_id,"
+    private static final String UPLOAD_ACCOUNT_AVATAR = "INSERT INTO " + ACCOUNT_AVATARS_TABLE + " (account_id,"
             + " avatar_blob) VALUES (?, ?)";
-    private static final String GET_ACCOUNT_AVATAR = "SELECT avatar_blob FROM account_data.account_avatars WHERE "
+    private static final String GET_ACCOUNT_AVATAR = "SELECT avatar_blob FROM " + ACCOUNT_AVATARS_TABLE + " WHERE "
             + "account_id = ?;";
-    private static final String UPDATE_ACCOUNT_AVATAR = "UPDATE account_data.account_avatars SET avatar_blob = ? "
+    private static final String UPDATE_ACCOUNT_AVATAR = "UPDATE " + ACCOUNT_AVATARS_TABLE + " SET avatar_blob = ? "
             + "WHERE account_id = ?;";
 
     private AccountAvatarDaoImpl() {

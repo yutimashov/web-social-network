@@ -11,15 +11,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.TableNames.ACCOUNT_PHONES_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatement;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
 
 public class PhoneDaoImpl implements PhoneDao {
 
-    private static final String CREATE_PHONE = "INSERT INTO account_data.account_phones (account_id, phone_type,"
-            + " phone_number) VALUES (?, ?, ?);";
-    private static final String GET_PHONE = "SELECT phone_type, phone_number FROM account_data.account_phones WHERE" +
-            " account_id = ?;";
+    private static final String CREATE_PHONE = "INSERT INTO " + ACCOUNT_PHONES_TABLE + " (account_id, phone_type, "
+            + "phone_number) VALUES (?, ?, ?);";
+    private static final String GET_PHONE = "SELECT phone_type, phone_number FROM " + ACCOUNT_PHONES_TABLE + " WHERE "
+            + "account_id = ?;";
     private static final PhoneDaoImpl PHONE_DAO_IMPL = new PhoneDaoImpl();
 
     private PhoneDaoImpl() {

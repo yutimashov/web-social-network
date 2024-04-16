@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.TableNames.GROUP_MEMBERS_TABLE;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.TableNames.GROUP_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatement;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
 import static java.util.Objects.isNull;
@@ -22,33 +24,33 @@ import static java.util.Optional.of;
 public class GroupDaoImpl implements AccountGroupDao<Group>, GroupDao, TableConstraintsValidator {
 
     private static final GroupDaoImpl GROUP_DAO_INSTANCE = new GroupDaoImpl();
-    private static final String SAVE_GROUP = "INSERT INTO group_data.\"group\" (group_name, description, owner_id) "
+    private static final String SAVE_GROUP = "INSERT INTO " + GROUP_TABLE + " (group_name, description, owner_id) "
             + "VALUES(?, ?, ?)";
     private static final String GET_GROUP_BY_ID = "SELECT id, group_name, description, owner_id "
-            + "FROM group_data.\"group\" WHERE id = ?";
+            + "FROM " + GROUP_TABLE + " WHERE id = ?";
     private static final String GET_ALL_GROUPS = "SELECT id, group_name, description, owner_id "
-            + "FROM group_data.\"group\"";
-    private static final String UPDATE_GROUP_BY_ID = "UPDATE group_data.\"group\" SET group_name = ?, description = ?,"
+            + "FROM " + GROUP_TABLE + ";";
+    private static final String UPDATE_GROUP_BY_ID = "UPDATE " + GROUP_TABLE + " SET group_name = ?, description = ?,"
             + " owner_id = ? WHERE id = ?";
-    private static final String DELETE_GROUP_BY_ID = "DELETE FROM group_data.\"group\" WHERE id = ?";
-    private static final String ADD_USER = "INSERT INTO group_data.group_members (account_id, group_id) " +
+    private static final String DELETE_GROUP_BY_ID = "DELETE FROM " + GROUP_TABLE + " WHERE id = ?";
+    private static final String ADD_USER = "INSERT INTO " + GROUP_MEMBERS_TABLE + " (account_id, group_id) " +
             "VALUES(?, ?);";
-    private static final String MAKE_USER_GROUP_ADMIN = "UPDATE group_data.group_members SET is_admin = TRUE WHERE " +
+    private static final String MAKE_USER_GROUP_ADMIN = "UPDATE " + GROUP_MEMBERS_TABLE + " SET is_admin = TRUE WHERE " +
             "group_id = ? AND account_id = ?;";
-    private static final String MAKE_USER_GROUP_MEMBER = "UPDATE group_data.group_members SET is_member = TRUE " +
+    private static final String MAKE_USER_GROUP_MEMBER = "UPDATE " + GROUP_MEMBERS_TABLE + " SET is_member = TRUE " +
             "WHERE group_id = ? AND account_id = ?;";
-    private static final String GET_GROUP_FOLLOWERS = "SELECT account_id FROM group_data.group_members " +
-            "WHERE group_id = ? AND is_member = FALSE ORDER BY registration_date DESC;";
-    private static final String DELETE_GROUP_MEMBER = "DELETE FROM group_data.group_members " +
-            "WHERE group_id = ? AND account_id = ?;";
-    private static final String CHECK_ACCOUNT_ADMIN = "SELECT id FROM group_data.group_members " +
-            "WHERE group_id = ? AND account_id = ? AND is_admin = TRUE;";
-    private static final String CHECK_ACCOUNT_SUBSCRIBER = "SELECT id FROM group_data.group_members "
-            + "WHERE group_id = ? AND account_id = ? AND is_member = FALSE;";
-    private static final String CHECK_ACCOUNT_MEMBER = "SELECT id FROM group_data.group_members "
-            + "WHERE group_id = ? AND account_id = ? AND is_member = TRUE;";;
-    private static final String GET_GROUP_MEMBERS = "SELECT account_id FROM group_data.group_members " +
-            "WHERE group_id = ? AND is_member = TRUE AND is_admin = FALSE ORDER BY registration_date DESC;";
+    private static final String GET_GROUP_FOLLOWERS = "SELECT account_id FROM " + GROUP_MEMBERS_TABLE
+            + " WHERE group_id = ? AND is_member = FALSE ORDER BY registration_date DESC;";
+    private static final String DELETE_GROUP_MEMBER = "DELETE FROM " + GROUP_MEMBERS_TABLE
+            + " WHERE group_id = ? AND account_id = ?;";
+    private static final String CHECK_ACCOUNT_ADMIN = "SELECT id FROM " + GROUP_MEMBERS_TABLE
+            + " WHERE group_id = ? AND account_id = ? AND is_admin = TRUE;";
+    private static final String CHECK_ACCOUNT_SUBSCRIBER = "SELECT id FROM " + GROUP_MEMBERS_TABLE
+            + " WHERE group_id = ? AND account_id = ? AND is_member = FALSE;";
+    private static final String CHECK_ACCOUNT_MEMBER = "SELECT id FROM " + GROUP_MEMBERS_TABLE
+            + " WHERE group_id = ? AND account_id = ? AND is_member = TRUE;";
+    private static final String GET_GROUP_MEMBERS = "SELECT account_id FROM " + GROUP_MEMBERS_TABLE
+            + " WHERE group_id = ? AND is_member = TRUE AND is_admin = FALSE ORDER BY registration_date DESC;";
 
     private GroupDaoImpl() {
     }

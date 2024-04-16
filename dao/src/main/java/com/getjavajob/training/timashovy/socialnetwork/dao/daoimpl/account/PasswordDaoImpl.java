@@ -11,17 +11,18 @@ import java.sql.SQLException;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.CredentialHashUtil.generateSalt;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.CredentialHashUtil.hashCredential;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.TableNames.ACCOUNT_PASSWORDS_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatement;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
 
 public class PasswordDaoImpl implements PasswordDao {
 
-    private static final String SAVE_PASSWORD = "INSERT INTO account_data.account_passwords (account_id, hash_password,"
+    private static final String SAVE_PASSWORD = "INSERT INTO " + ACCOUNT_PASSWORDS_TABLE + " (account_id, hash_password,"
             + " salt) VALUES(?, ?, ?)";
     private static final String GET_PASSWORD = "SELECT account_id, hash_password, salt " +
-            "FROM account_data.account_passwords WHERE account_id = ?;";
+            "FROM " + ACCOUNT_PASSWORDS_TABLE + " WHERE account_id = ?;";
     private static final String GET_PASSWORD_BY_EMAIL = "SELECT account_id, hash_password, salt " +
-            "FROM account_data.account_passwords pass JOIN account_data.account acc ON acc.id = pass.account_id " +
+            "FROM " + ACCOUNT_PASSWORDS_TABLE + " pass JOIN account_data.account acc ON acc.id = pass.account_id " +
             "WHERE acc.email = ?;";
     private static final String UPDATE_PASSWORD = "";
     private static final String CHECK_PASSWORD = "";

@@ -18,6 +18,8 @@ import java.util.Optional;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.Role.REGULAR;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.AccountTableFields.*;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.TableNames.ACCOUNT_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatement;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
 import static java.lang.String.valueOf;
@@ -28,19 +30,19 @@ import static java.util.stream.Collectors.toList;
 
 public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraintsValidator {
 
-    private static final String CREATE = "INSERT INTO account_data.account (first_name, last_name, "
+    private static final String CREATE = "INSERT INTO " + ACCOUNT_TABLE + " (first_name, last_name, "
             + "middle_name, birth_date, personal_address, work_address, email, icq, skype, additional_info, role_type) "
             + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     private static final String GET_BY_ID = "SELECT id, first_name, last_name, middle_name, birth_date, "
-            + "personal_address, work_address, email, icq, skype, additional_info, role_type FROM account_data.account "
-            + "WHERE id = ?;";
+            + "personal_address, work_address, email, icq, skype, additional_info, role_type FROM " + ACCOUNT_TABLE
+            + " WHERE id = ?;";
     private static final String GET_ALL = "SELECT id, first_name, last_name, middle_name, birth_date, personal_address, "
             + "work_address, email, icq, skype, additional_info, role_type "
-            + "FROM account_data.account;";
-    private static final String UPDATE_BY_ID = "UPDATE account_data.account SET first_name = ?, last_name = ?, "
+            + "FROM " + ACCOUNT_TABLE + ";";
+    private static final String UPDATE_BY_ID = "UPDATE " + ACCOUNT_TABLE + " SET first_name = ?, last_name = ?, "
             + "middle_name = ?, birth_date = ?, personal_address = ?, work_address = ?, email = ?, icq = ?, skype = ?, "
             + "additional_info = ?, role_type = ? WHERE id = ?;";
-    private static final String DELETE_BY_ID = "DELETE FROM account_data.account WHERE id = ?;";
+    private static final String DELETE_BY_ID = "DELETE FROM " + ACCOUNT_TABLE + " WHERE id = ?;";
     private static final AccountDaoImpl ACCOUNT_DAO_INSTANCE = new AccountDaoImpl();
     private static final PhoneDao PHONE_DAO = PhoneDaoImpl.getInstance();
 
@@ -131,19 +133,19 @@ public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraint
 
     private Account createAccountFromResultSet(ResultSet resultSet) throws SQLException {
         return new Account.Builder()
-                .id(resultSet.getLong("id"))
-                .firstName(resultSet.getString("first_name"))
-                .lastName(resultSet.getString("last_name"))
-                .email(resultSet.getString("email"))
-                .birthDate(resultSet.getDate("birth_date") != null
-                        ? resultSet.getDate("birth_date").toLocalDate() : null)
-                .middleName(resultSet.getString("middle_name"))
-                .personalAddress(resultSet.getString("personal_address"))
-                .workAddress(resultSet.getString("work_address"))
-                .icq(resultSet.getString("icq"))
-                .skype(resultSet.getString("skype"))
-                .additionalInfo(resultSet.getString("additional_info"))
-                .role(Role.valueOf(resultSet.getString("role_type")))
+                .id(resultSet.getLong(ACCOUNT_ID_FIELD))
+                .firstName(resultSet.getString(ACCOUNT_FIRST_NAME_FIELD))
+                .lastName(resultSet.getString(ACCOUNT_LAST_NAME_FIELD))
+                .email(resultSet.getString(ACCOUNT_EMAIL_FIELD))
+                .birthDate(resultSet.getDate(ACCOUNT_BIRTHDATE_FIELD) != null
+                        ? resultSet.getDate(ACCOUNT_BIRTHDATE_FIELD).toLocalDate() : null)
+                .middleName(resultSet.getString(ACCOUNT_MIDDLE_NAME_FIELD))
+                .personalAddress(resultSet.getString(ACCOUNT_PERSONAL_ADDRESS_FIELD))
+                .workAddress(resultSet.getString(ACCOUNT_WORK_ADDRESS_FIELD))
+                .icq(resultSet.getString(ACCOUNT_ICQ_FIELD))
+                .skype(resultSet.getString(ACCOUNT_SKYPE_FIELD))
+                .additionalInfo(resultSet.getString(ACCOUNT_ADDITIONAL_INFO_FIELD))
+                .role(Role.valueOf(resultSet.getString(ACCOUNT_ROLE_TYPE_FIELD)))
                 .build();
     }
 
