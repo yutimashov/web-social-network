@@ -70,8 +70,8 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public boolean isAccountAdmin(Long accountId) {
-        return groupDaoInstance.isAccountAdmin(accountId);
+    public boolean isAccountAdmin(Long groupId, Long accountId) {
+        return groupDaoInstance.isAccountAdmin(groupId, accountId);
     }
 
     @Override
@@ -82,6 +82,19 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public boolean isAccountGroupMember(Long groupId, Long accountId) {
         return groupDaoInstance.isAccountGroupMember(groupId, accountId);
+    }
+
+    @Override
+    public List<Account> getGroupMembers(Long groupId) {
+        List<Long> accountsId = groupDaoInstance.getGroupMembers(groupId);
+        List<Account> groupMembers = new ArrayList<>();
+        AccountService accountService = getAccountServiceInstance();
+        for (Long accountId : accountsId) {
+            if (accountService.getAccountById(accountId).isPresent()) {
+                groupMembers.add(accountService.getAccountById(accountId).get());
+            }
+        }
+        return groupMembers;
     }
 
     @Override

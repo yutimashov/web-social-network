@@ -14,7 +14,7 @@
 <hr>
 <p>Description: ${requestScope.group.description}</p>
 <hr>
-<c:if test="${empty(requestScope.isSubscriber)} && ${empty(requestScope.isMember)}">
+<c:if test="${empty(requestScope.isSubscriber) && empty(requestScope.isMember)}">
     <a href="${pageContext.request.contextPath}/group/send-request?id=${requestScope.group.id}">
         <button>Send join request</button>
     </a>
@@ -22,15 +22,18 @@
 <c:if test="${!empty(requestScope.isSubscriber)}">
     <span>Already subscribed!</span>
 </c:if>
-<c:if test="${!empty(requestScope.isMember)}">
-    <span>You are a group member!</span>
-</c:if>
-<hr>
 <c:if test="${!empty(requestScope.isAccountAdmin)}">
+    <p>Welcome, admin!</p>
     <a href="${pageContext.request.contextPath}/group/requests?id=${requestScope.group.id}">
         <button>Account requests</button>
+    </a><br>
+    <a href="${pageContext.request.contextPath}/group/members?id=${requestScope.group.id}">
+        <button>Account members</button>
     </a>
     <hr>
+</c:if>
+<c:if test="${!empty(requestScope.isMember)} && ${empty(requestScope.isAccountAdmin)}">
+    <span>Welcome, group member!</span>
 </c:if>
 </body>
 </html>

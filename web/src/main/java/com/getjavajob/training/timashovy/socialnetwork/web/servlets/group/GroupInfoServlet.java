@@ -27,7 +27,7 @@ public class GroupInfoServlet extends HttpServlet {
             req.setAttribute("group", groupService.getById(groupId).get());
             req.setAttribute("avatarInputStream", avatarService.get(groupId));
             Long accountId = ((Account) req.getSession(false).getAttribute("account")).getId();
-            if (groupService.isAccountAdmin(accountId)) {
+            if (groupService.isAccountAdmin(groupId, accountId)) {
                 req.setAttribute("isAccountAdmin", true);
             }
             if (groupService.isAccountGroupSubscriber(groupId, accountId)) {

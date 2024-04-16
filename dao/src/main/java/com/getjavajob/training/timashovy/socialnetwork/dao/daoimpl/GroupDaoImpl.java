@@ -1,6 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.Group;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.AccountGroupDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.GroupDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
@@ -42,11 +43,13 @@ public class GroupDaoImpl implements AccountGroupDao<Group>, GroupDao, TableCons
     private static final String DELETE_GROUP_MEMBER = "DELETE FROM group_data.group_members " +
             "WHERE group_id = ? AND account_id = ?;";
     private static final String CHECK_ACCOUNT_ADMIN = "SELECT id FROM group_data.group_members " +
-            "WHERE account_id = ? AND is_admin = TRUE;";
+            "WHERE group_id = ? AND account_id = ? AND is_admin = TRUE;";
     private static final String CHECK_ACCOUNT_SUBSCRIBER = "SELECT id FROM group_data.group_members "
             + "WHERE group_id = ? AND account_id = ? AND is_member = FALSE;";
     private static final String CHECK_ACCOUNT_MEMBER = "SELECT id FROM group_data.group_members "
             + "WHERE group_id = ? AND account_id = ? AND is_member = TRUE;";;
+    private static final String GET_GROUP_MEMBERS = "SELECT account_id FROM group_data.group_members " +
+            "WHERE group_id = ? AND is_member = TRUE AND is_admin = FALSE ORDER BY registration_date DESC;";
 
     private GroupDaoImpl() {
     }
@@ -190,9 +193,10 @@ public class GroupDaoImpl implements AccountGroupDao<Group>, GroupDao, TableCons
     }
 
     @Override
-    public boolean isAccountAdmin(Long accountId) {
+    public boolean isAccountAdmin(Long groupId, Long accountId) {
         try (PreparedStatement preparedStatement = getPreparedStatement(CHECK_ACCOUNT_ADMIN)) {
-            preparedStatement.setLong(1, accountId);
+            preparedStatement.setLong(1, groupId);
+            preparedStatement.setLong(2, accountId);
             ResultSet resultSet = preparedStatement.executeQuery();
             return resultSet.next();
         } catch (SQLException e) {
@@ -221,6 +225,21 @@ public class GroupDaoImpl implements AccountGroupDao<Group>, GroupDao, TableCons
             return resultSet.next();
         } catch (SQLException e) {
             throw new DaoException("dao: check account is group member method failed: ", e);
+        }
+    }
+
+    @Override
+    public List<Long> getGroupMembers(Long groupId) {
+        try (PreparedStatement preparedStatement = getPreparedStatement(GET_GROUP_MEMBERS)) {
+            List<Long> groupMembers = new ArrayList<>();
+            preparedStatement.setLong(1, groupId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                groupMembers.add(resultSet.getLong(1));
+            }
+            return groupMembers;
+        } catch (SQLException e) {
+            throw new DaoException("dao: get group members method failed: " + e.getMessage());
         }
     }
 

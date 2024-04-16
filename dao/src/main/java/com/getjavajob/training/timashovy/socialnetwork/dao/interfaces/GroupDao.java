@@ -1,6 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.Group;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 
 import java.util.List;
 
@@ -16,10 +17,12 @@ public interface GroupDao extends AccountGroupDao<Group> {
 
     boolean deleteGroupMember(Long groupId, Long accountId);
 
-    boolean isAccountAdmin(Long accountId);
+    boolean isAccountAdmin(Long groupId, Long accountId);
 
     boolean isAccountGroupSubscriber(Long groupId, Long accountId);
 
     boolean isAccountGroupMember(Long groupId, Long accountId);
+
+    List<Long> getGroupMembers(Long groupId);
 
 }

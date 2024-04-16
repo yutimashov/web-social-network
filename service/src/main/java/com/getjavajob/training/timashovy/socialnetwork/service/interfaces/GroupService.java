@@ -16,9 +16,11 @@ public interface GroupService {
     boolean makeAccountGroupMember(Long groupId, Long accountId);
     List<Account> getIncomingGroupRequests(Long groupId);
     boolean deleteGroupMember(Long groupId, Long accountId);
-    boolean isAccountAdmin(Long accountId);
+    boolean isAccountAdmin(Long groupId, Long accountId);
     boolean isAccountGroupSubscriber(Long groupId, Long accountId);
 
     boolean isAccountGroupMember(Long groupId, Long accountId);
+
+    List<Account> getGroupMembers(Long groupId);
 
 }
