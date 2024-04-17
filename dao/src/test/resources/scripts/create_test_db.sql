@@ -53,3 +53,26 @@ CREATE TABLE friend_data.friendship
     CONSTRAINT friendship_to_accepter_fk FOREIGN KEY (accepter_id) REFERENCES account_data.account (id) ON DELETE CASCADE,
     CONSTRAINT friends_are_distinct_ck CHECK (id_1 < id_2)
 );
+CREATE SCHEMA message_data;
+SET SCHEMA message_data;
+CREATE TABLE message_data.message_type
+(
+    id           INT PRIMARY KEY AUTO_INCREMENT,
+    message_type VARCHAR(50) NOT NULL UNIQUE
+);
+SET SCHEMA message_data;
+CREATE TABLE message_data.messages
+(
+    id                INT PRIMARY KEY AUTO_INCREMENT,
+    account_author_id INT REFERENCES account_data.account (id) ON DELETE CASCADE,
+    creation_date     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    message_text      TEXT,
+    destination_type  INT REFERENCES message_data.message_type (id) ON DELETE CASCADE
+);
+SET SCHEMA message_data;
+CREATE TABLE message_data.message_images
+(
+    id         INT PRIMARY KEY AUTO_INCREMENT,
+    image_blob BLOB,
+    message_id INT REFERENCES message_data.messages (id) ON DELETE CASCADE
+);

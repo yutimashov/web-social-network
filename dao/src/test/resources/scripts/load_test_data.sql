@@ -9,3 +9,5 @@ VALUES ('test', 'test', '1', 'test');
 INSERT INTO friend_data.friendship (id_1, id_2, status, requester_id, accepter_id)
 VALUES ('1', '2', TRUE, '1', '2'),
        ('3', '4', FALSE, '3', '4');
+INSERT INTO message_data.message_type (message_type)
+VALUES ('ACCOUNT_PERSONAL'), ('GROUP'), ('ACCOUNT_WALL');

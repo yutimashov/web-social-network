@@ -8,6 +8,14 @@ import java.util.Optional;
 
 public class MessageDaoImpl implements BaseDao<Message> {
 
+    private static final MessageDaoImpl MESSAGE_DAO = new MessageDaoImpl();
+
+    public static MessageDaoImpl getInstance() {
+        return MESSAGE_DAO;
+    }
+
+    private MessageDaoImpl() {
+    }
 
     @Override
     public Long create(Message message) {
