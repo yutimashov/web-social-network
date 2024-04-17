@@ -1,7 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.Group;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.AccountGroupDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.GroupDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
@@ -21,7 +21,7 @@ import static java.util.Objects.isNull;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
-public class GroupDaoImpl implements AccountGroupDao<Group>, GroupDao, TableConstraintsValidator {
+public class GroupDaoImpl implements BaseDao<Group>, GroupDao, TableConstraintsValidator {
 
     private static final GroupDaoImpl GROUP_DAO_INSTANCE = new GroupDaoImpl();
     private static final String SAVE_GROUP = "INSERT INTO " + GROUP_TABLE + " (group_name, description, owner_id) "

@@ -3,7 +3,7 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Role;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.AccountGroupDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
@@ -28,7 +28,7 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
 
-public class AccountDaoImpl implements AccountGroupDao<Account>, TableConstraintsValidator {
+public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidator {
 
     private static final String CREATE = "INSERT INTO " + ACCOUNT_TABLE + " (first_name, last_name, "
             + "middle_name, birth_date, personal_address, work_address, email, icq, skype, additional_info, role_type) "

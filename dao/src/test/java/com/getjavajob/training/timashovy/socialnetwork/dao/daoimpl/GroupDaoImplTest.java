@@ -1,7 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.Group;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.AccountGroupDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 import org.junit.jupiter.api.*;
 
@@ -18,7 +18,7 @@ class GroupDaoImplTest {
     private static final String LOAD_DATA_INTO_TEST_TABLES_FILEPATH = "scripts/load_test_data.sql";
     private static final String EMPTY_TEST_TABLES_FILEPATH = "scripts/clear_test_db.sql";
     private static final String DROP_TEST_DB_FILEPATH = "scripts/drop_test_db.sql";
-    private static final AccountGroupDao<Group> GROUP_DAO_INSTANCE = getInstance();
+    private static final BaseDao<Group> GROUP_DAO_INSTANCE = getInstance();
     private static final Group TEST_GROUP = new Group("", "", 1L);
 
     private void restoreTestGroupDefaultState() {

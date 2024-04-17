@@ -8,7 +8,7 @@ import java.util.Optional;
  *
  * @param <T> type of entity class
  */
-public interface AccountGroupDao<T> {
+public interface BaseDao<T> {
 
     Long create(T t);
 

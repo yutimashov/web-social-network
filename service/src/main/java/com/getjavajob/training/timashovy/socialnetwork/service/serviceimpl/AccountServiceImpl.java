@@ -7,7 +7,7 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship.Fr
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship.FriendshipDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AccountDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PhoneDaoImpl;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.AccountGroupDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipChecker;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
@@ -26,12 +26,12 @@ import static java.util.Objects.isNull;
 
 public class AccountServiceImpl implements AccountService {
 
-    private final AccountGroupDao<Account> accountDao;
+    private final BaseDao<Account> accountDao;
     private final FriendshipDao friendshipDao;
     private final FriendshipChecker friendshipChecker;
     private final PhoneDao phoneDao;
 
-    private AccountServiceImpl(AccountGroupDao<Account> accountDao, FriendshipDao friendshipDao,
+    private AccountServiceImpl(BaseDao<Account> accountDao, FriendshipDao friendshipDao,
                                FriendshipChecker friendshipChecker, PhoneDao phoneDao) {
         this.accountDao = accountDao;
         this.friendshipDao = friendshipDao;
@@ -44,7 +44,7 @@ public class AccountServiceImpl implements AccountService {
         private static final AccountServiceImpl INSTANCE;
 
         static {
-            AccountGroupDao<Account> accountDao = AccountDaoImpl.getInstance();
+            BaseDao<Account> accountDao = AccountDaoImpl.getInstance();
             FriendshipDao friendshipDao = FriendshipDaoImpl.getInstance();
             FriendshipChecker friendshipChecker = FriendshipCheckerImpl.getInstance();
             PhoneDao phoneDao = PhoneDaoImpl.getInstance();
