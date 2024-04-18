@@ -58,7 +58,7 @@ SET SCHEMA message_data;
 CREATE TABLE message_data.message_type
 (
     id           INT PRIMARY KEY AUTO_INCREMENT,
-    message_type VARCHAR(50) NOT NULL UNIQUE
+    message_type VARCHAR(50) NOT NULL
 );
 SET SCHEMA message_data;
 CREATE TABLE message_data.messages

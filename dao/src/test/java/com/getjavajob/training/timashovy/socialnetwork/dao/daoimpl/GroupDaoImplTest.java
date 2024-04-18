@@ -7,9 +7,11 @@ import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group.GroupDaoImpl.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
+import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GroupDaoImplTest {
@@ -73,11 +75,7 @@ class GroupDaoImplTest {
         @Test
         public void testGetByIdGetNonExistingGroup() {
             emptyTestTables();
-            Throwable exception = assertThrows(DaoException.class, () -> {
-                GROUP_DAO_INSTANCE.getById(1L);
-                throw new UnsupportedOperationException("Not supported");
-            });
-            assertEquals("try to get non-existing group by id", exception.getMessage());
+            assertEquals(empty(), GROUP_DAO_INSTANCE.getById(1L));
         }
 
     }

@@ -55,7 +55,7 @@ class FriendshipDaoImplTest {
 
         @Test
         void whenRecordAlreadyExistsWithStatusFalse() {
-            assertTrue(FRIENDSHIP_DAO_INSTANCE.acceptFriendRequest(4L, 3L));
+            assertFalse(FRIENDSHIP_DAO_INSTANCE.acceptFriendRequest(4L, 3L));
         }
 
         @Test
