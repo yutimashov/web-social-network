@@ -13,4 +13,3 @@ INSERT INTO message_data.message_type (message_type)
 VALUES ('ACCOUNT_PERSONAL'),
        ('GROUP'),
        ('ACCOUNT_WALL');
-INSERT INTO message_data.

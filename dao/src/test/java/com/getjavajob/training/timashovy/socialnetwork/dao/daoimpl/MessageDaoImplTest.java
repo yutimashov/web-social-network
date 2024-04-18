@@ -4,7 +4,15 @@ import com.getjavajob.training.timashovy.socialnetwork.common.message.Message;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import org.junit.jupiter.api.*;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static com.getjavajob.training.timashovy.socialnetwork.common.message.DestinationType.ACCOUNT_PERSONAL;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.MessageDaoImpl.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
+import static java.time.LocalDate.of;
+import static org.junit.jupiter.api.Assertions.*;
 
 class MessageDaoImplTest {
 
@@ -13,7 +21,8 @@ class MessageDaoImplTest {
     private static final String EMPTY_TEST_TABLES_FILEPATH = "scripts/clear_test_db.sql";
     private static final String DROP_TEST_DB_FILEPATH = "scripts/drop_test_db.sql";
 
-    private static final BaseDao<Message> MESSAGE_DAO_INSTANCE = MessageDaoImpl.getInstance();
+    private static final BaseDao<Message> MESSAGE_DAO = getInstance();
+    private static final Message TEST_MESSAGE = new Message(1L, of(1800, 1, 1), "test", ACCOUNT_PERSONAL, null);
 
     @BeforeAll
     static void createTestTables() {
@@ -35,24 +44,84 @@ class MessageDaoImplTest {
         executeScript(DROP_TEST_DB_FILEPATH);
     }
 
-    @Test
-    void create() {
+    @Nested
+    @DisplayName("Long create()")
+    class TestCreate {
+
+        @Test
+        void shouldReturn1LWhenMessageCreatedInEmptyTable() {
+            emptyTestTables();
+            assertEquals(1L, MESSAGE_DAO.create(TEST_MESSAGE));
+        }
+
     }
 
-    @Test
-    void getById() {
+    @Nested
+    @DisplayName("void getById()")
+    class TestGetById {
+
+        @Test
+        void shouldReturnEmptyOptionalWhenMessageNotExists() {
+            emptyTestTables();
+            assertEquals(Optional.empty(), MESSAGE_DAO.getById(1L));
+        }
+
+        @Test
+        void shouldRerun1LWhenTryToGetExistingOnlyOneInTableMessage() {
+            assertEquals(Optional.of(TEST_MESSAGE), MESSAGE_DAO.getById(1L));
+        }
+
     }
 
-    @Test
-    void getAll() {
+    @Nested
+    @DisplayName("void getAll()")
+    class TestGetAll {
+
+        @Test
+        void shouldReturnEmptyListWhenTableIsEmpty() {
+            emptyTestTables();
+            assertEquals(new ArrayList<Message>(), MESSAGE_DAO.getAll());
+        }
+
+        @Test
+        void shouldReturnListWithTwoMessagesWhen2MessagesInTable() {
+            List<Message> messages = new ArrayList<>();
+            messages.add(TEST_MESSAGE);
+            assertEquals(messages, MESSAGE_DAO.getAll());
+        }
+
     }
 
-    @Test
-    void updateById() {
+    @Nested
+    @DisplayName("boolean updateById(Long id, Message message")
+    class TestUpdateById {
+
+        @Test
+        void shouldReturnFalseWhenMessageNotExists() {
+            assertFalse(MESSAGE_DAO.updateById(-1L, TEST_MESSAGE));
+        }
+
+        @Test
+        void shouldReturnTrueWhenAccountExists() {
+            assertTrue(MESSAGE_DAO.updateById(1L, TEST_MESSAGE));
+        }
+
     }
 
-    @Test
-    void deleteById() {
+    @Nested
+    @DisplayName("boolean deleteById(Long id)")
+    class TestDeleteById {
+
+        @Test
+        void shouldReturnFalseWhenMessageNotExists() {
+            assertFalse(MESSAGE_DAO.deleteById(-1L));
+        }
+
+        @Test
+        void shouldReturnTrueWhenMessageExists() {
+            assertTrue(MESSAGE_DAO.deleteById(1L));
+        }
+
     }
 
 }
