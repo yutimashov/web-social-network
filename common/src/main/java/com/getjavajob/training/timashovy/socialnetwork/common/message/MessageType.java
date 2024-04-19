@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.common.message;
 
-public enum DestinationType {
+public enum MessageType {
 
     ACCOUNT_PERSONAL, GROUP, ACCOUNT_WALL
 

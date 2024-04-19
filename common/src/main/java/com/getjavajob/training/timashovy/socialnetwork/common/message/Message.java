@@ -12,10 +12,10 @@ public class Message {
     private Long accountAuthorId;
     private LocalDate creationDate;
     private String text;
-    private DestinationType destination;
+    private MessageType destination;
     private InputStream photo;
 
-    public Message(Long accountAuthorId, LocalDate creationDate, String text, DestinationType destination,
+    public Message(Long accountAuthorId, LocalDate creationDate, String text, MessageType destination,
                    InputStream photo) {
         this.accountAuthorId = accountAuthorId;
         this.creationDate = creationDate;
@@ -24,7 +24,7 @@ public class Message {
         this.photo = photo;
     }
 
-    public Message(Long id, Long accountAuthorId, LocalDate creationDate, String text, DestinationType destination,
+    public Message(Long id, Long accountAuthorId, LocalDate creationDate, String text, MessageType destination,
                    InputStream photo) {
         this(accountAuthorId, creationDate, text, destination, photo);
         this.id = id;
@@ -62,11 +62,11 @@ public class Message {
         this.text = text;
     }
 
-    public DestinationType getDestination() {
+    public MessageType getDestination() {
         return destination;
     }
 
-    public void setDestination(DestinationType destination) {
+    public void setDestination(MessageType destination) {
         this.destination = destination;
     }
 

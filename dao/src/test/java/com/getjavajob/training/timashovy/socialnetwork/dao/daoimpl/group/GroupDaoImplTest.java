@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl;
+package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.Group;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
