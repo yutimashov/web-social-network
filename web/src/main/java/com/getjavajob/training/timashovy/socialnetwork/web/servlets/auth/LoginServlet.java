@@ -17,19 +17,19 @@ import static java.util.concurrent.TimeUnit.HOURS;
 
 public class LoginServlet extends HttpServlet {
 
-    private final LoginService loginService = getLoginServiceInstance();
-    private final PasswordService passwordService = getInstance();
     private static final String LOGIN_COOKIE_NAME = "login";
     private static final String PASSWORD_COOKIE_NAME = "password";
     private static final int REMEMBER_ME_COOKIE_LIFETIME = (int) HOURS.toSeconds(1);
+    private final LoginService loginService = getLoginServiceInstance();
+    private final PasswordService passwordService = getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher(getJspPagePath("login")).forward(req, resp);
+        req.getRequestDispatcher(getJspPagePath("/auth/login")).forward(req, resp);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Optional<Account> loggedInAccount = loginService.getLoggedInAccount(req.getParameter("email"),
                 req.getParameter("password"));
         if (loggedInAccount.isPresent()) {
@@ -47,7 +47,9 @@ public class LoginServlet extends HttpServlet {
 
     private void createRememberMeCookies(Account account, HttpServletResponse resp) {
         prepareCookie(resp, LOGIN_COOKIE_NAME, account.getEmail());
-        prepareCookie(resp, PASSWORD_COOKIE_NAME, passwordService.get(account).getPassword());
+        if (passwordService.get(account.getId()).isPresent()) {
+            prepareCookie(resp, PASSWORD_COOKIE_NAME, passwordService.get(account.getId()).get().getPassword());
+        }
     }
 
     private void prepareCookie(HttpServletResponse resp, String cookieName, String cookieValue) {

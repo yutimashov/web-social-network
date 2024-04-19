@@ -5,17 +5,15 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.ImageS
 
 import java.io.InputStream;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AccountAvatarDaoImpl.getInstance;
-
 public class AccountAvatarServiceImpl implements ImageService {
 
     private static final AccountAvatarServiceImpl AVATAR_SERVICE = new AccountAvatarServiceImpl();
-    private final AccountAvatarDaoImpl avatarDao = getInstance();
+    private final AccountAvatarDaoImpl avatarDao = AccountAvatarDaoImpl.getInstance();
 
     private AccountAvatarServiceImpl() {
     }
 
-    public static AccountAvatarServiceImpl getAccountAvatarServiceInstance() {
+    public static AccountAvatarServiceImpl getInstance() {
         return AVATAR_SERVICE;
     }
 
@@ -35,8 +33,8 @@ public class AccountAvatarServiceImpl implements ImageService {
     }
 
     @Override
-    public boolean update(Long id, InputStream imageInputStream) {
-        return avatarDao.update(id, imageInputStream);
+    public boolean update(Long accountId, InputStream imageInputStream) {
+        return avatarDao.update(accountId, imageInputStream);
     }
 
 }

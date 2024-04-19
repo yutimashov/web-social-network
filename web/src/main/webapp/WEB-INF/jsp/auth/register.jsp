@@ -49,7 +49,7 @@
     </label>
     <br>
     <hr>
-    <label for="personalPhoneNumber">Private phone number (if there are several numbers - separate them with commas):
+    <label for="personalPhoneNumber">Personal phone number (if there are several numbers - separate them with commas):
         <input type="tel" name="personalPhoneNumber" id="personalPhoneNumber">
     </label>
     <br>

@@ -15,7 +15,7 @@ public class PhoneServiceImpl {
     private PhoneServiceImpl() {
     }
 
-    public static PhoneServiceImpl getPhoneServiceInstance() {
+    public static PhoneServiceImpl getInstance() {
         return PHONE_SERVICE_IMPL;
     }
 

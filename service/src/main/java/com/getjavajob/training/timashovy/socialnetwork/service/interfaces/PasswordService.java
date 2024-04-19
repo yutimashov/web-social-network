@@ -1,17 +1,14 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.interfaces;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Password;
+
+import java.util.Optional;
 
 public interface PasswordService {
 
     Long create(Long accountId, String rawPassword);
 
-    boolean verify(Password password);
-
-    boolean update(Password password);
-
-    Password get(Account account);
+    Optional<Password> get(Long accountId);
 
     Password findPasswordByEmail(String email);
 

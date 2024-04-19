@@ -4,6 +4,7 @@ import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.ImageService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
+import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountAvatarServiceImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountServiceImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.PasswordServiceImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.PhoneServiceImpl;
@@ -16,20 +17,18 @@ import java.io.IOException;
 
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
-import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountAvatarServiceImpl.getAccountAvatarServiceInstance;
-import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.PhoneServiceImpl.getPhoneServiceInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 
 public class RegistrationServlet extends HttpServlet {
 
     private final AccountService accountService = AccountServiceImpl.getInstance();
     private final PasswordService passwordService = PasswordServiceImpl.getInstance();
-    private final ImageService avatarService = getAccountAvatarServiceInstance();
-    private final PhoneServiceImpl phoneService = getPhoneServiceInstance();
+    private final ImageService avatarService = AccountAvatarServiceImpl.getInstance();
+    private final PhoneServiceImpl phoneService = PhoneServiceImpl.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher(getJspPagePath("register")).forward(req, resp);
+        req.getRequestDispatcher(getJspPagePath("/auth/register")).forward(req, resp);
     }
 
     @Override

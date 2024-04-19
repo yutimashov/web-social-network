@@ -75,14 +75,16 @@ public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidat
     @Override
     public Long create(Account account) {
         try (PreparedStatement createAccountStatement = getPreparedStatementWithGeneratedKeys(CREATE)) {
-            for (Phone phone :
-                    account.getPersonalPhoneNumber()) {
-                PHONE_DAO.create(phone);
-            }
-            for (Phone phone :
-                    account.getWorkPhoneNumber()) {
-                PHONE_DAO.create(phone);
-            }
+//            if (!isNull(account.getPersonalPhoneNumber())) {
+//                for (Phone phone : account.getPersonalPhoneNumber()) {
+//                    PHONE_DAO.create(phone);
+//                }
+//            }
+//            if (!isNull(account.getWorkPhoneNumber())) {
+//                for (Phone phone : account.getWorkPhoneNumber()) {
+//                    PHONE_DAO.create(phone);
+//                }
+//            }
             setAccountData(account, createAccountStatement);
             if (createAccountStatement.executeUpdate() > 0) {
                 ResultSet generatedKeys = createAccountStatement.getGeneratedKeys();
