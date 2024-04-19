@@ -24,14 +24,8 @@ CREATE TABLE message_data.messages
     id                INT PRIMARY KEY AUTO_INCREMENT,
     account_author_id INT REFERENCES account_data.accounts (id) ON DELETE CASCADE,
     creation_date     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    message_text      TEXT
-);
-SET SCHEMA message_data;
-CREATE TABLE message_data.message_types
-(
-    id           INT PRIMARY KEY AUTO_INCREMENT,
-    message_type VARCHAR(50) NOT NULL,
-    message_id   INT REFERENCES message_data.messages (id) ON DELETE CASCADE
+    message_text      TEXT,
+    destination_type VARCHAR(50) NOT NULL
 );
 SET SCHEMA message_data;
 CREATE TABLE message_data.message_images

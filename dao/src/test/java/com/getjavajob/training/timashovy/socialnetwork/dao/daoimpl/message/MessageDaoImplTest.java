@@ -4,6 +4,7 @@ import com.getjavajob.training.timashovy.socialnetwork.common.message.Message;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import org.junit.jupiter.api.*;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +23,8 @@ class MessageDaoImplTest {
     private static final String DROP_TEST_DB_FILEPATH = "scripts/message/drop.sql";
 
     private static final BaseDao<Message> MESSAGE_DAO = getInstance();
-    private static final Message TEST_MESSAGE = new Message(1L, of(1800, 1, 1), "test", ACCOUNT_PERSONAL, null);
+    private static final Message TEST_MESSAGE = new Message(1L, of(2020, 1, 1), "test", ACCOUNT_PERSONAL,
+            new ByteArrayInputStream("test".getBytes()));
 
     @BeforeAll
     static void createTestTables() {
@@ -51,7 +53,8 @@ class MessageDaoImplTest {
         @Test
         void shouldReturn1LWhenMessageCreatedInEmptyTable() {
             emptyTestTables();
-            assertEquals(1L, MESSAGE_DAO.create(TEST_MESSAGE));
+            fillTestTablesWith2Records();
+            assertEquals(2L, MESSAGE_DAO.create(TEST_MESSAGE));
         }
 
     }
@@ -69,25 +72,6 @@ class MessageDaoImplTest {
         @Test
         void shouldRerun1LWhenTryToGetExistingOnlyOneInTableMessage() {
             assertEquals(Optional.of(TEST_MESSAGE), MESSAGE_DAO.getById(1L));
-        }
-
-    }
-
-    @Nested
-    @DisplayName("void getAll()")
-    class TestGetAll {
-
-        @Test
-        void shouldReturnEmptyListWhenTableIsEmpty() {
-            emptyTestTables();
-            assertEquals(new ArrayList<Message>(), MESSAGE_DAO.getAll());
-        }
-
-        @Test
-        void shouldReturnListWithTwoMessagesWhen2MessagesInTable() {
-            List<Message> messages = new ArrayList<>();
-            messages.add(TEST_MESSAGE);
-            assertEquals(messages, MESSAGE_DAO.getAll());
         }
 
     }

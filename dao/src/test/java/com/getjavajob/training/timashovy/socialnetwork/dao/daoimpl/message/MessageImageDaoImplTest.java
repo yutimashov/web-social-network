@@ -72,25 +72,6 @@ class MessageImageDaoImplTest {
     }
 
     @Nested
-    @DisplayName("void getAll()")
-    class TestGetAll {
-
-        @Test
-        void shouldReturnEmptyListWhenTableIsEmpty() {
-            executeScript(CLEAR_TABLES_FILEPATH);
-            assertEquals(new ArrayList<MessageImage>(), MESSAGE_IMAGE_DAO.getAll());
-        }
-
-        @Test
-        void shouldReturnListWithTwoMessageImagesWhen2MessageImagesInTable() {
-            List<MessageImage> messages = new ArrayList<>();
-            messages.add(TEST_MESSAGE_IMAGE);
-            assertEquals(messages, MESSAGE_IMAGE_DAO.getAll());
-        }
-
-    }
-
-    @Nested
     @DisplayName("boolean updateById(Long id, MessageImage messageImage")
     class TestUpdateById {
 

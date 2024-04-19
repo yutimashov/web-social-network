@@ -89,7 +89,7 @@ public class Message {
         Message message = (Message) o;
         return Objects.equals(id, message.id) && Objects.equals(accountAuthorId, message.accountAuthorId)
                 && Objects.equals(creationDate, message.creationDate) && Objects.equals(text, message.text)
-                && Objects.equals(destination, message.destination) && Objects.equals(photo, message.photo);
+                && Objects.equals(destination, message.destination);
     }
 
     @Override

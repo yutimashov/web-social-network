@@ -1,6 +1,8 @@
 package com.getjavajob.training.timashovy.socialnetwork.common.message;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class MessageImage {
@@ -48,13 +50,21 @@ public class MessageImage {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MessageImage that = (MessageImage) o;
-        return Objects.equals(id, that.id) && Objects.equals(photo, that.photo)
-                && Objects.equals(messageId, that.messageId);
+        return Objects.equals(id, that.id) && Objects.equals(messageId, that.messageId);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, photo, messageId);
+    }
+
+    @Override
+    public String toString() {
+        return "MessageImage{" +
+                "id=" + id +
+                ", photo=" + photo +
+                ", messageId=" + messageId +
+                '}';
     }
 
 }
