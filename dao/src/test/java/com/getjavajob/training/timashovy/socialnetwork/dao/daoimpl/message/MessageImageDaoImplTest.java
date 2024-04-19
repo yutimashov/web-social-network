@@ -15,33 +15,28 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MessageImageDaoImplTest {
 
-    private static final String CREATE_TEST_TABLES_FILEPATH = "scripts/message/create.sql";
-    private static final String LOAD_DATA_INTO_TEST_TABLES_FILEPATH = "scripts/message/load.sql";
-    private static final String EMPTY_TEST_TABLES_FILEPATH = "scripts/message/clear.sql";
-    private static final String DROP_TEST_DB_FILEPATH = "scripts/message/drop.sql";
+    private static final String CREATE_TABLES_FILEPATH = "scripts/message/create.sql";
+    private static final String LOAD_DATA_FILEPATH = "scripts/message/load.sql";
+    private static final String CLEAR_TABLES_FILEPATH = "scripts/message/clear.sql";
+    private static final String DROP_DB_FILEPATH = "scripts/message/drop.sql";
     private static final BaseDao<MessageImage> MESSAGE_IMAGE_DAO = getInstance();
     private static final MessageImage TEST_MESSAGE_IMAGE = new MessageImage(1L,
             new ByteArrayInputStream("test".getBytes()), 1L);
 
     @BeforeAll
     static void createTestTables() {
-        executeScript(CREATE_TEST_TABLES_FILEPATH);
+        executeScript(CREATE_TABLES_FILEPATH);
     }
 
     @BeforeEach
     public void fillTestTablesWith2Records() {
-        emptyTestTables();
-        executeScript(LOAD_DATA_INTO_TEST_TABLES_FILEPATH);
-    }
-
-    @AfterEach
-    public void emptyTestTables() {
-        executeScript(EMPTY_TEST_TABLES_FILEPATH);
+        executeScript(CLEAR_TABLES_FILEPATH);
+        executeScript(LOAD_DATA_FILEPATH);
     }
 
     @AfterAll
     public static void dropDataBaseAfterTestExecution() {
-        executeScript(DROP_TEST_DB_FILEPATH);
+        executeScript(DROP_DB_FILEPATH);
     }
 
     @Nested
@@ -61,13 +56,17 @@ class MessageImageDaoImplTest {
 
         @Test
         void shouldReturnEmptyOptionalWhenMessageImageNotExists() {
-            emptyTestTables();
+            executeScript(CLEAR_TABLES_FILEPATH);
             assertEquals(Optional.empty(), MESSAGE_IMAGE_DAO.getById(1L));
         }
 
         @Test
         void shouldReturn1LWhenTryToGetExistingOnlyOneInTableMessageImage() {
-            assertEquals(Optional.of(TEST_MESSAGE_IMAGE), MESSAGE_IMAGE_DAO.getById(1L));
+            MessageImage messageImage = null;
+            if (MESSAGE_IMAGE_DAO.getById(1L).isPresent()) {
+                messageImage = MESSAGE_IMAGE_DAO.getById(1L).get();
+            }
+            assertEquals(Optional.of(TEST_MESSAGE_IMAGE).get(), messageImage);
         }
 
     }
@@ -78,7 +77,7 @@ class MessageImageDaoImplTest {
 
         @Test
         void shouldReturnEmptyListWhenTableIsEmpty() {
-            emptyTestTables();
+            executeScript(CLEAR_TABLES_FILEPATH);
             assertEquals(new ArrayList<MessageImage>(), MESSAGE_IMAGE_DAO.getAll());
         }
 

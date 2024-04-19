@@ -9,13 +9,9 @@ public class Phone {
     private String number;
     private Long accountId;
 
-    public Phone(PhoneType phoneType, String number) {
+    public Phone(PhoneType phoneType, String number, Long accountId) {
         this.phoneType = phoneType;
         this.number = number;
-    }
-
-    public Phone(PhoneType phoneType, String number, Long accountId) {
-        this(phoneType, number);
         this.accountId = accountId;
     }
 
