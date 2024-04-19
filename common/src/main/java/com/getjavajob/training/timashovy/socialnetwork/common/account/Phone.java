@@ -1,5 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.common.account;
 
+import java.util.Objects;
+
 public class Phone {
 
     private Long id;
@@ -57,6 +59,20 @@ public class Phone {
     @Override
     public String toString() {
         return "Phone{id=" + id + ", phoneType=" + phoneType + ", number=" + number + ", accountId=" + accountId + "}";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Phone phone = (Phone) o;
+        return Objects.equals(id, phone.id) && Objects.equals(phoneType, phone.phoneType)
+                && Objects.equals(number, phone.number) && Objects.equals(accountId, phone.accountId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, phoneType, number, accountId);
     }
 
 }

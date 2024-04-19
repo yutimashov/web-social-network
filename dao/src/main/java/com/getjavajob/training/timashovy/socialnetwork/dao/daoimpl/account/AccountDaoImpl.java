@@ -34,8 +34,8 @@ public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidat
             + "middle_name, birth_date, personal_address, work_address, email, icq, skype, additional_info, role_type) "
             + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     private static final String GET_BY_ID = "SELECT id, first_name, last_name, middle_name, birth_date, "
-            + "personal_address, work_address, email, icq, skype, additional_info, role_type FROM " + ACCOUNT_TABLE
-            + " WHERE id = ?;";
+            + "personal_address, work_address, email, icq, skype, additional_info, role_type FROM "
+            + ACCOUNT_TABLE + " WHERE id = ?;";
     private static final String GET_ALL = "SELECT id, first_name, last_name, middle_name, birth_date, personal_address, "
             + "work_address, email, icq, skype, additional_info, role_type "
             + "FROM " + ACCOUNT_TABLE + ";";
@@ -59,8 +59,8 @@ public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidat
             throw new IllegalArgumentException("uniqueness field violation: either fieldName or fieldValue is null");
         }
         if (!fieldValue.toString().isEmpty()) {
-            String checkRecordExistenceQuery = "SELECT id FROM account_data.account WHERE " + fieldName + " = ?";
-            try (PreparedStatement recordsSet = getPreparedStatement(checkRecordExistenceQuery)) {
+            String CHECK_RECORD_EXISTENCE_QUERY = "SELECT id FROM " + ACCOUNT_TABLE + " WHERE " + fieldName + " = ?";
+            try (PreparedStatement recordsSet = getPreparedStatement(CHECK_RECORD_EXISTENCE_QUERY)) {
                 recordsSet.setObject(1, fieldValue);
                 ResultSet existedRecords = recordsSet.executeQuery();
                 if (existedRecords.next()) {
@@ -75,6 +75,14 @@ public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidat
     @Override
     public Long create(Account account) {
         try (PreparedStatement createAccountStatement = getPreparedStatementWithGeneratedKeys(CREATE)) {
+            for (Phone phone :
+                    account.getPersonalPhoneNumber()) {
+                PHONE_DAO.create(phone);
+            }
+            for (Phone phone :
+                    account.getWorkPhoneNumber()) {
+                PHONE_DAO.create(phone);
+            }
             setAccountData(account, createAccountStatement);
             if (createAccountStatement.executeUpdate() > 0) {
                 ResultSet generatedKeys = createAccountStatement.getGeneratedKeys();

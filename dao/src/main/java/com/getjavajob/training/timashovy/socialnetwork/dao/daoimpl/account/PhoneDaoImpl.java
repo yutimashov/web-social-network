@@ -19,8 +19,8 @@ public class PhoneDaoImpl implements PhoneDao {
 
     private static final String CREATE_PHONE = "INSERT INTO " + ACCOUNT_PHONES_TABLE + " (account_id, phone_type, "
             + "phone_number) VALUES (?, ?, ?);";
-    private static final String GET_PHONE = "SELECT phone_type, phone_number FROM " + ACCOUNT_PHONES_TABLE + " WHERE "
-            + "account_id = ?;";
+    private static final String GET_PHONE = "SELECT id, phone_type, phone_number, account_id FROM "
+            + ACCOUNT_PHONES_TABLE + " WHERE account_id = ?;";
     private static final PhoneDaoImpl PHONE_DAO_IMPL = new PhoneDaoImpl();
 
     private PhoneDaoImpl() {
@@ -44,34 +44,36 @@ public class PhoneDaoImpl implements PhoneDao {
                 throw new DaoException("Failed to create phone");
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DaoException("dao: create phone failed: " + e.getMessage());
         }
     }
 
     private void setPhoneData(Phone phone, PreparedStatement preparedStatement) throws SQLException {
         preparedStatement.setLong(1, phone.getAccountId());
-        preparedStatement.setObject(2, phone.getPhoneType().name());
+        preparedStatement.setString(2, phone.getPhoneType().name());
         preparedStatement.setString(3, phone.getNumber());
     }
 
     @Override
     public List<Phone> getAll(Long accountId) {
-        List<Phone> phones = new ArrayList<>();
         try (PreparedStatement getPhoneStatement = getPreparedStatement(GET_PHONE)) {
+            List<Phone> phones = new ArrayList<>();
             getPhoneStatement.setLong(1, accountId);
             ResultSet phonesData = getPhoneStatement.executeQuery();
             while (phonesData.next()) {
                 phones.add(
                         new Phone(
+                                phonesData.getLong("id"),
                                 PhoneType.valueOf(phonesData.getString("phone_type")),
-                                phonesData.getString("phone_number")
+                                phonesData.getString("phone_number"),
+                                phonesData.getLong("account_id")
                         )
                 );
             }
+            return phones;
         } catch (SQLException e) {
             throw new DaoException("dao: get phone failed: " + e.getMessage());
         }
-        return phones;
     }
 
     @Override

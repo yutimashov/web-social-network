@@ -1,6 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
@@ -10,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
+import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.Role.REGULAR;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AccountDaoImpl.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
@@ -19,17 +22,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AccountDaoImplTest {
 
-    private static final String CREATE_TEST_TABLES_FILEPATH = "scripts/create_test_db.sql";
-    private static final String LOAD_DATA_INTO_TEST_TABLES_FILEPATH = "scripts/load_test_data.sql";
-    private static final String EMPTY_TEST_TABLES_FILEPATH = "scripts/clear_test_db.sql";
-    private static final String DROP_TEST_DB_FILEPATH = "scripts/drop_test_db.sql";
+    private static final String CREATE_TABLES_FILEPATH = "scripts/account/create.sql";
+    private static final String LOAD_DATA_FILEPATH = "scripts/account/load.sql";
+    private static final String CLEAR_TABLES_FILEPATH = "scripts/account/clear.sql";
+    private static final String DROP_DB_FILEPATH = "scripts/account/drop.sql";
     private static final BaseDao<Account> ACCOUNT_DAO_INSTANCE = getInstance();
     private static final Account TEST_ACCOUNT = new Account.Builder()
             .id(1L)
             .firstName("")
             .lastName("")
             .middleName("")
-            .birthDate(of(1800, 1, 1))
+            .birthDate(of(2000, 1, 1))
+            .personalPhoneNumber(new ArrayList<>())
+            .workPhoneNumber(new ArrayList<>())
             .personalAddress("")
             .workAddress("")
             .email("")
@@ -44,7 +49,9 @@ class AccountDaoImplTest {
         TEST_ACCOUNT.setFirstName("");
         TEST_ACCOUNT.setLastName("");
         TEST_ACCOUNT.setMiddleName("");
-        TEST_ACCOUNT.setBirthDate(of(1800, 1, 1));
+        TEST_ACCOUNT.setBirthDate(of(2000, 1, 1));
+        TEST_ACCOUNT.setPersonalPhoneNumber(new ArrayList<>());
+        TEST_ACCOUNT.setWorkPhoneNumber(new ArrayList<>());
         TEST_ACCOUNT.setPersonalAddress("");
         TEST_ACCOUNT.setPersonalAddress("");
         TEST_ACCOUNT.setWorkAddress("");
@@ -56,11 +63,17 @@ class AccountDaoImplTest {
     }
 
     private void setTestAccountEqualsToRecordInTestTable() {
+        List<Phone> personalPhones = new ArrayList<>();
+        personalPhones.add(new Phone(1L, PERSONAL, "+375291112233", 1L));
+        List<Phone> workingPhones = new ArrayList<>();
+        workingPhones.add(new Phone(2L, WORKING, "+375291112233", 1L));
         TEST_ACCOUNT.setId(1L);
         TEST_ACCOUNT.setFirstName("test");
         TEST_ACCOUNT.setLastName("test");
         TEST_ACCOUNT.setMiddleName("test");
-        TEST_ACCOUNT.setBirthDate(of(1800, 1, 1));
+        TEST_ACCOUNT.setBirthDate(of(2000, 1, 1));
+        TEST_ACCOUNT.setPersonalPhoneNumber(personalPhones);
+        TEST_ACCOUNT.setWorkPhoneNumber(workingPhones);
         TEST_ACCOUNT.setPersonalAddress("test");
         TEST_ACCOUNT.setPersonalAddress("test");
         TEST_ACCOUNT.setWorkAddress("test");
@@ -73,23 +86,19 @@ class AccountDaoImplTest {
 
     @BeforeAll
     public static void createTestTables() {
-        executeScript(CREATE_TEST_TABLES_FILEPATH);
+        executeScript(CREATE_TABLES_FILEPATH);
     }
 
     @BeforeEach
     public void fillTestTablesWith2Records() {
         restoreTestAccountDefaultState();
-        executeScript(LOAD_DATA_INTO_TEST_TABLES_FILEPATH);
-    }
-
-    @AfterEach
-    public void emptyTestTables() {
-        executeScript(EMPTY_TEST_TABLES_FILEPATH);
+        executeScript(CLEAR_TABLES_FILEPATH);
+        executeScript(LOAD_DATA_FILEPATH);
     }
 
     @AfterAll
     public static void dropDataBaseAfterTestExecution() {
-        executeScript(DROP_TEST_DB_FILEPATH);
+        executeScript(DROP_DB_FILEPATH);
     }
 
     @Nested
@@ -137,13 +146,12 @@ class AccountDaoImplTest {
 
         @Test
         void shouldReturn1LWhenAccountCreatedInEmptyTable() {
-            emptyTestTables();
+            executeScript(CLEAR_TABLES_FILEPATH);
             assertEquals(1L, ACCOUNT_DAO_INSTANCE.create(TEST_ACCOUNT));
         }
 
         @Test
         void shouldThrowExceptionWhenFirstNameIsNull() {
-            emptyTestTables();
             TEST_ACCOUNT.setFirstName(null);
             Throwable exception = assertThrows(DaoException.class, () -> {
                 ACCOUNT_DAO_INSTANCE.create(TEST_ACCOUNT);
@@ -155,7 +163,6 @@ class AccountDaoImplTest {
 
         @Test
         void shouldThrowExceptionWhenLastNameIsNull() {
-            emptyTestTables();
             TEST_ACCOUNT.setLastName(null);
             Throwable exception = assertThrows(DaoException.class, () -> {
                 ACCOUNT_DAO_INSTANCE.create(TEST_ACCOUNT);
@@ -174,12 +181,16 @@ class AccountDaoImplTest {
         @Test
         void shouldReturnOptionalWithAccountWhenAccountExists() {
             setTestAccountEqualsToRecordInTestTable();
-            assertEquals(Optional.of(TEST_ACCOUNT), ACCOUNT_DAO_INSTANCE.getById(1L));
+            Account actualAccount = null;
+            if (ACCOUNT_DAO_INSTANCE.getById(1L).isPresent()) {
+                actualAccount = ACCOUNT_DAO_INSTANCE.getById(1L).get();
+            }
+            assertEquals(Optional.of(TEST_ACCOUNT).get(), actualAccount);
         }
 
         @Test
         void shouldReturnEmptyOptionalWhenAccountNotExists() {
-            emptyTestTables();
+            executeScript(CLEAR_TABLES_FILEPATH);
             assertEquals(empty(), ACCOUNT_DAO_INSTANCE.getById(1L));
         }
 
@@ -191,7 +202,7 @@ class AccountDaoImplTest {
 
         @Test
         void shouldReturnEmptyListWhenTableIsEmpty() {
-            emptyTestTables();
+            executeScript(CLEAR_TABLES_FILEPATH);
             assertEquals(new ArrayList<Account>(), ACCOUNT_DAO_INSTANCE.getAll());
         }
 
@@ -199,16 +210,16 @@ class AccountDaoImplTest {
         void shouldReturnActualListWhenTableIsNotEmpty() {
             List<Account> accounts = new ArrayList<>();
             accounts.add(new Account.Builder().id(1L).firstName("test").middleName("test").lastName("test")
-                    .birthDate(of(1800, 1, 1)).personalAddress("test").workAddress("test")
+                    .birthDate(of(2000, 1, 1)).personalAddress("test").workAddress("test")
                     .email("test").icq("test").skype("test").additionalInfo("test").role(REGULAR).build());
             accounts.add(new Account.Builder().id(2L).firstName("test1").middleName("test1").lastName("test1")
-                    .birthDate(of(1800, 1, 1)).personalAddress("test1").workAddress("test1")
+                    .birthDate(of(2000, 1, 1)).personalAddress("test1").workAddress("test1")
                     .email("test1").icq("test1").skype("test1").additionalInfo("test1").role(REGULAR).build());
             accounts.add(new Account.Builder().id(3L).firstName("test2").middleName("test2").lastName("test2")
-                    .birthDate(of(1800, 1, 1)).personalAddress("test2").workAddress("test2")
+                    .birthDate(of(2000, 1, 1)).personalAddress("test2").workAddress("test2")
                     .email("test2").icq("test2").skype("test2").additionalInfo("test2").role(REGULAR).build());
             accounts.add(new Account.Builder().id(4L).firstName("test3").middleName("test3").lastName("test3")
-                    .birthDate(of(1800, 1, 1)).personalAddress("test3").workAddress("test3")
+                    .birthDate(of(2000, 1, 1)).personalAddress("test3").workAddress("test3")
                     .email("test3").icq("test3").skype("test3").additionalInfo("test3").role(REGULAR).build());
             assertEquals(accounts, ACCOUNT_DAO_INSTANCE.getAll());
         }

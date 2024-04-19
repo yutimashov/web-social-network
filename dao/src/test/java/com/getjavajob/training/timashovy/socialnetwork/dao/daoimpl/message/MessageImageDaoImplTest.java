@@ -21,7 +21,7 @@ class MessageImageDaoImplTest {
     private static final String DROP_TEST_DB_FILEPATH = "scripts/message/drop.sql";
     private static final BaseDao<MessageImage> MESSAGE_IMAGE_DAO = getInstance();
     private static final MessageImage TEST_MESSAGE_IMAGE = new MessageImage(1L,
-            new ByteArrayInputStream("test".getBytes()));
+            new ByteArrayInputStream("test".getBytes()), 1L);
 
     @BeforeAll
     static void createTestTables() {
@@ -30,6 +30,7 @@ class MessageImageDaoImplTest {
 
     @BeforeEach
     public void fillTestTablesWith2Records() {
+        emptyTestTables();
         executeScript(LOAD_DATA_INTO_TEST_TABLES_FILEPATH);
     }
 
@@ -48,9 +49,8 @@ class MessageImageDaoImplTest {
     class TestCreate {
 
         @Test
-        void shouldReturn1LWhenCreateInEmptyTable() {
-            emptyTestTables();
-            assertEquals(1L, MESSAGE_IMAGE_DAO.create(TEST_MESSAGE_IMAGE));
+        void shouldReturn2LWhenCreateSecondMessageImageInTable() {
+            assertEquals(2L, MESSAGE_IMAGE_DAO.create(TEST_MESSAGE_IMAGE));
         }
 
     }

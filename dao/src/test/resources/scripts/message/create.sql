@@ -17,15 +17,6 @@ CREATE TABLE account_data.account
     registration_date TIMESTAMP   DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT account_data_unique_fields UNIQUE (email, icq, skype)
 );
-SET SCHEMA account_data;
-CREATE TABLE account_data.account_phones
-(
-    id           INT PRIMARY KEY AUTO_INCREMENT,
-    account_id   INT,
-    phone_type   VARCHAR(10) NOT NULL,
-    phone_number VARCHAR(32) NOT NULL,
-    CONSTRAINT fk_account FOREIGN KEY (account_id) REFERENCES account_data.account (id) ON DELETE CASCADE
-);
 CREATE SCHEMA message_data;
 SET SCHEMA message_data;
 CREATE TABLE message_data.message_type
