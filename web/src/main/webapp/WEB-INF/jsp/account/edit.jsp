@@ -8,7 +8,7 @@
 <jsp:include page="/WEB-INF/jsp/header.jsp"/>
 <h2>Edit account: ${requestScope.account.firstName} ${requestScope.account.lastName}</h2>
 <hr>
-<form action="${pageContext.request.contextPath}/edit-account?id=${requestScope.account.id}" method="POST"
+<form action="${pageContext.request.contextPath}/account/edit?id=${requestScope.account.id}" method="POST"
       enctype="multipart/form-data">
     <label for="avatar">Current avatar:<br>
         <c:if test="${requestScope.avatarInputStream != null}">

@@ -82,7 +82,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Edit Account</servlet-name>
-        <url-pattern>/edit-account</url-pattern>
+        <url-pattern>/account/edit</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -102,7 +102,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Delete Account</servlet-name>
-        <url-pattern>/delete-account</url-pattern>
+        <url-pattern>/account/delete</url-pattern>
     </servlet-mapping>
 
     <servlet>

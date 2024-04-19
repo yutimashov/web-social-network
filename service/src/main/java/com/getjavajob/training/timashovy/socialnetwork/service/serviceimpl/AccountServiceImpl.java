@@ -3,15 +3,15 @@ package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Role;
-import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship.FriendshipCheckerImpl;
-import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship.FriendshipDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AccountDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PhoneDaoImpl;
+import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship.FriendshipCheckerImpl;
+import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship.FriendshipDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipChecker;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipChecker;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipDao;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 
 import java.time.LocalDate;
@@ -118,6 +118,7 @@ public class AccountServiceImpl implements AccountService {
                 new Account.Builder(accountDao.getById(accountId).get()).firstName(firstName).build());
     }
 
+    @Override
     public boolean updateAccountLastName(Long accountId, String lastName) {
         validateAccountId(accountId);
         validateAccountFieldNotNull(lastName);
@@ -125,6 +126,7 @@ public class AccountServiceImpl implements AccountService {
                 new Account.Builder(accountDao.getById(accountId).get()).lastName(lastName).build());
     }
 
+    @Override
     public boolean updateAccountMiddleName(Long accountId, String middleName) {
         validateAccountId(accountId);
         validateAccountFieldNotNull(middleName);
@@ -132,6 +134,7 @@ public class AccountServiceImpl implements AccountService {
                 new Account.Builder(accountDao.getById(accountId).get()).middleName(middleName).build());
     }
 
+    @Override
     public boolean updateAccountBirthDate(Long accountId, LocalDate birthDate) {
         validateAccountId(accountId);
         validateAccountFieldNotNull(birthDate);
@@ -153,6 +156,7 @@ public class AccountServiceImpl implements AccountService {
                 new Account.Builder(accountDao.getById(accountId).get()).personalAddress(personalAddress).build());
     }
 
+    @Override
     public boolean updateAccountEmail(Long accountId, String email) {
         validateAccountId(accountId);
         validateAccountFieldNotNull(email);
@@ -160,6 +164,7 @@ public class AccountServiceImpl implements AccountService {
                 new Account.Builder(accountDao.getById(accountId).get()).email(email).build());
     }
 
+    @Override
     public boolean updateAccountIcq(Long accountId, String icq) {
         validateAccountId(accountId);
         validateAccountFieldNotNull(icq);
@@ -167,6 +172,7 @@ public class AccountServiceImpl implements AccountService {
                 new Account.Builder(accountDao.getById(accountId).get()).icq(icq).build());
     }
 
+    @Override
     public boolean updateAccountSkype(Long accountId, String skype) {
         validateAccountId(accountId);
         validateAccountFieldNotNull(skype);

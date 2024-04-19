@@ -28,7 +28,7 @@ public class AccountServlet extends HttpServlet {
             req.setAttribute("account", account);
             req.setAttribute("avatarInputStream", avatarInputStream);
         }
-        req.getRequestDispatcher(getJspPagePath("account")).forward(req, resp);
+        req.getRequestDispatcher(getJspPagePath("/account/account")).forward(req, resp);
     }
 
 }

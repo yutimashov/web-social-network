@@ -64,11 +64,11 @@
     <p>Other information: ${requestScope.account.additionalInfo}</p>
     <hr>
     <c:if test="${sessionScope.account.id eq param.id || sessionScope.account.role eq 'ADMIN'}">
-        <a href="${pageContext.request.contextPath}/edit-account?id=${param.id}">
+        <a href="${pageContext.request.contextPath}/account/edit?id=${param.id}">
             <button>Edit account</button>
         </a>
         <br>
-        <a href="${pageContext.request.contextPath}/delete-account?id=${param.id}">
+        <a href="${pageContext.request.contextPath}/account/delete?id=${param.id}">
             <button>Delete account</button>
         </a>
     </c:if>

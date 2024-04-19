@@ -1,5 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.servlets.account;
 
+import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.ImageService;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountAvatarServiceImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountServiceImpl;
@@ -18,7 +19,7 @@ import static java.util.Objects.isNull;
 
 public class EditAccountServlet extends HttpServlet {
 
-    private final AccountServiceImpl accountService = AccountServiceImpl.getInstance();
+    private final AccountService accountService = AccountServiceImpl.getInstance();
     private final ImageService avatarService = AccountAvatarServiceImpl.getInstance();
     private static final String FIRST_NAME_PARAMETER_NAME = "name";
     private static final String LAST_NAME_PARAMETER_NAME = "lastName";
@@ -87,7 +88,7 @@ public class EditAccountServlet extends HttpServlet {
     }
 
     private boolean checkParameterHasValue(String parameterValue) {
-        return !"".equals(parameterValue);
+        return !isNull(parameterValue) && !parameterValue.isEmpty();
     }
 
 }

@@ -3,6 +3,7 @@ package com.getjavajob.training.timashovy.socialnetwork.service.interfaces;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Role;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,12 +29,24 @@ public interface AccountService {
 
     List<Account> getFriends(Long accountId);
 
-    boolean updateAccountRole(Long accountId, Role role);
-
     boolean updateFirstName(Long accountId, String firstName);
 
     List<Account> getIncomingFriendRequests(Long accountId);
 
     List<Account> getOutgoingFriendRequests(Long accountId);
+
+    boolean updateAccountLastName(Long accountId, String updatedLastName);
+
+    boolean updateAccountMiddleName(Long accountId, String updatedMiddleName);
+
+    boolean updateAccountBirthDate(Long accountId, LocalDate parse);
+
+    boolean updateAccountSkype(Long accountId, String updatedSkype);
+
+    boolean updateAccountIcq(Long accountId, String updatedICQ);
+
+    boolean updateAccountEmail(Long accountId, String updatedEmail);
+
+    boolean updateAccountRole(Long accountId, Role role);
 
 }
