@@ -20,7 +20,7 @@ public class LoginService {
     private LoginService() {
     }
 
-    public static LoginService getLoginServiceInstance() {
+    public static LoginService getInstance() {
         return loginService;
     }
 

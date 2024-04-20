@@ -32,9 +32,22 @@ public class RegisterServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        registerAccount(createAccount(req), req);
-        resp.sendRedirect("/login");
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        try {
+            registerAccount(createAccount(req), req);
+            resp.sendRedirect("/login?reg=success");
+        } catch (Exception e) {
+            resp.sendRedirect("/login?reg=fail");
+        }
+    }
+
+    private void registerAccount(Account account, HttpServletRequest req) throws ServletException, IOException {
+        accountService.createAccount(account);
+        Long accountId = account.getId();
+        phoneService.createPhone(accountId, req.getParameter("personalPhoneNumber"), PERSONAL);
+        phoneService.createPhone(accountId, req.getParameter("workPhoneNumber"), WORKING);
+        avatarService.create(accountId, req.getPart("avatar").getInputStream());
+        passwordService.create(accountId, req.getParameter("password"));
     }
 
     private Account createAccount(HttpServletRequest req) {
@@ -46,15 +59,6 @@ public class RegisterServlet extends HttpServlet {
                 .skype(req.getParameter("skype"))
                 .icq(req.getParameter("icq"))
                 .build();
-    }
-
-    private void registerAccount(Account account, HttpServletRequest req) throws ServletException, IOException {
-        accountService.createAccount(account);
-        Long accountId = account.getId();
-        phoneService.createPhone(accountId, req.getParameter("personalPhoneNumber"), PERSONAL);
-        phoneService.createPhone(accountId, req.getParameter("workPhoneNumber"), WORKING);
-        avatarService.upload(accountId, req.getPart("avatar").getInputStream());
-        passwordService.create(accountId, req.getParameter("password"));
     }
 
 }

@@ -5,7 +5,6 @@
     <title>Login</title>
 </head>
 <body>
-<jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <form action="${pageContext.request.contextPath}/login" method="POST">
     <div>
         <c:choose>
@@ -14,6 +13,12 @@
             </c:when>
             <c:when test="${param.error eq 'authorization'}">
                 <span style="color:red">You are not authorized!</span>
+            </c:when>
+            <c:when test="${param.reg eq 'success'}">
+                <span style="color:blue">Account has been successfully created!</span>
+            </c:when>
+            <c:when test="${param.reg eq 'fail'}">
+                <span style="color:red">Account has not been registered!</span>
             </c:when>
         </c:choose>
     </div>

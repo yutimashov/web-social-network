@@ -10,12 +10,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.LoginService.getLoginServiceInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.LoginService.getInstance;
 import static java.util.Objects.isNull;
 
 public class RememberMeFilter implements Filter {
 
-    private final LoginService loginService = getLoginServiceInstance();
+    private final LoginService loginService = getInstance();
     private static final String LOGIN_COOKIE_NAME = "login";
     private static final String PASSWORD_COOKIE_NAME = "password";
 
