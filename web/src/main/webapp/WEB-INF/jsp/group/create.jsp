@@ -7,7 +7,7 @@
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <h2>New group creation</h2>
 <p>Enter necessary data:</p>
-<form action="${pageContext.request.contextPath}/group-create" method="POST" enctype="multipart/form-data">
+<form action="${pageContext.request.contextPath}/group/create" method="POST" enctype="multipart/form-data">
     <hr>
     <label for="name">Group name<span style="color:red;">*</span> :
         <input type="text" name="name" id="name" required>
@@ -18,6 +18,7 @@
         <input type="file" name="avatar" id="avatar">
     </label>
     <br>
+    <hr>
     <label for="description">Description:
         <input type="text" name="description" id="description">
     </label>

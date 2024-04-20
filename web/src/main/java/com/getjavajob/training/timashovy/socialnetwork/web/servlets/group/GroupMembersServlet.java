@@ -7,13 +7,13 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.IOException;
 
-import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.GroupServiceImpl.getGroupServiceImplInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.GroupServiceImpl.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 import static java.lang.Long.valueOf;
 
 public class GroupMembersServlet extends HttpServlet {
 
-    private final GroupService groupService = getGroupServiceImplInstance();
+    private final GroupService groupService = getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

@@ -18,8 +18,8 @@ public class AccountAvatarServiceImpl implements ImageService {
     }
 
     @Override
-    public boolean create(Long id, InputStream avatarInputStream) {
-        return avatarDao.upload(id, avatarInputStream);
+    public boolean create(Long id, InputStream imageInputStream) {
+        return avatarDao.upload(id, imageInputStream);
     }
 
     @Override

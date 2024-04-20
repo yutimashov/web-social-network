@@ -10,12 +10,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.GroupAvatarServiceImpl.getGroupAvatarServiceInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.GroupAvatarServiceImpl.getInstance;
 import static java.lang.Long.valueOf;
 
 public class GroupAvatarServlet extends HttpServlet {
 
-    private final GroupAvatarServiceImpl avatarService = getGroupAvatarServiceInstance();
+    private final GroupAvatarServiceImpl avatarService = getInstance();
 
     private static final int BUFFER_SIZE = 4096;
 

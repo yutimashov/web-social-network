@@ -4,7 +4,7 @@ import java.io.InputStream;
 
 public interface ImageService {
 
-    boolean create(Long id, InputStream avatarInputStream);
+    boolean create(Long id, InputStream imageInputStream);
 
     boolean delete(Long id);
 

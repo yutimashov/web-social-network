@@ -5,6 +5,7 @@
     <title>Group</title>
 </head>
 <body>
+<jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <h2>Group: ${requestScope.group.groupName}</h2>
 <p>Profile avatar:</p>
 <c:if test="${requestScope.avatarInputStream != null}">

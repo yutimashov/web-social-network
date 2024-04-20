@@ -22,7 +22,7 @@
 <div>
     <h3>Groups section</h3>
     <a href="${pageContext.request.contextPath}/group/all">All groups</a><br>
-    <a href="${pageContext.request.contextPath}/group-create">
+    <a href="${pageContext.request.contextPath}/group/create">
         <button>Create group</button>
     </a>
     <hr>

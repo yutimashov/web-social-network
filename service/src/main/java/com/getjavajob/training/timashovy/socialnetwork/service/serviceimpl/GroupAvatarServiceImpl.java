@@ -5,23 +5,21 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.ImageS
 
 import java.io.InputStream;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group.GroupAvatarDaoImpl.getInstance;
-
 public class GroupAvatarServiceImpl implements ImageService {
 
     private static final GroupAvatarServiceImpl GROUP_AVATAR_SERVICE = new GroupAvatarServiceImpl();
-    private final GroupAvatarDaoImpl avatarDao = getInstance();
+    private final GroupAvatarDaoImpl avatarDao = GroupAvatarDaoImpl.getInstance();
 
     private GroupAvatarServiceImpl() {
     }
 
-    public static GroupAvatarServiceImpl getGroupAvatarServiceInstance() {
+    public static GroupAvatarServiceImpl getInstance() {
         return GROUP_AVATAR_SERVICE;
     }
 
     @Override
-    public boolean create(Long id, InputStream avatarInputStream) {
-        return avatarDao.upload(id, avatarInputStream);
+    public boolean create(Long id, InputStream imageInputStream) {
+        return avatarDao.upload(id, imageInputStream);
     }
 
     @Override

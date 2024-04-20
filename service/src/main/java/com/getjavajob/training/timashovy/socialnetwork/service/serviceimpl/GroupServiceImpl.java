@@ -20,7 +20,7 @@ public class GroupServiceImpl implements GroupService {
     private GroupServiceImpl() {
     }
 
-    public static GroupServiceImpl getGroupServiceImplInstance() {
+    public static GroupServiceImpl getInstance() {
         return GROUP_SERVICE_INSTANCE;
     }
 

@@ -194,7 +194,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Create Group</servlet-name>
-        <url-pattern>/group-create</url-pattern>
+        <url-pattern>/group/create</url-pattern>
     </servlet-mapping>
 
     <servlet>
