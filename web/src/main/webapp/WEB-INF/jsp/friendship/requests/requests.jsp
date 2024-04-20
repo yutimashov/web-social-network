@@ -6,8 +6,8 @@
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
-<a href="${pageContext.request.contextPath}/incoming-friend-requests">Incoming requests</a>
+<a href="${pageContext.request.contextPath}/friends/requests/incoming">Incoming requests</a>
 <br>
-<a href="${pageContext.request.contextPath}/outgoing-friend-requests">Outgoing requests</a>
+<a href="${pageContext.request.contextPath}/friends/requests/outgoing">Outgoing requests</a>
 </body>
 </html>

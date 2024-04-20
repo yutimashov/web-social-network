@@ -10,7 +10,7 @@
 <c:forEach items="${requestScope.outgoingFriendRequests}" var="account">
   <a href="${pageContext.request.contextPath}/account?id=${account.id}">${account.firstName} ${account.lastName}</a>
   <span>&nbsp;&nbsp;</span>
-  <a href="${pageContext.request.contextPath}/delete-friend?id=${account.id}">
+  <a href="${pageContext.request.contextPath}/friends/delete?id=${account.id}">
     <button>Revoke request</button>
   </a>
 </c:forEach>

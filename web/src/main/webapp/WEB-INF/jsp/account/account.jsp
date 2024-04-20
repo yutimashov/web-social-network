@@ -10,10 +10,10 @@
     <h3>Friends section</h3>
     <a href="${pageContext.request.contextPath}/friends?id=${param.id}">Friends list</a><br>
     <c:if test="${sessionScope.account.id == param.id}">
-        <a href="${pageContext.request.contextPath}/friend-requests">Friend requests</a><br>
+        <a href="${pageContext.request.contextPath}/friends/requests">Friend requests</a><br>
     </c:if>
     <c:if test="${sessionScope.account.id != param.id}">
-        <a href="${pageContext.request.contextPath}/send-friend-request?id=${param.id}">
+        <a href="${pageContext.request.contextPath}/friends/send-request?id=${param.id}">
             <button>Send friend request</button>
         </a>
     </c:if>

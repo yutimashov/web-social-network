@@ -13,7 +13,7 @@ import java.util.List;
 
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountServiceImpl.getInstance;
 
-public class AccountsServlet extends HttpServlet {
+public class AccountsListServlet extends HttpServlet {
 
     private final AccountServiceImpl accountService = getInstance();
 

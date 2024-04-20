@@ -44,7 +44,7 @@
     <!-- account servlets -->
     <servlet>
         <servlet-name>Accounts</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.AccountsServlet
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.AccountsListServlet
         </servlet-class>
     </servlet>
     <servlet-mapping>
@@ -110,7 +110,7 @@
     <!-- friends servlets -->
     <servlet>
         <servlet-name>Friends</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.friendship.ListFriendsServlet
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.friendship.FriendsListServlet
         </servlet-class>
     </servlet>
     <servlet-mapping>
@@ -120,66 +120,68 @@
 
     <servlet>
         <servlet-name>Friend Requests</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.FriendRequestsServlet
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.friendship.FriendshipRequestsListServlet
         </servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Friend Requests</servlet-name>
-        <url-pattern>/friend-requests</url-pattern>
+        <url-pattern>/friends/requests</url-pattern>
     </servlet-mapping>
 
     <servlet>
         <servlet-name>Incoming Friend Requests</servlet-name>
         <servlet-class>
-            com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.IncomingFriendsRequestsServlet
+            com.getjavajob.training.timashovy.socialnetwork.web.servlets.friendship.IncomingFriendRequestsServlet
         </servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Incoming Friend Requests</servlet-name>
-        <url-pattern>/incoming-friend-requests</url-pattern>
+        <url-pattern>/friends/requests/incoming</url-pattern>
     </servlet-mapping>
 
     <servlet>
         <servlet-name>Outgoing Friend Requests</servlet-name>
         <servlet-class>
-            com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.OutgoingFriendRequestServlet
+            com.getjavajob.training.timashovy.socialnetwork.web.servlets.friendship.OutgoingFriendRequestServlet
         </servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Outgoing Friend Requests</servlet-name>
-        <url-pattern>/outgoing-friend-requests</url-pattern>
+        <url-pattern>/friends/requests/outgoing</url-pattern>
     </servlet-mapping>
 
     <servlet>
         <servlet-name>Send Friend Request</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.SendFriendRequestServlet
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.friendship.SendFriendRequestServlet
         </servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Send Friend Request</servlet-name>
-        <url-pattern>/send-friend-request</url-pattern>
+        <url-pattern>/friends/send-request</url-pattern>
     </servlet-mapping>
 
     <servlet>
         <servlet-name>Delete Friend</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.DeleteFriendServlet
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.friendship.DeleteFriendServlet
         </servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Delete Friend</servlet-name>
-        <url-pattern>/delete-friend</url-pattern>
+        <url-pattern>/friends/delete</url-pattern>
     </servlet-mapping>
 
     <servlet>
         <servlet-name>Accept Friend Request</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.AcceptFriendRequestServlet
+        <servlet-class>
+            com.getjavajob.training.timashovy.socialnetwork.web.servlets.friendship.AcceptFriendshipRequestServlet
         </servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Accept Friend Request</servlet-name>
-        <url-pattern>/accept-friend-request</url-pattern>
+        <url-pattern>/friends/accept-request</url-pattern>
     </servlet-mapping>
 
+    <!-- group servlets -->
     <servlet>
         <servlet-name>Create Group</servlet-name>
         <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.CreateGroupServlet

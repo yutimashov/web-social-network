@@ -10,11 +10,11 @@
 <c:forEach items="${requestScope.friendRequests}" var="account">
   <a href="${pageContext.request.contextPath}/account?id=${account.id}">${account.firstName} ${account.lastName}</a>
   <span>&nbsp;&nbsp;</span>
-  <a href="${pageContext.request.contextPath}/accept-friend-request?id=${account.id}">
+  <a href="${pageContext.request.contextPath}/friends/accept-request?id=${account.id}">
     <button>Accept request</button>
   </a>
   <span>&nbsp;&nbsp;</span>
-  <a href="${pageContext.request.contextPath}/delete-friend?id=${account.id}">
+  <a href="${pageContext.request.contextPath}/friends/delete?id=${account.id}">
     <button>Decline request</button>
   </a>
 </c:forEach>

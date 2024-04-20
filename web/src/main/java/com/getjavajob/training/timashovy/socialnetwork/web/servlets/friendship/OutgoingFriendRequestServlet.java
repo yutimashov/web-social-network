@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.web.servlets.account;
+package com.getjavajob.training.timashovy.socialnetwork.web.servlets.friendship;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
@@ -20,7 +20,7 @@ public class OutgoingFriendRequestServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long accountId = ((Account) req.getSession().getAttribute("account")).getId();
         req.setAttribute("outgoingFriendRequests", accountService.getOutgoingFriendRequests(accountId));
-        req.getRequestDispatcher(getJspPagePath("outgoing-friend-requests")).forward(req, resp);
+        req.getRequestDispatcher(getJspPagePath("friendship/requests/outgoing")).forward(req, resp);
     }
 
 }
