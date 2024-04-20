@@ -4,7 +4,7 @@
     <title>Registration</title>
 </head>
 <body>
-<jsp:include page="/WEB-INF/jsp/header.jsp"/>
+<jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <h2>New account registration</h2>
 <p>Enter necessary data:</p>
 <form action="${pageContext.request.contextPath}/register" method="POST" enctype="multipart/form-data">

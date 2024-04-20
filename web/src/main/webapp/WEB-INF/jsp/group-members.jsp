@@ -5,7 +5,7 @@
     <title>Group members</title>
 </head>
 <body>
-<jsp:include page="/WEB-INF/jsp/header.jsp"/>
+<jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <p>There are ${requestScope.groupMembers.size()} regular (not admins) members of the group</p>
 <c:forEach items="${requestScope.groupMembers}" var="groupMember">
     <a href="${pageContext.request.contextPath}/account?id=${groupMember.id}">${groupMember.firstName}

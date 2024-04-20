@@ -5,7 +5,7 @@
     <title>Login</title>
 </head>
 <body>
-<jsp:include page="/WEB-INF/jsp/header.jsp"/>
+<jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <form action="${pageContext.request.contextPath}/login" method="POST">
     <div>
         <c:choose>

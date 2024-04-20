@@ -5,7 +5,7 @@
     <title>Account page</title>
 </head>
 <body>
-<jsp:include page="/WEB-INF/jsp/header.jsp"/>
+<jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <div>
     <h3>Friends section</h3>
     <a href="${pageContext.request.contextPath}/friends?id=${param.id}">Friends list</a><br>

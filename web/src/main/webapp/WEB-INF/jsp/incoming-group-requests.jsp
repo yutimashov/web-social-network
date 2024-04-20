@@ -5,7 +5,7 @@
     <title>Account group requests</title>
 </head>
 <body>
-<jsp:include page="/WEB-INF/jsp/header.jsp"/>
+<jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <p>Group has ${requestScope.groupRequests.size()} incoming requests from accounts</p>
 <c:forEach items="${requestScope.groupRequests}" var="account">
   <a href="${pageContext.request.contextPath}/account?id=${account.id}">${account.firstName} ${account.lastName}</a>

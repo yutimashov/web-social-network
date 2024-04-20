@@ -5,7 +5,7 @@
     <title>Incoming friend requests</title>
 </head>
 <body>
-<jsp:include page="/WEB-INF/jsp/header.jsp"/>
+<jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <p>Account has ${requestScope.friendRequests.size()} incoming friend requests</p>
 <c:forEach items="${requestScope.friendRequests}" var="account">
   <a href="${pageContext.request.contextPath}/account?id=${account.id}">${account.firstName} ${account.lastName}</a>

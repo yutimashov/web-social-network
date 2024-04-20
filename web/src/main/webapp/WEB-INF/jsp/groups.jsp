@@ -5,7 +5,7 @@
     <title>Groups catalog</title>
 </head>
 <body>
-<jsp:include page="/WEB-INF/jsp/header.jsp"/>
+<jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <p>There are ${requestScope.groups.size()} groups</p>
 <c:forEach items="${requestScope.groups}" var="group">
     <a href="${pageContext.request.contextPath}/group?id=${group.id}">${group.groupName}</a>

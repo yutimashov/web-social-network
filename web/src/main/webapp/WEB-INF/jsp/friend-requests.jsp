@@ -5,7 +5,7 @@
     <title>Friends requests</title>
 </head>
 <body>
-<jsp:include page="/WEB-INF/jsp/header.jsp"/>
+<jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <a href="${pageContext.request.contextPath}/incoming-friend-requests">Incoming requests</a>
 <br>
 <a href="${pageContext.request.contextPath}/outgoing-friend-requests">Outgoing requests</a>

@@ -5,7 +5,7 @@
     <title>Outgoing friend requests</title>
 </head>
 <body>
-<jsp:include page="/WEB-INF/jsp/header.jsp"/>
+<jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <p>Account has ${requestScope.outgoingFriendRequests.size()} outgoing friend requests</p>
 <c:forEach items="${requestScope.outgoingFriendRequests}" var="account">
   <a href="${pageContext.request.contextPath}/account?id=${account.id}">${account.firstName} ${account.lastName}</a>
