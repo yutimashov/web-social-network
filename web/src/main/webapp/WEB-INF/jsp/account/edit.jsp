@@ -39,6 +39,27 @@
         New: <input type="date" name="birthDate" id="birthDate">
     </label>
     <hr>
+    <label for="personalPhoneValue">Personal phones<br>
+        <c:forEach items="${requestScope.personalPhones}" var="phone">
+        <span>&nbsp;&nbsp;Current:&nbsp;&nbsp;${phone.number}&nbsp;&nbsp;
+            <input type="hidden" name="personalPhoneId" value="${phone.id}">
+            New:&nbsp;&nbsp;<input type="text" name="personalPhoneValue" id="personalPhoneValue"
+                                   placeholder="Enter new phone number">
+        </span><br>
+        </c:forEach>
+        <br>
+    </label>
+    <hr>
+    <label for="workingPhoneValue">Working phones<br>
+        <c:forEach items="${requestScope.workingPhones}" var="phone">
+        <span>&nbsp;&nbsp;Current:&nbsp;&nbsp;${phone.number}&nbsp;&nbsp;
+            <input type="hidden" name="workingPhoneId" value="${phone.id}">
+            New:&nbsp;&nbsp;<input type="text" name="workingPhoneValue" id="workingPhoneValue"
+                                   placeholder="Enter new phone number">
+        </span><br>
+        </c:forEach>
+    </label>
+    <hr>
     <label for="skype">Skype<br>
         Current: <strong>${requestScope.account.skype}</strong><br>
         New: <input type="text" name="skype" id="skype">

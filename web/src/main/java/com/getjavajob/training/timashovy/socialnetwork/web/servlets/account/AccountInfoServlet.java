@@ -15,7 +15,7 @@ import java.io.InputStream;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 import static java.lang.Long.valueOf;
 
-public class AccountServlet extends HttpServlet {
+public class AccountInfoServlet extends HttpServlet {
 
     private final AccountService accountService = AccountServiceImpl.getInstance();
 

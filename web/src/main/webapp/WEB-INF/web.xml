@@ -18,7 +18,7 @@
 
     <servlet>
         <servlet-name>Registration</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.auth.RegistrationServlet
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.auth.RegisterServlet
         </servlet-class>
         <multipart-config>
             <max-file-size>10485760</max-file-size>
@@ -62,7 +62,7 @@
 
     <servlet>
         <servlet-name>Account</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.AccountServlet
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.AccountInfoServlet
         </servlet-class>
     </servlet>
     <servlet-mapping>

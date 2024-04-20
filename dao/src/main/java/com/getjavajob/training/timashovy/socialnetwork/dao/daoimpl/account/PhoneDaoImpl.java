@@ -21,6 +21,7 @@ public class PhoneDaoImpl implements PhoneDao {
             + "phone_number) VALUES (?, ?, ?);";
     private static final String GET_PHONE = "SELECT id, phone_type, phone_number, account_id FROM "
             + ACCOUNT_PHONES_TABLE + " WHERE account_id = ?;";
+    private static final String UPDATE = "UPDATE " + ACCOUNT_PHONES_TABLE + " SET phone_number = ? WHERE id = ?;";
     private static final PhoneDaoImpl PHONE_DAO_IMPL = new PhoneDaoImpl();
 
     private PhoneDaoImpl() {
@@ -72,7 +73,7 @@ public class PhoneDaoImpl implements PhoneDao {
             }
             return phones;
         } catch (SQLException e) {
-            throw new DaoException("dao: get phone failed: " + e.getMessage());
+            throw new DaoException("dao: method get all phones failed: " + e.getMessage());
         }
     }
 
@@ -82,8 +83,14 @@ public class PhoneDaoImpl implements PhoneDao {
     }
 
     @Override
-    public boolean update() {
-        return false;
+    public boolean update(Long phoneId, String newPhoneNumber) {
+        try (PreparedStatement updateByIdStatement = getPreparedStatement(UPDATE)) {
+            updateByIdStatement.setString(1, newPhoneNumber);
+            updateByIdStatement.setLong(2, phoneId);
+            return updateByIdStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new DaoException("dao: update phone number by id method failed: ", e);
+        }
     }
 
 }

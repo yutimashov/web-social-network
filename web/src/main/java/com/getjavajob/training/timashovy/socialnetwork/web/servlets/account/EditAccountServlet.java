@@ -1,9 +1,11 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.servlets.account;
 
+import com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.ImageService;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountAvatarServiceImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountServiceImpl;
+import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.PhoneServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -13,14 +15,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 
+import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
+import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 import static java.lang.Long.valueOf;
 import static java.util.Objects.isNull;
 
 public class EditAccountServlet extends HttpServlet {
 
-    private final AccountService accountService = AccountServiceImpl.getInstance();
-    private final ImageService avatarService = AccountAvatarServiceImpl.getInstance();
     private static final String FIRST_NAME_PARAMETER_NAME = "name";
     private static final String LAST_NAME_PARAMETER_NAME = "lastName";
     private static final String MIDDLE_NAME_PARAMETER_NAME = "middleName";
@@ -28,6 +30,9 @@ public class EditAccountServlet extends HttpServlet {
     private static final String SKYPE_PARAMETER_NAME = "skype";
     private static final String ICQ_PARAMETER_NAME = "icq";
     private static final String EMAIL_PARAMETER_NAME = "email";
+    private final AccountService accountService = AccountServiceImpl.getInstance();
+    private final ImageService avatarService = AccountAvatarServiceImpl.getInstance();
+    private final PhoneServiceImpl phoneService = PhoneServiceImpl.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -35,6 +40,8 @@ public class EditAccountServlet extends HttpServlet {
         if (accountService.getAccountById(accountId).isPresent()) {
             req.setAttribute("account", accountService.getAccountById(accountId).get());
             req.setAttribute("avatarInputStream", avatarService.get(accountId));
+            req.setAttribute("personalPhones", phoneService.getPersonalPhoneNumbers(accountId));
+            req.setAttribute("workingPhones", phoneService.getWorkPhoneNumbers(accountId));
             req.getRequestDispatcher(getJspPagePath("/account/edit")).forward(req, resp);
         } else {
             req.getRequestDispatcher("/WEB-INF/jsp/error/404.jsp").forward(req, resp);
@@ -73,6 +80,8 @@ public class EditAccountServlet extends HttpServlet {
         if (checkParameterHasValue(updatedSkype)) {
             accountService.updateAccountSkype(accountId, updatedSkype);
         }
+        processPhoneNumber(req, PERSONAL);
+        processPhoneNumber(req, WORKING);
         String updatedICQ = getParameter(req, ICQ_PARAMETER_NAME);
         if (checkParameterHasValue(updatedICQ)) {
             accountService.updateAccountIcq(accountId, updatedICQ);
@@ -89,6 +98,25 @@ public class EditAccountServlet extends HttpServlet {
 
     private boolean checkParameterHasValue(String parameterValue) {
         return !isNull(parameterValue) && !parameterValue.isEmpty();
+    }
+
+    private void processPhoneNumber(HttpServletRequest req, PhoneType phoneType) {
+        String[] phoneIds;
+        String[] phoneValues;
+        if (phoneType == PERSONAL) {
+            phoneIds = req.getParameterValues("personalPhoneId");
+            phoneValues = req.getParameterValues("personalPhoneValue");
+        } else {
+            phoneIds = req.getParameterValues("workingPhoneId");
+            phoneValues = req.getParameterValues("workingPhoneValue");
+        }
+        if (!isNull(phoneIds) && !isNull(phoneValues)) {
+            for (int i = 0; i < phoneIds.length; i++) {
+                Long id = Long.valueOf(phoneIds[i]);
+                String value = phoneValues[i];
+                phoneService.updateById(id, value);
+            }
+        }
     }
 
 }

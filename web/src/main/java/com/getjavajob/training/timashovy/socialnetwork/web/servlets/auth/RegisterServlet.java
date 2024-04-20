@@ -19,7 +19,7 @@ import static com.getjavajob.training.timashovy.socialnetwork.common.account.Pho
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 
-public class RegistrationServlet extends HttpServlet {
+public class RegisterServlet extends HttpServlet {
 
     private final AccountService accountService = AccountServiceImpl.getInstance();
     private final PasswordService passwordService = PasswordServiceImpl.getInstance();

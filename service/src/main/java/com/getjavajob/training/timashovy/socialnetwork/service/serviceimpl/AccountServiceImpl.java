@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
 import static java.util.Objects.isNull;
+import static java.util.stream.Collectors.toList;
 
 public class AccountServiceImpl implements AccountService {
 
@@ -213,9 +214,9 @@ public class AccountServiceImpl implements AccountService {
             List<Phone> accountPhones = phoneDao.getAll(account.getId());
             if (!accountPhones.isEmpty()) {
                 account.setPersonalPhoneNumber(accountPhones.stream().filter(phone -> phone.getPhoneType() == PERSONAL)
-                        .collect(Collectors.toList()));
+                        .collect(toList()));
                 account.setWorkPhoneNumber(accountPhones.stream().filter(phone -> phone.getPhoneType() == WORKING)
-                        .collect(Collectors.toList()));
+                        .collect(toList()));
             }
         }
         return accounts;

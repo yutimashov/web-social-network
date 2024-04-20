@@ -10,7 +10,7 @@ public interface PhoneDao {
 
     boolean delete();
 
-    boolean update();
+    boolean update(Long phoneId, String newPhoneNumber);
 
     List<Phone> getAll(Long accountId);
 

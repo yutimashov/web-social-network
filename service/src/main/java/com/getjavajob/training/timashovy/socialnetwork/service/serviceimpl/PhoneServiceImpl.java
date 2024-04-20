@@ -6,6 +6,11 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.Phone
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
+import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
+import static java.util.stream.Collectors.toList;
 
 public class PhoneServiceImpl {
 
@@ -26,8 +31,16 @@ public class PhoneServiceImpl {
         }
     }
     
-    public List<Phone> getPhoneNumbers(Long accountId) {
-        return phoneDao.getAll(accountId);
+    public List<Phone> getPersonalPhoneNumbers(Long accountId) {
+        return phoneDao.getAll(accountId).stream().filter(phone -> phone.getPhoneType() == PERSONAL).collect(toList());
+    }
+
+    public List<Phone> getWorkPhoneNumbers(Long accountId) {
+        return phoneDao.getAll(accountId).stream().filter(phone -> phone.getPhoneType() == WORKING).collect(toList());
+    }
+
+    public boolean updateById(Long phoneId, String newPhoneNumber) {
+        return phoneDao.update(phoneId, newPhoneNumber);
     }
 
 }

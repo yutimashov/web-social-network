@@ -43,7 +43,7 @@
     <hr>
     <p>Birthdate: ${requestScope.account.birthDate}</p>
     <hr>
-    <p>Private phones:</p>
+    <p>Personal phones:</p>
     <c:forEach var="phone" items="${requestScope.account.personalPhoneNumber}">
         <p>${phone.number}</p>
     </c:forEach>
@@ -53,7 +53,7 @@
         <p>${phone.number}</p>
     </c:forEach>
     <hr>
-    <p>Private address: ${requestScope.account.personalAddress}</p>
+    <p>Personal address: ${requestScope.account.personalAddress}</p>
     <hr>
     <p>Email: ${requestScope.account.email}</p>
     <hr>
