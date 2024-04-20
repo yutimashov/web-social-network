@@ -5,7 +5,10 @@
         <form action="${pageContext.request.contextPath}/logout" method="POST">
             <button type="submit">Logout</button>
         </form>
-        <h2>Account: ${sessionScope.account.firstName} ${sessionScope.account.lastName}</h2>
+        <a href="${pageContext.request.contextPath}/account?id=${sessionScope.account.id}">
+            <button>My page</button>
+        </a>
+        <h3>Account: ${sessionScope.account.firstName} ${sessionScope.account.lastName}</h3>
         <hr>
     </div>
 </c:if>
