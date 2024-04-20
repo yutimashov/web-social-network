@@ -295,4 +295,11 @@ public class AccountServiceImpl implements AccountService {
         return followers;
     }
 
+    @Override
+    public boolean checkFriendshipRecordExistence(Long requesterId, Long accepterId) {
+        validateAccountId(requesterId);
+        validateAccountId(accepterId);
+        return friendshipChecker.checkFriendshipRecordExistence(requesterId, accepterId);
+    }
+
 }

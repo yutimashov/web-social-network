@@ -312,6 +312,16 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
+    <filter>
+        <filter-name>FriendshipRecordExistenceFilter</filter-name>
+        <filter-class>com.getjavajob.training.timashovy.socialnetwork.web.filters.FriendRecordExistenceFilter
+        </filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>FriendshipRecordExistenceFilter</filter-name>
+        <url-pattern>/account</url-pattern>
+    </filter-mapping>
+
     <!-- error pages -->
     <error-page>
         <error-code>404</error-code>

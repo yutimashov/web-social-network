@@ -8,8 +8,8 @@ import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimp
 
 public class AdminServiceImpl implements AdminService {
 
-    private final AccountService accountService = getInstance();
     private static final AdminServiceImpl ADMIN_SERVICE = new AdminServiceImpl();
+    private final AccountService accountService = getInstance();
 
     private AdminServiceImpl() {
     }

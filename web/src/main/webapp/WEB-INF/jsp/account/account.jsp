@@ -12,7 +12,7 @@
     <c:if test="${sessionScope.account.id == param.id}">
         <a href="${pageContext.request.contextPath}/friends/requests">Friend requests</a><br>
     </c:if>
-    <c:if test="${sessionScope.account.id != param.id}">
+    <c:if test="${sessionScope.account.id != param.id && empty(requestScope.alreadySentFriendRequest)}">
         <a href="${pageContext.request.contextPath}/friends/send-request?id=${param.id}">
             <button>Send friend request</button>
         </a>

@@ -49,4 +49,6 @@ public interface AccountService {
 
     boolean updateAccountRole(Long accountId, Role role);
 
+    boolean checkFriendshipRecordExistence(Long requesterId, Long accepterId);
+
 }
