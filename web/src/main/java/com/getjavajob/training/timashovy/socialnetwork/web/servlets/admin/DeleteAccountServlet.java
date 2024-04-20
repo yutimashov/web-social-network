@@ -20,19 +20,15 @@ public class DeleteAccountServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        deleteAccount(req);
+        accountService.deleteAccount(valueOf(req.getParameter("id")));
         Long sessionAccountId = ((Account) req.getSession(false).getAttribute("account")).getId();
         Long accountId = Long.valueOf(req.getParameter("id"));
         if (!Objects.equals(sessionAccountId, accountId)) {
-            req.getRequestDispatcher(getJspPagePath("/account/delete")).forward(req, resp);
+            req.getRequestDispatcher(getJspPagePath("/admin/delete")).forward(req, resp);
         } else {
             req.getSession().invalidate();
             resp.sendRedirect("/login");
         }
-    }
-
-    private void deleteAccount(HttpServletRequest req) {
-        accountService.deleteAccount(valueOf(req.getParameter("id")));
     }
 
 }

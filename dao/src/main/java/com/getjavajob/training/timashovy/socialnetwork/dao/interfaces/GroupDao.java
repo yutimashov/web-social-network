@@ -22,6 +22,8 @@ public interface GroupDao extends BaseDao<Group> {
 
     boolean isAccountGroupMember(Long groupId, Long accountId);
 
-    List<Long> getGroupMembers(Long groupId);
+    List<Long> getGroupRegularMembers(Long groupId);
+
+    List<Long> getGroupAdmins(Long groupId);
 
 }

@@ -12,7 +12,7 @@ import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimp
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 import static java.lang.Long.valueOf;
 
-public class IncomingGroupRequestsServlet extends HttpServlet {
+public class GroupRequestsServlet extends HttpServlet {
 
     private final GroupService groupService = getInstance();
 
@@ -21,7 +21,7 @@ public class IncomingGroupRequestsServlet extends HttpServlet {
         Long groupId = valueOf(req.getParameter("id"));
         req.setAttribute("groupRequests", groupService.getIncomingGroupRequests(groupId));
         req.setAttribute("groupId", groupId);
-        req.getRequestDispatcher(getJspPagePath("incoming-group-requests")).forward(req, resp);
+        req.getRequestDispatcher(getJspPagePath("group/requests")).forward(req, resp);
     }
 
 }

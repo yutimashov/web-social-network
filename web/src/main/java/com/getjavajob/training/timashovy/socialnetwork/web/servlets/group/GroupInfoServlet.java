@@ -36,7 +36,7 @@ public class GroupInfoServlet extends HttpServlet {
                 req.setAttribute("isMember", true);
             }
         }
-        req.getRequestDispatcher(getJspPagePath("group")).forward(req, resp);
+        req.getRequestDispatcher(getJspPagePath("group/group")).forward(req, resp);
     }
 
 }

@@ -238,12 +238,22 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>Account Group Requests</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.IncomingGroupRequestsServlet
+        <servlet-name>Group members</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.GroupMembersServlet
         </servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>Account Group Requests</servlet-name>
+        <servlet-name>Group members</servlet-name>
+        <url-pattern>/group/members</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Group Requests</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.GroupRequestsServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Group Requests</servlet-name>
         <url-pattern>/group/requests</url-pattern>
     </servlet-mapping>
 
@@ -266,16 +276,6 @@
         <servlet-name>Delete Group Member</servlet-name>
         <url-pattern>/group/decline-request</url-pattern>
         <url-pattern>/group/delete-member</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>Group members</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.GroupMembersServlet
-        </servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Group members</servlet-name>
-        <url-pattern>/group/members</url-pattern>
     </servlet-mapping>
 
     <servlet>

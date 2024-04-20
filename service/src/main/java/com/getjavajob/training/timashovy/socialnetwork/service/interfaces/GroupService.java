@@ -23,4 +23,6 @@ public interface GroupService {
 
     List<Account> getGroupMembers(Long groupId);
 
+    List<Account> getGroupAdmins(Long groupId);
+
 }

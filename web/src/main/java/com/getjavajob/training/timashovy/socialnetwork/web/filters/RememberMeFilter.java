@@ -15,9 +15,9 @@ import static java.util.Objects.isNull;
 
 public class RememberMeFilter implements Filter {
 
-    private final LoginService loginService = getInstance();
     private static final String LOGIN_COOKIE_NAME = "login";
     private static final String PASSWORD_COOKIE_NAME = "password";
+    private final LoginService loginService = getInstance();
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)

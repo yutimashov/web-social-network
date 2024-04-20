@@ -16,6 +16,7 @@ public class GroupServiceImpl implements GroupService {
     private static final GroupServiceImpl GROUP_SERVICE_INSTANCE = new GroupServiceImpl();
 
     private final GroupDao groupDaoInstance = GroupDaoImpl.getInstance();
+    private final AccountService accountService = AccountServiceImpl.getInstance();
 
     private GroupServiceImpl() {
     }
@@ -84,15 +85,26 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<Account> getGroupMembers(Long groupId) {
-        List<Long> accountsId = groupDaoInstance.getGroupMembers(groupId);
+        List<Long> accountsId = groupDaoInstance.getGroupRegularMembers(groupId);
         List<Account> groupMembers = new ArrayList<>();
-        AccountService accountService = AccountServiceImpl.getInstance();
         for (Long accountId : accountsId) {
             if (accountService.getAccountById(accountId).isPresent()) {
                 groupMembers.add(accountService.getAccountById(accountId).get());
             }
         }
         return groupMembers;
+    }
+
+    @Override
+    public List<Account> getGroupAdmins(Long groupId) {
+        List<Long> accountsId = groupDaoInstance.getGroupAdmins(groupId);
+        List<Account> admins = new ArrayList<>();
+        for (Long accountId : accountsId) {
+            if (accountService.getAccountById(accountId).isPresent()) {
+                admins.add(accountService.getAccountById(accountId).get());
+            }
+        }
+        return admins;
     }
 
     @Override

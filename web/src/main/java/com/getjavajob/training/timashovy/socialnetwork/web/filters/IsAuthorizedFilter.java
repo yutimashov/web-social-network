@@ -13,10 +13,11 @@ public class IsAuthorizedFilter implements Filter {
     private static final String REGISTER = "/register";
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
+            throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
-        HttpServletResponse resp = (HttpServletResponse) servletResponse;
         String requestUri = req.getRequestURI();
+        HttpServletResponse resp = (HttpServletResponse) servletResponse;
         if (requestUri.equals(LOGIN) || requestUri.equals(REGISTER)) {
             filterChain.doFilter(req, resp);
         } else if (isNull(req.getSession(false)) || isNull(req.getSession(false).getAttribute("account"))) {

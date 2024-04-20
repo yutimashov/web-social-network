@@ -20,10 +20,10 @@ public class GroupMembersServlet extends HttpServlet {
         Long groupId = valueOf(req.getParameter("id"));
         if (groupService.getById(groupId).isPresent()) {
             req.setAttribute("group", groupService.getById(groupId).get());
-            Long accountId = ((Account) req.getSession(false).getAttribute("account")).getId();
             req.setAttribute("groupMembers", groupService.getGroupMembers(groupId));
+            req.setAttribute("groupAdmins", groupService.getGroupAdmins(groupId));
         }
-        req.getRequestDispatcher(getJspPagePath("group-members")).forward(req, resp);
+        req.getRequestDispatcher(getJspPagePath("group/members")).forward(req, resp);
     }
 
 }

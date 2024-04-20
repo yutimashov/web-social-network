@@ -49,8 +49,10 @@ public class GroupDaoImpl implements BaseDao<Group>, GroupDao, TableConstraintsV
             + " WHERE group_id = ? AND account_id = ? AND is_member = FALSE;";
     private static final String CHECK_ACCOUNT_MEMBER = "SELECT id FROM " + GROUP_MEMBERS_TABLE
             + " WHERE group_id = ? AND account_id = ? AND is_member = TRUE;";
-    private static final String GET_GROUP_MEMBERS = "SELECT account_id FROM " + GROUP_MEMBERS_TABLE
-            + " WHERE group_id = ? AND is_member = TRUE AND is_admin = FALSE ORDER BY registration_date DESC;";
+    private static final String GET_REGULAR_MEMBERS = "SELECT account_id FROM " + GROUP_MEMBERS_TABLE
+            + " WHERE group_id = ? AND is_member = TRUE AND is_admin = FALSE;";
+    private static final String GET_ADMINS = "SELECT account_id FROM " + GROUP_MEMBERS_TABLE
+            + " WHERE group_id = ? AND is_member = TRUE AND is_admin = TRUE;";
 
     private GroupDaoImpl() {
     }
@@ -230,8 +232,8 @@ public class GroupDaoImpl implements BaseDao<Group>, GroupDao, TableConstraintsV
     }
 
     @Override
-    public List<Long> getGroupMembers(Long groupId) {
-        try (PreparedStatement preparedStatement = getPreparedStatement(GET_GROUP_MEMBERS)) {
+    public List<Long> getGroupRegularMembers(Long groupId) {
+        try (PreparedStatement preparedStatement = getPreparedStatement(GET_REGULAR_MEMBERS)) {
             List<Long> groupMembers = new ArrayList<>();
             preparedStatement.setLong(1, groupId);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -241,6 +243,21 @@ public class GroupDaoImpl implements BaseDao<Group>, GroupDao, TableConstraintsV
             return groupMembers;
         } catch (SQLException e) {
             throw new DaoException("dao: get group members method failed: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public List<Long> getGroupAdmins(Long groupId) {
+        try (PreparedStatement preparedStatement = getPreparedStatement(GET_ADMINS)) {
+            List<Long> groupMembers = new ArrayList<>();
+            preparedStatement.setLong(1, groupId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                groupMembers.add(resultSet.getLong(1));
+            }
+            return groupMembers;
+        } catch (SQLException e) {
+            throw new DaoException("dao: get group admins method failed: " + e.getMessage());
         }
     }
 
