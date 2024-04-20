@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import static java.time.LocalDate.of;
 import static java.util.Arrays.asList;
+import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -39,6 +40,7 @@ class AccountServiceImplTest {
     @InjectMocks
     private AccountServiceImpl accountService;
     final Long validAccountId = 1L;
+    final Long nonExistingAccountId = -1L;
     private static final Account TEST_ACCOUNT = new Account.Builder()
             .id(1L)
             .firstName("")
@@ -118,7 +120,7 @@ class AccountServiceImplTest {
         @Test
         void whenAccountIdIsLessOrEqualToZero() {
             Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.updateAccount(-1L, TEST_ACCOUNT);
+                accountService.updateAccount(nonExistingAccountId, TEST_ACCOUNT);
                 throw new UnsupportedOperationException("Not supported");
             });
             assertEquals(IllegalArgumentException.class, exception.getClass());
@@ -136,11 +138,8 @@ class AccountServiceImplTest {
         @Test
         void whenAccountDoesNotExist() {
             final Long nonExistingId = 1L;
-            when(accountDao.getById(nonExistingId)).thenThrow(new IllegalArgumentException("id is not existed"));
-            Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.updateAccount(nonExistingId, TEST_ACCOUNT);
-            });
-            assertEquals("id is not existed", exception.getMessage());
+            when(accountDao.updateById(nonExistingId, TEST_ACCOUNT)).thenReturn(false);
+            assertFalse(accountService.updateAccount(nonExistingId, TEST_ACCOUNT));
         }
 
     }
@@ -283,81 +282,6 @@ class AccountServiceImplTest {
             when(accountDao.updateById(validAccountId, accountChanged)).thenReturn(true);
             assertTrue(accountService.updateAccountBirthDate(validAccountId, newBirthDate));
         }
-
-    }
-
-    @Nested
-    @DisplayName("updateAccountPersonalPhoneNumber(Long accountId, String personalPhoneNumber)")
-    class TestUpdateAccountPersonalPhoneNumber {
-
-        final String validPersonalNumber = "+7";
-
-//        @Test
-//        void updateAccountPersonalPhoneNumberWhenAccountIdIsNull() {
-//            Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-//                accountService.updateAccountPersonalPhoneNumber(null, validPersonalNumber);
-//                throw new UnsupportedOperationException("Not supported");
-//            });
-//            assertEquals(IllegalArgumentException.class, exception.getClass());
-//        }
-//
-//        @Test
-//        void updateAccountPersonalPhoneNumberWhenPersonalPhoneNumberIsNull() {
-//            Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-//                accountService.updateAccountPersonalPhoneNumber(validAccountId, null);
-//                throw new UnsupportedOperationException("Not supported");
-//            });
-//            assertEquals(IllegalArgumentException.class, exception.getClass());
-//        }
-//
-//        @Test
-//        void successfulPersonalPhoneNumberUpdating() {
-//            String newPersonalPhoneNumber = "+3";
-//            Account accountOriginal = new Account.Builder().id(validAccountId)
-//                    .personalPhoneNumber(validPersonalNumber).build();
-//            when(accountDao.getById(validAccountId)).thenReturn(accountOriginal);
-//            Account accountChanged = new Account.Builder(accountOriginal).personalPhoneNumber(newPersonalPhoneNumber)
-//                    .build();
-//            when(accountDao.updateById(validAccountId, accountChanged)).thenReturn(true);
-//            assertTrue(accountService.updateAccountPersonalPhoneNumber(validAccountId, newPersonalPhoneNumber));
-//        }
-
-    }
-
-    @Nested
-    @DisplayName("updateAccountWorkPhoneNumber(Long accountId, String workPhoneNumber)")
-    class TestUpdateAccountWorkPhoneNumber {
-
-//        final String validPersonalNumber = "+7";
-//
-//        @Test
-//        void updateAccountWorkPhoneNumberWhenAccountIdIsNull() {
-//            Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-//                accountService.updateAccountWorkAddress(null, validPersonalNumber);
-//                throw new UnsupportedOperationException("Not supported");
-//            });
-//            assertEquals(IllegalArgumentException.class, exception.getClass());
-//        }
-//
-//        @Test
-//        void updateAccountWorkPhoneNumberWhenWorkPhoneNumberIsNull() {
-//            Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-//                accountService.updateAccountWorkAddress(validAccountId, null);
-//                throw new UnsupportedOperationException("Not supported");
-//            });
-//            assertEquals(IllegalArgumentException.class, exception.getClass());
-//        }
-//
-//        @Test
-//        void successfulWorkPhoneNumberUpdating() {
-//            String newWorkPhoneNumber = "+3";
-//            Account accountOriginal = new Account.Builder().id(validAccountId).workPhoneNumber(validPersonalNumber)
-//                    .build();
-//            when(accountDao.getById(validAccountId)).thenReturn(accountOriginal);
-//            Account accountChanged = new Account.Builder(accountOriginal).workPhoneNumber(newWorkPhoneNumber).build();
-//            when(accountDao.updateById(validAccountId, accountChanged)).thenReturn(true);
-//            assertTrue(accountService.updateAccountWorkPhoneNumber(validAccountId, newWorkPhoneNumber));
-//        }
 
     }
 
@@ -587,17 +511,15 @@ class AccountServiceImplTest {
 
         @Test
         void whenAccountIsNotExisted() {
-            when(accountDao.getById(validAccountId)).thenThrow(DaoException.class);
-            Throwable exception = assertThrows(DaoException.class, () -> {
-                accountService.deleteAccount(validAccountId);
+            Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
+                accountService.deleteAccount(nonExistingAccountId);
                 throw new UnsupportedOperationException("Not supported");
             });
-            assertEquals(DaoException.class, exception.getClass());
+            assertEquals(IllegalArgumentException.class, exception.getClass());
         }
 
         @Test
         void successfulAccountDeleting() {
-            when(accountDao.getById(validAccountId)).thenReturn(Optional.of(TEST_ACCOUNT));
             when(accountDao.deleteById(validAccountId)).thenReturn(true);
             assertTrue(accountService.deleteAccount(validAccountId));
         }
@@ -636,27 +558,6 @@ class AccountServiceImplTest {
                 throw new UnsupportedOperationException("Not supported");
             });
             assertEquals(IllegalArgumentException.class, exception.getClass());
-        }
-
-        @Test
-        void whenRequesterAccountIsNotExisted() {
-            when(accountDao.getById(requesterId)).thenThrow(DaoException.class);
-            Throwable exception = assertThrows(DaoException.class, () -> {
-                accountService.addFriend(requesterId, accepterId);
-                throw new UnsupportedOperationException("Not supported");
-            });
-            assertEquals(DaoException.class, exception.getClass());
-        }
-
-        @Test
-        void whenAccepterAccountIsNotExisted() {
-            when(accountDao.getById(requesterId)).thenReturn(Optional.of(TEST_ACCOUNT));
-            when(accountDao.getById(accepterId)).thenThrow(DaoException.class);
-            Throwable exception = assertThrows(DaoException.class, () -> {
-                accountService.addFriend(requesterId, accepterId);
-                throw new UnsupportedOperationException("Not supported");
-            });
-            assertEquals(DaoException.class, exception.getClass());
         }
 
         @Test
@@ -700,36 +601,6 @@ class AccountServiceImplTest {
         }
 
         @Test
-        void whenDeletingFriendAccountIsEqualToAccountId() {
-            Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.deleteFriend(validAccountId, validAccountId);
-                throw new UnsupportedOperationException("Not supported");
-            });
-            assertEquals(IllegalArgumentException.class, exception.getClass());
-        }
-
-        @Test
-        void whenAccountIsNotExisted() {
-            when(accountDao.getById(validAccountId)).thenThrow(DaoException.class);
-            Throwable exception = assertThrows(DaoException.class, () -> {
-                accountService.deleteFriend(validAccountId, deletingFriendId);
-                throw new UnsupportedOperationException("Not supported");
-            });
-            assertEquals(DaoException.class, exception.getClass());
-        }
-
-        @Test
-        void whenDeletingFriendAccountIsNotExisted() {
-            when(accountDao.getById(validAccountId)).thenReturn(Optional.of(TEST_ACCOUNT));
-            when(accountDao.getById(deletingFriendId)).thenThrow(DaoException.class);
-            Throwable exception = assertThrows(DaoException.class, () -> {
-                accountService.deleteFriend(validAccountId, deletingFriendId);
-                throw new UnsupportedOperationException("Not supported");
-            });
-            assertEquals(DaoException.class, exception.getClass());
-        }
-
-        @Test
         void whenDeletingIsSuccessful() {
             when(friendshipDao.deleteFriend(validAccountId, deletingFriendId)).thenReturn(true);
             assertTrue(accountService.deleteFriend(validAccountId, deletingFriendId));
@@ -748,16 +619,6 @@ class AccountServiceImplTest {
                 throw new UnsupportedOperationException("Not supported");
             });
             assertEquals(IllegalArgumentException.class, exception.getClass());
-        }
-
-        @Test
-        void whenAccountIsNotExisted() {
-            when(accountDao.getById(validAccountId)).thenThrow(DaoException.class);
-            Throwable exception = assertThrows(DaoException.class, () -> {
-                accountService.getFriends(validAccountId);
-                throw new UnsupportedOperationException("Not supported");
-            });
-            assertEquals(DaoException.class, exception.getClass());
         }
 
         @Test

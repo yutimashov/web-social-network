@@ -101,7 +101,6 @@ public class AccountServiceImpl implements AccountService {
         if (isNull(accountId) || accountId <= 0) {
             throw new IllegalArgumentException("Account id should be positive number greater than 0");
         }
-        // accountDao.getById(accountId);
     }
 
     private <T> void validateAccountFieldNotNull(T fieldName) {
