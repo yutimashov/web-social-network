@@ -9,8 +9,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.PasswordUtil.generateSalt;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.PasswordUtil.hashCredential;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNT_PASSWORDS_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNT_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
@@ -38,15 +36,20 @@ public final class PasswordDaoImpl implements PasswordDao {
     }
 
     @Override
-    public Long create(Long accountId, String rawPassword) {
+    public Long create(Long accountId, Password password) {
         try (PreparedStatement createPasswordStatement = getPreparedStatementWithGeneratedKeys(CREATE)) {
-            String salt = generateSalt();
-            Password password = new Password(accountId, hashCredential(rawPassword, salt), salt);
             createPasswordStatement.setLong(1, accountId);
             createPasswordStatement.setString(2, password.getPassword());
-            createPasswordStatement.setString(3, salt);
-            createPasswordStatement.executeUpdate();
-            return accountId;
+            createPasswordStatement.setString(3, password.getSalt());
+            if (createPasswordStatement.executeUpdate() > 0) {
+                ResultSet generatedKeys = createPasswordStatement.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    password.setId(generatedKeys.getLong(1));
+                }
+                return password.getId();
+            } else {
+                throw new DaoException("dao: create password method failed: no rows affected.");
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -68,7 +71,7 @@ public final class PasswordDaoImpl implements PasswordDao {
                 return empty();
             }
         } catch (SQLException e) {
-            throw new DaoException("dao: get password by account method failed: " + e.getMessage());
+            throw new DaoException("dao: get password by account id method failed: " + e.getMessage());
         }
     }
 

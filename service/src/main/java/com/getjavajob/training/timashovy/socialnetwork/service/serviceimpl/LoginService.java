@@ -7,7 +7,7 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.Passwo
 
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.service.util.CredentialHashUtil.hashCredential;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.PasswordUtil.hashCredentialData;
 import static java.util.Objects.isNull;
 import static java.util.Optional.empty;
 
@@ -33,7 +33,7 @@ public class LoginService {
             return empty();
         }
         String dbPasswordValue = dbPassword.getPassword();
-        String verifyingSaltedPasswordValue = hashCredential(verifyingPassword, dbPassword.getSalt());
+        String verifyingSaltedPasswordValue = hashCredentialData(verifyingPassword, dbPassword.getSalt());
         return dbPasswordValue.equals(verifyingSaltedPasswordValue)
                 ? accountService.getAccountById(dbPassword.getAccountId()) : empty();
     }

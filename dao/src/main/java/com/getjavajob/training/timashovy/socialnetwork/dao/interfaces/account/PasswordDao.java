@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface PasswordDao {
 
-    Long create(Long accountId, String rawPassword);
+    Long create(Long accountId, Password password);
 
     boolean update(Password password);
 

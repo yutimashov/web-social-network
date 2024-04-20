@@ -4,6 +4,7 @@ import java.util.Objects;
 
 public class Password {
 
+    private Long id;
     private Long accountId;
     private String password;
     private String salt;
@@ -12,6 +13,14 @@ public class Password {
         this.accountId = accountId;
         this.password = password;
         this.salt = salt;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getPassword() {
@@ -43,19 +52,20 @@ public class Password {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Password password1 = (Password) o;
-        return Objects.equals(accountId, password1.accountId) && Objects.equals(password, password1.password)
-                && Objects.equals(salt, password1.salt);
+        return Objects.equals(id, password1.id) && Objects.equals(accountId, password1.accountId)
+                & Objects.equals(password, password1.password) && Objects.equals(salt, password1.salt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(accountId, password, salt);
+        return Objects.hash(id, accountId, password, salt);
     }
 
     @Override
     public String toString() {
         return "Password{" +
-                "accountId=" + accountId +
+                "id=" + id +
+                ", accountId=" + accountId +
                 ", password='" + password + '\'' +
                 ", salt='" + salt + '\'' +
                 '}';

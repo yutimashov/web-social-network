@@ -6,6 +6,9 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.Passwo
 
 import java.util.Optional;
 
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.PasswordUtil.generateSalt;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.PasswordUtil.hashCredentialData;
+
 public class PasswordServiceImpl implements PasswordService {
 
     private static final PasswordServiceImpl passwordServiceImpl = new PasswordServiceImpl();
@@ -20,7 +23,8 @@ public class PasswordServiceImpl implements PasswordService {
 
     @Override
     public Long create(Long accountId, String rawPassword) {
-        return passwordDao.create(accountId, rawPassword);
+        String salt = generateSalt();
+        return passwordDao.create(accountId, new Password(accountId, hashCredentialData(rawPassword, salt), salt));
     }
 
     @Override

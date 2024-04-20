@@ -7,19 +7,20 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
 import static java.lang.String.format;
+import static java.security.MessageDigest.getInstance;
 
-public final class CredentialHashUtil {
+public final class PasswordUtil {
 
-    private static final int SALT_LENGTH = 12;
+    private static final int SALT_LENGTH = 32;
     private static final String HASH_ALGORITHM = "SHA-256";
     private static final int ASCII_CHARACTER_AMOUNT = 94;
     private static final int ASCII_STARTING_CHARACTER = 32;
 
-    public static String hashCredential(String password, String salt) {
+    public static String hashCredentialData(String password, String salt) {
         byte[] passwordBytes = password.getBytes();
         byte[] saltBytes = salt.getBytes();
         try {
-            MessageDigest messageDigest = MessageDigest.getInstance(HASH_ALGORITHM);
+            MessageDigest messageDigest = getInstance(HASH_ALGORITHM);
             messageDigest.update(passwordBytes);
             messageDigest.update(saltBytes);
             return bytesToHex(messageDigest.digest());
