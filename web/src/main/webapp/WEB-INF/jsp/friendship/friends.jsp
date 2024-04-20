@@ -7,9 +7,9 @@
 <body>
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <p>Account has ${requestScope.friends.size()} friends</p>
-<c:forEach items="${requestScope.friends}" var="account">
-    <a href="${pageContext.request.contextPath}/account?id=${account.id}">${account.firstName} ${account.lastName}</a>
-    <a href="${pageContext.request.contextPath}/delete-friend?id=${account.id}">
+<c:forEach items="${requestScope.friends}" var="friend">
+    <a href="${pageContext.request.contextPath}/account?id=${friend.id}">${friend.firstName} ${friend.lastName}</a>
+    <a href="${pageContext.request.contextPath}/delete-friend?id=${friend.id}">
         <button>Delete friendship</button>
     </a>
     <hr>

@@ -107,7 +107,7 @@
 
     <servlet>
         <servlet-name>Friends</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.AccountFriendsServlet
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.friendship.ListFriendsServlet
         </servlet-class>
     </servlet>
     <servlet-mapping>
@@ -117,7 +117,8 @@
 
     <servlet>
         <servlet-name>Friend Requests</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.FriendRequestsServlet</servlet-class>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.FriendRequestsServlet
+        </servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Friend Requests</servlet-name>
@@ -126,7 +127,8 @@
 
     <servlet>
         <servlet-name>Incoming Friend Requests</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.IncomingFriendsRequestsServlet
+        <servlet-class>
+            com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.IncomingFriendsRequestsServlet
         </servlet-class>
     </servlet>
     <servlet-mapping>
@@ -136,7 +138,8 @@
 
     <servlet>
         <servlet-name>Outgoing Friend Requests</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.OutgoingFriendRequestServlet
+        <servlet-class>
+            com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.OutgoingFriendRequestServlet
         </servlet-class>
     </servlet>
     <servlet-mapping>
@@ -290,17 +293,15 @@
         <filter-name>Remember Me</filter-name>
         <filter-class>com.getjavajob.training.timashovy.socialnetwork.web.filters.RememberMeFilter</filter-class>
     </filter>
-
-    <filter>
-        <filter-name>IsAuthorizedFilter</filter-name>
-        <filter-class>com.getjavajob.training.timashovy.socialnetwork.web.filters.IsAuthorizedFilter</filter-class>
-    </filter>
-
     <filter-mapping>
         <filter-name>Remember Me</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
+    <filter>
+        <filter-name>IsAuthorizedFilter</filter-name>
+        <filter-class>com.getjavajob.training.timashovy.socialnetwork.web.filters.IsAuthorizedFilter</filter-class>
+    </filter>
     <filter-mapping>
         <filter-name>IsAuthorizedFilter</filter-name>
         <url-pattern>/*</url-pattern>

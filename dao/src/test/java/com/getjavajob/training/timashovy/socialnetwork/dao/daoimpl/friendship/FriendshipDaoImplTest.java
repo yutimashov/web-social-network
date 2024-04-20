@@ -44,7 +44,7 @@ class FriendshipDaoImplTest {
 
         @Test
         void whenTwoAccountExists() {
-            assertTrue(FRIENDSHIP_DAO_INSTANCE.sendFriendshipRequest(1L, 4L));
+            assertTrue(FRIENDSHIP_DAO_INSTANCE.sendRequest(1L, 4L));
         }
 
     }
@@ -55,12 +55,12 @@ class FriendshipDaoImplTest {
 
         @Test
         void whenRecordAlreadyExistsWithStatusFalse() {
-            assertFalse(FRIENDSHIP_DAO_INSTANCE.acceptFriendRequest(4L, 3L));
+            assertFalse(FRIENDSHIP_DAO_INSTANCE.acceptRequest(4L, 3L));
         }
 
         @Test
         void whenRecordAlreadyExistsWithStatusFalseButInWrongOrder() {
-            assertTrue(FRIENDSHIP_DAO_INSTANCE.acceptFriendRequest(3L, 4L));
+            assertTrue(FRIENDSHIP_DAO_INSTANCE.acceptRequest(3L, 4L));
         }
 
     }

@@ -18,7 +18,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
@@ -243,12 +242,12 @@ public class AccountServiceImpl implements AccountService {
             throw new IllegalArgumentException("Account cannot send friend request to themselves");
         }
         if (!friendshipChecker.checkFriendshipRecordExistence(requesterId, accepterId)) {
-            return friendshipDao.sendFriendshipRequest(requesterId, accepterId);
+            return friendshipDao.sendRequest(requesterId, accepterId);
         }
         if (friendshipChecker.checkUsersAreFriends(requesterId, accepterId)) {
             return false;
         }
-        return friendshipDao.acceptFriendRequest(requesterId, accepterId);
+        return friendshipDao.acceptRequest(requesterId, accepterId);
     }
 
     @Override
@@ -274,7 +273,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public List<Account> getIncomingFriendRequests(Long accountId) {
         validateAccountId(accountId);
-        List<Long> friendRequestsId = friendshipDao.getIncomingFriendRequests(accountId);
+        List<Long> friendRequestsId = friendshipDao.getIncomingRequests(accountId);
         List<Account> followers = new ArrayList<>();
         for (Long followerId : friendRequestsId) {
             if (accountDao.getById(followerId).isPresent()) {
@@ -287,7 +286,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public List<Account> getOutgoingFriendRequests(Long accountId) {
         validateAccountId(accountId);
-        List<Long> friendRequestsId = friendshipDao.getOutgoingFriendRequests(accountId);
+        List<Long> friendRequestsId = friendshipDao.getOutgoingRequests(accountId);
         List<Account> followers = new ArrayList<>();
         for (Long followerId : friendRequestsId) {
             if (accountDao.getById(followerId).isPresent()) {

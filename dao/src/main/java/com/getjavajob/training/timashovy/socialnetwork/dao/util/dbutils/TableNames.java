@@ -11,6 +11,7 @@ public final class TableNames {
     public static final String MESSAGE_TABLE = "message_data.messages";
     public static final String MESSAGE_TYPE_TABLE = "message_data.message_type";
     public static final String MESSAGE_IMAGE_TABLE = "message_data.message_images";
+    public static final String FRIENDSHIP_TABLE = "friend_data.friendship";
 
     private TableNames() {
         throw new AssertionError();

@@ -9,22 +9,23 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.FRIENDSHIP_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
 
 public class FriendshipDaoImpl implements FriendshipDao {
 
     private static final FriendshipDaoImpl FRIENDSHIP_DAO_INSTANCE = new FriendshipDaoImpl();
-    private static final String ACCEPT_FRIEND_REQUEST = "UPDATE friend_data.friendship SET status = TRUE "
-            + "WHERE accepter_id = ? AND requester_id = ?;";
-    private static final String GET_FRIENDS = "SELECT id_1 FROM friend_data.friendship WHERE id_2 = ? "
-            + "AND status = TRUE UNION SELECT id_2 FROM friend_data.friendship WHERE id_1 = ? AND status = TRUE;";
-    private static final String DELETE_FRIEND = "DELETE FROM friend_data.friendship WHERE id_1 = ? AND id_2 = ?;";
-    private static final String SEND_FRIEND_REQUEST = "INSERT INTO friend_data.friendship (id_1, id_2, requester_id, " +
+    private static final String ACCEPT_REQUEST = "UPDATE " + FRIENDSHIP_TABLE + " SET status = TRUE " +
+            "WHERE accepter_id = ? AND requester_id = ?;";
+    private static final String GET_FRIENDS = "SELECT id_1 FROM " + FRIENDSHIP_TABLE + " WHERE id_2 = ? "
+            + "AND status = TRUE UNION SELECT id_2 FROM " + FRIENDSHIP_TABLE + " WHERE id_1 = ? AND status = TRUE;";
+    private static final String DELETE_FRIEND = "DELETE FROM " + FRIENDSHIP_TABLE + " WHERE id_1 = ? AND id_2 = ?;";
+    private static final String SEND_REQUEST = "INSERT INTO " + FRIENDSHIP_TABLE + " (id_1, id_2, requester_id, " +
             "accepter_id) VALUES(?, ?, ?, ?);";
-    private static final String GET_INCOMING_FRIEND_REQUESTS = "SELECT requester_id FROM friend_data.friendship " +
-            "WHERE status = FALSE AND accepter_id = ?;";
-    private static final String GET_OUTGOING_FRIEND_REQUESTS = "SELECT accepter_id FROM friend_data.friendship " +
-            "WHERE status = FALSE AND requester_id = ?;";
+    private static final String GET_INCOMING_REQUESTS = "SELECT requester_id FROM " + FRIENDSHIP_TABLE
+            + " WHERE status = FALSE AND accepter_id = ?;";
+    private static final String GET_OUTGOING_REQUESTS = "SELECT accepter_id FROM " + FRIENDSHIP_TABLE
+            + " WHERE status = FALSE AND requester_id = ?;";
 
     private FriendshipDaoImpl() {
     }
@@ -44,8 +45,8 @@ public class FriendshipDaoImpl implements FriendshipDao {
      * @return status of friend request delivery
      */
     @Override
-    public boolean sendFriendshipRequest(Long requesterId, Long accepterId) {
-        try (PreparedStatement friendshipRequest = getPreparedStatement(SEND_FRIEND_REQUEST)) {
+    public boolean sendRequest(Long requesterId, Long accepterId) {
+        try (PreparedStatement friendshipRequest = getPreparedStatement(SEND_REQUEST)) {
             if (requesterId < accepterId) {
                 friendshipRequest.setLong(1, requesterId);
                 friendshipRequest.setLong(2, accepterId);
@@ -64,8 +65,8 @@ public class FriendshipDaoImpl implements FriendshipDao {
     }
 
     @Override
-    public boolean acceptFriendRequest(Long requesterId, Long accepterId) {
-        try (PreparedStatement acceptFriendRequest = getPreparedStatement(ACCEPT_FRIEND_REQUEST)) {
+    public boolean acceptRequest(Long requesterId, Long accepterId) {
+        try (PreparedStatement acceptFriendRequest = getPreparedStatement(ACCEPT_REQUEST)) {
             acceptFriendRequest.setLong(1, accepterId);
             acceptFriendRequest.setLong(2, requesterId);
             return acceptFriendRequest.executeUpdate() > 0;
@@ -97,30 +98,28 @@ public class FriendshipDaoImpl implements FriendshipDao {
     }
 
     @Override
-    public List<Long> getIncomingFriendRequests(Long accountId) {
-        try (PreparedStatement getFriendRequests = getPreparedStatement(GET_INCOMING_FRIEND_REQUESTS)) {
-            List<Long> friendRequests = new ArrayList<>();
-            getFriendRequests.setLong(1, accountId);
-            ResultSet friendRequestsResult = getFriendRequests.executeQuery();
-            while (friendRequestsResult.next()) {
-                friendRequests.add(friendRequestsResult.getLong(1));
-            }
-            return friendRequests;
+    public List<Long> getIncomingRequests(Long accountId) {
+        try (PreparedStatement incomingFriendRequests = getPreparedStatement(GET_INCOMING_REQUESTS)) {
+            return getRequests(accountId, incomingFriendRequests);
         } catch (SQLException e) {
             throw new DaoException("dao: getIncomingFriendRequests method failed: " + e.getMessage());
         }
     }
 
+    private List<Long> getRequests(Long accountId, PreparedStatement preparedStatement) throws SQLException {
+        List<Long> friendRequests = new ArrayList<>();
+        preparedStatement.setLong(1, accountId);
+        ResultSet friendRequestsResult = preparedStatement.executeQuery();
+        while (friendRequestsResult.next()) {
+            friendRequests.add(friendRequestsResult.getLong(1));
+        }
+        return friendRequests;
+    }
+
     @Override
-    public List<Long> getOutgoingFriendRequests(Long accountId) {
-        try (PreparedStatement getFriendRequests = getPreparedStatement(GET_OUTGOING_FRIEND_REQUESTS)) {
-            List<Long> friendRequests = new ArrayList<>();
-            getFriendRequests.setLong(1, accountId);
-            ResultSet friendRequestsResult = getFriendRequests.executeQuery();
-            while (friendRequestsResult.next()) {
-                friendRequests.add(friendRequestsResult.getLong(1));
-            }
-            return friendRequests;
+    public List<Long> getOutgoingRequests(Long accountId) {
+        try (PreparedStatement outgoingFriendRequests = getPreparedStatement(GET_OUTGOING_REQUESTS)) {
+            return getRequests(accountId, outgoingFriendRequests);
         } catch (SQLException e) {
             throw new DaoException("dao: getOutgoingFriendRequests method failed: " + e.getMessage());
         }

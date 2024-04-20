@@ -662,7 +662,7 @@ class AccountServiceImplTest {
         @Test
         void whenNoFriendshipRecordExisted() {
             when(friendshipChecker.checkFriendshipRecordExistence(requesterId, accepterId)).thenReturn(false);
-            when(friendshipDao.sendFriendshipRequest(requesterId, accepterId)).thenReturn(true);
+            when(friendshipDao.sendRequest(requesterId, accepterId)).thenReturn(true);
             assertTrue(accountService.addFriend(requesterId, accepterId));
         }
 
