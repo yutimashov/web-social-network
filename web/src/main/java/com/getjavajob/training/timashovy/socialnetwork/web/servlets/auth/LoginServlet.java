@@ -19,6 +19,7 @@ public class LoginServlet extends HttpServlet {
     private static final String LOGIN_COOKIE_NAME = "login";
     private static final String PASSWORD_COOKIE_NAME = "password";
     private static final int REMEMBER_ME_COOKIE_LIFETIME = (int) HOURS.toSeconds(1);
+    //TODO: singleton
     private final LoginService loginService = LoginService.getInstance();
     private final PasswordService passwordService = PasswordServiceImpl.getInstance();
 

@@ -19,14 +19,16 @@
     </c:if>
     <hr>
 </div>
-<div>
-    <h3>Groups section</h3>
-    <a href="${pageContext.request.contextPath}/group/all">All groups</a><br>
-    <a href="${pageContext.request.contextPath}/group/create">
-        <button>Create group</button>
-    </a>
-    <hr>
-</div>
+<c:if test="${sessionScope.account.id == param.id}">
+    <div>
+        <h3>Groups section</h3>
+        <a href="${pageContext.request.contextPath}/group/all">All groups</a><br>
+        <a href="${pageContext.request.contextPath}/group/create">
+            <button>Create group</button>
+        </a>
+        <hr>
+    </div>
+</c:if>
 <div>
     <h3>Account info section</h3>
     <p>Profile avatar:</p>
