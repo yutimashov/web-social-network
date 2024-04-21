@@ -27,7 +27,7 @@
     <p>Welcome, admin!</p>
     <a href="${pageContext.request.contextPath}/group/requests?id=${requestScope.group.id}">
         <button>Account requests</button>
-    </a><br>
+    </a>&nbsp;&nbsp;
     <a href="${pageContext.request.contextPath}/group/members?id=${requestScope.group.id}">
         <button>Account members</button>
     </a>

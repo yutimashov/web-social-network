@@ -112,9 +112,7 @@ public class EditAccountServlet extends HttpServlet {
         }
         if (!isNull(phoneIds) && !isNull(phoneValues)) {
             for (int i = 0; i < phoneIds.length; i++) {
-                Long id = Long.valueOf(phoneIds[i]);
-                String value = phoneValues[i];
-                phoneService.updateById(id, value);
+                phoneService.updateById(valueOf(phoneIds[i]), phoneValues[i]);
             }
         }
     }
