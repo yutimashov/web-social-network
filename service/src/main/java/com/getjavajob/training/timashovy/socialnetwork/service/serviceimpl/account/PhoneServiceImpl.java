@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl;
+package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType;
@@ -6,7 +6,6 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.Phone
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;

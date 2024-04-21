@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl;
+package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;

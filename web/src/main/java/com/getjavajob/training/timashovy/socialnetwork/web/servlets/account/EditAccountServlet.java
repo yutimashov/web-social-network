@@ -3,9 +3,9 @@ package com.getjavajob.training.timashovy.socialnetwork.web.servlets.account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.ImageService;
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountAvatarServiceImpl;
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountServiceImpl;
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.PhoneServiceImpl;
+import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountAvatarServiceImpl;
+import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountServiceImpl;
+import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.PhoneServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

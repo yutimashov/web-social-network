@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.GroupServiceImpl.getInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group.GroupServiceImpl.getInstance;
 import static java.lang.Long.valueOf;
 
 public class AcceptGroupRequestServlet extends HttpServlet {

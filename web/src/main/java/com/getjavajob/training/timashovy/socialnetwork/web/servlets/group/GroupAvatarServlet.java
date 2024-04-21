@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.servlets.group;
 
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.GroupAvatarServiceImpl;
+import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group.GroupAvatarServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.GroupAvatarServiceImpl.getInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group.GroupAvatarServiceImpl.getInstance;
 import static java.lang.Long.valueOf;
 
 public class GroupAvatarServlet extends HttpServlet {

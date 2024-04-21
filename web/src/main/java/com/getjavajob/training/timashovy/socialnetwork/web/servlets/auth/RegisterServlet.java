@@ -4,10 +4,10 @@ import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.ImageService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountAvatarServiceImpl;
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountServiceImpl;
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.PasswordServiceImpl;
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.PhoneServiceImpl;
+import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountAvatarServiceImpl;
+import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountServiceImpl;
+import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.PasswordServiceImpl;
+import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.PhoneServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

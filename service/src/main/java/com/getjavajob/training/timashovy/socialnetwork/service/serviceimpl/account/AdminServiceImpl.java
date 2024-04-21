@@ -1,10 +1,10 @@
-package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl;
+package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AdminService;
 
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.Role.ADMIN;
-import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.AccountServiceImpl.getInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountServiceImpl.getInstance;
 
 public class AdminServiceImpl implements AdminService {
 

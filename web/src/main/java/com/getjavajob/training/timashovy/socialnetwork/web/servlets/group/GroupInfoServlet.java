@@ -2,8 +2,8 @@ package com.getjavajob.training.timashovy.socialnetwork.web.servlets.group;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupService;
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.GroupAvatarServiceImpl;
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.GroupServiceImpl;
+import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group.GroupAvatarServiceImpl;
+import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group.GroupServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

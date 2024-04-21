@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl;
+package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group.GroupAvatarDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.ImageService;

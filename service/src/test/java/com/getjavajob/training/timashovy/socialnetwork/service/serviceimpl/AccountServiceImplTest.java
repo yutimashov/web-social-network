@@ -5,7 +5,7 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.Accou
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship.FriendshipCheckerImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship.FriendshipDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PhoneDaoImpl;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
+import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,6 @@ import java.util.Optional;
 
 import static java.time.LocalDate.of;
 import static java.util.Arrays.asList;
-import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;

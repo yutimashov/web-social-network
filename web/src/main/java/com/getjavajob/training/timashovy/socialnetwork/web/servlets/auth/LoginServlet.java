@@ -2,8 +2,8 @@ package com.getjavajob.training.timashovy.socialnetwork.web.servlets.auth;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.LoginService;
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.PasswordServiceImpl;
+import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.LoginService;
+import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.PasswordServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.*;

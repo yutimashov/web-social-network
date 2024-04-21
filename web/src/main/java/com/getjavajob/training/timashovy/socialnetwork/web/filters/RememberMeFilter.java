@@ -1,7 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.filters;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.LoginService;
+import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.LoginService;
 
 import javax.servlet.*;
 import javax.servlet.http.Cookie;
@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.LoginService.getInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.LoginService.getInstance;
 import static java.util.Objects.isNull;
 
 public class RememberMeFilter implements Filter {
