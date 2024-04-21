@@ -107,6 +107,16 @@
         <url-pattern>/account/delete</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>All Accounts</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.AccountsListServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>All Accounts</servlet-name>
+        <url-pattern>/account/all</url-pattern>
+    </servlet-mapping>
+
     <!-- friends servlets -->
     <servlet>
         <servlet-name>Friends</servlet-name>
