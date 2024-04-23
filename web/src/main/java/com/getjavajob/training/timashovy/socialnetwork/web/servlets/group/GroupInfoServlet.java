@@ -2,8 +2,10 @@ package com.getjavajob.training.timashovy.socialnetwork.web.servlets.group;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupService;
+import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group.GroupAvatarServiceImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group.GroupServiceImpl;
+import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.message.MessageServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,6 +20,7 @@ public class GroupInfoServlet extends HttpServlet {
 
     private final GroupService groupService = GroupServiceImpl.getInstance();
     private final GroupAvatarServiceImpl avatarService = GroupAvatarServiceImpl.getInstance();
+    private final MessageService messageService = MessageServiceImpl.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -35,6 +38,7 @@ public class GroupInfoServlet extends HttpServlet {
             if (groupService.isAccountGroupMember(groupId, accountId)) {
                 req.setAttribute("isMember", true);
             }
+            req.setAttribute("groupPosts", messageService.getAll(groupId));
         }
         req.getRequestDispatcher(getJspPagePath("group/group")).forward(req, resp);
     }

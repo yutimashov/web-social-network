@@ -38,21 +38,26 @@
 </c:if>
 <c:if test="${!empty(requestScope.isMember)}">
     <div>
-        <div>
-            <form action="${pageContext.request.contextPath}/message/create" method="POST"
-                  enctype="multipart/form-data">
-                <label for="messageText">Create new post:</label>
-                <textarea id="messageText" name="messageText" rows="5" cols="33"
-                          placeholder="Enter post message"></textarea>
-                <br>
-                <label for="messageImage">Add post image (optional):
-                    <input type="file" id="messageImage" name="messageImage">
-                </label>
-                <br>
-                <button type="submit">Create post</button>
-            </form>
+        <form action="${pageContext.request.contextPath}/message/create" method="POST"
+              enctype="multipart/form-data">
+            <label for="messageText">Create new post:</label><br>
+            <textarea id="messageText" name="messageText" rows="5" cols="33"
+                      placeholder="Enter post message"></textarea>
+            <br>
+            <label for="messageImage">Add post image (optional):<br>
+                <input type="file" id="messageImage" name="messageImage">
+            </label>
+            <br><br>
+            <button type="submit">Create post</button>
+        </form>
+        <hr>
+    </div>
+    <div>
+        <c:forEach items="${requestScope.groupPosts}" var="post">
+            <p>Author: <span>${post.accountAuthorId}</span></p>
+            <p>Text: <span>${post.text}</span></p>
             <hr>
-        </div>
+        </c:forEach>
     </div>
 </c:if>
 </body>

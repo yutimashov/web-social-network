@@ -4,6 +4,8 @@ import com.getjavajob.training.timashovy.socialnetwork.common.message.Message;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.MessageDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
 
+import java.util.List;
+
 public class MessageServiceImpl implements MessageService {
 
     private final MessageDaoImpl messageDao = MessageDaoImpl.getInstance();
@@ -30,6 +32,11 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public Message getById(Long id) {
         return null;
+    }
+
+    @Override
+    public List<Message> getAll(Long groupId) {
+        return messageDao.getAll(groupId);
     }
 
 }

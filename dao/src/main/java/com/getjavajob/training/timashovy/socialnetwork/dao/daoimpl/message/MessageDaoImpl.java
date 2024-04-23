@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +29,8 @@ public class MessageDaoImpl implements BaseDao<Message> {
     private static final String UPDATE_BY_ID = "UPDATE " + MESSAGE_TABLE + " SET message_text = ? " + "WHERE id = ?;";
     private static final String GET_BY_ID = "SELECT id, account_author_id, creation_date, message_text, " +
             "message_type FROM " + MESSAGE_TABLE + " WHERE id = ?;";
+    private static final String GET_ALL_GROUP_MESSAGES = "SELECT id, account_author_id, creation_date, message_text "
+            + "FROM " + MESSAGE_TABLE + " ;";
 
     public static MessageDaoImpl getInstance() {
         return MESSAGE_DAO;
@@ -88,6 +91,24 @@ public class MessageDaoImpl implements BaseDao<Message> {
     @Override
     public List<Message> getAll() {
         return null;
+    }
+
+    public List<Message> getAll(Long groupId) {
+        try (PreparedStatement preparedStatement = getPreparedStatement(GET_ALL_GROUP_MESSAGES)) {
+            List<Message> groupPosts = new ArrayList<>();
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                groupPosts.add(new Message(
+                        resultSet.getLong("id"),
+                        resultSet.getLong("account_author_id"),
+                        resultSet.getString("message_text"),
+                        MessageType.GROUP
+                ));
+            }
+            return groupPosts;
+        } catch (SQLException e) {
+            throw new DaoException("dao: get all groups method failed: " + e.getMessage());
+        }
     }
 
     @Override
