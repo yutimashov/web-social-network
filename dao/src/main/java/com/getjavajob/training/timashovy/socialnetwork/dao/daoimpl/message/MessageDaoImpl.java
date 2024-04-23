@@ -1,7 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.message.Message;
-import com.getjavajob.training.timashovy.socialnetwork.common.message.MessageImage;
 import com.getjavajob.training.timashovy.socialnetwork.common.message.MessageType;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
@@ -60,7 +59,7 @@ public class MessageDaoImpl implements BaseDao<Message> {
     private void setMessageData(Message message, PreparedStatement preparedStatement) throws SQLException {
         preparedStatement.setLong(1, message.getAccountAuthorId());
         preparedStatement.setString(2, message.getText());
-        preparedStatement.setString(3, message.getDestination().name());
+        preparedStatement.setString(3, message.getMessageType().name());
     }
 
     @Override
@@ -76,6 +75,7 @@ public class MessageDaoImpl implements BaseDao<Message> {
             if (messageData.next()) {
                 Message message = new Message(
                         messageData.getLong("account_author_id"),
+                        messageData.getLong("destination_id"),
                         messageData.getString("message_text"),
                         MessageType.valueOf(messageData.getString("message_type"))
                 );

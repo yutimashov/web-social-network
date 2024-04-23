@@ -4,9 +4,6 @@ import com.getjavajob.training.timashovy.socialnetwork.common.message.Message;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import org.junit.jupiter.api.*;
 
-import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.common.message.MessageType.ACCOUNT_PERSONAL;
@@ -23,7 +20,7 @@ class MessageDaoImplTest {
     private static final String DROP_TEST_DB_FILEPATH = "scripts/message/drop.sql";
 
     private static final BaseDao<Message> MESSAGE_DAO = getInstance();
-    private static final Message TEST_MESSAGE = new Message(1L, "test", ACCOUNT_PERSONAL);
+    private static final Message TEST_MESSAGE = new Message(1L, 1L, "test", ACCOUNT_PERSONAL);
 
     @BeforeAll
     static void createTestTables() {

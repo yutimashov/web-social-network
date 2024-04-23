@@ -1,6 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.message;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.message.Message;
+import com.getjavajob.training.timashovy.socialnetwork.common.message.MessageType;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.MessageDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
 
@@ -21,7 +22,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public Long create(Message message) {
-        return messageDao.create(message);
+        return -1L;
     }
 
     @Override

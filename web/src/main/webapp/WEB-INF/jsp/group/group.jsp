@@ -38,7 +38,7 @@
 </c:if>
 <c:if test="${!empty(requestScope.isMember)}">
     <div>
-        <form action="${pageContext.request.contextPath}/message/create" method="POST"
+        <form action="${pageContext.request.contextPath}/group/message/create" method="POST"
               enctype="multipart/form-data">
             <label for="messageText">Create new post:</label><br>
             <textarea id="messageText" name="messageText" rows="5" cols="33"
