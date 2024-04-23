@@ -1,6 +1,5 @@
 package com.getjavajob.training.timashovy.socialnetwork.common.message;
 
-import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -13,20 +12,15 @@ public class Message {
     private LocalDate creationDate;
     private String text;
     private MessageType destination;
-    private InputStream photo;
 
-    public Message(Long accountAuthorId, LocalDate creationDate, String text, MessageType destination,
-                   InputStream photo) {
+    public Message(Long accountAuthorId, String text, MessageType destination) {
         this.accountAuthorId = accountAuthorId;
-        this.creationDate = creationDate;
         this.text = text;
         this.destination = destination;
-        this.photo = photo;
     }
 
-    public Message(Long id, Long accountAuthorId, LocalDate creationDate, String text, MessageType destination,
-                   InputStream photo) {
-        this(accountAuthorId, creationDate, text, destination, photo);
+    public Message(Long id, Long accountAuthorId, String text, MessageType destination) {
+        this(accountAuthorId, text, destination);
         this.id = id;
     }
 
@@ -50,10 +44,6 @@ public class Message {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDate creationDate) {
-        this.creationDate = creationDate;
-    }
-
     public String getText() {
         return text;
     }
@@ -68,14 +58,6 @@ public class Message {
 
     public void setDestination(MessageType destination) {
         this.destination = destination;
-    }
-
-    public InputStream getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(InputStream photo) {
-        this.photo = photo;
     }
 
     @Override
@@ -94,7 +76,7 @@ public class Message {
 
     @Override
     public int hashCode() {
-        return hash(id, accountAuthorId, creationDate, text, destination, photo);
+        return hash(id, accountAuthorId, creationDate, text, destination);
     }
 
     @Override
@@ -105,7 +87,6 @@ public class Message {
                 ", creationDate=" + creationDate +
                 ", text='" + text + '\'' +
                 ", destination=" + destination +
-                ", photo=" + photo +
                 '}';
     }
 

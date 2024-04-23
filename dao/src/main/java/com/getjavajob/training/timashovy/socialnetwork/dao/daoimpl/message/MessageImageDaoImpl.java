@@ -37,7 +37,7 @@ public class MessageImageDaoImpl implements BaseDao<MessageImage> {
     @Override
     public Long create(MessageImage messageImage) {
         try (PreparedStatement messageImageStatement = getPreparedStatementWithGeneratedKeys(CREATE)) {
-            messageImageStatement.setString(1, messageImage.getPhoto().toString());
+            messageImageStatement.setBinaryStream(1, messageImage.getPhoto());
             messageImageStatement.setLong(2, messageImage.getMessageId());
             if (messageImageStatement.executeUpdate() > 0) {
                 ResultSet generatedKeys = messageImageStatement.getGeneratedKeys();

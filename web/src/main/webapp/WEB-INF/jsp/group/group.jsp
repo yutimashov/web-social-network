@@ -36,5 +36,24 @@
 <c:if test="${!empty(requestScope.isMember)} && ${empty(requestScope.isAccountAdmin)}">
     <span>Welcome, group member!</span>
 </c:if>
+<c:if test="${!empty(requestScope.isMember)}">
+    <div>
+        <div>
+            <form action="${pageContext.request.contextPath}/message/create" method="POST"
+                  enctype="multipart/form-data">
+                <label for="messageText">Create new post:</label>
+                <textarea id="messageText" name="messageText" rows="5" cols="33"
+                          placeholder="Enter post message"></textarea>
+                <br>
+                <label for="messageImage">Add post image (optional):
+                    <input type="file" id="messageImage" name="messageImage">
+                </label>
+                <br>
+                <button type="submit">Create post</button>
+            </form>
+            <hr>
+        </div>
+    </div>
+</c:if>
 </body>
 </html>

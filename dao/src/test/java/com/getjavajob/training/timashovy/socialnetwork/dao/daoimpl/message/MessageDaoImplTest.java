@@ -23,8 +23,7 @@ class MessageDaoImplTest {
     private static final String DROP_TEST_DB_FILEPATH = "scripts/message/drop.sql";
 
     private static final BaseDao<Message> MESSAGE_DAO = getInstance();
-    private static final Message TEST_MESSAGE = new Message(1L, of(2020, 1, 1), "test", ACCOUNT_PERSONAL,
-            new ByteArrayInputStream("test".getBytes()));
+    private static final Message TEST_MESSAGE = new Message(1L, "test", ACCOUNT_PERSONAL);
 
     @BeforeAll
     static void createTestTables() {

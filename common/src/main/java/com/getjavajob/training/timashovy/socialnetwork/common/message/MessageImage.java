@@ -1,8 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.common.message;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.Objects;
 
 public class MessageImage {

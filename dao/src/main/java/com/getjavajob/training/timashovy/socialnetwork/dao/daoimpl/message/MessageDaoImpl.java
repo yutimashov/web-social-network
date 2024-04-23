@@ -23,11 +23,11 @@ public class MessageDaoImpl implements BaseDao<Message> {
 
     private static final MessageDaoImpl MESSAGE_DAO = new MessageDaoImpl();
     private static final String CREATE = "INSERT INTO " + MESSAGE_TABLE + " (account_author_id, message_text, " +
-            "destination_type) VALUES (?, ?, ?);";
+            "message_type) VALUES (?, ?, ?);";
     private static final String DELETE_BY_ID = "DELETE FROM " + MESSAGE_TABLE + " WHERE id = ?;";
     private static final String UPDATE_BY_ID = "UPDATE " + MESSAGE_TABLE + " SET message_text = ? " + "WHERE id = ?;";
     private static final String GET_BY_ID = "SELECT id, account_author_id, creation_date, message_text, " +
-            "destination_type FROM " + MESSAGE_TABLE + " WHERE id = ?;";
+            "message_type FROM " + MESSAGE_TABLE + " WHERE id = ?;";
 
     public static MessageDaoImpl getInstance() {
         return MESSAGE_DAO;
@@ -73,10 +73,8 @@ public class MessageDaoImpl implements BaseDao<Message> {
             if (messageData.next()) {
                 Message message = new Message(
                         messageData.getLong("account_author_id"),
-                        messageData.getDate("creation_date").toLocalDate(),
                         messageData.getString("message_text"),
-                        MessageType.valueOf(messageData.getString("destination_type")),
-                        imagePhoto
+                        MessageType.valueOf(messageData.getString("message_type"))
                 );
                 return of(message);
             } else {
