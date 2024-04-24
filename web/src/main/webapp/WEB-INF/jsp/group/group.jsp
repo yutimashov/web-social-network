@@ -37,22 +37,24 @@
     <span>Welcome, group member!</span>
 </c:if>
 <c:if test="${!empty(requestScope.isMember)}">
-    <div>
-        <form action="${pageContext.request.contextPath}/group/message/create" method="POST"
-              enctype="multipart/form-data">
-            <input type="hidden" name="groupId" value="${requestScope.group.id}">
-            <label for="text">Create new post:</label><br>
-            <textarea id="text" name="text" rows="5" cols="33"
-                      placeholder="Enter post message"></textarea>
-            <br>
-            <label for="photo">Add post photo (optional):<br>
-                <input type="file" id="photo" name="photo">
-            </label>
-            <br><br>
-            <button type="submit">Create post</button>
-        </form>
-        <hr>
-    </div>
+    <c:if test="${!empty(requestScope.isAccountAdmin)}">
+        <div>
+            <form action="${pageContext.request.contextPath}/group/message/create" method="POST"
+                  enctype="multipart/form-data">
+                <input type="hidden" name="groupId" value="${requestScope.group.id}">
+                <label for="text">Create new post:</label><br>
+                <textarea id="text" name="text" rows="5" cols="33"
+                          placeholder="Enter post message"></textarea>
+                <br>
+                <label for="photo">Add post photo (optional):<br>
+                    <input type="file" id="photo" name="photo">
+                </label>
+                <br><br>
+                <button type="submit">Create post</button>
+            </form>
+            <hr>
+        </div>
+    </c:if>
     <div>
         <c:forEach items="${requestScope.groupPosts}" var="post">
             <hr>
