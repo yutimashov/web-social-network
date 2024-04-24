@@ -314,6 +314,17 @@
         <url-pattern>/group/message/create</url-pattern>
     </servlet-mapping>
 
+    <!-- image servlets -->
+    <servlet>
+        <servlet-name>Show image</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.image.ShowImageServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Show image</servlet-name>
+        <url-pattern>/image/show</url-pattern>
+    </servlet-mapping>
+
     <!-- session config -->
     <session-config>
         <session-timeout>10</session-timeout>

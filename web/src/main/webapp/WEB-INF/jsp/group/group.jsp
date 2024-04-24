@@ -60,8 +60,9 @@
             <span>Author: ${post.accountAuthorId}</span>
             <p>Text: ${post.text}</p>
             <c:if test="${!empty(post.photo)}">
-                <img src="${pageContext.request.contextPath}/avatar?id=${requestScope.account.id}" alt="Message photo"
-                     width="250px" height="250px">
+                <img src="${pageContext.request.contextPath}/message/image?id=${post.id}"
+                     alt="Message photo" width="250px"
+                     height="250px">
             </c:if>
             <hr>
         </c:forEach>
