@@ -8,9 +8,7 @@ public final class TableNames {
     public static final String ACCOUNT_PHONES_TABLE = "account_data.account_phones";
     public static final String GROUP_TABLE = "group_data.\"group\"";
     public static final String GROUP_MEMBERS_TABLE = "group_data.group_members";
-    public static final String MESSAGE_TABLE = "message_data.messages";
-    public static final String MESSAGE_TYPE_TABLE = "message_data.message_type";
-    public static final String MESSAGE_IMAGE_TABLE = "message_data.message_images";
+    public static final String GROUP_MESSAGE_TABLE = "message_data.group_messages";
     public static final String FRIENDSHIP_TABLE = "friend_data.friendship";
 
     private TableNames() {

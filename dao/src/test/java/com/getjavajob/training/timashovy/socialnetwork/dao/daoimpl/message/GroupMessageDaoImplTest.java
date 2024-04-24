@@ -1,26 +1,33 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.message.Message;
+import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group.GroupDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.GroupDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.MessageDao;
 import org.junit.jupiter.api.*;
 
 import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.common.message.MessageType.ACCOUNT_PERSONAL;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.MessageDaoImpl.getInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.GroupMessageDaoImpl.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static java.time.LocalDate.of;
 import static org.junit.jupiter.api.Assertions.*;
 
-class MessageDaoImplTest {
+class GroupMessageDaoImplTest {
 
     private static final String CREATE_TEST_TABLES_FILEPATH = "scripts/message/create.sql";
     private static final String LOAD_DATA_INTO_TEST_TABLES_FILEPATH = "scripts/message/load.sql";
     private static final String EMPTY_TEST_TABLES_FILEPATH = "scripts/message/clear.sql";
     private static final String DROP_TEST_DB_FILEPATH = "scripts/message/drop.sql";
 
-    private static final BaseDao<Message> MESSAGE_DAO = getInstance();
-    private static final Message TEST_MESSAGE = new Message(1L, 1L, "test", ACCOUNT_PERSONAL);
+    private static final MessageDao MESSAGE_DAO = GroupMessageDaoImpl.getInstance();
+    private static final Message TEST_MESSAGE = new Message.Builder()
+            .id(1L)
+            .accountAuthorId(1L)
+            .text("test")
+            .build();
 
     @BeforeAll
     static void createTestTables() {

@@ -40,12 +40,13 @@
     <div>
         <form action="${pageContext.request.contextPath}/group/message/create" method="POST"
               enctype="multipart/form-data">
-            <label for="messageText">Create new post:</label><br>
-            <textarea id="messageText" name="messageText" rows="5" cols="33"
+            <input type="hidden" name="groupId" value="${requestScope.group.id}">
+            <label for="text">Create new post:</label><br>
+            <textarea id="text" name="text" rows="5" cols="33"
                       placeholder="Enter post message"></textarea>
             <br>
-            <label for="messageImage">Add post image (optional):<br>
-                <input type="file" id="messageImage" name="messageImage">
+            <label for="photo">Add post photo (optional):<br>
+                <input type="file" id="photo" name="photo">
             </label>
             <br><br>
             <button type="submit">Create post</button>
@@ -54,8 +55,14 @@
     </div>
     <div>
         <c:forEach items="${requestScope.groupPosts}" var="post">
-            <p>Author: <span>${post.accountAuthorId}</span></p>
-            <p>Text: <span>${post.text}</span></p>
+            <hr>
+            <span>Created: ${post.creationDate}</span>
+            <span>Author: ${post.accountAuthorId}</span>
+            <p>Text: ${post.text}</p>
+            <c:if test="${!empty(post.photo)}">
+                <img src="${pageContext.request.contextPath}/avatar?id=${requestScope.account.id}" alt="Message photo"
+                     width="250px" height="250px">
+            </c:if>
             <hr>
         </c:forEach>
     </div>
