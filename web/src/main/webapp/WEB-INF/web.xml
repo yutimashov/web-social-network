@@ -314,6 +314,16 @@
         <url-pattern>/group/message/create</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>Show message image</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.ShowMessageImageServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Show message image</servlet-name>
+        <url-pattern>/message/image</url-pattern>
+    </servlet-mapping>
+
     <!-- image servlets -->
     <servlet>
         <servlet-name>Show image</servlet-name>

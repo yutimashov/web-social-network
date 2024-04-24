@@ -15,15 +15,12 @@
 <hr>
 <p>Description: ${requestScope.group.description}</p>
 <hr>
-<c:if test="${empty(requestScope.isSubscriber) && empty(requestScope.isMember)}">
+<c:if test="${requestScope.isSubscriber ne true && requestScope.isMember ne true}">
     <a href="${pageContext.request.contextPath}/group/send-request?id=${requestScope.group.id}">
         <button>Send join request</button>
     </a>
 </c:if>
-<c:if test="${!empty(requestScope.isSubscriber)}">
-    <span>Already subscribed!</span>
-</c:if>
-<c:if test="${!empty(requestScope.isAccountAdmin)}">
+<c:if test="${requestScope.isAdmin ne true}">
     <p>Welcome, admin!</p>
     <a href="${pageContext.request.contextPath}/group/requests?id=${requestScope.group.id}">
         <button>Account requests</button>
@@ -33,11 +30,8 @@
     </a>
     <hr>
 </c:if>
-<c:if test="${!empty(requestScope.isMember)} && ${empty(requestScope.isAccountAdmin)}">
-    <span>Welcome, group member!</span>
-</c:if>
-<c:if test="${!empty(requestScope.isMember)}">
-    <c:if test="${!empty(requestScope.isAccountAdmin)}">
+<c:if test="${requestScope.isMember eq true}">
+    <c:if test="${requestScope.isAdmin eq true}">
         <div>
             <form action="${pageContext.request.contextPath}/group/message/create" method="POST"
                   enctype="multipart/form-data">
@@ -59,10 +53,13 @@
         <c:forEach items="${requestScope.groupPosts}" var="post">
             <hr>
             <span>Created: ${post.creationDate}</span>
-            <span>Author: ${post.accountAuthorId}</span>
+            <span>Author: ${requestScope.accountService.getAccountById(post.accountAuthorId).get().firstName}
+                    ${requestScope.accountService.getAccountById(post.accountAuthorId).get().lastName}</span>
             <p>Text: ${post.text}</p>
             <c:if test="${!empty(post.photo)}">
-                <img src="#" alt="Message photo" width="250px" height="250px">
+                <img src="${pageContext.request.contextPath}/message/image?id=${post.id}"
+                     alt="Message photo"
+                     width="250px" height="250px">
             </c:if>
             <hr>
         </c:forEach>

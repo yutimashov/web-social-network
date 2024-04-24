@@ -1,11 +1,9 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.message.Message;
-import com.getjavajob.training.timashovy.socialnetwork.common.message.MessageType;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.MessageDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 
-import java.io.InputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,7 +25,7 @@ public class GroupMessageDaoImpl implements MessageDao {
     private static final String DELETE_BY_ID = "DELETE FROM " + GROUP_MESSAGE_TABLE + " WHERE id = ?;";
     private static final String UPDATE_BY_ID = "UPDATE " + GROUP_MESSAGE_TABLE + " SET message_text = ? " + "WHERE id = ?;";
     private static final String GET_BY_ID = "SELECT id, account_author_id, creation_date, message_text, " +
-            "message_type FROM " + GROUP_MESSAGE_TABLE + " WHERE id = ?;";
+            "message_image, group_id FROM " + GROUP_MESSAGE_TABLE + " WHERE id = ?;";
     private static final String GET_ALL = "SELECT id, account_author_id, group_id, message_text, message_image, " +
             "creation_date FROM " + GROUP_MESSAGE_TABLE + " WHERE group_id = ?;";
 
@@ -66,21 +64,17 @@ public class GroupMessageDaoImpl implements MessageDao {
 
     @Override
     public Optional<Message> getById(Long id) {
-        try (PreparedStatement getMessageImageByIdStatement = getPreparedStatement(GET_BY_ID)) {
-            getMessageImageByIdStatement.setLong(1, id);
-            ResultSet messageData = getMessageImageByIdStatement.executeQuery();
-            //BaseDao<MessageImage> MESSAGE_IMAGE_DAO = MessageImageDaoImpl.getInstance();
-            InputStream imagePhoto = null;
-            //if (MESSAGE_IMAGE_DAO.getById(id).isPresent()) {
-            //imagePhoto = MESSAGE_IMAGE_DAO.getById(id).get().getPhoto();
-            //}
+        try (PreparedStatement getMessageByIdStatement = getPreparedStatement(GET_BY_ID)) {
+            getMessageByIdStatement.setLong(1, id);
+            ResultSet messageData = getMessageByIdStatement.executeQuery();
             if (messageData.next()) {
                 Message message = new Message.Builder()
+                        .id(messageData.getLong("id"))
                         .accountAuthorId(messageData.getLong("account_author_id"))
-                        .destinationId(messageData.getLong("destination_id"))
+                        .creationDate(messageData.getDate("creation_date").toLocalDate())
+                        .destinationId(messageData.getLong("group_id"))
                         .text(messageData.getString("message_text"))
-                        .messageType(MessageType.valueOf(messageData.getString("message_type")))
-                        .photo(messageData.getBinaryStream(""))
+                        .photo(messageData.getBinaryStream("message_image"))
                         .build();
                 return of(message);
             } else {

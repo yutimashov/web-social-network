@@ -1,8 +1,10 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.servlets.group;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
+import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountServiceImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group.GroupAvatarServiceImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group.GroupServiceImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.message.MessageServiceImpl;
@@ -21,6 +23,7 @@ public class GroupInfoServlet extends HttpServlet {
     private final GroupService groupService = GroupServiceImpl.getInstance();
     private final GroupAvatarServiceImpl avatarService = GroupAvatarServiceImpl.getInstance();
     private final MessageService messageService = MessageServiceImpl.getInstance();
+    private final AccountService accountService = AccountServiceImpl.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -29,16 +32,11 @@ public class GroupInfoServlet extends HttpServlet {
             req.setAttribute("group", groupService.getById(groupId).get());
             req.setAttribute("avatarInputStream", avatarService.get(groupId));
             Long accountId = ((Account) req.getSession(false).getAttribute("account")).getId();
-            if (groupService.isAccountAdmin(groupId, accountId)) {
-                req.setAttribute("isAccountAdmin", true);
-            }
-            if (groupService.isAccountGroupSubscriber(groupId, accountId)) {
-                req.setAttribute("isSubscriber", true);
-            }
-            if (groupService.isAccountGroupMember(groupId, accountId)) {
-                req.setAttribute("isMember", true);
-            }
+            req.setAttribute("isAdmin", groupService.isAccountAdmin(groupId, accountId));
+            req.setAttribute("isSubscriber", groupService.isAccountGroupSubscriber(groupId, accountId));
+            req.setAttribute("isMember", groupService.isAccountGroupMember(groupId, accountId));
             req.setAttribute("groupPosts", messageService.getAll(groupId));
+            req.setAttribute("accountService", accountService);
         }
         req.getRequestDispatcher(getJspPagePath("group/group")).forward(req, resp);
     }

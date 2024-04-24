@@ -2,13 +2,14 @@ package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.mess
 
 import com.getjavajob.training.timashovy.socialnetwork.common.message.Message;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.GroupMessageDaoImpl;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.MessageDao;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
 
 import java.util.List;
 
 public class MessageServiceImpl implements MessageService {
 
-    private final GroupMessageDaoImpl messageDao = GroupMessageDaoImpl.getInstance();
+    private final MessageDao messageDao = GroupMessageDaoImpl.getInstance();
 
     private static final MessageServiceImpl MESSAGE_SERVICE = new MessageServiceImpl();
 
@@ -31,6 +32,9 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public Message getById(Long id) {
+        if (messageDao.getById(id).isPresent()) {
+            return messageDao.getById(id).get();
+        }
         return null;
     }
 

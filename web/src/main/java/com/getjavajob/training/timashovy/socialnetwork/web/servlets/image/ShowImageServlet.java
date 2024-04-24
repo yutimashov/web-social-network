@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import static java.util.Objects.isNull;
+
 public class ShowImageServlet extends HttpServlet {
 
     private static final int BUFFER_SIZE = 4096;
@@ -15,7 +17,7 @@ public class ShowImageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         InputStream inputStreamImage = ((InputStream) req.getAttribute("inputStreamImage"));
-        if (!(inputStreamImage == null)) {
+        if (!(isNull(inputStreamImage))) {
             resp.setContentType("image/jpeg");
             try (OutputStream out = resp.getOutputStream()) {
                 byte[] buffer = new byte[BUFFER_SIZE];
