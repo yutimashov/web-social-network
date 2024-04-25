@@ -349,6 +349,36 @@
         <url-pattern>/account-wall/image</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>All messages</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.ShowAccountMessagesServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>All messages</servlet-name>
+        <url-pattern>/account/messages</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Dialog</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.ShowPrivateMessageDialogServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Dialog</servlet-name>
+        <url-pattern>/account/messages/dialog</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Send personal message</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.SendPersonalMessageServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Send personal message</servlet-name>
+        <url-pattern>/account/messages/create</url-pattern>
+    </servlet-mapping>
+
     <!-- image servlets -->
     <servlet>
         <servlet-name>Show image</servlet-name>

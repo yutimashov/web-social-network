@@ -10,6 +10,8 @@ public interface MessageService {
 
     Long createPersonalWallMessage(Message message);
 
+    Long createPersonalMessage(Message message);
+
     boolean deleteById(Long id);
 
     Message getGroupMessageById(Long id);

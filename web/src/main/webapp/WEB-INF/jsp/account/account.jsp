@@ -7,7 +7,7 @@
 <body>
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <div>
-    <h3>Friends</h3>
+    <h4>Friends</h4>
     <a href="${pageContext.request.contextPath}/friends?id=${param.id}">Friends list</a><br>
     <c:if test="${sessionScope.account.id == param.id}">
         <a href="${pageContext.request.contextPath}/friends/requests">Friend requests</a><br>
@@ -21,7 +21,14 @@
 </div>
 <c:if test="${sessionScope.account.id == param.id}">
     <div>
-        <h3>Groups</h3>
+        <h4>Messages</h4>
+        <!-- переход на страницу со списком аккаунтов, с которыми есть диалогиы -->
+        <!-- при переходе на аккаунт - диалог с этим пользователем -->
+        <a href="${pageContext.request.contextPath}/account/messages?id=${param.id}">All messages</a><br>
+        <hr>
+    </div>
+    <div>
+        <h4>Groups</h4>
         <a href="${pageContext.request.contextPath}/group/all">All groups</a><br>
         <a href="${pageContext.request.contextPath}/group/create">
             <button>Create group</button>
