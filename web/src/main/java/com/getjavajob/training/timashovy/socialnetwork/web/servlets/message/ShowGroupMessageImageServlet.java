@@ -9,13 +9,14 @@ import java.io.IOException;
 
 import static java.lang.Long.valueOf;
 
-public class ShowMessageImageServlet extends HttpServlet {
+public class ShowGroupMessageImageServlet extends HttpServlet {
 
     private final MessageService messageService = MessageServiceImpl.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("inputStreamImage", messageService.getById(valueOf(req.getParameter("id"))).getPhoto());
+        req.setAttribute("inputStreamImage", messageService.getGroupMessageById(valueOf(req.getParameter("id")))
+                .getPhoto());
         req.getRequestDispatcher("/image/show").include(req, resp);
     }
 

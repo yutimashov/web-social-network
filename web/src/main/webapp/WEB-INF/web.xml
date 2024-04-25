@@ -300,8 +300,8 @@
 
     <!-- message servlets -->
     <servlet>
-        <servlet-name>Create message</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.CreateMessageServlet
+        <servlet-name>Create group message</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.CreateGroupMessageServlet
         </servlet-class>
         <multipart-config>
             <max-file-size>10485760</max-file-size>
@@ -310,18 +310,43 @@
         </multipart-config>
     </servlet>
     <servlet-mapping>
-        <servlet-name>Create message</servlet-name>
+        <servlet-name>Create group message</servlet-name>
         <url-pattern>/group/message/create</url-pattern>
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>Show message image</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.ShowMessageImageServlet
+        <servlet-name>Create personal wall message</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.CreatePersonalWallMessageServlet
+        </servlet-class>
+        <multipart-config>
+            <max-file-size>10485760</max-file-size>
+            <max-request-size>20971520</max-request-size>
+            <file-size-threshold>5242880</file-size-threshold>
+        </multipart-config>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Create personal wall message</servlet-name>
+        <url-pattern>/account-wall/message/create</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Show group message image</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.ShowGroupMessageImageServlet
         </servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>Show message image</servlet-name>
-        <url-pattern>/message/image</url-pattern>
+        <servlet-name>Show group message image</servlet-name>
+        <url-pattern>/group-message/image</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Show account wall message image</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.ShowAccountWallMessageServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Show account wall message image</servlet-name>
+        <url-pattern>/account-wall/image</url-pattern>
     </servlet-mapping>
 
     <!-- image servlets -->

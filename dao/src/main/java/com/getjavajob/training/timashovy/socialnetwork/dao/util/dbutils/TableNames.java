@@ -9,6 +9,7 @@ public final class TableNames {
     public static final String GROUP_TABLE = "group_data.\"group\"";
     public static final String GROUP_MEMBERS_TABLE = "group_data.group_members";
     public static final String GROUP_MESSAGE_TABLE = "message_data.group_messages";
+    public static final String PERSONAL_WALL_MESSAGE_TABLE = "message_data.personal_wall_messages";
     public static final String FRIENDSHIP_TABLE = "friend_data.friendship";
 
     private TableNames() {

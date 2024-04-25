@@ -2,6 +2,7 @@ package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.mess
 
 import com.getjavajob.training.timashovy.socialnetwork.common.message.Message;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.GroupMessageDaoImpl;
+import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.PersonalWallMessageDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.MessageDao;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
 
@@ -9,7 +10,8 @@ import java.util.List;
 
 public class MessageServiceImpl implements MessageService {
 
-    private final MessageDao messageDao = GroupMessageDaoImpl.getInstance();
+    private final MessageDao groupMessageDao = GroupMessageDaoImpl.getInstance();
+    private final MessageDao accountWallMessageDao = PersonalWallMessageDaoImpl.getInstance();
 
     private static final MessageServiceImpl MESSAGE_SERVICE = new MessageServiceImpl();
 
@@ -21,8 +23,13 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Long create(Message message) {
-        return messageDao.create(message);
+    public Long createGroupMessage(Message message) {
+        return groupMessageDao.create(message);
+    }
+
+    @Override
+    public Long createPersonalWallMessage(Message message) {
+        return accountWallMessageDao.create(message);
     }
 
     @Override
@@ -31,16 +38,29 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Message getById(Long id) {
-        if (messageDao.getById(id).isPresent()) {
-            return messageDao.getById(id).get();
+    public Message getGroupMessageById(Long id) {
+        if (groupMessageDao.getById(id).isPresent()) {
+            return groupMessageDao.getById(id).get();
         }
         return null;
     }
 
     @Override
-    public List<Message> getAll(Long groupId) {
-        return messageDao.getAll(groupId);
+    public Message getAccountWallMessageById(Long accountId) {
+        if (accountWallMessageDao.getById(accountId).isPresent()) {
+            return accountWallMessageDao.getById(accountId).get();
+        }
+        return null;
+    }
+
+    @Override
+    public List<Message> getAllGroupMessages(Long groupId) {
+        return groupMessageDao.getAll(groupId);
+    }
+
+    @Override
+    public List<Message> getAllAccountWallMessages(Long destinationId) {
+        return accountWallMessageDao.getAll(destinationId);
     }
 
 }

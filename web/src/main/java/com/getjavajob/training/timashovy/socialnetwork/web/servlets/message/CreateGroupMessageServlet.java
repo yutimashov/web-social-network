@@ -13,13 +13,13 @@ import java.io.IOException;
 
 import static java.lang.Long.valueOf;
 
-public class CreateMessageServlet extends HttpServlet {
+public class CreateGroupMessageServlet extends HttpServlet {
 
     private final MessageService messageService = MessageServiceImpl.getInstance();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        messageService.create(new Message.Builder()
+        messageService.createGroupMessage(new Message.Builder()
                 .accountAuthorId(((Account) req.getSession(false).getAttribute("account")).getId())
                 .destinationId(valueOf(req.getParameter("groupId")))
                 .text(req.getParameter("text"))

@@ -60,7 +60,7 @@
             </span>
             <p>${post.text}</p>
             <c:if test="${!empty(post.photo)}">
-                <img src="${baseUrl}/message/image?id=${post.id}"
+                <img src="${baseUrl}/group-message/image?id=${post.id}"
                      alt="Message photo"
                      width="250px" height="250px">
             </c:if>

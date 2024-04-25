@@ -6,12 +6,18 @@ import java.util.List;
 
 public interface MessageService {
 
-    Long create(Message message);
+    Long createGroupMessage(Message message);
+
+    Long createPersonalWallMessage(Message message);
 
     boolean deleteById(Long id);
 
-    Message getById(Long id);
+    Message getGroupMessageById(Long id);
 
-    List<Message> getAll(Long groupId);
+    Message getAccountWallMessageById(Long accountId);
+
+    List<Message> getAllGroupMessages(Long groupId);
+
+    List<Message> getAllAccountWallMessages(Long destinationId);
 
 }

@@ -11,29 +11,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.GROUP_MESSAGE_TABLE;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.PERSONAL_WALL_MESSAGE_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
-public class GroupMessageDaoImpl implements MessageDao {
+public class PersonalWallMessageDaoImpl implements MessageDao {
 
-    private static final String CREATE = "INSERT INTO " + GROUP_MESSAGE_TABLE + " (account_author_id, group_id," +
-            "message_text, message_image) VALUES (?, ?, ?, ?);";
-    private static final String DELETE_BY_ID = "DELETE FROM " + GROUP_MESSAGE_TABLE + " WHERE id = ?;";
-    private static final String UPDATE_BY_ID = "UPDATE " + GROUP_MESSAGE_TABLE + " SET message_text = ? " + "WHERE id = ?;";
+    private static final String CREATE = "INSERT INTO " + PERSONAL_WALL_MESSAGE_TABLE + " (account_author_id," +
+            "account_receiver_id, message_text, message_image) VALUES (?, ?, ?, ?);";
+    private static final String GET_ALL = "SELECT id, account_author_id, account_receiver_id, message_text, " +
+            "message_image, creation_date FROM " + PERSONAL_WALL_MESSAGE_TABLE + " WHERE account_receiver_id = ?;";
     private static final String GET_BY_ID = "SELECT id, account_author_id, creation_date, message_text, " +
-            "message_image, group_id FROM " + GROUP_MESSAGE_TABLE + " WHERE id = ?;";
-    private static final String GET_ALL = "SELECT id, account_author_id, group_id, message_text, message_image, " +
-            "creation_date FROM " + GROUP_MESSAGE_TABLE + " WHERE group_id = ?;";
-    private static final GroupMessageDaoImpl MESSAGE_DAO = new GroupMessageDaoImpl();
+            "message_image, account_receiver_id FROM " + PERSONAL_WALL_MESSAGE_TABLE + " WHERE id = ?;";
+    private static final PersonalWallMessageDaoImpl PERSONAL_WALL_MESSAGE_DAO = new PersonalWallMessageDaoImpl();
 
-    public static GroupMessageDaoImpl getInstance() {
-        return MESSAGE_DAO;
+    private PersonalWallMessageDaoImpl() {
     }
 
-    private GroupMessageDaoImpl() {
+    public static PersonalWallMessageDaoImpl getInstance() {
+        return PERSONAL_WALL_MESSAGE_DAO;
     }
 
     @Override
@@ -71,7 +69,7 @@ public class GroupMessageDaoImpl implements MessageDao {
                         .id(messageData.getLong("id"))
                         .accountAuthorId(messageData.getLong("account_author_id"))
                         .creationDate(messageData.getDate("creation_date").toLocalDate())
-                        .destinationId(messageData.getLong("group_id"))
+                        .destinationId(messageData.getLong("account_receiver_id"))
                         .text(messageData.getString("message_text"))
                         .photo(messageData.getBinaryStream("message_image"))
                         .build();
@@ -84,10 +82,11 @@ public class GroupMessageDaoImpl implements MessageDao {
         }
     }
 
-    public List<Message> getAll(Long groupId) {
+    @Override
+    public List<Message> getAll(Long destinationId) {
         try (PreparedStatement preparedStatement = getPreparedStatement(GET_ALL)) {
             List<Message> messages = new ArrayList<>();
-            preparedStatement.setLong(1, groupId);
+            preparedStatement.setLong(1, destinationId);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 messages.add(new Message.Builder()
@@ -106,23 +105,12 @@ public class GroupMessageDaoImpl implements MessageDao {
 
     @Override
     public boolean updateById(Long id, Message message) {
-        try (PreparedStatement updateByIdStatement = getPreparedStatement(UPDATE_BY_ID)) {
-            updateByIdStatement.setString(1, message.getText());
-            updateByIdStatement.setLong(2, id);
-            return updateByIdStatement.executeUpdate() > 0;
-        } catch (SQLException e) {
-            throw new DaoException("dao: update message method failed: ", e);
-        }
+        return false;
     }
 
     @Override
     public boolean deleteById(Long id) {
-        try (PreparedStatement deleteByIdStatement = getPreparedStatement(DELETE_BY_ID)) {
-            deleteByIdStatement.setLong(1, id);
-            return deleteByIdStatement.executeUpdate() > 0;
-        } catch (SQLException e) {
-            throw new DaoException("dao: delete message by id method failed: " + e.getMessage());
-        }
+        return false;
     }
 
 }

@@ -35,7 +35,7 @@ public class GroupInfoServlet extends HttpServlet {
             req.setAttribute("isAdmin", groupService.isAccountAdmin(groupId, accountId));
             req.setAttribute("isSubscriber", groupService.isAccountGroupSubscriber(groupId, accountId));
             req.setAttribute("isMember", groupService.isAccountGroupMember(groupId, accountId));
-            req.setAttribute("groupPosts", messageService.getAll(groupId));
+            req.setAttribute("groupPosts", messageService.getAllGroupMessages(groupId));
             req.setAttribute("accountService", accountService);
         }
         req.getRequestDispatcher(getJspPagePath("group/group")).forward(req, resp);
