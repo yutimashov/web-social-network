@@ -26,7 +26,7 @@ public class GroupMessageDaoImpl implements MessageDao {
     private static final String GET_BY_ID = "SELECT id, account_author_id, creation_date, message_text, " +
             "message_image, group_id FROM " + GROUP_MESSAGE_TABLE + " WHERE id = ?;";
     private static final String GET_ALL = "SELECT id, account_author_id, group_id, message_text, message_image, " +
-            "creation_date FROM " + GROUP_MESSAGE_TABLE + " WHERE group_id = ?;";
+            "creation_date FROM " + GROUP_MESSAGE_TABLE + " WHERE group_id = ? ORDER BY creation_date DESC;";
     private static final GroupMessageDaoImpl MESSAGE_DAO = new GroupMessageDaoImpl();
 
     public static GroupMessageDaoImpl getInstance() {

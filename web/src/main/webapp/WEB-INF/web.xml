@@ -373,10 +373,25 @@
         <servlet-name>Send personal message</servlet-name>
         <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.SendPersonalMessageServlet
         </servlet-class>
+        <multipart-config>
+            <max-file-size>10485760</max-file-size>
+            <max-request-size>20971520</max-request-size>
+            <file-size-threshold>5242880</file-size-threshold>
+        </multipart-config>
     </servlet>
     <servlet-mapping>
         <servlet-name>Send personal message</servlet-name>
         <url-pattern>/account/messages/create</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Show personal message image</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.ShowPersonalMessageImagesServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Show personal message image</servlet-name>
+        <url-pattern>/personal-message/image</url-pattern>
     </servlet-mapping>
 
     <!-- image servlets -->

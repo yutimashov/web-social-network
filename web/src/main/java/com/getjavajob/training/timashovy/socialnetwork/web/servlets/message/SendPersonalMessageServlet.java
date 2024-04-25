@@ -20,11 +20,11 @@ public class SendPersonalMessageServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         messageService.createPersonalMessage(new Message.Builder()
                 .accountAuthorId(((Account) req.getSession(false).getAttribute("account")).getId())
-                .destinationId(valueOf(req.getParameter("id")))
+                .destinationId(valueOf(req.getParameter("accountReceiverId")))
                 .text(req.getParameter("text"))
-                .photo(req.getPart("photo") == null ? null : req.getPart("photo").getInputStream())
+                .photo(req.getPart("photo").getInputStream())
                 .build());
-        resp.sendRedirect("/account/messages/dialog?id=" + req.getParameter("id"));
+        resp.sendRedirect("/account/messages/dialog?id=" + req.getParameter("accountReceiverId"));
     }
 
 }

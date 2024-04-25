@@ -21,6 +21,11 @@ public class PersonalMessageDaoImpl implements MessageDao {
             "destination_id, message_text, message_image) VALUES (?, ?, ?, ?);";
     private static final String GET_ALL_ACCOUNT_IDS = "SELECT DISTINCT account_author_id FROM " + PERSONAL_MESSAGE_TABLE
             + " WHERE destination_id = ?;";
+    private static final String GET_ALL_PRIVATE_MESSAGES_WITH_ACCOUNT = "SELECT id, account_author_id, destination_id, " +
+            "message_text, message_image, creation_date FROM " + PERSONAL_MESSAGE_TABLE + " WHERE account_author_id = " +
+            "? AND destination_id = ? UNION SELECT id, account_author_id, destination_id, message_text, message_image" +
+            ", creation_date FROM " + PERSONAL_MESSAGE_TABLE + " WHERE account_author_id = ? AND destination_id = ? "
+            + "ORDER BY creation_date DESC;";
     private static final PersonalMessageDaoImpl PERSONAL_MESSAGE_DAO = new PersonalMessageDaoImpl();
 
     private PersonalMessageDaoImpl() {
@@ -84,6 +89,32 @@ public class PersonalMessageDaoImpl implements MessageDao {
                 ids.add(resultSet.getLong("account_author_id"));
             }
             return ids;
+        } catch (SQLException e) {
+            throw new DaoException("dao: get all accounts ids method failed: " + e.getMessage());
+        }
+    }
+
+    public List<Message> getAllPersonalMessagesWithAccount(Long authorId, Long receiverId) {
+        try (PreparedStatement preparedStatement = getPreparedStatement(GET_ALL_PRIVATE_MESSAGES_WITH_ACCOUNT)) {
+            preparedStatement.setLong(1, authorId);
+            preparedStatement.setLong(2, receiverId);
+            preparedStatement.setLong(3, receiverId);
+            preparedStatement.setLong(4, authorId);
+            List<Message> messages = new ArrayList<>();
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                messages.add(
+                        new Message.Builder()
+                                .id(resultSet.getLong("id"))
+                                .accountAuthorId(resultSet.getLong("account_author_id"))
+                                .destinationId(resultSet.getLong("destination_id"))
+                                .creationDate(resultSet.getDate("creation_date").toLocalDate())
+                                .text(resultSet.getString("message_text"))
+                                .photo(resultSet.getBinaryStream("message_image"))
+                                .build()
+                );
+            }
+            return messages;
         } catch (SQLException e) {
             throw new DaoException("dao: get all accounts ids method failed: " + e.getMessage());
         }

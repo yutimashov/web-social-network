@@ -22,7 +22,8 @@ public class PersonalWallMessageDaoImpl implements MessageDao {
     private static final String CREATE = "INSERT INTO " + PERSONAL_WALL_MESSAGE_TABLE + " (account_author_id," +
             "account_receiver_id, message_text, message_image) VALUES (?, ?, ?, ?);";
     private static final String GET_ALL = "SELECT id, account_author_id, account_receiver_id, message_text, " +
-            "message_image, creation_date FROM " + PERSONAL_WALL_MESSAGE_TABLE + " WHERE account_receiver_id = ?;";
+            "message_image, creation_date FROM " + PERSONAL_WALL_MESSAGE_TABLE + " WHERE account_receiver_id = ? " +
+            "ORDER BY creation_date DESC;";
     private static final String GET_BY_ID = "SELECT id, account_author_id, creation_date, message_text, " +
             "message_image, account_receiver_id FROM " + PERSONAL_WALL_MESSAGE_TABLE + " WHERE id = ?;";
     private static final PersonalWallMessageDaoImpl PERSONAL_WALL_MESSAGE_DAO = new PersonalWallMessageDaoImpl();

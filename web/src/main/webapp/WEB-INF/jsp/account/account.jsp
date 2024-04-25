@@ -36,6 +36,13 @@
         <hr>
     </div>
 </c:if>
+<c:if test="${sessionScope.account.id != param.id}">
+    <div>
+        <h4>Messages</h4>
+        <a href="${pageContext.request.contextPath}/account/messages/dialog?id=${param.id}">Send message</a>
+        <hr>
+    </div>
+</c:if>
 <div>
     <c:if test="${requestScope.avatarInputStream != null}">
         <img src="${pageContext.request.contextPath}/avatar?id=${requestScope.account.id}" alt="Profile avatar"

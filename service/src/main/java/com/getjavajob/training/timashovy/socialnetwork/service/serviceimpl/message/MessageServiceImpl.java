@@ -86,4 +86,8 @@ public class MessageServiceImpl implements MessageService {
         return accounts;
     }
 
+    public List<Message> getAllPersonalMessagesWithAccount(Long authorId, Long receiverId) {
+        return personalMessageDao.getAllPersonalMessagesWithAccount(authorId, receiverId);
+    }
+
 }
