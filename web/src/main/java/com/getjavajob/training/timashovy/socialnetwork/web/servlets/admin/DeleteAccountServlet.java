@@ -12,8 +12,8 @@ import java.util.Objects;
 
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountServiceImpl.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
-import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspPathConstants.ACCOUNTS;
-import static com.getjavajob.training.timashovy.socialnetwork.web.util.ServletPathConstants.LOGOUT_SERVLET_PATH;
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspPagePaths.ACCOUNTS;
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.ServletPaths.LOGOUT_SERVLET_PATH;
 import static java.lang.Long.valueOf;
 
 public class DeleteAccountServlet extends HttpServlet {

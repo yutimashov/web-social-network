@@ -10,7 +10,11 @@ import javax.servlet.http.*;
 import java.io.IOException;
 import java.util.Optional;
 
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.ErrorTypes.AUTH_DATA_ERROR;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspPagePaths.LOGIN;
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.ServletPaths.ACCOUNT_SERVLET_PATH;
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.ServletPaths.LOGIN_SERVLET_PATH;
 import static java.util.Objects.isNull;
 import static java.util.concurrent.TimeUnit.HOURS;
 
@@ -25,7 +29,7 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher(getJspPagePath("/auth/login")).forward(req, resp);
+        req.getRequestDispatcher(getJspPagePath(LOGIN)).forward(req, resp);
     }
 
     @Override
@@ -33,15 +37,14 @@ public class LoginServlet extends HttpServlet {
         Optional<Account> loggedInAccount = loginService.getLoggedInAccount(req.getParameter("email"),
                 req.getParameter("password"));
         if (loggedInAccount.isPresent()) {
-            HttpSession session = req.getSession();
             Account account = loggedInAccount.get();
-            session.setAttribute("account", account);
+            req.getSession().setAttribute("account", account);
             if (!isNull(req.getParameter("rememberMe"))) {
                 createRememberMeCookies(account, resp);
             }
-            resp.sendRedirect("/account?id=" + account.getId());
+            resp.sendRedirect(ACCOUNT_SERVLET_PATH + "?id=" + account.getId());
         } else {
-            resp.sendRedirect("/login?error=auth-data");
+            resp.sendRedirect(LOGIN_SERVLET_PATH + AUTH_DATA_ERROR);
         }
     }
 

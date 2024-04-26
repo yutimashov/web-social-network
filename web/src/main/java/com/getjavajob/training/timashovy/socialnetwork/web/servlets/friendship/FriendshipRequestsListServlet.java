@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
-import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspPathConstants.FRIENDS_REQUESTS;
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspPagePaths.FRIENDS_REQUESTS;
 
 public class FriendshipRequestsListServlet extends HttpServlet {
 

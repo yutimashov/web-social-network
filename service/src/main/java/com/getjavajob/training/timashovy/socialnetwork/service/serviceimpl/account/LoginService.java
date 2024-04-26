@@ -24,16 +24,16 @@ public class LoginService {
         return loginService;
     }
 
-    public Optional<Account> getLoggedInAccount(String verifyingEmail, String verifyingPassword) {
-        if (isNull(verifyingEmail) || isNull(verifyingPassword)) {
+    public Optional<Account> getLoggedInAccount(String email, String password) {
+        if (isNull(email) || isNull(password)) {
             return empty();
         }
-        Password dbPassword = passwordService.findPasswordByEmail(verifyingEmail);
+        Password dbPassword = passwordService.findPasswordByEmail(email);
         if (isNull(dbPassword)) {
             return empty();
         }
         String dbPasswordValue = dbPassword.getPassword();
-        String verifyingSaltedPasswordValue = hashCredentialData(verifyingPassword, dbPassword.getSalt());
+        String verifyingSaltedPasswordValue = hashCredentialData(password, dbPassword.getSalt());
         return dbPasswordValue.equals(verifyingSaltedPasswordValue)
                 ? accountService.getAccountById(dbPassword.getAccountId()) : empty();
     }

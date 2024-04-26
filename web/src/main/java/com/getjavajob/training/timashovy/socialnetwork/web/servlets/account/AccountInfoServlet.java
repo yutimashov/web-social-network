@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
-import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspPathConstants.ACCOUNT;
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspPagePaths.ACCOUNT;
 import static java.lang.Long.valueOf;
 
 public class AccountInfoServlet extends HttpServlet {

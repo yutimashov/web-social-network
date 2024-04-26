@@ -10,15 +10,16 @@ import java.io.IOException;
 
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountServiceImpl.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspPagePaths.ALL_ACCOUNTS;
 
-public class AccountsListServlet extends HttpServlet {
+public class ShowAccountsListServlet extends HttpServlet {
 
     private final AccountServiceImpl accountService = getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         req.setAttribute("accounts", accountService.getAllAccounts());
-        req.getRequestDispatcher(getJspPagePath("account/accounts")).forward(req, resp);
+        req.getRequestDispatcher(getJspPagePath(ALL_ACCOUNTS)).forward(req, resp);
     }
 
 }

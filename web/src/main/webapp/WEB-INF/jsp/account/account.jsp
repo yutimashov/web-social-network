@@ -25,12 +25,11 @@
 <c:if test="${sessionAccountId eq pageAccountId}">
     <div>
         <h4>Messages</h4>
-        <a href="${rootUrl}/account/messages?id=${pageAccountId}">All messages</a><br>
+        <a href="${rootUrl}/account/messages?id=${pageAccountId}">My messages</a><br>
         <hr>
     </div>
     <div>
         <h4>Groups</h4>
-
         <a href="${rootUrl}/group/create">
             <button>Create group</button>
         </a>

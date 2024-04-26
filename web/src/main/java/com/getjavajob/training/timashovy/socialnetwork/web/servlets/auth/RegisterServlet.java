@@ -17,7 +17,10 @@ import java.io.IOException;
 
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.ErrorTypes.ACCOUNT_REGISTRATION_ERROR;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspPagePaths.REGISTER_PAGE;
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.ServletPaths.LOGIN_SERVLET_PATH;
 
 public class RegisterServlet extends HttpServlet {
 
@@ -28,37 +31,32 @@ public class RegisterServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher(getJspPagePath("/auth/register")).forward(req, resp);
+        req.getRequestDispatcher(getJspPagePath(REGISTER_PAGE)).forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
-            registerAccount(createAccount(req), req);
-            resp.sendRedirect("/login?reg=success");
+            registerAccount(req);
+            resp.sendRedirect(LOGIN_SERVLET_PATH);
         } catch (Exception e) {
-            resp.sendRedirect("/login?reg=fail");
+            resp.sendRedirect(LOGIN_SERVLET_PATH + ACCOUNT_REGISTRATION_ERROR);
         }
     }
 
-    private void registerAccount(Account account, HttpServletRequest req) throws ServletException, IOException {
-        accountService.createAccount(account);
-        Long accountId = account.getId();
-        phoneService.createPhone(accountId, req.getParameter("personalPhoneNumber"), PERSONAL);
-        phoneService.createPhone(accountId, req.getParameter("workPhoneNumber"), WORKING);
-        avatarService.create(accountId, req.getPart("avatar").getInputStream());
-        passwordService.create(accountId, req.getParameter("password"));
-    }
-
-    private Account createAccount(HttpServletRequest req) {
-        return new Account.Builder()
+    private void registerAccount(HttpServletRequest req) throws ServletException, IOException {
+        Long accountId = accountService.createAccount(new Account.Builder()
                 .firstName(req.getParameter("name"))
                 .lastName(req.getParameter("lastName"))
                 .middleName(req.getParameter("middleName"))
                 .email(req.getParameter("email"))
                 .skype(req.getParameter("skype"))
                 .icq(req.getParameter("icq"))
-                .build();
+                .build());
+        phoneService.createPhone(accountId, req.getParameter("personalPhoneNumber"), PERSONAL);
+        phoneService.createPhone(accountId, req.getParameter("workPhoneNumber"), WORKING);
+        avatarService.create(accountId, req.getPart("avatar").getInputStream());
+        passwordService.create(accountId, req.getParameter("password"));
     }
 
 }

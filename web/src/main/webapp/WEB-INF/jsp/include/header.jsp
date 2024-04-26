@@ -6,8 +6,8 @@
     <div style="background-color: bisque">
         <h4>Account: ${account.firstName} ${account.lastName}</h4>
         <a href="${rootUrl}/account?id=${account.id}">My page</a>&nbsp;&nbsp;
-        <a href="${rootUrl}/account/all">All accounts</a>&nbsp;
-        <a href="${rootUrl}/group/all">All groups</a>&nbsp;
+        <a href="${rootUrl}/account/all">All accounts</a>&nbsp;&nbsp;
+        <a href="${rootUrl}/group/all">All groups</a>&nbsp;&nbsp;
         <a href="${rootUrl}/logout">Log out</a>
         <hr>
     </div>

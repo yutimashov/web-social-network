@@ -10,7 +10,7 @@ import java.io.IOException;
 
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountServiceImpl.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
-import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspPathConstants.FRIENDS;
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspPagePaths.FRIENDS;
 import static java.lang.Long.valueOf;
 
 public class FriendsListServlet extends HttpServlet {

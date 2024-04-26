@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.ServletPaths.LOGIN_SERVLET_PATH;
 import static java.util.Objects.isNull;
 
 public class LogoutServlet extends HttpServlet {
@@ -17,7 +18,7 @@ public class LogoutServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getSession().invalidate();
         invalidateCookies(req, resp);
-        resp.sendRedirect("/login");
+        resp.sendRedirect(LOGIN_SERVLET_PATH);
     }
 
     private void invalidateCookies(HttpServletRequest req, HttpServletResponse resp) {

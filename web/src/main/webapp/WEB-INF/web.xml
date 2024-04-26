@@ -44,7 +44,7 @@
     <!-- account servlets -->
     <servlet>
         <servlet-name>Accounts</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.AccountsListServlet
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.ShowAccountsListServlet
         </servlet-class>
     </servlet>
     <servlet-mapping>
@@ -54,7 +54,7 @@
 
     <servlet>
         <servlet-name>Make Admin</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.admin.MakeAdminServlet
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.admin.MakeAppAdminServlet
         </servlet-class>
     </servlet>
     <servlet-mapping>
@@ -109,7 +109,7 @@
 
     <servlet>
         <servlet-name>All Accounts</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.AccountsListServlet
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.ShowAccountsListServlet
         </servlet-class>
     </servlet>
     <servlet-mapping>
