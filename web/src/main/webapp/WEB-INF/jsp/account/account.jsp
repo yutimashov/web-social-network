@@ -1,5 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="rootUrl" value="${pageContext.request.contextPath}"/>
+<c:set var="sessionAccountId" value="${sessionScope.account.id}"/>
+<c:set var="pageAccountId" value="${param.id}"/>
 <html>
 <head>
     <title>Account page</title>
@@ -8,44 +11,42 @@
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <div>
     <h4>Friends</h4>
-    <a href="${pageContext.request.contextPath}/friends?id=${param.id}">Friends list</a><br>
-    <c:if test="${sessionScope.account.id == param.id}">
-        <a href="${pageContext.request.contextPath}/friends/requests">Friend requests</a><br>
+    <a href="${rootUrl}/friends?id=${pageAccountId}">Friends list</a><br>
+    <c:if test="${sessionAccountId eq pageAccountId}">
+        <a href="${rootUrl}/friends/requests">Friend requests</a><br>
     </c:if>
-    <c:if test="${sessionScope.account.id != param.id && empty(requestScope.alreadySentFriendRequest)}">
-        <a href="${pageContext.request.contextPath}/friends/send-request?id=${param.id}">
+    <c:if test="${sessionAccountId ne pageAccountId and empty(requestScope.alreadySentFriendRequest)}">
+        <a href="${rootUrl}/friends/send-request?id=${pageAccountId}">
             <button>Send friend request</button>
         </a>
     </c:if>
     <hr>
 </div>
-<c:if test="${sessionScope.account.id == param.id}">
+<c:if test="${sessionAccountId eq pageAccountId}">
     <div>
         <h4>Messages</h4>
-        <!-- переход на страницу со списком аккаунтов, с которыми есть диалогиы -->
-        <!-- при переходе на аккаунт - диалог с этим пользователем -->
-        <a href="${pageContext.request.contextPath}/account/messages?id=${param.id}">All messages</a><br>
+        <a href="${rootUrl}/account/messages?id=${pageAccountId}">All messages</a><br>
         <hr>
     </div>
     <div>
         <h4>Groups</h4>
-        <a href="${pageContext.request.contextPath}/group/all">All groups</a><br>
-        <a href="${pageContext.request.contextPath}/group/create">
+        <a href="${rootUrl}/group/all">All groups</a><br>
+        <a href="${rootUrl}/group/create">
             <button>Create group</button>
         </a>
         <hr>
     </div>
 </c:if>
-<c:if test="${sessionScope.account.id != param.id}">
+<c:if test="${sessionAccountId ne pageAccountId}">
     <div>
         <h4>Messages</h4>
-        <a href="${pageContext.request.contextPath}/account/messages/dialog?id=${param.id}">Send message</a>
+        <a href="${rootUrl}account/messages/dialog?id=${pageAccountId}">Send message</a>
         <hr>
     </div>
 </c:if>
 <div>
-    <c:if test="${requestScope.avatarInputStream != null}">
-        <img src="${pageContext.request.contextPath}/avatar?id=${requestScope.account.id}" alt="Profile avatar"
+    <c:if test="${requestScope.avatarInputStream ne null}">
+        <img src="${rootUrl}/avatar?id=${pageAccountId}" alt="Profile avatar"
              width="200px" height="200px">
     </c:if><br>
     <span>First name: ${requestScope.account.firstName}</span><br>
@@ -65,32 +66,28 @@
     <span>ICQ: ${requestScope.account.icq}</span><br>
     <span>Skype: ${requestScope.account.skype}</span><br>
     <span>Other information: ${requestScope.account.additionalInfo}</span><br>
-    <c:if test="${sessionScope.account.id eq param.id || sessionScope.account.role eq 'ADMIN'}">
-        <a href="${pageContext.request.contextPath}/account/edit?id=${param.id}">
+    <c:if test="${sessionAccountId eq param.id or sessionScope.account.role eq 'ADMIN'}">
+        <a href="${rootUrl}/account/edit?id=${pageAccountId}">
             <button>Edit account</button>
         </a>&nbsp;&nbsp;
-        <a href="${pageContext.request.contextPath}/account/delete?id=${param.id}">
+        <a href="${rootUrl}/account/delete?id=${pageAccountId}">
             <button>Delete account</button>
         </a>&nbsp;&nbsp;
     </c:if>
-    <c:if test="${sessionScope.account.role eq 'ADMIN' && requestScope.account.role eq 'REGULAR'}">
-        <a href="${pageContext.request.contextPath}/make-admin?id=${param.id}">
+    <c:if test="${sessionScope.account.role eq 'ADMIN' and requestScope.account.role eq 'REGULAR'}">
+        <a href="${rootUrl}/make-admin?id=${pageAccountId}">
             <button>Make admin</button>
         </a><br>
     </c:if>
 </div>
-<c:if test="${sessionScope.account.id == param.id}">
+<c:if test="${sessionAccountId eq pageAccountId}">
     <div>
-        <form action="${pageContext.request.contextPath}/account-wall/message/create" method="POST"
-              enctype="multipart/form-data">
-            <input type="hidden" name="accountReceiverId" value="${param.id}">
+        <form action="${rootUrl}/account-wall/message/create" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="accountReceiverId" value="${pageAccountId}">
             <label for="text">New post:</label><br>
-            <textarea id="text" name="text" rows="10" cols="40"
-                      placeholder="Enter post message"></textarea>
+            <textarea id="text" name="text" rows="10" cols="40" placeholder="Enter post message"></textarea>
             <br><br>
-            <label for="photo">Add post photo (optional):<br>
-                <input type="file" id="photo" name="photo">
-            </label>
+            <label for="photo">Add post photo (optional):<br><input type="file" id="photo" name="photo"></label>
             <br><br>
             <button type="submit">Create post</button>
         </form>
@@ -104,10 +101,8 @@
         <c:set var="accountAuthor"
                value="${requestScope.accountService.getAccountById(post.accountAuthorId).get()}"/>
         <p>${post.text}</p>
-        <c:if test="${post.photo != null}">
-            <img src="${pageContext.request.contextPath}/account-wall/image?id=${post.id}"
-                 alt="Message photo"
-                 width="150px" height="150px">
+        <c:if test="${post.photo ne null}">
+            <img src="${rootUrl}/account-wall/image?id=${post.id}" alt="Message photo" width="150px" height="150px">
         </c:if>
         <hr>
     </c:forEach>

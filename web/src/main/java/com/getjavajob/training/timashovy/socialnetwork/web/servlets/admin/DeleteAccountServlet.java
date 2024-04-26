@@ -12,6 +12,8 @@ import java.util.Objects;
 
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountServiceImpl.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspPathConstants.ACCOUNTS;
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.ServletPathConstants.LOGOUT_SERVLET_PATH;
 import static java.lang.Long.valueOf;
 
 public class DeleteAccountServlet extends HttpServlet {
@@ -20,14 +22,12 @@ public class DeleteAccountServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        accountService.deleteAccount(valueOf(req.getParameter("id")));
-        Long sessionAccountId = ((Account) req.getSession(false).getAttribute("account")).getId();
-        Long accountId = Long.valueOf(req.getParameter("id"));
-        if (!Objects.equals(sessionAccountId, accountId)) {
-            req.getRequestDispatcher(getJspPagePath("/admin/delete")).forward(req, resp);
+        Long accountIdToDelete = valueOf(req.getParameter("id"));
+        accountService.deleteAccount(accountIdToDelete);
+        if (!Objects.equals(((Account) req.getSession(false).getAttribute("account")).getId(), accountIdToDelete)) {
+            req.getRequestDispatcher(getJspPagePath(ACCOUNTS)).forward(req, resp);
         } else {
-            req.getSession().invalidate();
-            resp.sendRedirect("/login");
+            req.getRequestDispatcher(LOGOUT_SERVLET_PATH).forward(req, resp);
         }
     }
 

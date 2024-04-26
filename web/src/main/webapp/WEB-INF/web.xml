@@ -130,7 +130,8 @@
 
     <servlet>
         <servlet-name>Friend Requests</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.friendship.FriendshipRequestsListServlet
+        <servlet-class>
+            com.getjavajob.training.timashovy.socialnetwork.web.servlets.friendship.FriendshipRequestsListServlet
         </servlet-class>
     </servlet>
     <servlet-mapping>
@@ -316,7 +317,8 @@
 
     <servlet>
         <servlet-name>Create personal wall message</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.CreatePersonalWallMessageServlet
+        <servlet-class>
+            com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.CreatePersonalWallMessageServlet
         </servlet-class>
         <multipart-config>
             <max-file-size>10485760</max-file-size>
@@ -341,7 +343,8 @@
 
     <servlet>
         <servlet-name>Show account wall message image</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.ShowAccountWallMessageServlet
+        <servlet-class>
+            com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.ShowAccountWallMessageServlet
         </servlet-class>
     </servlet>
     <servlet-mapping>
@@ -361,7 +364,8 @@
 
     <servlet>
         <servlet-name>Dialog</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.ShowPrivateMessageDialogServlet
+        <servlet-class>
+            com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.ShowPrivateMessageDialogServlet
         </servlet-class>
     </servlet>
     <servlet-mapping>
@@ -386,7 +390,8 @@
 
     <servlet>
         <servlet-name>Show personal message image</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.ShowPersonalMessageImagesServlet
+        <servlet-class>
+            com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.ShowPersonalMessageImagesServlet
         </servlet-class>
     </servlet>
     <servlet-mapping>

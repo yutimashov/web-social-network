@@ -1,5 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.servlets.auth;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -13,7 +14,7 @@ public class LogoutServlet extends HttpServlet {
     private static final int EXPIRATION_COOKIE_TIME = 0;
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getSession().invalidate();
         invalidateCookies(req, resp);
         resp.sendRedirect("/login");

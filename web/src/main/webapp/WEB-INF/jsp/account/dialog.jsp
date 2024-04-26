@@ -37,7 +37,7 @@
             <span>To: ${requestScope.accountService.getAccountById(message.destinationId).get().lastName}</span><br>
             <span>Message:</span><br>
             <span>${message.text}</span>
-            <c:if test="${message.photo != null}">
+            <c:if test="${message.photo ne null}">
                 <div>
                     <img src="${pageContext.request.contextPath}/personal-message/image?id=${message.id}"
                          alt="Message photo"
