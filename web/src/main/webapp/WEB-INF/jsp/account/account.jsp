@@ -30,7 +30,7 @@
     </div>
     <div>
         <h4>Groups</h4>
-        <a href="${rootUrl}/group/all">All groups</a><br>
+
         <a href="${rootUrl}/group/create">
             <button>Create group</button>
         </a>
@@ -46,8 +46,7 @@
 </c:if>
 <div>
     <c:if test="${requestScope.avatarInputStream ne null}">
-        <img src="${rootUrl}/avatar?id=${pageAccountId}" alt="Profile avatar"
-             width="200px" height="200px">
+        <img src="${rootUrl}/avatar?id=${pageAccountId}" alt="Profile avatar" width="100px" height="100px">
     </c:if><br>
     <span>First name: ${requestScope.account.firstName}</span><br>
     <span>Last name: ${requestScope.account.lastName}</span><br>
@@ -55,11 +54,11 @@
     <span>Birthdate: ${requestScope.account.birthDate}</span><br>
     <span>Personal phones:</span><br>
     <c:forEach var="phone" items="${requestScope.account.personalPhoneNumber}">
-        <span>${phone.number}</span><br>
+        &nbsp;&nbsp;<span>${phone.number}</span><br>
     </c:forEach>
     <span>Working phones:</span><br>
     <c:forEach var="phone" items="${requestScope.account.workPhoneNumber}">
-        <span>${phone.number}</span><br>
+        &nbsp;&nbsp;<span>${phone.number}</span><br>
     </c:forEach>
     <span>Personal address: ${requestScope.account.personalAddress}</span><br>
     <span>Email: ${requestScope.account.email}</span><br>
