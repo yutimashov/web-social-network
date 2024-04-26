@@ -104,10 +104,10 @@
         <c:set var="accountAuthor"
                value="${requestScope.accountService.getAccountById(post.accountAuthorId).get()}"/>
         <p>${post.text}</p>
-        <c:if test="${!empty(post.photo)}">
+        <c:if test="${post.photo != null}">
             <img src="${pageContext.request.contextPath}/account-wall/image?id=${post.id}"
                  alt="Message photo"
-                 width="250px" height="250px">
+                 width="150px" height="150px">
         </c:if>
         <hr>
     </c:forEach>

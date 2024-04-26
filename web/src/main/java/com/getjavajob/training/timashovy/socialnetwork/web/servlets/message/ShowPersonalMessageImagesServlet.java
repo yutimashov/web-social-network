@@ -15,7 +15,8 @@ public class ShowPersonalMessageImagesServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        req.setAttribute("inputStreamImage", messageService.getPersonalMessageById(valueOf(req.getParameter("id")))
+                .getPhoto());
         req.getRequestDispatcher("/image/show").include(req, resp);
     }
 

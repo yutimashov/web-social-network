@@ -11,9 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.GROUP_MESSAGE_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.PERSONAL_MESSAGE_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 
 public class PersonalMessageDaoImpl implements MessageDao {
 
@@ -26,6 +29,8 @@ public class PersonalMessageDaoImpl implements MessageDao {
             "? AND destination_id = ? UNION SELECT id, account_author_id, destination_id, message_text, message_image" +
             ", creation_date FROM " + PERSONAL_MESSAGE_TABLE + " WHERE account_author_id = ? AND destination_id = ? "
             + "ORDER BY creation_date DESC;";
+    private static final String GET_BY_ID = "SELECT id, account_author_id, creation_date, message_text, " +
+            "message_image, destination_id FROM " + PERSONAL_MESSAGE_TABLE + " WHERE id = ?;";
     private static final PersonalMessageDaoImpl PERSONAL_MESSAGE_DAO = new PersonalMessageDaoImpl();
 
     private PersonalMessageDaoImpl() {
@@ -62,7 +67,25 @@ public class PersonalMessageDaoImpl implements MessageDao {
 
     @Override
     public Optional<Message> getById(Long id) {
-        return Optional.empty();
+        try (PreparedStatement getMessageByIdStatement = getPreparedStatement(GET_BY_ID)) {
+            getMessageByIdStatement.setLong(1, id);
+            ResultSet messageData = getMessageByIdStatement.executeQuery();
+            if (messageData.next()) {
+                Message message = new Message.Builder()
+                        .id(messageData.getLong("id"))
+                        .accountAuthorId(messageData.getLong("account_author_id"))
+                        .creationDate(messageData.getDate("creation_date").toLocalDate())
+                        .destinationId(messageData.getLong("destination_id"))
+                        .text(messageData.getString("message_text"))
+                        .photo(messageData.getBinaryStream("message_image"))
+                        .build();
+                return of(message);
+            } else {
+                return empty();
+            }
+        } catch (SQLException e) {
+            throw new DaoException("dao: get message by id method failed: " + e.getMessage());
+        }
     }
 
     @Override

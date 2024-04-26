@@ -66,6 +66,14 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    public Message getPersonalMessageById(Long messageId) {
+        if (personalMessageDao.getById(messageId).isPresent()) {
+            return personalMessageDao.getById(messageId).get();
+        }
+        return null;
+    }
+
+    @Override
     public List<Message> getAllGroupMessages(Long groupId) {
         return groupMessageDao.getAll(groupId);
     }

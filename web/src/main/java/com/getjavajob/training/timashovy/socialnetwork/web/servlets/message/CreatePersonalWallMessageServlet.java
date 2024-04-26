@@ -23,7 +23,7 @@ public class CreatePersonalWallMessageServlet extends HttpServlet {
                 .accountAuthorId(((Account) req.getSession(false).getAttribute("account")).getId())
                 .destinationId(valueOf(req.getParameter("accountReceiverId")))
                 .text(req.getParameter("text"))
-                .photo(req.getPart("photo").getInputStream())
+                .photo(req.getPart("photo").getSize() > 0 ? req.getPart("photo").getInputStream() : null)
                 .build());
         resp.sendRedirect("/account?id=" + req.getParameter("accountReceiverId"));
     }

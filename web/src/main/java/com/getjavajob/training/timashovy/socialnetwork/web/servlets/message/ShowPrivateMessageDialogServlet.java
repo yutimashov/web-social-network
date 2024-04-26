@@ -24,6 +24,7 @@ public class ShowPrivateMessageDialogServlet extends HttpServlet {
         if (accountService.getAccountById(valueOf(req.getParameter("id"))).isPresent()) {
             req.setAttribute("account", accountService.getAccountById(valueOf(req.getParameter("id"))).get());
         }
+        req.setAttribute("accountService", accountService);
         req.setAttribute("messages", messageService
                 .getAllPersonalMessagesWithAccount(((Account) req.getSession(false).getAttribute("account")).getId(),
                         valueOf(req.getParameter("id"))));
