@@ -2,7 +2,7 @@ package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.acco
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
-import com.getjavajob.training.timashovy.socialnetwork.common.account.Role;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.AccountRole;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AccountDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PhoneDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship.FriendshipCheckerImpl;
@@ -14,6 +14,7 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipDao;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -187,11 +188,18 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public boolean updateAccountRole(Long accountId, Role role) {
+    public boolean updateAccountRole(Long accountId, AccountRole role) {
         validateAccountId(accountId);
         validateAccountFieldNotNull(role);
         return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
                 new Account.Builder(accountDao.getById(accountId).get()).role(role).build());
+    }
+
+    @Override
+    public boolean updateFirstAvatar(Long accountId, InputStream updatedAvatar) {
+        validateAccountId(accountId);
+        return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
+                new Account.Builder(accountDao.getById(accountId).get()).avatar(updatedAvatar).build());
     }
 
     @Override

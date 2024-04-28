@@ -1,5 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.common.account;
 
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -11,7 +12,7 @@ import static java.util.Objects.hash;
  * Contains all relevant information about Account.
  *
  * @author Yuriy Timashov
- * @since 10.01.2023
+ * @since 10.01.2024
  */
 public class Account {
 
@@ -28,7 +29,8 @@ public class Account {
     private String icq;
     private String skype;
     private String additionalInfo;
-    private Role role;
+    private AccountRole role;
+    private InputStream avatar;
 
     private Account(Builder builder) {
         id = builder.id;
@@ -45,6 +47,7 @@ public class Account {
         skype = builder.skype;
         additionalInfo = builder.additionalInfo;
         role = builder.role;
+        avatar = builder.avatar;
     }
 
     public static final class Builder {
@@ -62,7 +65,8 @@ public class Account {
         private String icq;
         private String skype;
         private String additionalInfo;
-        private Role role;
+        private AccountRole role;
+        private InputStream avatar;
 
         public Builder() {
         }
@@ -82,6 +86,7 @@ public class Account {
             this.skype = account.getSkype();
             this.additionalInfo = account.getAdditionalInfo();
             this.role = account.getRole();
+            this.avatar = account.getAvatar();
         }
 
         public Builder id(Long id) {
@@ -149,8 +154,13 @@ public class Account {
             return this;
         }
 
-        public Builder role(Role role) {
+        public Builder role(AccountRole role) {
             this.role = role;
+            return this;
+        }
+
+        public Builder avatar(InputStream avatar) {
+            this.avatar = avatar;
             return this;
         }
 
@@ -264,12 +274,20 @@ public class Account {
         this.additionalInfo = additionalInfo;
     }
 
-    public Role getRole() {
+    public AccountRole getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(AccountRole role) {
         this.role = role;
+    }
+
+    public InputStream getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(InputStream avatar) {
+        this.avatar = avatar;
     }
 
     @Override
@@ -288,13 +306,13 @@ public class Account {
                 && Objects.equals(personalAddress, account.personalAddress) && Objects.equals(workAddress,
                 account.workAddress) && Objects.equals(email, account.email) && Objects.equals(icq, account.icq)
                 && Objects.equals(skype, account.skype) && Objects.equals(additionalInfo, account.additionalInfo)
-                && Objects.equals(role, account.role);
+                && Objects.equals(role, account.role) && Objects.equals(avatar, account.avatar);
     }
 
     @Override
     public int hashCode() {
         return hash(id, firstName, lastName, middleName, birthDate, personalPhoneNumber, workPhoneNumber,
-                personalAddress, workAddress, email, icq, skype, additionalInfo, role);
+                personalAddress, workAddress, email, icq, skype, additionalInfo, role, avatar);
     }
 
     @Override

@@ -2,9 +2,7 @@ package com.getjavajob.training.timashovy.socialnetwork.web.servlets.auth;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
-import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.ImageService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountAvatarServiceImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountServiceImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.PasswordServiceImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.PhoneServiceImpl;
@@ -26,7 +24,6 @@ public class RegisterServlet extends HttpServlet {
 
     private final AccountService accountService = AccountServiceImpl.getInstance();
     private final PasswordService passwordService = PasswordServiceImpl.getInstance();
-    private final ImageService avatarService = AccountAvatarServiceImpl.getInstance();
     private final PhoneServiceImpl phoneService = PhoneServiceImpl.getInstance();
 
     @Override
@@ -52,10 +49,10 @@ public class RegisterServlet extends HttpServlet {
                 .email(req.getParameter("email"))
                 .skype(req.getParameter("skype"))
                 .icq(req.getParameter("icq"))
+                .avatar(req.getPart("avatar").getInputStream())
                 .build());
         phoneService.createPhone(accountId, req.getParameter("personalPhoneNumber"), PERSONAL);
         phoneService.createPhone(accountId, req.getParameter("workPhoneNumber"), WORKING);
-        avatarService.create(accountId, req.getPart("avatar").getInputStream());
         passwordService.create(accountId, req.getParameter("password"));
     }
 

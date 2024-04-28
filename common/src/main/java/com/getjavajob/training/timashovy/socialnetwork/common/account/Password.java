@@ -2,6 +2,10 @@ package com.getjavajob.training.timashovy.socialnetwork.common.account;
 
 import java.util.Objects;
 
+/**
+ * Class store information about Account's password.
+ * It also provides basic functionality to work with password.
+ */
 public class Password {
 
     private Long id;

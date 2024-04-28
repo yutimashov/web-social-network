@@ -1,8 +1,9 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.interfaces;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.common.account.Role;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.AccountRole;
 
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -47,8 +48,10 @@ public interface AccountService {
 
     boolean updateAccountEmail(Long accountId, String updatedEmail);
 
-    boolean updateAccountRole(Long accountId, Role role);
+    boolean updateAccountRole(Long accountId, AccountRole role);
 
     boolean checkFriendshipRecordExistence(Long requesterId, Long accepterId);
+
+    boolean updateFirstAvatar(Long accountId, InputStream updatedAvatar);
 
 }

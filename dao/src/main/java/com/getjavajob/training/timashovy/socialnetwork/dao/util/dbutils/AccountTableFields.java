@@ -14,6 +14,7 @@ public final class AccountTableFields {
     public static final String ACCOUNT_SKYPE_FIELD = "skype";
     public static final String ACCOUNT_ADDITIONAL_INFO_FIELD = "additional_info";
     public static final String ACCOUNT_ROLE_TYPE_FIELD = "role_type";
+    public static final String ACCOUNT_AVATAR_FIELD = "avatar";
 
     private AccountTableFields() {
         throw new AssertionError();

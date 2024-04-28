@@ -5,6 +5,7 @@ public final class ServletPaths {
     public static final String LOGOUT_SERVLET_PATH = "/logout";
     public static final String LOGIN_SERVLET_PATH = "/login";
     public static final String ACCOUNT_SERVLET_PATH = "/account";
+    public static final String SHOW_IMAGE_SERVLET_PATH = "/image/show";
 
     private ServletPaths() {
         throw new AssertionError();

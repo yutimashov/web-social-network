@@ -2,12 +2,10 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.Group;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group.GroupDaoImpl.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
@@ -26,14 +24,14 @@ class GroupDaoImplTest {
     private void restoreTestGroupDefaultState() {
         TEST_GROUP.setGroupName("");
         TEST_GROUP.setDescription("");
-        TEST_GROUP.setOwnerId(1L);
+        TEST_GROUP.setAccountOwnerId(1L);
     }
 
     private void setTestGroupEqualsToRecordInTestTable() {
         TEST_GROUP.setId(1L);
         TEST_GROUP.setGroupName("test");
         TEST_GROUP.setDescription("test");
-        TEST_GROUP.setOwnerId(1L);
+        TEST_GROUP.setAccountOwnerId(1L);
     }
 
     @BeforeAll

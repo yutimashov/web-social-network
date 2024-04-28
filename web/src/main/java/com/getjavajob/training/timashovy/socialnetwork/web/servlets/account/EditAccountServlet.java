@@ -3,7 +3,6 @@ package com.getjavajob.training.timashovy.socialnetwork.web.servlets.account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.ImageService;
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountAvatarServiceImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountServiceImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.PhoneServiceImpl;
 
@@ -31,7 +30,6 @@ public class EditAccountServlet extends HttpServlet {
     private static final String ICQ_PARAMETER_NAME = "icq";
     private static final String EMAIL_PARAMETER_NAME = "email";
     private final AccountService accountService = AccountServiceImpl.getInstance();
-    private final ImageService avatarService = AccountAvatarServiceImpl.getInstance();
     private final PhoneServiceImpl phoneService = PhoneServiceImpl.getInstance();
 
     @Override
@@ -39,7 +37,7 @@ public class EditAccountServlet extends HttpServlet {
         Long accountId = valueOf(req.getParameter("id"));
         if (accountService.getAccountById(accountId).isPresent()) {
             req.setAttribute("account", accountService.getAccountById(accountId).get());
-            req.setAttribute("avatarInputStream", avatarService.get(accountId));
+            req.setAttribute("avatarInputStream", accountService.getAccountById(accountId).get().getAvatar());
             req.setAttribute("personalPhones", phoneService.getPersonalPhoneNumbers(accountId));
             req.setAttribute("workingPhones", phoneService.getWorkPhoneNumbers(accountId));
             req.getRequestDispatcher(getJspPagePath("/account/edit")).forward(req, resp);
@@ -58,7 +56,7 @@ public class EditAccountServlet extends HttpServlet {
         Long accountId = valueOf(req.getParameter("id"));
         InputStream updatedAvatar = req.getPart("avatar").getInputStream();
         if (!isNull(updatedAvatar)) {
-            avatarService.update(accountId, req.getPart("avatar").getInputStream());
+            accountService.updateFirstAvatar(accountId, updatedAvatar);
         }
         String updatedFirstName = getParameter(req, FIRST_NAME_PARAMETER_NAME);
         if (checkParameterHasValue(updatedFirstName)) {

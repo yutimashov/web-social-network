@@ -44,7 +44,7 @@
     </div>
 </c:if>
 <div>
-    <c:if test="${requestScope.avatarInputStream ne null}">
+    <c:if test="${requestScope.account.avatar ne null}">
         <img src="${rootUrl}/avatar?id=${pageAccountId}" alt="Profile avatar" width="100px" height="100px">
     </c:if><br>
     <span>First name: ${requestScope.account.firstName}</span><br>

@@ -10,19 +10,19 @@ import static java.util.Objects.hash;
  * Each group belongs to a certain account and also has some meta information.
  *
  * @author Yuriy Timashov
- * @since 10.01.2023
+ * @since 10.01.2024
  */
 public class Group {
 
     private Long id;
     private String groupName;
     private String description;
-    private Long ownerId;
+    private Long accountOwnerId;
 
     public Group(String groupName, String description, Long ownerId) {
         this.groupName = groupName;
         this.description = description;
-        this.ownerId = ownerId;
+        this.accountOwnerId = ownerId;
     }
 
     public Group(Long id, String groupName, String description, Long ownerId) {
@@ -54,12 +54,12 @@ public class Group {
         this.description = description;
     }
 
-    public Long getOwnerId() {
-        return ownerId;
+    public Long getAccountOwnerId() {
+        return accountOwnerId;
     }
 
-    public void setOwnerId(Long ownerId) {
-        this.ownerId = ownerId;
+    public void setAccountOwnerId(Long accountOwnerId) {
+        this.accountOwnerId = accountOwnerId;
     }
 
     @Override
@@ -71,19 +71,20 @@ public class Group {
             return false;
         }
         Group group = (Group) o;
-        return Objects.equals(id, group.id) && Objects.equals(groupName, group.groupName) && Objects.equals(description,
-                group.description) && Objects.equals(ownerId, group.ownerId);
+        return Objects.equals(id, group.id) && Objects.equals(groupName, group.groupName)
+                && Objects.equals(description, group.description) && Objects.equals(accountOwnerId,
+                group.accountOwnerId);
     }
 
     @Override
     public int hashCode() {
-        return hash(id, groupName, description, ownerId);
+        return hash(id, groupName, description, accountOwnerId);
     }
 
     @Override
     public String toString() {
-        return "Group {id=" + id + ", groupName=" + groupName + ", description=" + description + ", ownerId=" + ownerId
-                + "}";
+        return "Group {id=" + id + ", groupName=" + groupName + ", description=" + description + ", ownerId="
+                + accountOwnerId + "}";
     }
 
 }

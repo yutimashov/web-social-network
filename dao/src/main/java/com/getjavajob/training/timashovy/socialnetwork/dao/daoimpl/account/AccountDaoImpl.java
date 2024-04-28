@@ -2,10 +2,10 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
-import com.getjavajob.training.timashovy.socialnetwork.common.account.Role;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.AccountRole;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 
 import java.sql.PreparedStatement;
@@ -17,7 +17,7 @@ import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
-import static com.getjavajob.training.timashovy.socialnetwork.common.account.Role.REGULAR;
+import static com.getjavajob.training.timashovy.socialnetwork.common.account.AccountRole.REGULAR;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.AccountTableFields.*;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNT_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
@@ -31,17 +31,17 @@ import static java.util.stream.Collectors.toList;
 public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidator {
 
     private static final String CREATE = "INSERT INTO " + ACCOUNT_TABLE + " (first_name, last_name, "
-            + "middle_name, birth_date, personal_address, work_address, email, icq, skype, additional_info, role_type) "
-            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+            + "middle_name, birth_date, personal_address, work_address, email, icq, skype, additional_info, "
+            + "role_type, avatar) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     private static final String GET_BY_ID = "SELECT id, first_name, last_name, middle_name, birth_date, "
-            + "personal_address, work_address, email, icq, skype, additional_info, role_type FROM "
+            + "personal_address, work_address, email, icq, skype, additional_info, role_type, avatar FROM "
             + ACCOUNT_TABLE + " WHERE id = ?;";
     private static final String GET_ALL = "SELECT id, first_name, last_name, middle_name, birth_date, personal_address, "
-            + "work_address, email, icq, skype, additional_info, role_type "
+            + "work_address, email, icq, skype, additional_info, role_type, avatar "
             + "FROM " + ACCOUNT_TABLE + ";";
     private static final String UPDATE_BY_ID = "UPDATE " + ACCOUNT_TABLE + " SET first_name = ?, last_name = ?, "
             + "middle_name = ?, birth_date = ?, personal_address = ?, work_address = ?, email = ?, icq = ?, skype = ?, "
-            + "additional_info = ?, role_type = ? WHERE id = ?;";
+            + "additional_info = ?, role_type = ?, avatar = ? WHERE id = ?;";
     private static final String DELETE_BY_ID = "DELETE FROM " + ACCOUNT_TABLE + " WHERE id = ?;";
     private static final AccountDaoImpl ACCOUNT_DAO_INSTANCE = new AccountDaoImpl();
     private static final PhoneDao PHONE_DAO = PhoneDaoImpl.getInstance();
@@ -106,6 +106,7 @@ public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidat
         } else {
             preparedStatement.setString(11, account.getRole().name());
         }
+        preparedStatement.setBinaryStream(12, account.getAvatar());
     }
 
     @Override
@@ -145,7 +146,8 @@ public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidat
                 .icq(resultSet.getString(ACCOUNT_ICQ_FIELD))
                 .skype(resultSet.getString(ACCOUNT_SKYPE_FIELD))
                 .additionalInfo(resultSet.getString(ACCOUNT_ADDITIONAL_INFO_FIELD))
-                .role(Role.valueOf(resultSet.getString(ACCOUNT_ROLE_TYPE_FIELD)))
+                .role(AccountRole.valueOf(resultSet.getString(ACCOUNT_ROLE_TYPE_FIELD)))
+                .avatar(resultSet.getBinaryStream(ACCOUNT_AVATAR_FIELD))
                 .build();
     }
 
@@ -167,7 +169,7 @@ public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidat
     public boolean updateById(Long id, Account account) {
         try (PreparedStatement updateByIdStatement = getPreparedStatement(UPDATE_BY_ID)) {
             setAccountData(account, updateByIdStatement);
-            updateByIdStatement.setLong(12, id);
+            updateByIdStatement.setLong(13, id);
             return updateByIdStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DaoException("dao: update account by id method failed: ", e);

@@ -82,7 +82,7 @@ public class GroupDaoImpl implements BaseDao<Group>, GroupDao, TableConstraintsV
     private void setGroupData(Group group, PreparedStatement preparedStatement) throws SQLException {
         preparedStatement.setString(1, group.getGroupName());
         preparedStatement.setString(2, group.getDescription());
-        preparedStatement.setLong(3, group.getOwnerId());
+        preparedStatement.setLong(3, group.getAccountOwnerId());
     }
 
     @Override

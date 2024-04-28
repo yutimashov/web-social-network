@@ -15,7 +15,7 @@ import static java.util.Objects.hash;
  * When receiver accepts request from requester, the status becomes `true`.
  *
  * @author Yuriy Timashov
- * @since 13.01.2023
+ * @since 13.01.2024
  */
 public class Friendship {
 
