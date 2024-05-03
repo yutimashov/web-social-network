@@ -12,10 +12,11 @@
         <hr>
     </div>
     <div style="background-color: #efde59">
-        <form action="${rootUrl}/register" method="POST">
-            <label for="search">
-                Search:&nbsp;&nbsp;&nbsp;<input type="text" id="search" name="search">
+        <form action="${rootUrl}/search" method="POST">
+            <label for="searchQuery">
+                Search:&nbsp;&nbsp;&nbsp;<input type="text" id="searchQuery" name="searchQuery">
             </label>
+            <button type="submit">Find</button>
         </form>
         <hr>
     </div>

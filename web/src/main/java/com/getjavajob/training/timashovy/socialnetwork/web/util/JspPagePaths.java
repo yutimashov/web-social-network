@@ -9,6 +9,7 @@ public final class JspPagePaths {
     public static final String ACCOUNTS = "/account/accounts";
     public static final String FRIENDS = "/friendship/friends";
     public static final String FRIENDS_REQUESTS = "/friendship/requests/requests";
+    public static final String SEARCH_RESULT = "search/result";
 
     private JspPagePaths() {
         throw new AssertionError();

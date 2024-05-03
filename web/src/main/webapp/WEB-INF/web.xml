@@ -411,7 +411,15 @@
     </servlet-mapping>
 
     <!-- search -->
-    
+    <servlet>
+        <servlet-name>Search</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.search.SearchServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Search</servlet-name>
+        <url-pattern>/search</url-pattern>
+    </servlet-mapping>
 
     <!-- session config -->
     <session-config>
