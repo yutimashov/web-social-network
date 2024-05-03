@@ -23,13 +23,18 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public List<Account> findAccounts(String searchQuery) {
-        return searchAccountDao.search(searchQuery);
+    public List<Account> findAccounts(String searchQuery, int offset, int resultsPerPage) {
+        return searchAccountDao.searchAccounts(searchQuery, offset, resultsPerPage);
     }
 
     @Override
-    public List<Group> findGroups(String searchQuery) {
-        return searchGroupDao.search(searchQuery);
+    public List<Group> findGroups(String searchQuery, int offset, int resultsPerPage) {
+        return searchGroupDao.searchAccounts(searchQuery, offset, resultsPerPage);
+    }
+
+    @Override
+    public Integer getNumberOfRows() {
+        return null;
     }
 
 }

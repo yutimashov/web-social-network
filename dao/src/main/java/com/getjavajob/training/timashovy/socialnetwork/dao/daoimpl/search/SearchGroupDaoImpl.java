@@ -16,7 +16,8 @@ import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.d
 public class SearchGroupDaoImpl implements SearchDao<Group> {
 
     private static final SearchGroupDaoImpl SEARCH_GROUP_DAO = new SearchGroupDaoImpl();
-    private static final String FIND_GROUPS = "SELECT * FROM " + GROUP_TABLE + " WHERE group_name ILIKE ?;";
+    private static final String FIND_GROUPS = "SELECT * FROM " + GROUP_TABLE + " WHERE group_name ILIKE ? LIMIT ? "
+            + "OFFSET ?;";
 
     private SearchGroupDaoImpl() {
     }
@@ -26,10 +27,12 @@ public class SearchGroupDaoImpl implements SearchDao<Group> {
     }
 
     @Override
-    public List<Group> search(String searchQuery) {
+    public List<Group> searchAccounts(String searchQuery, int offset, int resultsPerPage) {
         try (PreparedStatement preparedStatement = getPreparedStatement(FIND_GROUPS)) {
             List<Group> groups = new ArrayList<>();
             preparedStatement.setString(1, "%" + searchQuery + "%");
+            preparedStatement.setInt(2, resultsPerPage);
+            preparedStatement.setInt(3, offset);
             ResultSet groupRequestsResult = preparedStatement.executeQuery();
             while (groupRequestsResult.next()) {
                 groups.add(new Group(

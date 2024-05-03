@@ -17,7 +17,7 @@ public class SearchAccountDaoImpl implements SearchDao<Account> {
 
     private static final SearchAccountDaoImpl SEARCH_ACCOUNT_DAO = new SearchAccountDaoImpl();
     private static final String FIND_ACCOUNTS = "SELECT id, first_name, last_name FROM " + ACCOUNT_TABLE
-            + " WHERE first_name ILIKE ? OR last_name ILIKE ?;";
+            + " WHERE first_name ILIKE ? OR last_name ILIKE ? OFFSET ? LIMIT ?;";
 
     private SearchAccountDaoImpl() {
     }
@@ -27,12 +27,15 @@ public class SearchAccountDaoImpl implements SearchDao<Account> {
     }
 
     @Override
-    public List<Account> search(String searchQuery) {
+    public List<Account> searchAccounts(String searchQuery, int currentPage, int recordsPerPage) {
         try (PreparedStatement preparedStatement = getPreparedStatement(FIND_ACCOUNTS)) {
             preparedStatement.setString(1, "%" + searchQuery + "%");
             preparedStatement.setString(2, "%" + searchQuery + "%");
+            preparedStatement.setInt(3, currentPage);
+            preparedStatement.setInt(4, recordsPerPage);
             ResultSet friendRequestsResult = preparedStatement.executeQuery();
             List<Account> accounts = new ArrayList<>();
+            int start = currentPage * recordsPerPage - recordsPerPage;
             while (friendRequestsResult.next()) {
                 accounts.add(new Account.Builder()
                         .id(friendRequestsResult.getLong("id"))

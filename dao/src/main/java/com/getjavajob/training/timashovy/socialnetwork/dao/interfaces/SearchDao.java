@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface SearchDao<T> {
 
-    List<T> search(String searchQuery);
+    List<T> searchAccounts(String searchQuery, int offset, int resultsPerPage);
 
 }
