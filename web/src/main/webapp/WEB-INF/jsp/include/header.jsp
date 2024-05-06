@@ -17,6 +17,11 @@
             <label for="searchQuery">
                 Search:&nbsp;&nbsp;&nbsp;<input type="text" id="searchQuery" name="searchQuery">
             </label>
+            <label for="searchType">Type of search:</label>
+            <select name="searchType" id="searchType">
+                <option value="account">Account</option>
+                <option value="group">Group</option>
+            </select>
             <button type="submit">Find</button>
         </form>
         <hr>

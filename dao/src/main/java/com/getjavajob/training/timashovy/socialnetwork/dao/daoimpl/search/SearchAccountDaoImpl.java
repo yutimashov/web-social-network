@@ -18,6 +18,8 @@ public class SearchAccountDaoImpl implements SearchDao<Account> {
     private static final SearchAccountDaoImpl SEARCH_ACCOUNT_DAO = new SearchAccountDaoImpl();
     private static final String FIND_ACCOUNTS = "SELECT id, first_name, last_name FROM " + ACCOUNT_TABLE
             + " WHERE first_name ILIKE ? OR last_name ILIKE ? OFFSET ? LIMIT ?;";
+    private static final String FIND_ACCOUNTS_AMOUNT = "SELECT COUNT(*) AS total FROM " + ACCOUNT_TABLE
+            + " WHERE first_name ILIKE ? OR last_name ILIKE ?;";
 
     private SearchAccountDaoImpl() {
     }
@@ -43,6 +45,20 @@ public class SearchAccountDaoImpl implements SearchDao<Account> {
                         .build());
             }
             return accounts;
+        } catch (SQLException e) {
+            throw new DaoException("dao: search method failed: " + e.getMessage());
+        }
+    }
+
+    public int findResultsAmount(String searchQuery) {
+        try (PreparedStatement preparedStatement = getPreparedStatement(FIND_ACCOUNTS_AMOUNT)) {
+            preparedStatement.setString(1, "%" + searchQuery + "%");
+            preparedStatement.setString(2, "%" + searchQuery + "%");
+            ResultSet accountsAmount = preparedStatement.executeQuery();
+            if (accountsAmount.next()) {
+                return accountsAmount.getInt("total");
+            }
+            return -1;
         } catch (SQLException e) {
             throw new DaoException("dao: search method failed: " + e.getMessage());
         }

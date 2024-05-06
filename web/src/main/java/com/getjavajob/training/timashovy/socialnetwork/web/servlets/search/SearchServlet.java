@@ -26,16 +26,23 @@ public class SearchServlet extends HttpServlet {
         String searchQuery = req.getParameter("searchQuery");
         req.setAttribute("searchQuery", searchQuery);
         int currentPage = parseInt(req.getParameter("currentPage"));
-        List<Account> accounts = searchService.findAccounts(searchQuery, currentPage, RESULTS_PER_PAGE);
-        req.setAttribute("accounts", accounts);
-        List<Group> groups = searchService.findGroups(searchQuery, currentPage, RESULTS_PER_PAGE);
-        req.setAttribute("groups", groups);
-        int numberOfPages = (accounts.size() + groups.size()) / RESULTS_PER_PAGE;
+        req.setAttribute("currentPage", currentPage);
+        String searchType = req.getParameter("searchType");
+        req.setAttribute("searchType", searchType);
+        int numberOfPages = 0;
+        if ("account".equals(searchType)) {
+            List<Account> accounts = searchService.findAccounts(searchQuery, currentPage, RESULTS_PER_PAGE);
+            req.setAttribute("accounts", accounts);
+            numberOfPages = searchService.findResultsAmount(searchQuery) / RESULTS_PER_PAGE;
+        } else if ("group".equals(searchType)) {
+            List<Group> groups = searchService.findGroups(searchQuery, currentPage, RESULTS_PER_PAGE);
+            req.setAttribute("groups", groups);
+            numberOfPages = searchService.findResultsAmount(searchQuery) / RESULTS_PER_PAGE;
+        }
         if (numberOfPages % RESULTS_PER_PAGE > 0) {
             numberOfPages++;
         }
         req.setAttribute("numberOfPages", numberOfPages);
-        req.setAttribute("currentPage", currentPage);
         req.setAttribute("recordsPerPage", RESULTS_PER_PAGE);
         req.getRequestDispatcher(getJspPagePath(SEARCH_RESULT)).forward(req, resp);
     }

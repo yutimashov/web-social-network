@@ -28,28 +28,34 @@
 </table>
 <nav>
     <ul>
-        <c:if test="${currentPage != 1}">
+        <c:if test="${requestScope.currentPage != 1}">
             <li>
-                <a href="${rootUrl}/search?searchQuery=${searchQuery}&currentPage=${currentPage - 1}">Previous</a>
+                <a href="${rootUrl}/search?searchType=${requestScope.searchType}&searchQuery=${requestScope.searchQuery}&currentPage=${requestScope.currentPage - 1}">
+                    Previous
+                </a>
             </li>
         </c:if>
-        <c:forEach begin="1" end="${numberOfPages}" var="i">
+        <c:forEach begin="1" end="${requestScope.numberOfPages}" var="i">
             <c:choose>
-                <c:when test="${currentPage eq i}">
+                <c:when test="${requestScope.currentPage eq i}">
                     <li>
                         <a href="">${i} <span>(current)</span></a>
                     </li>
                 </c:when>
                 <c:otherwise>
                     <li>
-                        <a href="${rootUrl}/search?searchQuery=${searchQuery}&currentPage=${i}">${i}</a>
+                        <a href="${rootUrl}/search?searchType=${requestScope.searchType}&searchQuery=${requestScope.searchQuery}&currentPage=${i}">
+                                ${i}
+                        </a>
                     </li>
                 </c:otherwise>
             </c:choose>
         </c:forEach>
-        <c:if test="${currentPage lt numberOfPages}">
+        <c:if test="${requestScope.currentPage lt requestScope.numberOfPages}">
             <li>
-                <a href="${rootUrl}/search?searchQuery=${searchQuery}&currentPage=${currentPage + 1}">Next</a>
+                <a href="${rootUrl}/search?searchType=${requestScope.searchType}&searchQuery=${requestScope.searchQuery}&currentPage=${requestScope.currentPage + 1}">
+                    Next
+                </a>
             </li>
         </c:if>
     </ul>
