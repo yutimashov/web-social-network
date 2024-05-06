@@ -11,6 +11,4 @@ public interface SearchService {
 
     List<Group> findGroups(String searchQuery, int currentPage, int numOfRecords);
 
-    Integer getNumberOfRows();
-
 }

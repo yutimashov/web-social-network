@@ -31,11 +31,10 @@ public class SearchAccountDaoImpl implements SearchDao<Account> {
         try (PreparedStatement preparedStatement = getPreparedStatement(FIND_ACCOUNTS)) {
             preparedStatement.setString(1, "%" + searchQuery + "%");
             preparedStatement.setString(2, "%" + searchQuery + "%");
-            preparedStatement.setInt(3, currentPage);
+            preparedStatement.setInt(3, currentPage * recordsPerPage - recordsPerPage);
             preparedStatement.setInt(4, recordsPerPage);
             ResultSet friendRequestsResult = preparedStatement.executeQuery();
             List<Account> accounts = new ArrayList<>();
-            int start = currentPage * recordsPerPage - recordsPerPage;
             while (friendRequestsResult.next()) {
                 accounts.add(new Account.Builder()
                         .id(friendRequestsResult.getLong("id"))

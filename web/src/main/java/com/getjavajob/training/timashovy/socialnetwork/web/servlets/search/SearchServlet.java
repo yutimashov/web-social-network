@@ -22,30 +22,21 @@ public class SearchServlet extends HttpServlet {
     private static final int RESULTS_PER_PAGE = 5;
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String searchQuery = req.getParameter("searchQuery");
         req.setAttribute("searchQuery", searchQuery);
-
         int currentPage = parseInt(req.getParameter("currentPage"));
-        int recordsPerPage = parseInt(req.getParameter("recordsPerPage"));
-
         List<Account> accounts = searchService.findAccounts(searchQuery, currentPage, RESULTS_PER_PAGE);
         req.setAttribute("accounts", accounts);
         List<Group> groups = searchService.findGroups(searchQuery, currentPage, RESULTS_PER_PAGE);
         req.setAttribute("groups", groups);
-
-        // общее количество записей для вывода всех значений
-        int accountRows = accounts.size();
-        int groupRows = groups.size();
-        int totalNumberOfPages = (accountRows + groupRows) / RESULTS_PER_PAGE;
-        if (totalNumberOfPages % RESULTS_PER_PAGE > 0) {
-            totalNumberOfPages++;
+        int numberOfPages = (accounts.size() + groups.size()) / RESULTS_PER_PAGE;
+        if (numberOfPages % RESULTS_PER_PAGE > 0) {
+            numberOfPages++;
         }
-
-        req.setAttribute("numberOfPages", totalNumberOfPages);
+        req.setAttribute("numberOfPages", numberOfPages);
         req.setAttribute("currentPage", currentPage);
         req.setAttribute("recordsPerPage", RESULTS_PER_PAGE);
-
         req.getRequestDispatcher(getJspPagePath(SEARCH_RESULT)).forward(req, resp);
     }
 

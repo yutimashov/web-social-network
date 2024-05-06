@@ -26,31 +26,33 @@
         </tr>
     </c:forEach>
 </table>
-<div class="pagination">
-    <c:if test="${not empty requestScope.accounts}">
-        <c:set var="currentPage" value="${param.page != null ? param.page : 1}"/>
-        <c:set var="totalPages" value="${(requestScope.accounts.size() + 4) / 5}"/>
-
-        <c:if test="${currentPage > 1}">
-            <a href="?page=${currentPage - 1}&searchQuery=${requestScope.searchQuery}">&lt; Previous</a>
+<nav>
+    <ul>
+        <c:if test="${currentPage != 1}">
+            <li>
+                <a href="${rootUrl}/search?searchQuery=${searchQuery}&currentPage=${currentPage - 1}">Previous</a>
+            </li>
         </c:if>
-
-        <c:forEach begin="1" end="${totalPages}" varStatus="status">
+        <c:forEach begin="1" end="${numberOfPages}" var="i">
             <c:choose>
-                <c:when test="${status.index + 1 == currentPage}">
-                    <strong>${status.index + 1}</strong>
+                <c:when test="${currentPage eq i}">
+                    <li>
+                        <a href="">${i} <span>(current)</span></a>
+                    </li>
                 </c:when>
                 <c:otherwise>
-                    <a href="?page=${status.index + 1}&searchQuery=${requestScope.searchQuery}">${status.index + 1}</a>
+                    <li>
+                        <a href="${rootUrl}/search?searchQuery=${searchQuery}&currentPage=${i}">${i}</a>
+                    </li>
                 </c:otherwise>
             </c:choose>
         </c:forEach>
-
-        <c:if test="${currentPage < totalPages}">
-            <a href="?page=${currentPage + 1}&searchQuery=${requestScope.searchQuery}">Next &gt;</a>
+        <c:if test="${currentPage lt numberOfPages}">
+            <li>
+                <a href="${rootUrl}/search?searchQuery=${searchQuery}&currentPage=${currentPage + 1}">Next</a>
+            </li>
         </c:if>
-    </c:if>
-</div>
-
+    </ul>
+</nav>
 </body>
 </html>

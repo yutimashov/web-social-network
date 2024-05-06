@@ -12,7 +12,8 @@
         <hr>
     </div>
     <div style="background-color: #efde59">
-        <form action="${rootUrl}/search" method="POST">
+        <form action="${rootUrl}/search">
+            <input type="hidden" name="currentPage" value="1">
             <label for="searchQuery">
                 Search:&nbsp;&nbsp;&nbsp;<input type="text" id="searchQuery" name="searchQuery">
             </label>

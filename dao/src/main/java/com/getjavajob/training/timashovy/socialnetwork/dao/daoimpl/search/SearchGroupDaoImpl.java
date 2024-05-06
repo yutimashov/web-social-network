@@ -27,12 +27,12 @@ public class SearchGroupDaoImpl implements SearchDao<Group> {
     }
 
     @Override
-    public List<Group> searchAccounts(String searchQuery, int offset, int resultsPerPage) {
+    public List<Group> searchAccounts(String searchQuery, int currentPage, int recordsPerPage) {
         try (PreparedStatement preparedStatement = getPreparedStatement(FIND_GROUPS)) {
             List<Group> groups = new ArrayList<>();
             preparedStatement.setString(1, "%" + searchQuery + "%");
-            preparedStatement.setInt(2, resultsPerPage);
-            preparedStatement.setInt(3, offset);
+            preparedStatement.setInt(2, currentPage * recordsPerPage - recordsPerPage);
+            preparedStatement.setInt(3, recordsPerPage);
             ResultSet groupRequestsResult = preparedStatement.executeQuery();
             while (groupRequestsResult.next()) {
                 groups.add(new Group(
