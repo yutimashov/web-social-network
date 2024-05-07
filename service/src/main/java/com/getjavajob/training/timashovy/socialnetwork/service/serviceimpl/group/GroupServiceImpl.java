@@ -37,18 +37,18 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public boolean sendGroupMemberRequest(Long groupId, Long accountId) {
-        return groupDaoInstance.sendGroupMemberRequest(groupId, accountId);
+    public void sendGroupMemberRequest(Long groupId, Long accountId) {
+        groupDaoInstance.sendGroupMemberRequest(groupId, accountId);
     }
 
     @Override
-    public boolean makeUserGroupAdmin(Long groupId, Long accountId) {
-        return groupDaoInstance.makeUserGroupAdmin(groupId, accountId);
+    public void makeUserGroupAdmin(Long groupId, Long accountId) {
+        groupDaoInstance.makeUserGroupAdmin(groupId, accountId);
     }
 
     @Override
-    public boolean makeAccountGroupMember(Long groupId, Long accountId) {
-        return groupDaoInstance.makeAccountGroupMember(groupId, accountId);
+    public void makeAccountGroupMember(Long groupId, Long accountId) {
+        groupDaoInstance.makeAccountGroupMember(groupId, accountId);
     }
 
     @Override
@@ -65,8 +65,8 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public boolean deleteGroupMember(Long groupId, Long accountId) {
-        return groupDaoInstance.deleteGroupMember(groupId, accountId);
+    public void deleteGroupMember(Long groupId, Long accountId) {
+        groupDaoInstance.deleteGroupMember(groupId, accountId);
     }
 
     @Override

@@ -67,12 +67,7 @@ public class Password {
 
     @Override
     public String toString() {
-        return "Password{" +
-                "id=" + id +
-                ", accountId=" + accountId +
-                ", password='" + password + '\'' +
-                ", salt='" + salt + '\'' +
-                '}';
+        return "Password{id=" + id + ", accountId=" + accountId + ", password=" + password + ", salt=" + salt + "}";
     }
 
 }

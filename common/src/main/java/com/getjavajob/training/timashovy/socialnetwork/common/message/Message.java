@@ -157,15 +157,9 @@ public class Message {
 
     @Override
     public String toString() {
-        return "Message{" +
-                "id=" + id +
-                ", accountAuthorId=" + accountAuthorId +
-                ", messageType=" + messageType +
-                ", destinationId=" + destinationId +
-                ", text='" + text + '\'' +
-                ", photo=" + photo +
-                ", creationDate=" + creationDate +
-                '}';
+        return "Message{id=" + id + ", accountAuthorId=" + accountAuthorId + ", messageType=" + messageType
+                + ", destinationId=" + destinationId + ", text=" + text + ", photo=" + photo + ", creationDate="
+                + creationDate + "}";
     }
 
 }

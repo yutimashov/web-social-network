@@ -11,14 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.GROUP_MESSAGE_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.PERSONAL_MESSAGE_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
-public class PersonalMessageDaoImpl implements MessageDao {
+public final class PersonalMessageDaoImpl implements MessageDao {
 
     private static final String CREATE = "INSERT INTO " + PERSONAL_MESSAGE_TABLE + " (account_author_id, " +
             "destination_id, message_text, message_image) VALUES (?, ?, ?, ?);";

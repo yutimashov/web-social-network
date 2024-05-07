@@ -28,7 +28,7 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
 
-public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidator {
+public final class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidator {
 
     private static final String CREATE = "INSERT INTO " + ACCOUNT_TABLE + " (first_name, last_name, "
             + "middle_name, birth_date, personal_address, work_address, email, icq, skype, additional_info, "
@@ -36,12 +36,12 @@ public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidat
     private static final String GET_BY_ID = "SELECT id, first_name, last_name, middle_name, birth_date, "
             + "personal_address, work_address, email, icq, skype, additional_info, role_type, avatar FROM "
             + ACCOUNT_TABLE + " WHERE id = ?;";
-    private static final String GET_ALL = "SELECT id, first_name, last_name, middle_name, birth_date, personal_address, "
-            + "work_address, email, icq, skype, additional_info, role_type, avatar "
-            + "FROM " + ACCOUNT_TABLE + ";";
+    private static final String GET_ALL = "SELECT id, first_name, last_name, middle_name, birth_date, "
+            + "personal_address, work_address, email, icq, skype, additional_info, role_type, avatar FROM "
+            + ACCOUNT_TABLE + ";";
     private static final String UPDATE_BY_ID = "UPDATE " + ACCOUNT_TABLE + " SET first_name = ?, last_name = ?, "
-            + "middle_name = ?, birth_date = ?, personal_address = ?, work_address = ?, email = ?, icq = ?, skype = ?, "
-            + "additional_info = ?, role_type = ?, avatar = ? WHERE id = ?;";
+            + "middle_name = ?, birth_date = ?, personal_address = ?, work_address = ?, email = ?, icq = ?, "
+            + "skype = ?, additional_info = ?, role_type = ?, avatar = ? WHERE id = ?;";
     private static final String DELETE_BY_ID = "DELETE FROM " + ACCOUNT_TABLE + " WHERE id = ?;";
     private static final AccountDaoImpl ACCOUNT_DAO_INSTANCE = new AccountDaoImpl();
     private static final PhoneDao PHONE_DAO = PhoneDaoImpl.getInstance();

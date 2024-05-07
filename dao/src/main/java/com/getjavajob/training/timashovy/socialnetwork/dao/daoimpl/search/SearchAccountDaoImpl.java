@@ -13,7 +13,7 @@ import java.util.List;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNT_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
 
-public class SearchAccountDaoImpl implements SearchDao<Account> {
+public final class SearchAccountDaoImpl implements SearchDao<Account> {
 
     private static final SearchAccountDaoImpl SEARCH_ACCOUNT_DAO = new SearchAccountDaoImpl();
     private static final String FIND_ACCOUNTS = "SELECT id, first_name, last_name FROM " + ACCOUNT_TABLE

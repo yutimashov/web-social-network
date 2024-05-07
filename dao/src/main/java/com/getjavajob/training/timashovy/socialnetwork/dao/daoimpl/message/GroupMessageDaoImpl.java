@@ -17,7 +17,7 @@ import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.d
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
-public class GroupMessageDaoImpl implements MessageDao {
+public final class GroupMessageDaoImpl implements MessageDao {
 
     private static final String CREATE = "INSERT INTO " + GROUP_MESSAGE_TABLE + " (account_author_id, group_id," +
             "message_text, message_image) VALUES (?, ?, ?, ?);";

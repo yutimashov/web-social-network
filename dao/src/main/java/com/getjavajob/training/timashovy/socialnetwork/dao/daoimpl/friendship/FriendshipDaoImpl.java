@@ -12,7 +12,7 @@ import java.util.List;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.FRIENDSHIP_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
 
-public class FriendshipDaoImpl implements FriendshipDao {
+public final class FriendshipDaoImpl implements FriendshipDao {
 
     private static final FriendshipDaoImpl FRIENDSHIP_DAO_INSTANCE = new FriendshipDaoImpl();
     private static final String ACCEPT_REQUEST = "UPDATE " + FRIENDSHIP_TABLE + " SET status = TRUE " +

@@ -38,8 +38,8 @@ public class PhoneServiceImpl {
         return phoneDao.getAll(accountId).stream().filter(phone -> phone.getPhoneType() == WORKING).collect(toList());
     }
 
-    public boolean updateById(Long phoneId, String newPhoneNumber) {
-        return phoneDao.update(phoneId, newPhoneNumber);
+    public void updateById(Long phoneId, String newPhoneNumber) {
+        phoneDao.update(phoneId, newPhoneNumber);
     }
 
 }

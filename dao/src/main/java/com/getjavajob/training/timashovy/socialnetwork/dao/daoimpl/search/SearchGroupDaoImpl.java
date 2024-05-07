@@ -13,7 +13,7 @@ import java.util.List;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.GROUP_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
 
-public class SearchGroupDaoImpl implements SearchDao<Group> {
+public final class SearchGroupDaoImpl implements SearchDao<Group> {
 
     private static final SearchGroupDaoImpl SEARCH_GROUP_DAO = new SearchGroupDaoImpl();
     private static final String FIND_GROUPS = "SELECT * FROM " + GROUP_TABLE + " WHERE group_name ILIKE ? OFFSET ? "

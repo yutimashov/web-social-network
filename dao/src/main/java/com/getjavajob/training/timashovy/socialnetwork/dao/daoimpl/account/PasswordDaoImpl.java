@@ -18,12 +18,12 @@ import static java.util.Optional.of;
 
 public final class PasswordDaoImpl implements PasswordDao {
 
-    private static final String CREATE = "INSERT INTO " + ACCOUNT_PASSWORDS_TABLE + " (account_id, hash_password,"
-            + " salt) VALUES(?, ?, ?)";
-    private static final String GET_BY_ACCOUNT_ID = "SELECT account_id, hash_password, salt " +
-            "FROM " + ACCOUNT_PASSWORDS_TABLE + " WHERE account_id = ?;";
-    private static final String GET_BY_ACCOUNT_EMAIL = "SELECT account_id, hash_password, salt " +
-            "FROM " + ACCOUNT_PASSWORDS_TABLE + " pass JOIN " + ACCOUNT_TABLE + " acc ON acc.id = pass.account_id " +
+    private static final String CREATE = "INSERT INTO " + ACCOUNT_PASSWORDS_TABLE + " (account_id, hash_password, "
+            + "salt) VALUES(?, ?, ?)";
+    private static final String GET_BY_ACCOUNT_ID = "SELECT account_id, hash_password, salt FROM "
+            + ACCOUNT_PASSWORDS_TABLE + " WHERE account_id = ?;";
+    private static final String GET_BY_ACCOUNT_EMAIL = "SELECT account_id, hash_password, salt FROM "
+            + ACCOUNT_PASSWORDS_TABLE + " pass JOIN " + ACCOUNT_TABLE + " acc ON acc.id = pass.account_id " +
             "WHERE acc.email = ?;";
 
     private static final PasswordDaoImpl PASSWORD_DAO_INSTANCE = new PasswordDaoImpl();

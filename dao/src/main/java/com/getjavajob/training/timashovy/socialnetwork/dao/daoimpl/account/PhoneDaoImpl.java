@@ -15,7 +15,7 @@ import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.T
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
 
-public class PhoneDaoImpl implements PhoneDao {
+public final class PhoneDaoImpl implements PhoneDao {
 
     private static final String CREATE_PHONE = "INSERT INTO " + ACCOUNT_PHONES_TABLE + " (account_id, phone_type, "
             + "phone_number) VALUES (?, ?, ?);";
