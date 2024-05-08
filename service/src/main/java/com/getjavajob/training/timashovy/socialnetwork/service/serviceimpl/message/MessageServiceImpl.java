@@ -87,8 +87,8 @@ public class MessageServiceImpl implements MessageService {
         List<Long> personalMessageAccountsIds = personalMessageDao.getAllAccountsIds(accountId);
         List<Account> accounts = new ArrayList<>();
         for (Long personalMessageAccountsId : personalMessageAccountsIds) {
-            if (accountService.getAccountById(personalMessageAccountsId).isPresent()) {
-                accounts.add(accountService.getAccountById(personalMessageAccountsId).get());
+            if (accountService.getById(personalMessageAccountsId).isPresent()) {
+                accounts.add(accountService.getById(personalMessageAccountsId).get());
             }
         }
         return accounts;

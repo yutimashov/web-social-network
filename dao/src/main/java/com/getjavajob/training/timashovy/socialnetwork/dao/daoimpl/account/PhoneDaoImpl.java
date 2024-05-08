@@ -78,11 +78,6 @@ public final class PhoneDaoImpl implements PhoneDao {
     }
 
     @Override
-    public boolean delete() {
-        return false;
-    }
-
-    @Override
     public boolean update(Long phoneId, String newPhoneNumber) {
         try (PreparedStatement updateByIdStatement = getPreparedStatement(UPDATE)) {
             updateByIdStatement.setString(1, newPhoneNumber);

@@ -23,7 +23,7 @@ public class DeleteAccountServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long accountIdToDelete = valueOf(req.getParameter("id"));
-        accountService.deleteAccount(accountIdToDelete);
+        accountService.delete(accountIdToDelete);
         if (!Objects.equals(((Account) req.getSession(false).getAttribute("account")).getId(), accountIdToDelete)) {
             req.getRequestDispatcher(getJspPagePath(ACCOUNTS)).forward(req, resp);
         } else {

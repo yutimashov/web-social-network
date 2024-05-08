@@ -42,7 +42,7 @@ public class RegisterServlet extends HttpServlet {
     }
 
     private void registerAccount(HttpServletRequest req) throws ServletException, IOException {
-        Long accountId = accountService.createAccount(new Account.Builder()
+        Long accountId = accountService.create(new Account.Builder()
                 .firstName(req.getParameter("name"))
                 .lastName(req.getParameter("lastName"))
                 .middleName(req.getParameter("middleName"))

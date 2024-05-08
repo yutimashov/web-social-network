@@ -18,7 +18,7 @@ public class DeleteGroupMemberServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long groupId = valueOf(req.getParameter("groupId"));
-        groupService.deleteGroupMember(groupId, valueOf(req.getParameter("accountId")));
+        groupService.deleteMember(groupId, valueOf(req.getParameter("accountId")));
         resp.sendRedirect("/group?id=" + groupId);
     }
 

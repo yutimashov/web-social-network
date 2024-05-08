@@ -27,82 +27,82 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Long createGroup(Group group) {
+    public Long create(Group group) {
         return groupDaoInstance.create(group);
     }
 
     @Override
-    public List<Group> listGroups() {
+    public List<Group> getAll() {
         return groupDaoInstance.getAll();
     }
 
     @Override
-    public void sendGroupMemberRequest(Long groupId, Long accountId) {
-        groupDaoInstance.sendGroupMemberRequest(groupId, accountId);
+    public void sendRequest(Long groupId, Long accountId) {
+        groupDaoInstance.sendRequest(groupId, accountId);
     }
 
     @Override
-    public void makeUserGroupAdmin(Long groupId, Long accountId) {
-        groupDaoInstance.makeUserGroupAdmin(groupId, accountId);
+    public void makeAdmin(Long groupId, Long accountId) {
+        groupDaoInstance.makeAdmin(groupId, accountId);
     }
 
     @Override
-    public void makeAccountGroupMember(Long groupId, Long accountId) {
-        groupDaoInstance.makeAccountGroupMember(groupId, accountId);
+    public void makeMember(Long groupId, Long accountId) {
+        groupDaoInstance.makeMember(groupId, accountId);
     }
 
     @Override
-    public List<Account> getIncomingGroupRequests(Long groupId) {
-        List<Long> accountsId = groupDaoInstance.getIncomingGroupRequests(groupId);
+    public List<Account> getIncomingRequests(Long groupId) {
+        List<Long> accountsId = groupDaoInstance.getRequests(groupId);
         List<Account> accounts = new ArrayList<>();
         AccountService accountService = AccountServiceImpl.getInstance();
         for (Long accountId : accountsId) {
-            if (accountService.getAccountById(accountId).isPresent()) {
-                accounts.add(accountService.getAccountById(accountId).get());
+            if (accountService.getById(accountId).isPresent()) {
+                accounts.add(accountService.getById(accountId).get());
             }
         }
         return accounts;
     }
 
     @Override
-    public void deleteGroupMember(Long groupId, Long accountId) {
-        groupDaoInstance.deleteGroupMember(groupId, accountId);
+    public void deleteMember(Long groupId, Long accountId) {
+        groupDaoInstance.deleteMember(groupId, accountId);
     }
 
     @Override
-    public boolean isAccountAdmin(Long groupId, Long accountId) {
-        return groupDaoInstance.isAccountAdmin(groupId, accountId);
+    public boolean isAdmin(Long groupId, Long accountId) {
+        return groupDaoInstance.isAdmin(groupId, accountId);
     }
 
     @Override
-    public boolean isAccountGroupSubscriber(Long groupId, Long accountId) {
-        return groupDaoInstance.isAccountGroupSubscriber(groupId, accountId);
+    public boolean isSubscriber(Long groupId, Long accountId) {
+        return groupDaoInstance.isSubscriber(groupId, accountId);
     }
 
     @Override
-    public boolean isAccountGroupMember(Long groupId, Long accountId) {
-        return groupDaoInstance.isAccountGroupMember(groupId, accountId);
+    public boolean isMember(Long groupId, Long accountId) {
+        return groupDaoInstance.isMember(groupId, accountId);
     }
 
     @Override
-    public List<Account> getGroupMembers(Long groupId) {
-        List<Long> accountsId = groupDaoInstance.getGroupRegularMembers(groupId);
+    public List<Account> getRegularMembers(Long groupId) {
+        List<Long> accountsId = groupDaoInstance.getRegularMembers(groupId);
         List<Account> groupMembers = new ArrayList<>();
         for (Long accountId : accountsId) {
-            if (accountService.getAccountById(accountId).isPresent()) {
-                groupMembers.add(accountService.getAccountById(accountId).get());
+            if (accountService.getById(accountId).isPresent()) {
+                groupMembers.add(accountService.getById(accountId).get());
             }
         }
         return groupMembers;
     }
 
     @Override
-    public List<Account> getGroupAdmins(Long groupId) {
-        List<Long> accountsId = groupDaoInstance.getGroupAdmins(groupId);
+    public List<Account> getAdmins(Long groupId) {
+        List<Long> accountsId = groupDaoInstance.getAdmins(groupId);
         List<Account> admins = new ArrayList<>();
         for (Long accountId : accountsId) {
-            if (accountService.getAccountById(accountId).isPresent()) {
-                admins.add(accountService.getAccountById(accountId).get());
+            if (accountService.getById(accountId).isPresent()) {
+                admins.add(accountService.getById(accountId).get());
             }
         }
         return admins;

@@ -19,7 +19,7 @@ public class GroupRequestsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long groupId = valueOf(req.getParameter("id"));
-        req.setAttribute("groupRequests", groupService.getIncomingGroupRequests(groupId));
+        req.setAttribute("groupRequests", groupService.getIncomingRequests(groupId));
         req.setAttribute("groupId", groupId);
         req.getRequestDispatcher(getJspPagePath("group/requests")).forward(req, resp);
     }

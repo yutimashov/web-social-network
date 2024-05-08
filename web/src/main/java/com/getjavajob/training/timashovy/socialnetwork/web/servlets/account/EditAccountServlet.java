@@ -2,7 +2,6 @@ package com.getjavajob.training.timashovy.socialnetwork.web.servlets.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
-import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.ImageService;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountServiceImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.PhoneServiceImpl;
 
@@ -35,9 +34,9 @@ public class EditAccountServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long accountId = valueOf(req.getParameter("id"));
-        if (accountService.getAccountById(accountId).isPresent()) {
-            req.setAttribute("account", accountService.getAccountById(accountId).get());
-            req.setAttribute("avatarInputStream", accountService.getAccountById(accountId).get().getAvatar());
+        if (accountService.getById(accountId).isPresent()) {
+            req.setAttribute("account", accountService.getById(accountId).get());
+            req.setAttribute("avatarInputStream", accountService.getById(accountId).get().getAvatar());
             req.setAttribute("personalPhones", phoneService.getPersonalPhoneNumbers(accountId));
             req.setAttribute("workingPhones", phoneService.getWorkPhoneNumbers(accountId));
             req.getRequestDispatcher(getJspPagePath("/account/edit")).forward(req, resp);
@@ -56,7 +55,7 @@ public class EditAccountServlet extends HttpServlet {
         Long accountId = valueOf(req.getParameter("id"));
         InputStream updatedAvatar = req.getPart("avatar").getInputStream();
         if (!isNull(updatedAvatar)) {
-            accountService.updateFirstAvatar(accountId, updatedAvatar);
+            accountService.updateAvatar(accountId, updatedAvatar);
         }
         String updatedFirstName = getParameter(req, FIRST_NAME_PARAMETER_NAME);
         if (checkParameterHasValue(updatedFirstName)) {
@@ -64,29 +63,29 @@ public class EditAccountServlet extends HttpServlet {
         }
         String updatedLastName = getParameter(req, LAST_NAME_PARAMETER_NAME);
         if (checkParameterHasValue(updatedLastName)) {
-            accountService.updateAccountLastName(accountId, updatedLastName);
+            accountService.updateLastName(accountId, updatedLastName);
         }
         String updatedMiddleName = getParameter(req, MIDDLE_NAME_PARAMETER_NAME);
         if (checkParameterHasValue(updatedMiddleName)) {
-            accountService.updateAccountMiddleName(accountId, updatedMiddleName);
+            accountService.updateMiddleName(accountId, updatedMiddleName);
         }
         String updatedBirthDate = getParameter(req, BIRTHDATE_PARAMETER_NAME);
         if (checkParameterHasValue(updatedBirthDate)) {
-            accountService.updateAccountBirthDate(accountId, LocalDate.parse(updatedBirthDate));
+            accountService.updateBirthDate(accountId, LocalDate.parse(updatedBirthDate));
         }
         String updatedSkype = getParameter(req, SKYPE_PARAMETER_NAME);
         if (checkParameterHasValue(updatedSkype)) {
-            accountService.updateAccountSkype(accountId, updatedSkype);
+            accountService.updateSkype(accountId, updatedSkype);
         }
         processPhoneNumber(req, PERSONAL);
         processPhoneNumber(req, WORKING);
         String updatedICQ = getParameter(req, ICQ_PARAMETER_NAME);
         if (checkParameterHasValue(updatedICQ)) {
-            accountService.updateAccountIcq(accountId, updatedICQ);
+            accountService.updateIcq(accountId, updatedICQ);
         }
         String updatedEmail = getParameter(req, EMAIL_PARAMETER_NAME);
         if (checkParameterHasValue(updatedEmail)) {
-            accountService.updateAccountEmail(accountId, updatedEmail);
+            accountService.updateEmail(accountId, updatedEmail);
         }
     }
 

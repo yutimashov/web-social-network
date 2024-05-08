@@ -21,8 +21,8 @@ public class ShowPrivateMessageDialogServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (accountService.getAccountById(valueOf(req.getParameter("id"))).isPresent()) {
-            req.setAttribute("account", accountService.getAccountById(valueOf(req.getParameter("id"))).get());
+        if (accountService.getById(valueOf(req.getParameter("id"))).isPresent()) {
+            req.setAttribute("account", accountService.getById(valueOf(req.getParameter("id"))).get());
         }
         req.setAttribute("accountService", accountService);
         req.setAttribute("messages", messageService

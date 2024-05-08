@@ -18,7 +18,7 @@ public class AcceptGroupRequestServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long groupId = valueOf(req.getParameter("groupId"));
-        groupService.makeAccountGroupMember(groupId, valueOf(req.getParameter("accountId")));
+        groupService.makeMember(groupId, valueOf(req.getParameter("accountId")));
         resp.sendRedirect("/group?id=" + groupId);
     }
 

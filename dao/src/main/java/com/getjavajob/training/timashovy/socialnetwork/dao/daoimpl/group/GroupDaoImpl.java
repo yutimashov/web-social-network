@@ -148,29 +148,29 @@ public final class GroupDaoImpl implements BaseDao<Group>, GroupDao, TableConstr
     }
 
     @Override
-    public boolean sendGroupMemberRequest(Long groupId, Long accountId) {
+    public void sendRequest(Long groupId, Long accountId) {
         try (PreparedStatement preparedStatement = getPreparedStatement(ADD_USER)) {
             preparedStatement.setLong(1, accountId);
             preparedStatement.setLong(2, groupId);
-            return preparedStatement.executeUpdate() > 0;
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DaoException("dao: create group method failed: " + e.getMessage());
         }
     }
 
     @Override
-    public boolean makeAccountGroupMember(Long groupId, Long accountId) {
+    public void makeMember(Long groupId, Long accountId) {
         try (PreparedStatement preparedStatement = getPreparedStatement(MAKE_USER_GROUP_MEMBER)) {
             preparedStatement.setLong(1, groupId);
             preparedStatement.setLong(2, accountId);
-            return preparedStatement.executeUpdate() > 0;
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DaoException("dao: make user group member method failed: " + e.getMessage());
         }
     }
 
     @Override
-    public List<Long> getIncomingGroupRequests(Long groupId) {
+    public List<Long> getRequests(Long groupId) {
         try (PreparedStatement preparedStatement = getPreparedStatement(GET_GROUP_FOLLOWERS)) {
             List<Long> groupFollowers = new ArrayList<>();
             preparedStatement.setLong(1, groupId);
@@ -185,18 +185,18 @@ public final class GroupDaoImpl implements BaseDao<Group>, GroupDao, TableConstr
     }
 
     @Override
-    public boolean deleteGroupMember(Long groupId, Long accountId) {
+    public void deleteMember(Long groupId, Long accountId) {
         try (PreparedStatement preparedStatement = getPreparedStatement(DELETE_GROUP_MEMBER)) {
             preparedStatement.setLong(1, groupId);
             preparedStatement.setLong(2, accountId);
-            return preparedStatement.executeUpdate() > 0;
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DaoException("dao: delete group by id method failed: ", e);
         }
     }
 
     @Override
-    public boolean isAccountAdmin(Long groupId, Long accountId) {
+    public boolean isAdmin(Long groupId, Long accountId) {
         try (PreparedStatement preparedStatement = getPreparedStatement(CHECK_ACCOUNT_ADMIN)) {
             preparedStatement.setLong(1, groupId);
             preparedStatement.setLong(2, accountId);
@@ -208,7 +208,7 @@ public final class GroupDaoImpl implements BaseDao<Group>, GroupDao, TableConstr
     }
 
     @Override
-    public boolean isAccountGroupSubscriber(Long groupId, Long accountId) {
+    public boolean isSubscriber(Long groupId, Long accountId) {
         try (PreparedStatement preparedStatement = getPreparedStatement(CHECK_ACCOUNT_SUBSCRIBER)) {
             preparedStatement.setLong(1, groupId);
             preparedStatement.setLong(2, accountId);
@@ -220,7 +220,7 @@ public final class GroupDaoImpl implements BaseDao<Group>, GroupDao, TableConstr
     }
 
     @Override
-    public boolean isAccountGroupMember(Long groupId, Long accountId) {
+    public boolean isMember(Long groupId, Long accountId) {
         try (PreparedStatement preparedStatement = getPreparedStatement(CHECK_ACCOUNT_MEMBER)) {
             preparedStatement.setLong(1, groupId);
             preparedStatement.setLong(2, accountId);
@@ -232,7 +232,7 @@ public final class GroupDaoImpl implements BaseDao<Group>, GroupDao, TableConstr
     }
 
     @Override
-    public List<Long> getGroupRegularMembers(Long groupId) {
+    public List<Long> getRegularMembers(Long groupId) {
         try (PreparedStatement preparedStatement = getPreparedStatement(GET_REGULAR_MEMBERS)) {
             List<Long> groupMembers = new ArrayList<>();
             preparedStatement.setLong(1, groupId);
@@ -247,7 +247,7 @@ public final class GroupDaoImpl implements BaseDao<Group>, GroupDao, TableConstr
     }
 
     @Override
-    public List<Long> getGroupAdmins(Long groupId) {
+    public List<Long> getAdmins(Long groupId) {
         try (PreparedStatement preparedStatement = getPreparedStatement(GET_ADMINS)) {
             List<Long> groupMembers = new ArrayList<>();
             preparedStatement.setLong(1, groupId);
@@ -262,11 +262,11 @@ public final class GroupDaoImpl implements BaseDao<Group>, GroupDao, TableConstr
     }
 
     @Override
-    public boolean makeUserGroupAdmin(Long groupId, Long accountId) {
+    public void makeAdmin(Long groupId, Long accountId) {
         try (PreparedStatement preparedStatement = getPreparedStatement(MAKE_USER_GROUP_ADMIN)) {
             preparedStatement.setLong(1, groupId);
             preparedStatement.setLong(2, accountId);
-            return preparedStatement.executeUpdate() > 0;
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DaoException("dao: make user group admin method failed: " + e.getMessage());
         }

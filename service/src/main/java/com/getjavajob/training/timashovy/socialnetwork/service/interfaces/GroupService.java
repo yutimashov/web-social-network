@@ -8,30 +8,30 @@ import java.util.Optional;
 
 public interface GroupService {
 
-    Long createGroup(Group group);
+    Long create(Group group);
 
-    List<Group> listGroups();
+    List<Group> getAll();
 
-    void sendGroupMemberRequest(Long groupId, Long accountId);
+    void sendRequest(Long groupId, Long accountId);
 
-    void makeUserGroupAdmin(Long groupId, Long accountId);
+    void makeAdmin(Long groupId, Long accountId);
 
     Optional<Group> getById(Long groupId);
 
-    void makeAccountGroupMember(Long groupId, Long accountId);
+    void makeMember(Long groupId, Long accountId);
 
-    List<Account> getIncomingGroupRequests(Long groupId);
+    List<Account> getIncomingRequests(Long groupId);
 
-    void deleteGroupMember(Long groupId, Long accountId);
+    void deleteMember(Long groupId, Long accountId);
 
-    boolean isAccountAdmin(Long groupId, Long accountId);
+    boolean isAdmin(Long groupId, Long accountId);
 
-    boolean isAccountGroupSubscriber(Long groupId, Long accountId);
+    boolean isSubscriber(Long groupId, Long accountId);
 
-    boolean isAccountGroupMember(Long groupId, Long accountId);
+    boolean isMember(Long groupId, Long accountId);
 
-    List<Account> getGroupMembers(Long groupId);
+    List<Account> getRegularMembers(Long groupId);
 
-    List<Account> getGroupAdmins(Long groupId);
+    List<Account> getAdmins(Long groupId);
 
 }

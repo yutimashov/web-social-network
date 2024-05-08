@@ -18,8 +18,8 @@ public class AccountAvatarServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (accountService.getAccountById(valueOf(req.getParameter("id"))).isPresent()) {
-            req.setAttribute("inputStreamImage", accountService.getAccountById(valueOf(req.getParameter("id")))
+        if (accountService.getById(valueOf(req.getParameter("id"))).isPresent()) {
+            req.setAttribute("inputStreamImage", accountService.getById(valueOf(req.getParameter("id")))
                     .get().getAvatar());
             req.getRequestDispatcher(SHOW_IMAGE_SERVLET_PATH).include(req, resp);
         }

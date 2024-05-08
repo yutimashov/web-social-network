@@ -61,7 +61,7 @@ class AccountServiceImplTest {
         @Test
         void whenAccountIsNull() {
             Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.createAccount(null);
+                accountService.create(null);
                 throw new UnsupportedOperationException("Not supported");
             });
             assertEquals(IllegalArgumentException.class, exception.getClass());
@@ -70,7 +70,7 @@ class AccountServiceImplTest {
         @Test
         void whenAccountFirstNameIsNull() {
             Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.createAccount(new Account.Builder().firstName(null).build());
+                accountService.create(new Account.Builder().firstName(null).build());
                 throw new UnsupportedOperationException("Not supported");
             });
             assertEquals(IllegalArgumentException.class, exception.getClass());
@@ -79,7 +79,7 @@ class AccountServiceImplTest {
         @Test
         void whenAccountLastNameIsNull() {
             Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.createAccount(new Account.Builder().lastName(null).build());
+                accountService.create(new Account.Builder().lastName(null).build());
                 throw new UnsupportedOperationException("Not supported");
             });
             assertEquals(IllegalArgumentException.class, exception.getClass());
@@ -88,7 +88,7 @@ class AccountServiceImplTest {
         @Test
         void whenAccountEmailIsNull() {
             Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.createAccount(new Account.Builder().email(null).build());
+                accountService.create(new Account.Builder().email(null).build());
                 throw new UnsupportedOperationException("Not supported");
             });
             assertEquals(IllegalArgumentException.class, exception.getClass());
@@ -98,7 +98,7 @@ class AccountServiceImplTest {
         void whenAccountIsValid() {
             final Long expectedIdAfterCreatingAccount = 1L;
             when(accountDao.create(TEST_ACCOUNT)).thenReturn(expectedIdAfterCreatingAccount);
-            assertEquals(expectedIdAfterCreatingAccount, accountService.createAccount(TEST_ACCOUNT));
+            assertEquals(expectedIdAfterCreatingAccount, accountService.create(TEST_ACCOUNT));
         }
 
     }
@@ -110,7 +110,7 @@ class AccountServiceImplTest {
         @Test
         void whenAccountIdIsNull() {
             Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.updateAccount(null, TEST_ACCOUNT);
+                accountService.update(null, TEST_ACCOUNT);
                 throw new UnsupportedOperationException("Not supported");
             });
             assertEquals(IllegalArgumentException.class, exception.getClass());
@@ -119,7 +119,7 @@ class AccountServiceImplTest {
         @Test
         void whenAccountIdIsLessOrEqualToZero() {
             Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.updateAccount(nonExistingAccountId, TEST_ACCOUNT);
+                accountService.update(nonExistingAccountId, TEST_ACCOUNT);
                 throw new UnsupportedOperationException("Not supported");
             });
             assertEquals(IllegalArgumentException.class, exception.getClass());
@@ -128,7 +128,7 @@ class AccountServiceImplTest {
         @Test
         void whenUpdatedAccountIsNull() {
             Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.updateAccount(1L, null);
+                accountService.update(1L, null);
                 throw new UnsupportedOperationException("Not supported");
             });
             assertEquals(IllegalArgumentException.class, exception.getClass());
@@ -138,7 +138,7 @@ class AccountServiceImplTest {
         void whenAccountDoesNotExist() {
             final Long nonExistingId = 1L;
             when(accountDao.updateById(nonExistingId, TEST_ACCOUNT)).thenReturn(false);
-            assertFalse(accountService.updateAccount(nonExistingId, TEST_ACCOUNT));
+            assertFalse(accountService.update(nonExistingId, TEST_ACCOUNT));
         }
 
     }
@@ -185,7 +185,7 @@ class AccountServiceImplTest {
         @Test
         void whenAccountIdIsNull() {
             Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.updateAccountLastName(null, "name");
+                accountService.updateLastName(null, "name");
                 throw new UnsupportedOperationException("Not supported");
             });
             assertEquals(IllegalArgumentException.class, exception.getClass());
@@ -194,7 +194,7 @@ class AccountServiceImplTest {
         @Test
         void whenLastNameIsNull() {
             Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.updateAccountLastName(validAccountId, null);
+                accountService.updateLastName(validAccountId, null);
                 throw new UnsupportedOperationException("Not supported");
             });
             assertEquals(IllegalArgumentException.class, exception.getClass());
@@ -208,7 +208,7 @@ class AccountServiceImplTest {
             when(accountDao.getById(validAccountId)).thenReturn(Optional.of(accountOriginal));
             Account accountChanged = new Account.Builder(accountOriginal).lastName(newLastName).build();
             when(accountDao.updateById(validAccountId, accountChanged)).thenReturn(true);
-            assertTrue(accountService.updateAccountLastName(validAccountId, newLastName));
+            assertTrue(accountService.updateLastName(validAccountId, newLastName));
         }
 
     }
@@ -220,7 +220,7 @@ class AccountServiceImplTest {
         @Test
         void whenAccountIdIsNull() {
             Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.updateAccountMiddleName(null, "name");
+                accountService.updateMiddleName(null, "name");
                 throw new UnsupportedOperationException("Not supported");
             });
             assertEquals(IllegalArgumentException.class, exception.getClass());
@@ -229,7 +229,7 @@ class AccountServiceImplTest {
         @Test
         void whenMiddleNameIsNull() {
             Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.updateAccountMiddleName(validAccountId, null);
+                accountService.updateMiddleName(validAccountId, null);
                 throw new UnsupportedOperationException("Not supported");
             });
             assertEquals(IllegalArgumentException.class, exception.getClass());
@@ -243,7 +243,7 @@ class AccountServiceImplTest {
             when(accountDao.getById(validAccountId)).thenReturn(Optional.of(accountOriginal));
             Account accountChanged = new Account.Builder(accountOriginal).middleName(newMiddleName).build();
             when(accountDao.updateById(validAccountId, accountChanged)).thenReturn(true);
-            assertTrue(accountService.updateAccountMiddleName(validAccountId, newMiddleName));
+            assertTrue(accountService.updateMiddleName(validAccountId, newMiddleName));
         }
 
     }
@@ -257,7 +257,7 @@ class AccountServiceImplTest {
         @Test
         void updateAccountBirthDateWhenAccountIdIsNull() {
             Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.updateAccountBirthDate(null, validAccountBirthDate);
+                accountService.updateBirthDate(null, validAccountBirthDate);
                 throw new UnsupportedOperationException("Not supported");
             });
             assertEquals(IllegalArgumentException.class, exception.getClass());
@@ -266,7 +266,7 @@ class AccountServiceImplTest {
         @Test
         void updateAccountBirthDateWhenBirthDateIsNull() {
             Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.updateAccountBirthDate(validAccountId, null);
+                accountService.updateBirthDate(validAccountId, null);
                 throw new UnsupportedOperationException("Not supported");
             });
             assertEquals(IllegalArgumentException.class, exception.getClass());
@@ -279,7 +279,7 @@ class AccountServiceImplTest {
             when(accountDao.getById(validAccountId)).thenReturn(Optional.of(accountOriginal));
             Account accountChanged = new Account.Builder(accountOriginal).birthDate(newBirthDate).build();
             when(accountDao.updateById(validAccountId, accountChanged)).thenReturn(true);
-            assertTrue(accountService.updateAccountBirthDate(validAccountId, newBirthDate));
+            assertTrue(accountService.updateBirthDate(validAccountId, newBirthDate));
         }
 
     }
@@ -362,7 +362,7 @@ class AccountServiceImplTest {
         @Test
         void updateAccountEmailWhenAccountIdIsNull() {
             Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.updateAccountEmail(null, "new_email");
+                accountService.updateEmail(null, "new_email");
                 throw new UnsupportedOperationException("Not supported");
             });
             assertEquals(IllegalArgumentException.class, exception.getClass());
@@ -371,7 +371,7 @@ class AccountServiceImplTest {
         @Test
         void updateAccountEmailWhenEmailIsNull() {
             Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.updateAccountEmail(validAccountId, null);
+                accountService.updateEmail(validAccountId, null);
                 throw new UnsupportedOperationException("Not supported");
             });
             assertEquals(IllegalArgumentException.class, exception.getClass());
@@ -385,7 +385,7 @@ class AccountServiceImplTest {
             when(accountDao.getById(validAccountId)).thenReturn(Optional.of(accountOriginal));
             Account accountChanged = new Account.Builder(accountOriginal).email(newEmail).build();
             when(accountDao.updateById(validAccountId, accountChanged)).thenReturn(true);
-            assertTrue(accountService.updateAccountEmail(validAccountId, newEmail));
+            assertTrue(accountService.updateEmail(validAccountId, newEmail));
         }
 
     }
@@ -397,7 +397,7 @@ class AccountServiceImplTest {
         @Test
         void updateAccountIcqWhenAccountIdIsNull() {
             Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.updateAccountIcq(null, "new_icq");
+                accountService.updateIcq(null, "new_icq");
                 throw new UnsupportedOperationException("Not supported");
             });
             assertEquals(IllegalArgumentException.class, exception.getClass());
@@ -406,7 +406,7 @@ class AccountServiceImplTest {
         @Test
         void updateAccountIcqWhenIcqIsNull() {
             Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.updateAccountIcq(validAccountId, null);
+                accountService.updateIcq(validAccountId, null);
                 throw new UnsupportedOperationException("Not supported");
             });
             assertEquals(IllegalArgumentException.class, exception.getClass());
@@ -420,7 +420,7 @@ class AccountServiceImplTest {
             when(accountDao.getById(validAccountId)).thenReturn(Optional.of(accountOriginal));
             Account accountChanged = new Account.Builder(accountOriginal).icq(newIcq).build();
             when(accountDao.updateById(validAccountId, accountChanged)).thenReturn(true);
-            assertTrue(accountService.updateAccountIcq(validAccountId, newIcq));
+            assertTrue(accountService.updateIcq(validAccountId, newIcq));
         }
 
     }
@@ -432,7 +432,7 @@ class AccountServiceImplTest {
         @Test
         void updateAccountSkypeWhenAccountIdIsNull() {
             Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.updateAccountSkype(null, "new_skype");
+                accountService.updateSkype(null, "new_skype");
                 throw new UnsupportedOperationException("Not supported");
             });
             assertEquals(IllegalArgumentException.class, exception.getClass());
@@ -441,7 +441,7 @@ class AccountServiceImplTest {
         @Test
         void updateAccountSkypeWhenSkypeIsNull() {
             Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.updateAccountSkype(validAccountId, null);
+                accountService.updateSkype(validAccountId, null);
                 throw new UnsupportedOperationException("Not supported");
             });
             assertEquals(IllegalArgumentException.class, exception.getClass());
@@ -455,7 +455,7 @@ class AccountServiceImplTest {
             when(accountDao.getById(validAccountId)).thenReturn(Optional.of(accountOriginal));
             Account accountChanged = new Account.Builder(accountOriginal).skype(newSkype).build();
             when(accountDao.updateById(validAccountId, accountChanged)).thenReturn(true);
-            assertTrue(accountService.updateAccountSkype(validAccountId, newSkype));
+            assertTrue(accountService.updateSkype(validAccountId, newSkype));
         }
 
     }
@@ -502,7 +502,7 @@ class AccountServiceImplTest {
         @Test
         void whenAccountIdIsNull() {
             Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.deleteAccount(null);
+                accountService.delete(null);
                 throw new UnsupportedOperationException("Not supported");
             });
             assertEquals(IllegalArgumentException.class, exception.getClass());
@@ -511,7 +511,7 @@ class AccountServiceImplTest {
         @Test
         void whenAccountIsNotExisted() {
             Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.deleteAccount(nonExistingAccountId);
+                accountService.delete(nonExistingAccountId);
                 throw new UnsupportedOperationException("Not supported");
             });
             assertEquals(IllegalArgumentException.class, exception.getClass());
@@ -520,7 +520,7 @@ class AccountServiceImplTest {
         @Test
         void successfulAccountDeleting() {
             when(accountDao.deleteById(validAccountId)).thenReturn(true);
-            assertTrue(accountService.deleteAccount(validAccountId));
+            assertTrue(accountService.delete(validAccountId));
         }
 
     }
@@ -639,13 +639,13 @@ class AccountServiceImplTest {
         @Test
         void whenAccountsTableIsEmpty() {
             when(accountDao.getAll()).thenReturn(new ArrayList<>());
-            assertEquals(new ArrayList<Account>(), accountService.getAllAccounts());
+            assertEquals(new ArrayList<Account>(), accountService.getAll());
         }
 
         @Test
         void when2AccountsExisted() {
             when(accountDao.getAll()).thenReturn(new ArrayList<>(asList(TEST_ACCOUNT, TEST_ACCOUNT)));
-            assertEquals(2, accountService.getAllAccounts().size());
+            assertEquals(2, accountService.getAll().size());
         }
 
     }

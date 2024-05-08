@@ -19,7 +19,7 @@ public class SendGroupRequestServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long accountId = ((Account) req.getSession(false).getAttribute("account")).getId();
-        groupService.sendGroupMemberRequest(valueOf(req.getParameter("id")), accountId);
+        groupService.sendRequest(valueOf(req.getParameter("id")), accountId);
         resp.sendRedirect("/account?id=" + accountId);
     }
 

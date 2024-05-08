@@ -8,8 +8,6 @@ public interface PhoneDao {
 
     Long create(Phone phone);
 
-    boolean delete();
-
     boolean update(Long phoneId, String newPhoneNumber);
 
     List<Phone> getAll(Long accountId);

@@ -32,9 +32,9 @@ public class GroupInfoServlet extends HttpServlet {
             req.setAttribute("group", groupService.getById(groupId).get());
             req.setAttribute("avatarInputStream", avatarService.get(groupId));
             Long accountId = ((Account) req.getSession(false).getAttribute("account")).getId();
-            req.setAttribute("isAdmin", groupService.isAccountAdmin(groupId, accountId));
-            req.setAttribute("isSubscriber", groupService.isAccountGroupSubscriber(groupId, accountId));
-            req.setAttribute("isMember", groupService.isAccountGroupMember(groupId, accountId));
+            req.setAttribute("isAdmin", groupService.isAdmin(groupId, accountId));
+            req.setAttribute("isSubscriber", groupService.isSubscriber(groupId, accountId));
+            req.setAttribute("isMember", groupService.isMember(groupId, accountId));
             req.setAttribute("groupPosts", messageService.getAllGroupMessages(groupId));
             req.setAttribute("accountService", accountService);
         }

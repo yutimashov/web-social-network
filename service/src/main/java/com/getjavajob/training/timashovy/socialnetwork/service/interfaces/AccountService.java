@@ -14,15 +14,15 @@ import java.util.Optional;
  */
 public interface AccountService {
 
-    Long createAccount(Account account);
+    Long create(Account account);
 
-    boolean updateAccount(Long accountId, Account updatedAccount);
+    boolean update(Long accountId, Account updatedAccount);
 
-    boolean deleteAccount(Long accountId);
+    boolean delete(Long accountId);
 
-    Optional<Account> getAccountById(Long accountId);
+    Optional<Account> getById(Long accountId);
 
-    List<Account> getAllAccounts();
+    List<Account> getAll();
 
     boolean addFriend(Long accountId, Long friendId);
 
@@ -36,22 +36,22 @@ public interface AccountService {
 
     List<Account> getOutgoingFriendRequests(Long accountId);
 
-    boolean updateAccountLastName(Long accountId, String updatedLastName);
+    boolean updateLastName(Long accountId, String updatedLastName);
 
-    boolean updateAccountMiddleName(Long accountId, String updatedMiddleName);
+    boolean updateMiddleName(Long accountId, String updatedMiddleName);
 
-    boolean updateAccountBirthDate(Long accountId, LocalDate parse);
+    boolean updateBirthDate(Long accountId, LocalDate parse);
 
-    boolean updateAccountSkype(Long accountId, String updatedSkype);
+    boolean updateSkype(Long accountId, String updatedSkype);
 
-    boolean updateAccountIcq(Long accountId, String updatedICQ);
+    boolean updateIcq(Long accountId, String updatedICQ);
 
-    boolean updateAccountEmail(Long accountId, String updatedEmail);
+    boolean updateEmail(Long accountId, String updatedEmail);
 
-    boolean updateAccountRole(Long accountId, AccountRole role);
+    boolean updateRole(Long accountId, AccountRole role);
 
     boolean checkFriendshipRecordExistence(Long requesterId, Long accepterId);
 
-    boolean updateFirstAvatar(Long accountId, InputStream updatedAvatar);
+    boolean updateAvatar(Long accountId, InputStream updatedAvatar);
 
 }

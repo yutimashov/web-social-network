@@ -20,7 +20,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public void makeAdmin(Long accountId) {
-        accountService.updateAccountRole(accountId, ADMIN);
+        accountService.updateRole(accountId, ADMIN);
     }
 
 }

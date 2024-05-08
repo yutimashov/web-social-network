@@ -17,7 +17,7 @@ public class MakeGroupAdminServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        groupService.makeUserGroupAdmin(valueOf(req.getParameter("groupId")),
+        groupService.makeAdmin(valueOf(req.getParameter("groupId")),
                 valueOf(req.getParameter("accountId")));
         resp.sendRedirect("/group?id=" + valueOf(req.getParameter("groupId")));
     }

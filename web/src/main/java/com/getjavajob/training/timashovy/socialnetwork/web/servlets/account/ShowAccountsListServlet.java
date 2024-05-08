@@ -18,7 +18,7 @@ public class ShowAccountsListServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        req.setAttribute("accounts", accountService.getAllAccounts());
+        req.setAttribute("accounts", accountService.getAll());
         req.getRequestDispatcher(getJspPagePath(ALL_ACCOUNTS)).forward(req, resp);
     }
 

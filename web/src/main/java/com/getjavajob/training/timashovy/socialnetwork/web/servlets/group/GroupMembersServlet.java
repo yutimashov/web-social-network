@@ -19,8 +19,8 @@ public class GroupMembersServlet extends HttpServlet {
         Long groupId = valueOf(req.getParameter("id"));
         if (groupService.getById(groupId).isPresent()) {
             req.setAttribute("group", groupService.getById(groupId).get());
-            req.setAttribute("groupMembers", groupService.getGroupMembers(groupId));
-            req.setAttribute("groupAdmins", groupService.getGroupAdmins(groupId));
+            req.setAttribute("groupMembers", groupService.getRegularMembers(groupId));
+            req.setAttribute("groupAdmins", groupService.getAdmins(groupId));
         }
         req.getRequestDispatcher(getJspPagePath("group/members")).forward(req, resp);
     }

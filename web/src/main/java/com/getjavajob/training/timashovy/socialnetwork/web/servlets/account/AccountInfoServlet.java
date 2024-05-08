@@ -1,7 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.servlets.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
-import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.ImageService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountServiceImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.message.MessageServiceImpl;
@@ -24,8 +23,8 @@ public class AccountInfoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long accountId = valueOf(req.getParameter("id"));
-        if (accountService.getAccountById(accountId).isPresent()) {
-            req.setAttribute("account", accountService.getAccountById(accountId).get());
+        if (accountService.getById(accountId).isPresent()) {
+            req.setAttribute("account", accountService.getById(accountId).get());
             req.setAttribute("wallPosts", messageService.getAllAccountWallMessages(accountId));
             req.setAttribute("accountService", accountService);
         }

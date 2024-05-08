@@ -65,7 +65,7 @@ public class AccountServiceImpl implements AccountService {
      * @return id of created account
      */
     @Override
-    public Long createAccount(Account account) {
+    public Long create(Account account) {
         validateAccount(account);
         return accountDao.create(account);
     }
@@ -87,7 +87,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public boolean updateAccount(Long accountId, Account updatedAccount) {
+    public boolean update(Long accountId, Account updatedAccount) {
         validateAccountId(accountId);
         validateAccount(updatedAccount);
         return accountDao.updateById(accountId, updatedAccount);
@@ -119,7 +119,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public boolean updateAccountLastName(Long accountId, String lastName) {
+    public boolean updateLastName(Long accountId, String lastName) {
         validateAccountId(accountId);
         validateAccountFieldNotNull(lastName);
         return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
@@ -127,7 +127,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public boolean updateAccountMiddleName(Long accountId, String middleName) {
+    public boolean updateMiddleName(Long accountId, String middleName) {
         validateAccountId(accountId);
         validateAccountFieldNotNull(middleName);
         return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
@@ -135,7 +135,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public boolean updateAccountBirthDate(Long accountId, LocalDate birthDate) {
+    public boolean updateBirthDate(Long accountId, LocalDate birthDate) {
         validateAccountId(accountId);
         validateAccountFieldNotNull(birthDate);
         return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
@@ -157,7 +157,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public boolean updateAccountEmail(Long accountId, String email) {
+    public boolean updateEmail(Long accountId, String email) {
         validateAccountId(accountId);
         validateAccountFieldNotNull(email);
         return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
@@ -165,7 +165,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public boolean updateAccountIcq(Long accountId, String icq) {
+    public boolean updateIcq(Long accountId, String icq) {
         validateAccountId(accountId);
         validateAccountFieldNotNull(icq);
         return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
@@ -173,7 +173,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public boolean updateAccountSkype(Long accountId, String skype) {
+    public boolean updateSkype(Long accountId, String skype) {
         validateAccountId(accountId);
         validateAccountFieldNotNull(skype);
         return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
@@ -188,7 +188,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public boolean updateAccountRole(Long accountId, AccountRole role) {
+    public boolean updateRole(Long accountId, AccountRole role) {
         validateAccountId(accountId);
         validateAccountFieldNotNull(role);
         return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
@@ -196,25 +196,25 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public boolean updateFirstAvatar(Long accountId, InputStream updatedAvatar) {
+    public boolean updateAvatar(Long accountId, InputStream updatedAvatar) {
         validateAccountId(accountId);
         return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
                 new Account.Builder(accountDao.getById(accountId).get()).avatar(updatedAvatar).build());
     }
 
     @Override
-    public boolean deleteAccount(Long accountId) {
+    public boolean delete(Long accountId) {
         validateAccountId(accountId);
         return accountDao.deleteById(accountId);
     }
 
     @Override
-    public Optional<Account> getAccountById(Long accountId) {
+    public Optional<Account> getById(Long accountId) {
         return accountDao.getById(accountId);
     }
 
     @Override
-    public List<Account> getAllAccounts() {
+    public List<Account> getAll() {
         List<Account> accounts = accountDao.getAll();
         for (Account account : accounts) {
             List<Phone> accountPhones = phoneDao.getAll(account.getId());

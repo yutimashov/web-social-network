@@ -35,7 +35,7 @@ public class LoginService {
         String dbPasswordValue = dbPassword.getPassword();
         String verifyingSaltedPasswordValue = hashCredentialData(password, dbPassword.getSalt());
         return dbPasswordValue.equals(verifyingSaltedPasswordValue)
-                ? accountService.getAccountById(dbPassword.getAccountId()) : empty();
+                ? accountService.getById(dbPassword.getAccountId()) : empty();
     }
 
 }

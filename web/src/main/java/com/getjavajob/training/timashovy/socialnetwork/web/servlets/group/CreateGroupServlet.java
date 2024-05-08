@@ -33,12 +33,12 @@ public class CreateGroupServlet extends HttpServlet {
 
     private void createGroup(HttpServletRequest req) throws ServletException, IOException {
         Long accountId = ((Account) req.getSession(false).getAttribute("account")).getId();
-        Long groupId = groupService.createGroup(new Group(req.getParameter("name"), req.getParameter("description"),
+        Long groupId = groupService.create(new Group(req.getParameter("name"), req.getParameter("description"),
                 accountId));
         avatarService.create(groupId, req.getPart("avatar").getInputStream());
-        groupService.sendGroupMemberRequest(groupId, accountId);
-        groupService.makeAccountGroupMember(groupId, accountId);
-        groupService.makeUserGroupAdmin(groupId, accountId);
+        groupService.sendRequest(groupId, accountId);
+        groupService.makeMember(groupId, accountId);
+        groupService.makeAdmin(groupId, accountId);
     }
 
 }
