@@ -22,7 +22,8 @@ public final class PersonalMessageDaoImpl implements MessageDao {
     private static final String CREATE = "INSERT INTO " + PERSONAL_MESSAGE_TABLE + " (account_author_id, " +
             "destination_id, message_text, message_image) VALUES (?, ?, ?, ?);";
     private static final String GET_ALL_ACCOUNT_IDS = "SELECT DISTINCT account_author_id FROM " + PERSONAL_MESSAGE_TABLE
-            + " WHERE destination_id = ?;";
+            + " WHERE destination_id = ? UNION SELECT DISTINCT destination_id FROM " + PERSONAL_MESSAGE_TABLE
+            + " WHERE account_author_id = ?;";
     private static final String GET_ALL_PRIVATE_MESSAGES_WITH_ACCOUNT = "SELECT id, account_author_id, destination_id, " +
             "message_text, message_image, creation_date FROM " + PERSONAL_MESSAGE_TABLE + " WHERE account_author_id = " +
             "? AND destination_id = ? UNION SELECT id, account_author_id, destination_id, message_text, message_image" +
@@ -105,6 +106,7 @@ public final class PersonalMessageDaoImpl implements MessageDao {
     public List<Long> getAllAccountsIds(Long accountId) {
         try (PreparedStatement preparedStatement = getPreparedStatement(GET_ALL_ACCOUNT_IDS)) {
             preparedStatement.setLong(1, accountId);
+            preparedStatement.setLong(2, accountId);
             List<Long> ids = new ArrayList<>();
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
