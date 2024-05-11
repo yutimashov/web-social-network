@@ -33,11 +33,11 @@ public class SearchServlet extends HttpServlet {
         if ("account".equals(searchType)) {
             List<Account> accounts = searchService.findAccounts(searchQuery, currentPage, RESULTS_PER_PAGE);
             req.setAttribute("accounts", accounts);
-            numberOfPages = searchService.findResultsAmount(searchQuery) / RESULTS_PER_PAGE;
+            numberOfPages = searchService.findAccountResultsAmount(searchQuery) / RESULTS_PER_PAGE;
         } else if ("group".equals(searchType)) {
             List<Group> groups = searchService.findGroups(searchQuery, currentPage, RESULTS_PER_PAGE);
             req.setAttribute("groups", groups);
-            numberOfPages = searchService.findResultsAmount(searchQuery) / RESULTS_PER_PAGE;
+            numberOfPages = searchService.findGroupResultsAmount(searchQuery) / RESULTS_PER_PAGE;
         }
         if (numberOfPages % RESULTS_PER_PAGE > 0) {
             numberOfPages++;

@@ -19,7 +19,7 @@ public final class SearchGroupDaoImpl implements SearchDao<Group> {
     private static final String FIND_GROUPS = "SELECT * FROM " + GROUP_TABLE + " WHERE group_name ILIKE ? OFFSET ? "
             + "LIMIT ?;";
     private static final String FIND_GROUPS_AMOUNT = "SELECT COUNT(*) AS total FROM " + GROUP_TABLE
-            + " WHERE group_name ILIKE ? OR group_name ILIKE ?;";
+            + " WHERE group_name ILIKE ?;";
 
     private SearchGroupDaoImpl() {
     }
@@ -54,7 +54,6 @@ public final class SearchGroupDaoImpl implements SearchDao<Group> {
     public int findResultsAmount(String searchQuery) {
         try (PreparedStatement preparedStatement = getPreparedStatement(FIND_GROUPS_AMOUNT)) {
             preparedStatement.setString(1, "%" + searchQuery + "%");
-            preparedStatement.setString(2, "%" + searchQuery + "%");
             ResultSet accountsAmount = preparedStatement.executeQuery();
             if (accountsAmount.next()) {
                 return accountsAmount.getInt("total");

@@ -8,9 +8,13 @@
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <div>
     <div>
-        <p>Messages with: ${requestScope.account.firstName} ${requestScope.account.lastName}</p>
-        <img src="${pageContext.request.contextPath}/avatar?id=${requestScope.account.id}" alt="Profile avatar"
-             width="100px" height="100px">
+        <p>Messages with:
+            <a href="${pageContext.request.contextPath}/account?id=${account.id}">
+                <img src="${pageContext.request.contextPath}/avatar?id=${requestScope.account.id}" alt="Profile avatar"
+                     width="100px" height="100px">
+                ${requestScope.account.firstName} ${requestScope.account.lastName}
+            </a>
+        </p>
         <hr>
     </div>
     <div>
@@ -31,10 +35,28 @@
     </div>
     <div>
         <c:forEach items="${requestScope.messages}" var="message">
+            <c:set var="senderId" value="${message.accountAuthorId}"/>
+            <c:set var="destinationId" value="${message.destinationId}"/>
             <hr>
             <span>Created: ${message.creationDate}</span><br>
-            <span>From: ${requestScope.accountService.getAccountById(message.accountAuthorId).get().firstName}</span>&nbsp;&nbsp;
-            <span>To: ${requestScope.accountService.getAccountById(message.destinationId).get().lastName}</span><br>
+            <span>From:
+                <a href="${rootUrl}/account?id=${senderId}">
+                    <img src="${pageContext.request.contextPath}/avatar?id=${senderId}"
+                         alt="Profile avatar"
+                         width="50px" height="50px">
+                        ${requestScope.accountService.getById(senderId).get().firstName}
+                        ${requestScope.accountService.getById(senderId).get().lastName}
+                </a>
+            </span><br>
+            <span>To:
+                    <a href="${rootUrl}/account?id=${destinationId}">
+                        <img src="${pageContext.request.contextPath}/avatar?id=${destinationId}"
+                             alt="Profile avatar"
+                             width="50px" height="50px">
+                        ${requestScope.accountService.getById(destinationId).get().firstName}
+                        ${requestScope.accountService.getById(destinationId).get().lastName}
+                </a>
+            </span><br>
             <span>Message:</span><br>
             <span>${message.text}</span>
             <c:if test="${message.photo ne null}">

@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -53,9 +54,9 @@ public class EditAccountServlet extends HttpServlet {
 
     private void updateAccountData(HttpServletRequest req) throws ServletException, IOException {
         Long accountId = valueOf(req.getParameter("id"));
-        InputStream updatedAvatar = req.getPart("avatar").getInputStream();
-        if (!isNull(updatedAvatar)) {
-            accountService.updateAvatar(accountId, updatedAvatar);
+        Part avatarPart = req.getPart("avatar");
+        if (avatarPart != null && avatarPart.getSize() > 0) {
+            accountService.updateAvatar(accountId, avatarPart.getInputStream());
         }
         String updatedFirstName = getParameter(req, FIRST_NAME_PARAMETER_NAME);
         if (checkParameterHasValue(updatedFirstName)) {

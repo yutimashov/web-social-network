@@ -9,7 +9,9 @@ public interface SearchService {
 
     List<Account> findAccounts(String searchQuery, int currentPage, int numOfRecords);
 
-    int findResultsAmount(String searchQuery);
+    int findAccountResultsAmount(String searchQuery);
+
+    int findGroupResultsAmount(String searchQuery);
 
     List<Group> findGroups(String searchQuery, int currentPage, int numOfRecords);
 

@@ -51,11 +51,11 @@
     <span>Last name: ${requestScope.account.lastName}</span><br>
     <span>Middle name: ${requestScope.account.middleName}</span><br>
     <span>Birthdate: ${requestScope.account.birthDate}</span><br>
-    <span>Personal phones:</span><br>
+    <span>Personal phones:</span>
     <c:forEach var="phone" items="${requestScope.account.personalPhoneNumber}">
         &nbsp;&nbsp;<span>${phone.number}</span><br>
     </c:forEach>
-    <span>Working phones:</span><br>
+    <span>Working phones:</span>
     <c:forEach var="phone" items="${requestScope.account.workPhoneNumber}">
         &nbsp;&nbsp;<span>${phone.number}</span><br>
     </c:forEach>
@@ -92,18 +92,24 @@
         <hr>
     </div>
 </c:if>
-<div>
-    <c:forEach items="${requestScope.wallPosts}" var="post">
-        <hr>
-        <span>Created: ${post.creationDate}</span><br>
-        <c:set var="accountAuthor"
-               value="${requestScope.accountService.getAccountById(post.accountAuthorId).get()}"/>
-        <p>${post.text}</p>
-        <c:if test="${post.photo ne null}">
-            <img src="${rootUrl}/account-wall/image?id=${post.id}" alt="Message photo" width="150px" height="150px">
-        </c:if>
-        <hr>
-    </c:forEach>
-</div>
+<c:if test="${requestScope.wallPosts ne null}">
+    <div>
+        <c:forEach items="${requestScope.wallPosts}" var="post">
+            <hr>
+            <span>Created: ${post.creationDate}</span><br>
+            <p>Author:
+                <a href="${rootUrl}/account?id=${post.accountAuthorId}">
+                        ${requestScope.accountService.getById(post.accountAuthorId).get().firstName}
+                        ${requestScope.accountService.getById(post.accountAuthorId).get().lastName}
+                </a>
+            </p>
+            <p>${post.text}</p>
+            <c:if test="${post.photo ne null}">
+                <img src="${rootUrl}/account-wall/image?id=${post.id}" alt="Message photo" width="150px" height="150px">
+            </c:if>
+            <hr>
+        </c:forEach>
+    </div>
+</c:if>
 </body>
 </html>

@@ -11,18 +11,15 @@
 <table style="border:1px solid black;padding:5px;border-spacing:10px;">
     <tr>
         <th>Name</th>
-        <th>Type</th>
     </tr>
     <c:forEach var="account" items="${requestScope.accounts}">
         <tr>
             <td><a href="${rootUrl}/account?id=${account.id}">${account.firstName} ${account.lastName}</a></td>
-            <td>Account</td>
         </tr>
     </c:forEach>
     <c:forEach var="group" items="${requestScope.groups}">
         <tr>
             <td><a href="${rootUrl}/group?id=${group.id}">${group.groupName}</a></td>
-            <td>Group</td>
         </tr>
     </c:forEach>
 </table>
