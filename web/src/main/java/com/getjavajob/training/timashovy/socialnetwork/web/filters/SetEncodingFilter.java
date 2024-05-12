@@ -3,7 +3,7 @@ package com.getjavajob.training.timashovy.socialnetwork.web.filters;
 import javax.servlet.*;
 import java.io.IOException;
 
-public class SetUTF8EncodingFilter implements Filter {
+public class SetEncodingFilter implements Filter {
 
     private static final String encoding = "UTF-8";
 

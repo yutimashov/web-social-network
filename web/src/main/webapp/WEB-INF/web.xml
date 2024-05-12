@@ -457,7 +457,7 @@
 
     <filter>
         <filter-name>Set Encoding Filter</filter-name>
-        <filter-class>com.getjavajob.training.timashovy.socialnetwork.web.filters.SetUTF8EncodingFilter
+        <filter-class>com.getjavajob.training.timashovy.socialnetwork.web.filters.SetEncodingFilter
         </filter-class>
     </filter>
     <filter-mapping>
