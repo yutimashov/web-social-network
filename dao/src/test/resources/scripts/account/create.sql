@@ -15,6 +15,7 @@ CREATE TABLE account_data.accounts
     additional_info   TEXT,
     role_type         VARCHAR(32) DEFAULT 'REGULAR',
     registration_date TIMESTAMP   DEFAULT CURRENT_TIMESTAMP,
+    avatar            BYTEA,
     CONSTRAINT account_data_unique_fields UNIQUE (email, icq, skype)
 );
 SET SCHEMA account_data;

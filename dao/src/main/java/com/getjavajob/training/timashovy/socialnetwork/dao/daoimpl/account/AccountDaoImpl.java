@@ -1,8 +1,8 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.AccountRole;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
@@ -15,9 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.getjavajob.training.timashovy.socialnetwork.common.account.AccountRole.REGULAR;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
-import static com.getjavajob.training.timashovy.socialnetwork.common.account.AccountRole.REGULAR;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.AccountTableFields.*;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNT_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
@@ -28,7 +28,7 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
 
-public final class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidator {
+public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidator {
 
     private static final String CREATE = "INSERT INTO " + ACCOUNT_TABLE + " (first_name, last_name, "
             + "middle_name, birth_date, personal_address, work_address, email, icq, skype, additional_info, "

@@ -51,7 +51,6 @@ public final class GroupAvatarDaoImpl implements ImageDao {
             if (avatarRecord.next()) {
                 return avatarRecord.getBinaryStream("avatar_blob");
             } else {
-                //TODO: avoid return null, use `Optional` instead
                 return null;
             }
         } catch (SQLException e) {

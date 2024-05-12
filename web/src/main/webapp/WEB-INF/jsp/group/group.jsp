@@ -18,7 +18,7 @@
         <button>Send join request</button>
     </a>
 </c:if>
-<c:if test="${requestScope.isAdmin ne true}">
+<c:if test="${requestScope.isAdmin eq true}">
     <p>Welcome, admin!</p>
     <a href="${rootUrl}/group/requests?id=${requestScope.group.id}">
         <button>Account requests</button>
@@ -48,7 +48,7 @@
             <hr>
             <span>Created: ${post.creationDate}</span><br>
             <c:set var="accountAuthor"
-                   value="${requestScope.accountService.getAccountById(post.accountAuthorId).get()}"/>
+                   value="${requestScope.accountService.getById(post.accountAuthorId).get()}"/>
             <span>Author:
                 <a href="${rootUrl}/account?id=${accountAuthor.id}">${accountAuthor.firstName} ${accountAuthor.lastName}
                 </a>

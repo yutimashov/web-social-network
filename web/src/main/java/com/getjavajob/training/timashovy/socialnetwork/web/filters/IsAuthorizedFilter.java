@@ -18,10 +18,9 @@ public class IsAuthorizedFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         String requestUri = req.getRequestURI();
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
-        if (requestUri.equals(LOGIN) || requestUri.equals(REGISTER)) {
+        if (LOGIN.equals(requestUri) || REGISTER.equals(requestUri)) {
             filterChain.doFilter(req, resp);
-            //TODO: avoid duplicate session
-        } else if (isNull(req.getSession(false)) || isNull(req.getSession(false).getAttribute("account"))) {
+        } else if (isNull(req.getSession().getAttribute("account"))) {
             resp.sendRedirect("/login?error=authorization");
         } else {
             filterChain.doFilter(req, resp);

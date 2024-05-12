@@ -1,18 +1,13 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.message.Message;
-import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group.GroupDaoImpl;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.GroupDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.MessageDao;
 import org.junit.jupiter.api.*;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.common.message.MessageType.ACCOUNT_PERSONAL;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.GroupMessageDaoImpl.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
-import static java.time.LocalDate.of;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GroupMessageDaoImplTest {
@@ -25,8 +20,10 @@ class GroupMessageDaoImplTest {
     private static final MessageDao MESSAGE_DAO = GroupMessageDaoImpl.getInstance();
     private static final Message TEST_MESSAGE = new Message.Builder()
             .id(1L)
+            .destinationId(1L)
             .accountAuthorId(1L)
             .text("test")
+            .creationDate(LocalDate.of(2020, 1, 1))
             .build();
 
     @BeforeAll

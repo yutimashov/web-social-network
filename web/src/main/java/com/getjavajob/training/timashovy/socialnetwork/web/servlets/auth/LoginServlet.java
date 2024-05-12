@@ -6,7 +6,10 @@ import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.accou
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.PasswordServiceImpl;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.*;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -23,9 +26,18 @@ public class LoginServlet extends HttpServlet {
     private static final String LOGIN_COOKIE_NAME = "login";
     private static final String PASSWORD_COOKIE_NAME = "password";
     private static final int REMEMBER_ME_COOKIE_LIFETIME = (int) HOURS.toSeconds(1);
-    //TODO: singleton
-    private final LoginService loginService = LoginService.getInstance();
-    private final PasswordService passwordService = PasswordServiceImpl.getInstance();
+    private final LoginService loginService;
+    private final PasswordService passwordService;
+
+    public LoginServlet() {
+        this.loginService = LoginService.getInstance();
+        this.passwordService = PasswordServiceImpl.getInstance();
+    }
+
+    public LoginServlet(LoginService loginService, PasswordService passwordService) {
+        this.loginService = loginService;
+        this.passwordService = passwordService;
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

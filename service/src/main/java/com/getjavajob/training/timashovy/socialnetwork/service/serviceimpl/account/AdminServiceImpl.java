@@ -7,15 +7,24 @@ import static com.getjavajob.training.timashovy.socialnetwork.common.account.Acc
 import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountServiceImpl.getInstance;
 
 public class AdminServiceImpl implements AdminService {
+    private final AccountService accountService;
 
-    private static final AdminServiceImpl ADMIN_SERVICE = new AdminServiceImpl();
-    private final AccountService accountService = getInstance();
+    private AdminServiceImpl(AccountService accountService) {
+        this.accountService = accountService;
+    }
 
-    private AdminServiceImpl() {
+    private static class SingletonHolder {
+
+        private static final AdminServiceImpl INSTANCE;
+
+        static {
+            INSTANCE = new AdminServiceImpl(getInstance());
+        }
+
     }
 
     public static AdminServiceImpl getAdminServiceImpl() {
-        return ADMIN_SERVICE;
+        return SingletonHolder.INSTANCE;
     }
 
     @Override

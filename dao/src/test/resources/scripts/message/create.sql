@@ -17,20 +17,45 @@ CREATE TABLE account_data.accounts
     registration_date TIMESTAMP   DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT account_data_unique_fields UNIQUE (email, icq, skype)
 );
+CREATE SCHEMA group_data;
+SET SCHEMA group_data;
+CREATE TABLE group_data."group"
+(
+    id            INT PRIMARY KEY AUTO_INCREMENT,
+    group_name    VARCHAR(255) NOT NULL UNIQUE,
+    description   TEXT,
+    creation_date TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    owner_id      INT REFERENCES account_data.accounts (id) ON DELETE CASCADE,
+    group_status  VARCHAR(50)
+);
 CREATE SCHEMA message_data;
 SET SCHEMA message_data;
-CREATE TABLE message_data.messages
+CREATE TABLE message_data.group_messages
 (
     id                INT PRIMARY KEY AUTO_INCREMENT,
     account_author_id INT REFERENCES account_data.accounts (id) ON DELETE CASCADE,
+    group_id          INT REFERENCES group_data."group" (id) ON DELETE CASCADE,
     creation_date     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     message_text      TEXT,
-    destination_type VARCHAR(50) NOT NULL
+    message_image     BLOB
 );
 SET SCHEMA message_data;
-CREATE TABLE message_data.message_images
+CREATE TABLE message_data.personal_messages
 (
-    id         INT PRIMARY KEY AUTO_INCREMENT,
-    image_blob BLOB,
-    message_id INT REFERENCES message_data.messages (id) ON DELETE CASCADE
+    id                INT PRIMARY KEY AUTO_INCREMENT,
+    account_author_id INT REFERENCES account_data.accounts (id) ON DELETE CASCADE,
+    destination_id    INT REFERENCES account_data.accounts (id) ON DELETE CASCADE,
+    creation_date     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    message_text      TEXT,
+    message_image     BLOB
+);
+SET SCHEMA message_data;
+CREATE TABLE message_data.personal_wall_messages
+(
+    id                  INT PRIMARY KEY AUTO_INCREMENT,
+    account_author_id   INT REFERENCES account_data.accounts (id) ON DELETE CASCADE,
+    account_receiver_id INT REFERENCES account_data.accounts (id) ON DELETE CASCADE,
+    creation_date       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    message_text        TEXT,
+    message_image       BLOB
 );

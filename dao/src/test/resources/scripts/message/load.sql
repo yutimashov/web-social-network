@@ -4,7 +4,7 @@ VALUES ('test', 'test', 'test', '2000-01-01', 'test', 'test', 'test', 'test', 't
        ('test1', 'test1', 'test1', '2000-01-01', 'test1', 'test1', 'test1', 'test1', 'test1', 'test1'),
        ('test2', 'test2', 'test2', '2000-01-01', 'test2', 'test2', 'test2', 'test2', 'test2', 'test2'),
        ('test3', 'test3', 'test3', '2000-01-01', 'test3', 'test3', 'test3', 'test3', 'test3', 'test3');
-INSERT INTO message_data.messages (account_author_id, creation_date, message_text, destination_type)
-VALUES (1, '2020-01-01', 'test', 'ACCOUNT_PERSONAL');
-INSERT INTO message_data.message_images (image_blob, message_id)
-VALUES ('test', 1);
+INSERT INTO group_data."group" (group_name, description, owner_id, group_status)
+VALUES ('test', 'test', 1, 'test');
+INSERT INTO message_data.group_messages (account_author_id, group_id, message_text, creation_date)
+VALUES (1, 1, 'test', '2020-01-01');

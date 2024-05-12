@@ -13,15 +13,28 @@ import static java.util.Optional.empty;
 
 public class LoginService {
 
-    private static final LoginService loginService = new LoginService();
-    private final AccountService accountService = AccountServiceImpl.getInstance();
-    private final PasswordService passwordService = PasswordServiceImpl.getInstance();
+    private final AccountService accountService;
+    private final PasswordService passwordService;
 
-    private LoginService() {
+    private LoginService(AccountService accountService, PasswordService passwordService) {
+        this.accountService = accountService;
+        this.passwordService = passwordService;
+    }
+
+    private static class SingletonHolder {
+
+        private static final LoginService INSTANCE;
+
+        static {
+            AccountService accountService = AccountServiceImpl.getInstance();
+            PasswordService passwordService = PasswordServiceImpl.getInstance();
+            INSTANCE = new LoginService(accountService, passwordService);
+        }
+
     }
 
     public static LoginService getInstance() {
-        return loginService;
+        return SingletonHolder.INSTANCE;
     }
 
     public Optional<Account> getLoggedInAccount(String email, String password) {

@@ -28,7 +28,7 @@ CREATE TABLE account_data.account_phones
 );
 CREATE SCHEMA group_data;
 SET SCHEMA group_data;
-CREATE TABLE group_data."group"
+CREATE TABLE group_data.groups
 (
     id            INT PRIMARY KEY AUTO_INCREMENT,
     group_name    VARCHAR(255) NOT NULL UNIQUE,

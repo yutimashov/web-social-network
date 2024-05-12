@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
 
-public final class FriendshipCheckerImpl implements FriendshipChecker {
+public class FriendshipCheckerImpl implements FriendshipChecker {
 
     private static final FriendshipCheckerImpl FRIENDSHIP_CHECKER_INSTANCE = new FriendshipCheckerImpl();
     private static final String FRIENDSHIP_RECORD_EXISTENCE = "SELECT 1 FROM friend_data.friendship WHERE id_1 = ? "

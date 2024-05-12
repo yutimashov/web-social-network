@@ -12,4 +12,6 @@ public interface PasswordDao {
 
     Optional<Password> getById(Long accountId);
 
+    Password findByEmail(String email);
+
 }

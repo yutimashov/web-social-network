@@ -16,7 +16,7 @@ import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.d
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
-public final class PasswordDaoImpl implements PasswordDao {
+public class PasswordDaoImpl implements PasswordDao {
 
     private static final String CREATE = "INSERT INTO " + ACCOUNT_PASSWORDS_TABLE + " (account_id, hash_password, "
             + "salt) VALUES(?, ?, ?)";
@@ -75,6 +75,7 @@ public final class PasswordDaoImpl implements PasswordDao {
         }
     }
 
+    @Override
     public Password findByEmail(String email) {
         try (PreparedStatement preparedStatement = getPreparedStatement(GET_BY_ACCOUNT_EMAIL)) {
             preparedStatement.setString(1, email);

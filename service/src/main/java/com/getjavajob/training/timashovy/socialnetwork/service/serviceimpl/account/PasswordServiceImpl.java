@@ -2,6 +2,7 @@ package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.acco
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Password;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PasswordDaoImpl;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PasswordDao;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
 
 import java.util.Optional;
@@ -11,14 +12,25 @@ import static com.getjavajob.training.timashovy.socialnetwork.service.util.Passw
 
 public class PasswordServiceImpl implements PasswordService {
 
-    private static final PasswordServiceImpl passwordServiceImpl = new PasswordServiceImpl();
-    private final PasswordDaoImpl passwordDao = PasswordDaoImpl.getInstance();
+    private final PasswordDao passwordDao;
 
-    private PasswordServiceImpl() {
+    private PasswordServiceImpl(PasswordDao passwordDao) {
+        this.passwordDao = passwordDao;
+    }
+
+    private static class SingletonHolder {
+
+        private static final PasswordServiceImpl INSTANCE;
+
+        static {
+            PasswordDao passwordDao = PasswordDaoImpl.getInstance();
+            INSTANCE = new PasswordServiceImpl(passwordDao);
+        }
+
     }
 
     public static PasswordServiceImpl getInstance() {
-        return passwordServiceImpl;
+        return SingletonHolder.INSTANCE;
     }
 
     @Override
