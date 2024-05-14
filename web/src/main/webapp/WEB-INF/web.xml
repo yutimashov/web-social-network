@@ -302,7 +302,7 @@
     <!-- message servlets -->
     <servlet>
         <servlet-name>Create group message</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.CreateGroupMessageServlet
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.group.CreateMessageServlet
         </servlet-class>
         <multipart-config>
             <max-file-size>10485760</max-file-size>
@@ -318,7 +318,7 @@
     <servlet>
         <servlet-name>Create personal wall message</servlet-name>
         <servlet-class>
-            com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.CreatePersonalWallMessageServlet
+            com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.wall.CreateMessageServlet
         </servlet-class>
         <multipart-config>
             <max-file-size>10485760</max-file-size>
@@ -333,7 +333,7 @@
 
     <servlet>
         <servlet-name>Show group message image</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.ShowGroupMessageImageServlet
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.group.ShowImageServlet
         </servlet-class>
     </servlet>
     <servlet-mapping>
@@ -344,7 +344,7 @@
     <servlet>
         <servlet-name>Show account wall message image</servlet-name>
         <servlet-class>
-            com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.ShowAccountWallMessageServlet
+            com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.wall.ShowMessageServlet
         </servlet-class>
     </servlet>
     <servlet-mapping>
@@ -354,7 +354,7 @@
 
     <servlet>
         <servlet-name>All messages</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.ShowAccountMessagesServlet
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.personal.ShowMessagesServlet
         </servlet-class>
     </servlet>
     <servlet-mapping>
@@ -365,7 +365,7 @@
     <servlet>
         <servlet-name>Dialog</servlet-name>
         <servlet-class>
-            com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.ShowPrivateMessageDialogServlet
+            com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.personal.ShowDialogServlet
         </servlet-class>
     </servlet>
     <servlet-mapping>
@@ -375,7 +375,7 @@
 
     <servlet>
         <servlet-name>Send personal message</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.SendPersonalMessageServlet
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.personal.SendMessageServlet
         </servlet-class>
         <multipart-config>
             <max-file-size>10485760</max-file-size>
@@ -391,7 +391,7 @@
     <servlet>
         <servlet-name>Show personal message image</servlet-name>
         <servlet-class>
-            com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.ShowPersonalMessageImagesServlet
+            com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.personal.ShowImagesServlet
         </servlet-class>
     </servlet>
     <servlet-mapping>

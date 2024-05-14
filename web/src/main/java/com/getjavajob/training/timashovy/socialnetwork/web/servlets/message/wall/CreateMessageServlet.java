@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.web.servlets.message;
+package com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.wall;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.message.Message;
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 import static java.lang.Long.valueOf;
 
-public class CreatePersonalWallMessageServlet extends HttpServlet {
+public class CreateMessageServlet extends HttpServlet {
 
     private final MessageService messageService = MessageServiceImpl.getInstance();
 

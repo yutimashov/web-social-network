@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.web.servlets.message;
+package com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.personal;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
@@ -14,7 +14,7 @@ import java.io.IOException;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 import static java.lang.Long.valueOf;
 
-public class ShowPrivateMessageDialogServlet extends HttpServlet {
+public class ShowDialogServlet extends HttpServlet {
 
     private final AccountService accountService = AccountServiceImpl.getInstance();
     private final MessageServiceImpl messageService = MessageServiceImpl.getInstance();

@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.web.servlets.message;
+package com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.personal;
 
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.message.MessageServiceImpl;
 
@@ -9,7 +9,7 @@ import java.io.IOException;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 import static java.lang.Long.valueOf;
 
-public class ShowAccountMessagesServlet extends HttpServlet {
+public class ShowMessagesServlet extends HttpServlet {
 
     private final MessageServiceImpl messageService = MessageServiceImpl.getInstance();
 

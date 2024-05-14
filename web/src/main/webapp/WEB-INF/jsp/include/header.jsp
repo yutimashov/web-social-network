@@ -6,7 +6,7 @@
     <div style="background-color: bisque">
         <h4 style="display:inline;">Account: ${account.firstName} ${account.lastName}</h4>
         <div style="display:inline;">
-            <form action="${rootUrl}/search" style="margin:0px;">
+            <form action="${rootUrl}/search" style="margin:0;">
                 <input type="hidden" name="currentPage" value="1">
                 <label for="searchQuery">
                     Search:&nbsp;&nbsp;&nbsp;<input type="text" id="searchQuery" name="searchQuery">

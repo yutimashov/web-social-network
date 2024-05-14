@@ -20,7 +20,7 @@ public class LoginService {
         this.accountService = accountService;
         this.passwordService = passwordService;
     }
-
+    //TODO: singleton: listeners
     private static class SingletonHolder {
 
         private static final LoginService INSTANCE;

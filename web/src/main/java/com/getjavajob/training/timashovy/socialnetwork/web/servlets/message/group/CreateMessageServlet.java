@@ -1,7 +1,8 @@
-package com.getjavajob.training.timashovy.socialnetwork.web.servlets.message;
+package com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.group;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.message.Message;
+import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.message.MessageServiceImpl;
 
 import javax.servlet.ServletException;
@@ -12,19 +13,19 @@ import java.io.IOException;
 
 import static java.lang.Long.valueOf;
 
-public class SendPersonalMessageServlet extends HttpServlet {
+public class CreateMessageServlet extends HttpServlet {
 
-    private final MessageServiceImpl messageService = MessageServiceImpl.getInstance();
+    private final MessageService messageService = MessageServiceImpl.getInstance();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        messageService.createPersonalMessage(new Message.Builder()
+        messageService.createGroupMessage(new Message.Builder()
                 .accountAuthorId(((Account) req.getSession(false).getAttribute("account")).getId())
-                .destinationId(valueOf(req.getParameter("accountReceiverId")))
+                .destinationId(valueOf(req.getParameter("groupId")))
                 .text(req.getParameter("text"))
                 .photo(req.getPart("photo").getSize() > 0 ? req.getPart("photo").getInputStream() : null)
                 .build());
-        resp.sendRedirect("/account/messages/dialog?id=" + req.getParameter("accountReceiverId"));
+        resp.sendRedirect("/group?id=" + req.getParameter("groupId"));
     }
 
 }
