@@ -4,10 +4,12 @@ import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Password;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
+import com.getjavajob.training.timashovy.socialnetwork.service.util.ServiceSingletonRegistry;
 
 import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.PasswordUtil.hashCredentialData;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.ServiceSingletonsNames.LOGIN_SERVICE_SINGLETON;
 import static java.util.Objects.isNull;
 import static java.util.Optional.empty;
 
@@ -20,21 +22,14 @@ public class LoginService {
         this.accountService = accountService;
         this.passwordService = passwordService;
     }
-    //TODO: singleton: listeners
-    private static class SingletonHolder {
-
-        private static final LoginService INSTANCE;
-
-        static {
-            AccountService accountService = AccountServiceImpl.getInstance();
-            PasswordService passwordService = PasswordServiceImpl.getInstance();
-            INSTANCE = new LoginService(accountService, passwordService);
-        }
-
-    }
 
     public static LoginService getInstance() {
-        return SingletonHolder.INSTANCE;
+        return ServiceSingletonRegistry.getInstance().getSingleton(LOGIN_SERVICE_SINGLETON);
+    }
+
+    public static void registerSingleton(AccountService accountService, PasswordService passwordService) {
+        ServiceSingletonRegistry.getInstance().registerSingleton(LOGIN_SERVICE_SINGLETON,
+                new LoginService(accountService, passwordService));
     }
 
     public Optional<Account> getLoggedInAccount(String email, String password) {
