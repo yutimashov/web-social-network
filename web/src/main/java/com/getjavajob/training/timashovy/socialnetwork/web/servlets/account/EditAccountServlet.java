@@ -2,7 +2,6 @@ package com.getjavajob.training.timashovy.socialnetwork.web.servlets.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountServiceImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.PhoneServiceImpl;
 
 import javax.servlet.ServletException;
@@ -11,11 +10,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.IOException;
-import java.io.InputStream;
 import java.time.LocalDate;
 
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.ServiceSingletonRegistry.getServiceSingletonRegistry;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.ServiceSingletonsNames.ACCOUNT_SERVICE_SINGLETON;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.ServiceSingletonsNames.PHONE_SERVICE_SINGLETON;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 import static java.lang.Long.valueOf;
 import static java.util.Objects.isNull;
@@ -29,8 +30,8 @@ public class EditAccountServlet extends HttpServlet {
     private static final String SKYPE_PARAMETER_NAME = "skype";
     private static final String ICQ_PARAMETER_NAME = "icq";
     private static final String EMAIL_PARAMETER_NAME = "email";
-    private final AccountService accountService = AccountServiceImpl.getInstance();
-    private final PhoneServiceImpl phoneService = PhoneServiceImpl.getInstance();
+    private final AccountService accountService = getServiceSingletonRegistry().getSingleton(ACCOUNT_SERVICE_SINGLETON);
+    private final PhoneServiceImpl phoneService = getServiceSingletonRegistry().getSingleton(PHONE_SERVICE_SINGLETON);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

@@ -17,7 +17,7 @@ import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.d
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
-public final class PersonalWallMessageDaoImpl implements MessageDao {
+public class PersonalWallMessageDaoImpl implements MessageDao {
 
     private static final String CREATE = "INSERT INTO " + PERSONAL_WALL_MESSAGE_TABLE + " (account_author_id," +
             "account_receiver_id, message_text, message_image) VALUES (?, ?, ?, ?);";
@@ -31,7 +31,7 @@ public final class PersonalWallMessageDaoImpl implements MessageDao {
     private PersonalWallMessageDaoImpl() {
     }
 
-    public static PersonalWallMessageDaoImpl getInstance() {
+    public static PersonalWallMessageDaoImpl createInstance() {
         return PERSONAL_WALL_MESSAGE_DAO;
     }
 

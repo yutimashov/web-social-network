@@ -43,14 +43,14 @@ public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidat
             + "middle_name = ?, birth_date = ?, personal_address = ?, work_address = ?, email = ?, icq = ?, "
             + "skype = ?, additional_info = ?, role_type = ?, avatar = ? WHERE id = ?;";
     private static final String DELETE_BY_ID = "DELETE FROM " + ACCOUNT_TABLE + " WHERE id = ?;";
-    private static final AccountDaoImpl ACCOUNT_DAO_INSTANCE = new AccountDaoImpl();
-    private static final PhoneDao PHONE_DAO = PhoneDaoImpl.getInstance();
+    private final PhoneDao phoneDao;
 
-    private AccountDaoImpl() {
+    private AccountDaoImpl(PhoneDao phoneDao) {
+        this.phoneDao = phoneDao;
     }
 
-    public static AccountDaoImpl getInstance() {
-        return ACCOUNT_DAO_INSTANCE;
+    public static AccountDaoImpl createInstance(PhoneDao phoneDao) {
+        return new AccountDaoImpl(phoneDao);
     }
 
     @Override
@@ -116,7 +116,7 @@ public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidat
             ResultSet accountData = getAccountByIdStatement.executeQuery();
             if (accountData.next()) {
                 Account account = createAccountFromResultSet(accountData);
-                List<Phone> phones = PHONE_DAO.getAll(accountId);
+                List<Phone> phones = phoneDao.getAll(accountId);
                 if (!phones.isEmpty()) {
                     account.setPersonalPhoneNumber(phones.stream().filter(phone -> phone.getPhoneType() == PERSONAL)
                             .collect(toList()));

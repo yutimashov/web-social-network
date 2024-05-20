@@ -4,27 +4,17 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.Accoun
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AdminService;
 
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.AccountRole.ADMIN;
-import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountServiceImpl.getInstance;
 
 public class AdminServiceImpl implements AdminService {
+
     private final AccountService accountService;
 
     private AdminServiceImpl(AccountService accountService) {
         this.accountService = accountService;
     }
 
-    private static class SingletonHolder {
-
-        private static final AdminServiceImpl INSTANCE;
-
-        static {
-            INSTANCE = new AdminServiceImpl(getInstance());
-        }
-
-    }
-
-    public static AdminServiceImpl getAdminServiceImpl() {
-        return SingletonHolder.INSTANCE;
+    public static AdminServiceImpl createInstance(AccountService accountService) {
+        return new AdminServiceImpl(accountService);
     }
 
     @Override

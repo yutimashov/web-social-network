@@ -4,8 +4,6 @@ import com.getjavajob.training.timashovy.socialnetwork.common.Group;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.ImageService;
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group.GroupAvatarServiceImpl;
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group.GroupServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -13,12 +11,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.ServiceSingletonRegistry.getServiceSingletonRegistry;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.ServiceSingletonsNames.GROUP_AVATAR_SERVICE_SINGLETON;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.ServiceSingletonsNames.GROUP_SERVICE_SINGLETON;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 
 public class CreateGroupServlet extends HttpServlet {
 
-    private final GroupService groupService = GroupServiceImpl.getInstance();
-    private final ImageService avatarService = GroupAvatarServiceImpl.getInstance();
+    private final GroupService groupService = getServiceSingletonRegistry().getSingleton(GROUP_SERVICE_SINGLETON);
+    private final ImageService avatarService = getServiceSingletonRegistry().getSingleton(GROUP_AVATAR_SERVICE_SINGLETON);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

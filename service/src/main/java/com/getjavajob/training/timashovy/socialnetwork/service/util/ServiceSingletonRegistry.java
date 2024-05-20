@@ -10,13 +10,15 @@ public class ServiceSingletonRegistry implements SingletonRegistry {
 
     private ServiceSingletonRegistry() {}
 
-    public static ServiceSingletonRegistry getInstance() {
+    public static ServiceSingletonRegistry getServiceSingletonRegistry() {
         return INSTANCE;
     }
 
     @Override
-    public <T> void registerSingleton(String key, T singleton) {
-        singletons.put(key, singleton);
+    public synchronized <T> void registerSingleton(String key, T singleton) {
+        if (!singletons.containsKey(key)) {
+            singletons.put(key, singleton);
+        }
     }
 
     @Override

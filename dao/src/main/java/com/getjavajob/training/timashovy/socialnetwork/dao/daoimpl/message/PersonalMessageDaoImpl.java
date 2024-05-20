@@ -17,7 +17,7 @@ import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.d
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
-public final class PersonalMessageDaoImpl implements MessageDao {
+public class PersonalMessageDaoImpl implements MessageDao {
 
     private static final String CREATE = "INSERT INTO " + PERSONAL_MESSAGE_TABLE + " (account_author_id, " +
             "destination_id, message_text, message_image) VALUES (?, ?, ?, ?);";
@@ -36,7 +36,7 @@ public final class PersonalMessageDaoImpl implements MessageDao {
     private PersonalMessageDaoImpl() {
     }
 
-    public static PersonalMessageDaoImpl getInstance() {
+    public static PersonalMessageDaoImpl createInstance() {
         return PERSONAL_MESSAGE_DAO;
     }
 

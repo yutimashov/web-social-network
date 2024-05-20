@@ -4,10 +4,7 @@ import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountServiceImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group.GroupAvatarServiceImpl;
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group.GroupServiceImpl;
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.message.MessageServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,15 +12,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.ServiceSingletonRegistry.getServiceSingletonRegistry;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.ServiceSingletonsNames.*;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 import static java.lang.Long.valueOf;
 
 public class GroupInfoServlet extends HttpServlet {
 
-    private final GroupService groupService = GroupServiceImpl.getInstance();
-    private final GroupAvatarServiceImpl avatarService = GroupAvatarServiceImpl.getInstance();
-    private final MessageService messageService = MessageServiceImpl.getInstance();
-    private final AccountService accountService = AccountServiceImpl.getInstance();
+    private final GroupService groupService = getServiceSingletonRegistry().getSingleton(GROUP_SERVICE_SINGLETON);
+    private final GroupAvatarServiceImpl avatarService = getServiceSingletonRegistry()
+            .getSingleton(GROUP_AVATAR_SERVICE_SINGLETON);
+    private final MessageService messageService = getServiceSingletonRegistry().getSingleton(MESSAGE_SERVICE_SINGLETON);
+    private final AccountService accountService = getServiceSingletonRegistry().getSingleton(ACCOUNT_SERVICE_SINGLETON);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

@@ -2,12 +2,14 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.Group;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoSingletonRegistry;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group.GroupDaoImpl.getInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoSingletonNames.GROUP_DAO_SINGLETON;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoSingletonRegistry.getDaoRegistryInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,7 +20,7 @@ class GroupDaoImplTest {
     private static final String LOAD_DATA_INTO_TEST_TABLES_FILEPATH = "scripts/load_test_data.sql";
     private static final String EMPTY_TEST_TABLES_FILEPATH = "scripts/clear_test_db.sql";
     private static final String DROP_TEST_DB_FILEPATH = "scripts/drop_test_db.sql";
-    private static final BaseDao<Group> GROUP_DAO_INSTANCE = getInstance();
+    private static final BaseDao<Group> GROUP_DAO_INSTANCE = getDaoRegistryInstance().getSingleton(GROUP_DAO_SINGLETON);
     private static final Group TEST_GROUP = new Group("", "", 1L);
 
     private void restoreTestGroupDefaultState() {

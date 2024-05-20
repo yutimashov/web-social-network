@@ -14,7 +14,8 @@ import java.util.Optional;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.AccountRole.REGULAR;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AccountDaoImpl.getInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoSingletonNames.ACCOUNT_DAO_SINGLETON;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoSingletonRegistry.getDaoRegistryInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static java.time.LocalDate.of;
 import static java.util.Optional.empty;
@@ -26,7 +27,8 @@ class AccountDaoImplTest {
     private static final String LOAD_DATA_FILEPATH = "scripts/account/load.sql";
     private static final String CLEAR_TABLES_FILEPATH = "scripts/account/clear.sql";
     private static final String DROP_DB_FILEPATH = "scripts/account/drop.sql";
-    private static final BaseDao<Account> ACCOUNT_DAO_INSTANCE = getInstance();
+    private static final BaseDao<Account> ACCOUNT_DAO_INSTANCE = getDaoRegistryInstance()
+            .getSingleton(ACCOUNT_DAO_SINGLETON);
     private static final Account TEST_ACCOUNT = new Account.Builder()
             .id(1L)
             .firstName("")

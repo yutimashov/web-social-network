@@ -1,7 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.filters;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.LoginService;
+import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.LoginServiceImpl;
 
 import javax.servlet.*;
 import javax.servlet.http.Cookie;
@@ -10,14 +10,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.LoginService.getInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.ServiceSingletonRegistry.getServiceSingletonRegistry;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.ServiceSingletonsNames.LOGIN_SERVICE_SINGLETON;
 import static java.util.Objects.isNull;
 
 public class RememberMeFilter implements Filter {
 
     private static final String LOGIN_COOKIE_NAME = "login";
     private static final String PASSWORD_COOKIE_NAME = "password";
-    private final LoginService loginService = getInstance();
+    private final LoginServiceImpl loginService = getServiceSingletonRegistry().getSingleton(LOGIN_SERVICE_SINGLETON);
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)

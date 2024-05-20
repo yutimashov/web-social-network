@@ -6,7 +6,7 @@ import java.util.Map;
 public class DaoSingletonRegistry {
 
     private static final DaoSingletonRegistry DAO_REGISTRY_INSTANCE = new DaoSingletonRegistry();
-    private Map<String, Object> daoSingletons;
+    private final Map<String, Object> daoSingletons;
 
     private DaoSingletonRegistry() {
         daoSingletons = new HashMap<>();
@@ -16,12 +16,13 @@ public class DaoSingletonRegistry {
         return DAO_REGISTRY_INSTANCE;
     }
 
-    public void registerSingleton(String key, Object singleton) {
+    public synchronized <T> void registerSingleton(String key, T singleton) {
         daoSingletons.put(key, singleton);
     }
 
-    public Object getSingleton(String key) {
-        return daoSingletons.get(key);
+    @SuppressWarnings("unchecked")
+    public <T> T getSingleton(String key) {
+        return (T) daoSingletons.get(key);
     }
 
 }

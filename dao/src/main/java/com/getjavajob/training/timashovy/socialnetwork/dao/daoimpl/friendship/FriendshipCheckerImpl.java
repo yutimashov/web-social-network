@@ -20,7 +20,7 @@ public class FriendshipCheckerImpl implements FriendshipChecker {
     private FriendshipCheckerImpl() {
     }
 
-    public static FriendshipCheckerImpl getInstance() {
+    public static FriendshipCheckerImpl createInstance() {
         return FRIENDSHIP_CHECKER_INSTANCE;
     }
 

@@ -2,28 +2,29 @@ package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.grou
 
 import com.getjavajob.training.timashovy.socialnetwork.common.Group;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group.GroupDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.GroupDao;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupService;
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.ServiceSingletonRegistry.getServiceSingletonRegistry;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.ServiceSingletonsNames.ACCOUNT_SERVICE_SINGLETON;
+
 public class GroupServiceImpl implements GroupService {
 
-    private static final GroupServiceImpl GROUP_SERVICE_INSTANCE = new GroupServiceImpl();
+    private final GroupDao groupDaoInstance;
+    private final AccountService accountService;
 
-    private final GroupDao groupDaoInstance = GroupDaoImpl.getInstance();
-    private final AccountService accountService = AccountServiceImpl.getInstance();
-
-    private GroupServiceImpl() {
+    private GroupServiceImpl(GroupDao groupDaoInstance, AccountService accountService) {
+        this.groupDaoInstance = groupDaoInstance;
+        this.accountService = accountService;
     }
 
-    public static GroupServiceImpl getInstance() {
-        return GROUP_SERVICE_INSTANCE;
+    public static GroupServiceImpl createInstance(GroupDao groupDaoInstance, AccountService accountService) {
+        return new GroupServiceImpl(groupDaoInstance, accountService);
     }
 
     @Override
@@ -55,7 +56,7 @@ public class GroupServiceImpl implements GroupService {
     public List<Account> getIncomingRequests(Long groupId) {
         List<Long> accountsId = groupDaoInstance.getRequests(groupId);
         List<Account> accounts = new ArrayList<>();
-        AccountService accountService = AccountServiceImpl.getInstance();
+        AccountService accountService = getServiceSingletonRegistry().getSingleton(ACCOUNT_SERVICE_SINGLETON);
         for (Long accountId : accountsId) {
             if (accountService.getById(accountId).isPresent()) {
                 accounts.add(accountService.getById(accountId).get());

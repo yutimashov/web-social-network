@@ -3,10 +3,6 @@ package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.acco
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.AccountRole;
-import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AccountDaoImpl;
-import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PhoneDaoImpl;
-import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship.FriendshipCheckerImpl;
-import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship.FriendshipDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
@@ -40,22 +36,9 @@ public class AccountServiceImpl implements AccountService {
         this.phoneDao = phoneDao;
     }
 
-    private static class SingletonHolder {
-
-        private static final AccountServiceImpl INSTANCE;
-
-        static {
-            BaseDao<Account> accountDao = AccountDaoImpl.getInstance();
-            FriendshipDao friendshipDao = FriendshipDaoImpl.getInstance();
-            FriendshipChecker friendshipChecker = FriendshipCheckerImpl.getInstance();
-            PhoneDao phoneDao = PhoneDaoImpl.getInstance();
-            INSTANCE = new AccountServiceImpl(accountDao, friendshipDao, friendshipChecker, phoneDao);
-        }
-
-    }
-
-    public static AccountServiceImpl getInstance() {
-        return SingletonHolder.INSTANCE;
+    public static AccountServiceImpl createInstance(BaseDao<Account> accountDao, FriendshipDao friendshipDao,
+                                                    FriendshipChecker friendshipChecker, PhoneDao phoneDao) {
+        return new AccountServiceImpl(accountDao, friendshipDao, friendshipChecker, phoneDao);
     }
 
     /**

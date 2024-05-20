@@ -3,35 +3,30 @@ package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.acco
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Password;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
+import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.LoginService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
-import com.getjavajob.training.timashovy.socialnetwork.service.util.ServiceSingletonRegistry;
 
 import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.PasswordUtil.hashCredentialData;
-import static com.getjavajob.training.timashovy.socialnetwork.service.util.ServiceSingletonsNames.LOGIN_SERVICE_SINGLETON;
 import static java.util.Objects.isNull;
 import static java.util.Optional.empty;
 
-public class LoginService {
+public class LoginServiceImpl implements LoginService {
 
     private final AccountService accountService;
     private final PasswordService passwordService;
 
-    private LoginService(AccountService accountService, PasswordService passwordService) {
+    private LoginServiceImpl(AccountService accountService, PasswordService passwordService) {
         this.accountService = accountService;
         this.passwordService = passwordService;
     }
 
-    public static LoginService getInstance() {
-        return ServiceSingletonRegistry.getInstance().getSingleton(LOGIN_SERVICE_SINGLETON);
+    public static LoginServiceImpl createInstance(AccountService accountService, PasswordService passwordService) {
+        return new LoginServiceImpl(accountService, passwordService);
     }
 
-    public static void registerSingleton(AccountService accountService, PasswordService passwordService) {
-        ServiceSingletonRegistry.getInstance().registerSingleton(LOGIN_SERVICE_SINGLETON,
-                new LoginService(accountService, passwordService));
-    }
-
+    @Override
     public Optional<Account> getLoggedInAccount(String email, String password) {
         if (isNull(email) || isNull(password)) {
             return empty();

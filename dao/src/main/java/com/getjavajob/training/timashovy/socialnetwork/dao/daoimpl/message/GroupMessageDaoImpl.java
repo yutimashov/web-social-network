@@ -17,7 +17,7 @@ import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.d
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
-public final class GroupMessageDaoImpl implements MessageDao {
+public class GroupMessageDaoImpl implements MessageDao {
 
     private static final String CREATE = "INSERT INTO " + GROUP_MESSAGE_TABLE + " (account_author_id, group_id," +
             "message_text, message_image) VALUES (?, ?, ?, ?);";
@@ -29,7 +29,7 @@ public final class GroupMessageDaoImpl implements MessageDao {
             "creation_date FROM " + GROUP_MESSAGE_TABLE + " WHERE group_id = ? ORDER BY creation_date DESC;";
     private static final GroupMessageDaoImpl MESSAGE_DAO = new GroupMessageDaoImpl();
 
-    public static GroupMessageDaoImpl getInstance() {
+    public static GroupMessageDaoImpl createInstance() {
         return MESSAGE_DAO;
     }
 

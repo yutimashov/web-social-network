@@ -14,7 +14,7 @@ import static java.util.stream.Collectors.toList;
 public class PhoneServiceImpl {
 
     private static final PhoneServiceImpl PHONE_SERVICE_IMPL = new PhoneServiceImpl();
-    private final PhoneDao phoneDao = PhoneDaoImpl.getInstance();
+    private final PhoneDao phoneDao = PhoneDaoImpl.createInstance();
 
     private PhoneServiceImpl() {
     }

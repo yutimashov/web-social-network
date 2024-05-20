@@ -10,11 +10,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.ServiceSingletonRegistry.getServiceSingletonRegistry;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.ServiceSingletonsNames.MESSAGE_SERVICE_SINGLETON;
 import static java.lang.Long.valueOf;
 
 public class SendMessageServlet extends HttpServlet {
 
-    private final MessageServiceImpl messageService = MessageServiceImpl.getInstance();
+    private final MessageServiceImpl messageService = getServiceSingletonRegistry()
+            .getSingleton(MESSAGE_SERVICE_SINGLETON);
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

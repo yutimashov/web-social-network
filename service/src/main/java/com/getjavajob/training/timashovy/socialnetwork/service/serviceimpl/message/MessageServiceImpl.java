@@ -2,31 +2,33 @@ package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.mess
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.message.Message;
-import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.GroupMessageDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.PersonalMessageDaoImpl;
-import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.PersonalWallMessageDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.MessageDao;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MessageServiceImpl implements MessageService {
 
-    private final MessageDao groupMessageDao = GroupMessageDaoImpl.getInstance();
-    private final MessageDao accountWallMessageDao = PersonalWallMessageDaoImpl.getInstance();
-    private final PersonalMessageDaoImpl personalMessageDao = PersonalMessageDaoImpl.getInstance();
-    private final AccountService accountService = AccountServiceImpl.getInstance();
+    private final MessageDao groupMessageDao;
+    private final MessageDao accountWallMessageDao;
+    private final PersonalMessageDaoImpl personalMessageDao;
+    private final AccountService accountService;
 
-    private static final MessageServiceImpl MESSAGE_SERVICE = new MessageServiceImpl();
-
-    private MessageServiceImpl() {
+    private MessageServiceImpl(MessageDao groupMessageDao, MessageDao accountWallMessageDao,
+                               PersonalMessageDaoImpl personalMessageDao, AccountService accountService) {
+        this.groupMessageDao = groupMessageDao;
+        this.accountWallMessageDao = accountWallMessageDao;
+        this.personalMessageDao = personalMessageDao;
+        this.accountService = accountService;
     }
 
-    public static MessageServiceImpl getInstance() {
-        return MESSAGE_SERVICE;
+    public static MessageServiceImpl createInstance(MessageDao groupMessageDao, MessageDao accountWallMessageDao,
+                                                    PersonalMessageDaoImpl personalMessageDao,
+                                                    AccountService accountService) {
+        return new MessageServiceImpl(groupMessageDao, accountWallMessageDao, personalMessageDao, accountService);
     }
 
     @Override

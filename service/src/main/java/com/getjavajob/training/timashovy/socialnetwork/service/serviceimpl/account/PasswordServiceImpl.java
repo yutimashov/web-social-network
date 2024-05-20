@@ -23,7 +23,7 @@ public class PasswordServiceImpl implements PasswordService {
         private static final PasswordServiceImpl INSTANCE;
 
         static {
-            PasswordDao passwordDao = PasswordDaoImpl.getInstance();
+            PasswordDao passwordDao = PasswordDaoImpl.createInstance();
             INSTANCE = new PasswordServiceImpl(passwordDao);
         }
 

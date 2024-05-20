@@ -21,7 +21,7 @@ import static java.util.Objects.isNull;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
-public final class GroupDaoImpl implements BaseDao<Group>, GroupDao, TableConstraintsValidator {
+public class GroupDaoImpl implements BaseDao<Group>, GroupDao, TableConstraintsValidator {
 
     private static final GroupDaoImpl GROUP_DAO_INSTANCE = new GroupDaoImpl();
     private static final String SAVE_GROUP = "INSERT INTO " + GROUP_TABLE + " (group_name, description, owner_id) "
@@ -57,7 +57,7 @@ public final class GroupDaoImpl implements BaseDao<Group>, GroupDao, TableConstr
     private GroupDaoImpl() {
     }
 
-    public static GroupDaoImpl getInstance() {
+    public static GroupDaoImpl createInstance() {
         return GROUP_DAO_INSTANCE;
     }
 

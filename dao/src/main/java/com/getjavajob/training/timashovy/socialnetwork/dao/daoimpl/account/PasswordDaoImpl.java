@@ -31,7 +31,7 @@ public class PasswordDaoImpl implements PasswordDao {
     private PasswordDaoImpl() {
     }
 
-    public static PasswordDaoImpl getInstance() {
+    public static PasswordDaoImpl createInstance() {
         return PASSWORD_DAO_INSTANCE;
     }
 

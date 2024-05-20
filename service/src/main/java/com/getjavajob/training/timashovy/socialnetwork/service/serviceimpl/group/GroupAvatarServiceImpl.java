@@ -7,14 +7,14 @@ import java.io.InputStream;
 
 public class GroupAvatarServiceImpl implements ImageService {
 
-    private static final GroupAvatarServiceImpl GROUP_AVATAR_SERVICE = new GroupAvatarServiceImpl();
-    private final GroupAvatarDaoImpl avatarDao = GroupAvatarDaoImpl.getInstance();
+    private final GroupAvatarDaoImpl avatarDao;
 
-    private GroupAvatarServiceImpl() {
+    private GroupAvatarServiceImpl(GroupAvatarDaoImpl avatarDao) {
+        this.avatarDao = avatarDao;
     }
 
-    public static GroupAvatarServiceImpl getInstance() {
-        return GROUP_AVATAR_SERVICE;
+    public static GroupAvatarServiceImpl createInstance(GroupAvatarDaoImpl avatarDao) {
+        return new GroupAvatarServiceImpl(avatarDao);
     }
 
     @Override

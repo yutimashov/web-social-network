@@ -10,7 +10,7 @@ import java.sql.SQLException;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
 
-public final class GroupAvatarDaoImpl implements ImageDao {
+public class GroupAvatarDaoImpl implements ImageDao {
 
     private static final GroupAvatarDaoImpl GROUP_AVATAR_DAO = new GroupAvatarDaoImpl();
     private static final String UPLOAD_GROUP_AVATAR = "INSERT INTO group_data.group_avatars (group_id,"
@@ -23,7 +23,7 @@ public final class GroupAvatarDaoImpl implements ImageDao {
     private GroupAvatarDaoImpl() {
     }
 
-    public static GroupAvatarDaoImpl getInstance() {
+    public static GroupAvatarDaoImpl createInstance() {
         return GROUP_AVATAR_DAO;
     }
 

@@ -2,8 +2,6 @@ package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.sear
 
 import com.getjavajob.training.timashovy.socialnetwork.common.Group;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.search.SearchAccountDaoImpl;
-import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.search.SearchGroupDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.SearchDao;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.SearchService;
 
@@ -11,15 +9,16 @@ import java.util.List;
 
 public class SearchServiceImpl implements SearchService {
 
-    private static final SearchServiceImpl SEARCH_SERVICE = new SearchServiceImpl();
-    private final SearchDao<Account> searchAccountDao = SearchAccountDaoImpl.getInstance();
-    private final SearchDao<Group> searchGroupDao = SearchGroupDaoImpl.getInstance();
+    private final SearchDao<Account> searchAccountDao;
+    private final SearchDao<Group> searchGroupDao;
 
-    private SearchServiceImpl() {
+    private SearchServiceImpl(SearchDao<Account> searchAccountDao, SearchDao<Group> searchGroupDao) {
+        this.searchAccountDao = searchAccountDao;
+        this.searchGroupDao = searchGroupDao;
     }
 
-    public static SearchServiceImpl getInstance() {
-        return SEARCH_SERVICE;
+    public static SearchServiceImpl createInstance(SearchDao<Account> searchAccountDao, SearchDao<Group> searchGroupDao) {
+        return new SearchServiceImpl(searchAccountDao, searchGroupDao);
     }
 
     @Override

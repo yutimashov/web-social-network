@@ -8,13 +8,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AdminServiceImpl.getAdminServiceImpl;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.ServiceSingletonRegistry.getServiceSingletonRegistry;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.ServiceSingletonsNames.ADMIN_SERVICE_SINGLETON;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.ServletPaths.ACCOUNT_SERVLET_PATH;
 import static java.lang.Long.valueOf;
 
 public class MakeAppAdminServlet extends HttpServlet {
 
-    private final AdminService adminService = getAdminServiceImpl();
+    private final AdminService adminService = getServiceSingletonRegistry().getSingleton(ADMIN_SERVICE_SINGLETON);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

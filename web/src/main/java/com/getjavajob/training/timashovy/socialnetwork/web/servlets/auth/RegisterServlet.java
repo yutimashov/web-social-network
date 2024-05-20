@@ -3,8 +3,6 @@ package com.getjavajob.training.timashovy.socialnetwork.web.servlets.auth;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountServiceImpl;
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.PasswordServiceImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.PhoneServiceImpl;
 
 import javax.servlet.ServletException;
@@ -15,6 +13,8 @@ import java.io.IOException;
 
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.ServiceSingletonRegistry.getServiceSingletonRegistry;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.ServiceSingletonsNames.*;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.ErrorTypes.ACCOUNT_REGISTRATION_ERROR;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspPagePaths.REGISTER_PAGE;
@@ -22,9 +22,9 @@ import static com.getjavajob.training.timashovy.socialnetwork.web.util.ServletPa
 
 public class RegisterServlet extends HttpServlet {
 
-    private final AccountService accountService = AccountServiceImpl.getInstance();
-    private final PasswordService passwordService = PasswordServiceImpl.getInstance();
-    private final PhoneServiceImpl phoneService = PhoneServiceImpl.getInstance();
+    private final AccountService accountService = getServiceSingletonRegistry().getSingleton(ACCOUNT_SERVICE_SINGLETON);
+    private final PasswordService passwordService = getServiceSingletonRegistry().getSingleton(PASSWORD_SERVICE_SINGLETON);
+    private final PhoneServiceImpl phoneService = getServiceSingletonRegistry().getSingleton(PHONE_SERVICE_SINGLETON);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
