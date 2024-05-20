@@ -1,4 +1,6 @@
-package com.getjavajob.training.timashovy.socialnetwork.service.util;
+package com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry;
+
+import com.getjavajob.training.timashovy.socialnetwork.dao.util.singletonsregistry.SingletonRegistry;
 
 import java.util.HashMap;
 import java.util.Map;

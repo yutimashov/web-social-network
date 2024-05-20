@@ -2,7 +2,6 @@ package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.acco
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType;
-import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PhoneDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
 
 import java.util.List;
@@ -13,14 +12,14 @@ import static java.util.stream.Collectors.toList;
 
 public class PhoneServiceImpl {
 
-    private static final PhoneServiceImpl PHONE_SERVICE_IMPL = new PhoneServiceImpl();
-    private final PhoneDao phoneDao = PhoneDaoImpl.createInstance();
+    private final PhoneDao phoneDao;
 
-    private PhoneServiceImpl() {
+    private PhoneServiceImpl(PhoneDao phoneDao) {
+        this.phoneDao = phoneDao;
     }
 
-    public static PhoneServiceImpl getInstance() {
-        return PHONE_SERVICE_IMPL;
+    public static PhoneServiceImpl createInstance(PhoneDao phoneDao) {
+        return new PhoneServiceImpl(phoneDao);
     }
 
     public void createPhone(Long accountId, String phoneNumbers, PhoneType phoneType) {

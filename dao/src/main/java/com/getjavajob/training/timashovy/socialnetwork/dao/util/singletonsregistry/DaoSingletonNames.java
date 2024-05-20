@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.dao.util;
+package com.getjavajob.training.timashovy.socialnetwork.dao.util.singletonsregistry;
 
 public class DaoSingletonNames {
 

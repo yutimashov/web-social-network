@@ -2,14 +2,13 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.Group;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoSingletonRegistry;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoSingletonNames.GROUP_DAO_SINGLETON;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoSingletonRegistry.getDaoRegistryInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.singletonsregistry.DaoSingletonNames.GROUP_DAO_SINGLETON;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.singletonsregistry.DaoSingletonRegistry.getDaoRegistryInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.*;

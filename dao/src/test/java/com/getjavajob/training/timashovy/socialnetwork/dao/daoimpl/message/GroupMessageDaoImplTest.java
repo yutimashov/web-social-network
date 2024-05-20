@@ -7,9 +7,8 @@ import org.junit.jupiter.api.*;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoSingletonNames.GROUP_DAO_SINGLETON;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoSingletonNames.GROUP_MESSAGE_DAO_SINGLETON;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoSingletonRegistry.getDaoRegistryInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.singletonsregistry.DaoSingletonNames.GROUP_MESSAGE_DAO_SINGLETON;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.singletonsregistry.DaoSingletonRegistry.getDaoRegistryInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-import static com.getjavajob.training.timashovy.socialnetwork.service.util.ServiceSingletonRegistry.getServiceSingletonRegistry;
-import static com.getjavajob.training.timashovy.socialnetwork.service.util.ServiceSingletonsNames.SEARCH_SERVICE_SINGLETON;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonRegistry.getServiceSingletonRegistry;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.SEARCH_SERVICE_SINGLETON;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspPagePaths.SEARCH_RESULT;
 import static java.lang.Integer.parseInt;

@@ -13,8 +13,8 @@ import java.io.IOException;
 
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
-import static com.getjavajob.training.timashovy.socialnetwork.service.util.ServiceSingletonRegistry.getServiceSingletonRegistry;
-import static com.getjavajob.training.timashovy.socialnetwork.service.util.ServiceSingletonsNames.*;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonRegistry.getServiceSingletonRegistry;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.*;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.ErrorTypes.ACCOUNT_REGISTRATION_ERROR;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspPagePaths.REGISTER_PAGE;

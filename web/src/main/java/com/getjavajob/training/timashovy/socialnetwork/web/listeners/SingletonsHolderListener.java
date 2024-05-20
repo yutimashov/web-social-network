@@ -12,21 +12,21 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.Perso
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.PersonalWallMessageDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.search.SearchAccountDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.search.SearchGroupDaoImpl;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoSingletonRegistry;
+import com.getjavajob.training.timashovy.socialnetwork.dao.util.singletonsregistry.DaoSingletonRegistry;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.*;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group.GroupAvatarServiceImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group.GroupServiceImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.message.MessageServiceImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.search.SearchServiceImpl;
-import com.getjavajob.training.timashovy.socialnetwork.service.util.SingletonRegistry;
+import com.getjavajob.training.timashovy.socialnetwork.dao.util.singletonsregistry.SingletonRegistry;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoSingletonNames.*;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoSingletonRegistry.getDaoRegistryInstance;
-import static com.getjavajob.training.timashovy.socialnetwork.service.util.ServiceSingletonRegistry.getServiceSingletonRegistry;
-import static com.getjavajob.training.timashovy.socialnetwork.service.util.ServiceSingletonsNames.*;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.singletonsregistry.DaoSingletonNames.*;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.singletonsregistry.DaoSingletonRegistry.getDaoRegistryInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonRegistry.getServiceSingletonRegistry;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.*;
 
 public class SingletonsHolderListener implements ServletContextListener {
 
@@ -61,7 +61,9 @@ public class SingletonsHolderListener implements ServletContextListener {
                 getDaoRegistryInstance().getSingleton(FRIENDSHIP_CHECKER_SINGLETON),
                 getDaoRegistryInstance().getSingleton(PHONE_DAO_SINGLETON)
         ));
-        serviceSingletonRegistry.registerSingleton(PASSWORD_SERVICE_SINGLETON, PasswordServiceImpl.getInstance());
+        serviceSingletonRegistry.registerSingleton(PASSWORD_SERVICE_SINGLETON, PasswordServiceImpl.createInstance(
+                getDaoRegistryInstance().getSingleton(PASSWORD_DAO_SINGLETON)
+        ));
         serviceSingletonRegistry.registerSingleton(LOGIN_SERVICE_SINGLETON, LoginServiceImpl.createInstance(
                 getServiceSingletonRegistry().getSingleton(ACCOUNT_SERVICE_SINGLETON),
                 getServiceSingletonRegistry().getSingleton(PASSWORD_SERVICE_SINGLETON)
@@ -75,7 +77,9 @@ public class SingletonsHolderListener implements ServletContextListener {
                 getDaoRegistryInstance().getSingleton(PERSONAL_MESSAGE_DAO_SINGLETON),
                 getServiceSingletonRegistry().getSingleton(ACCOUNT_SERVICE_SINGLETON)
         ));
-        serviceSingletonRegistry.registerSingleton(PHONE_SERVICE_SINGLETON, PhoneServiceImpl.getInstance());
+        serviceSingletonRegistry.registerSingleton(PHONE_SERVICE_SINGLETON, PhoneServiceImpl.createInstance(
+                getDaoRegistryInstance().getSingleton(PHONE_DAO_SINGLETON)
+        ));
         serviceSingletonRegistry.registerSingleton(GROUP_SERVICE_SINGLETON, GroupServiceImpl.createInstance(
                 getDaoRegistryInstance().getSingleton(GROUP_DAO_SINGLETON),
                 getServiceSingletonRegistry().getSingleton(ACCOUNT_SERVICE_SINGLETON)

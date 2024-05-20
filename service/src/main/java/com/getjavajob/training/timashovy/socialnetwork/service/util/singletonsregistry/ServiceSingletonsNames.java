@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.service.util;
+package com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry;
 
 public class ServiceSingletonsNames {
 

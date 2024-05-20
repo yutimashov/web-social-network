@@ -55,10 +55,12 @@
     <c:forEach var="phone" items="${requestScope.account.personalPhoneNumber}">
         &nbsp;&nbsp;<span>${phone.number}</span><br>
     </c:forEach>
+    <br>
     <span>Working phones:</span>
     <c:forEach var="phone" items="${requestScope.account.workPhoneNumber}">
         &nbsp;&nbsp;<span>${phone.number}</span><br>
     </c:forEach>
+    <br>
     <span>Personal address: ${requestScope.account.personalAddress}</span><br>
     <span>Email: ${requestScope.account.email}</span><br>
     <span>ICQ: ${requestScope.account.icq}</span><br>
