@@ -33,7 +33,7 @@ public class PasswordServiceImpl implements PasswordService {
     }
 
     @Override
-    public Password findPasswordByEmail(String email) {
+    public Optional<Password> findPasswordByEmail(String email) {
         return passwordDao.findByEmail(email);
     }
 

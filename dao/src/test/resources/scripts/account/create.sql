@@ -27,3 +27,12 @@ CREATE TABLE account_data.account_phones
     phone_number VARCHAR(32) NOT NULL,
     CONSTRAINT fk_account FOREIGN KEY (account_id) REFERENCES account_data.accounts (id) ON DELETE CASCADE
 );
+SET SCHEMA account_data;
+CREATE TABLE account_data.account_passwords
+(
+    id            INT PRIMARY KEY AUTO_INCREMENT,
+    account_id    INT,
+    hash_password VARCHAR(64),
+    salt          VARCHAR(32),
+    CONSTRAINT fk_pass_account FOREIGN KEY (account_id) REFERENCES account_data.accounts (id) ON DELETE CASCADE
+);

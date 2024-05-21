@@ -8,10 +8,8 @@ public interface PasswordDao {
 
     Long create(Long accountId, Password password);
 
-    boolean update(Password password);
-
     Optional<Password> getById(Long accountId);
 
-    Password findByEmail(String email);
+    Optional<Password> findByEmail(String email);
 
 }

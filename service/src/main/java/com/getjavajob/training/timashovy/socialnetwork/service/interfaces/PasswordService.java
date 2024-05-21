@@ -10,6 +10,6 @@ public interface PasswordService {
 
     Optional<Password> get(Long accountId);
 
-    Password findPasswordByEmail(String email);
+    Optional<Password> findPasswordByEmail(String email);
 
 }

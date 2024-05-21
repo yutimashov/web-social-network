@@ -51,13 +51,8 @@ public class PasswordDaoImpl implements PasswordDao {
                 throw new DaoException("dao: create password method failed: no rows affected.");
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DaoException("dao: create password method failed: " + e.getMessage());
         }
-    }
-
-    @Override
-    public boolean update(Password password) {
-        return false;
     }
 
     @Override
@@ -76,15 +71,15 @@ public class PasswordDaoImpl implements PasswordDao {
     }
 
     @Override
-    public Password findByEmail(String email) {
+    public Optional<Password> findByEmail(String email) {
         try (PreparedStatement preparedStatement = getPreparedStatement(GET_BY_ACCOUNT_EMAIL)) {
             preparedStatement.setString(1, email);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                return new Password(resultSet.getLong("account_id"), resultSet.getString("hash_password"),
-                        resultSet.getString("salt"));
+                return of(new Password(resultSet.getLong("account_id"), resultSet.getString("hash_password"),
+                        resultSet.getString("salt")));
             } else {
-                return null;
+                return empty();
             }
         } catch (SQLException e) {
             throw new DaoException("dao: get password by email method failed: " + e.getMessage());

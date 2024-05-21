@@ -7,3 +7,5 @@ VALUES ('test', 'test', 'test', '2000-01-01', 'test', 'test', 'test', 'test', 't
 INSERT INTO account_data.account_phones (account_id, phone_type, phone_number)
 VALUES ('1', 'PERSONAL', '+375291112233'),
        ('1', 'WORKING', '+375291112233');
+INSERT INTO account_data.account_passwords (account_id, hash_password, salt)
+VALUES ('1', 'test', 'test');

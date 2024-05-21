@@ -28,13 +28,10 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public Optional<Account> getLoggedInAccount(String email, String password) {
-        if (isNull(email) || isNull(password)) {
+        if (isNull(email) || isNull(password) || !passwordService.findPasswordByEmail(email).isPresent()) {
             return empty();
         }
-        Password dbPassword = passwordService.findPasswordByEmail(email);
-        if (isNull(dbPassword)) {
-            return empty();
-        }
+        Password dbPassword = passwordService.findPasswordByEmail(email).get();
         String dbPasswordValue = dbPassword.getPassword();
         String verifyingSaltedPasswordValue = hashCredentialData(password, dbPassword.getSalt());
         return dbPasswordValue.equals(verifyingSaltedPasswordValue)
