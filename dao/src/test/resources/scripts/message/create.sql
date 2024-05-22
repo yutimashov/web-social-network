@@ -19,7 +19,7 @@ CREATE TABLE account_data.accounts
 );
 CREATE SCHEMA group_data;
 SET SCHEMA group_data;
-CREATE TABLE group_data."group"
+CREATE TABLE group_data.groups
 (
     id            INT PRIMARY KEY AUTO_INCREMENT,
     group_name    VARCHAR(255) NOT NULL UNIQUE,
@@ -34,28 +34,8 @@ CREATE TABLE message_data.group_messages
 (
     id                INT PRIMARY KEY AUTO_INCREMENT,
     account_author_id INT REFERENCES account_data.accounts (id) ON DELETE CASCADE,
-    group_id          INT REFERENCES group_data."group" (id) ON DELETE CASCADE,
+    group_id          INT REFERENCES group_data.groups (id) ON DELETE CASCADE,
     creation_date     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     message_text      TEXT,
     message_image     BLOB
-);
-SET SCHEMA message_data;
-CREATE TABLE message_data.personal_messages
-(
-    id                INT PRIMARY KEY AUTO_INCREMENT,
-    account_author_id INT REFERENCES account_data.accounts (id) ON DELETE CASCADE,
-    destination_id    INT REFERENCES account_data.accounts (id) ON DELETE CASCADE,
-    creation_date     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    message_text      TEXT,
-    message_image     BLOB
-);
-SET SCHEMA message_data;
-CREATE TABLE message_data.personal_wall_messages
-(
-    id                  INT PRIMARY KEY AUTO_INCREMENT,
-    account_author_id   INT REFERENCES account_data.accounts (id) ON DELETE CASCADE,
-    account_receiver_id INT REFERENCES account_data.accounts (id) ON DELETE CASCADE,
-    creation_date       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    message_text        TEXT,
-    message_image       BLOB
 );

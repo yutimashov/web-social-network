@@ -1,6 +1,6 @@
-package com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils;
+package com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames;
 
-public final class AccountTableFields {
+public class AccountTableFields {
 
     public static final String ACCOUNT_ID_FIELD = "id";
     public static final String ACCOUNT_FIRST_NAME_FIELD = "first_name";

@@ -9,6 +9,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.FriendshipTableFields.FRIENDSHIP_ACCEPTER_FIELD;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.FriendshipTableFields.FRIENDSHIP_REQUESTER_FIELD;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.FRIENDSHIP_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
 
@@ -16,7 +18,7 @@ public class FriendshipDaoImpl implements FriendshipDao {
 
     private static final FriendshipDaoImpl FRIENDSHIP_DAO_INSTANCE = new FriendshipDaoImpl();
     private static final String ACCEPT_REQUEST = "UPDATE " + FRIENDSHIP_TABLE + " SET status = TRUE " +
-            "WHERE accepter_id = ? AND requester_id = ?;";
+            "WHERE " + FRIENDSHIP_ACCEPTER_FIELD + " = ? AND " + FRIENDSHIP_REQUESTER_FIELD + " = ?;";
     private static final String GET_FRIENDS = "SELECT id_1 FROM " + FRIENDSHIP_TABLE + " WHERE id_2 = ? "
             + "AND status = TRUE UNION SELECT id_2 FROM " + FRIENDSHIP_TABLE + " WHERE id_1 = ? AND status = TRUE;";
     private static final String DELETE_FRIEND = "DELETE FROM " + FRIENDSHIP_TABLE + " WHERE id_1 = ? AND id_2 = ?;";

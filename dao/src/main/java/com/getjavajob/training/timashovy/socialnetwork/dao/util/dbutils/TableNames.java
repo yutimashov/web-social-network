@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils;
 
-public final class TableNames {
+public class TableNames {
 
     public static final String ACCOUNT_TABLE = "account_data.accounts";
     public static final String ACCOUNT_PASSWORDS_TABLE = "account_data.account_passwords";

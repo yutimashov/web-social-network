@@ -19,15 +19,15 @@ import static java.util.Optional.of;
 
 public class PersonalMessageDaoImpl implements MessageDao {
 
-    private static final String CREATE = "INSERT INTO " + PERSONAL_MESSAGE_TABLE + " (account_author_id, " +
-            "destination_id, message_text, message_image) VALUES (?, ?, ?, ?);";
+    private static final String CREATE = "INSERT INTO " + PERSONAL_MESSAGE_TABLE + " (account_author_id, "
+            + "destination_id, message_text, message_image) VALUES (?, ?, ?, ?);";
     private static final String GET_ALL_ACCOUNT_IDS = "SELECT DISTINCT account_author_id FROM " + PERSONAL_MESSAGE_TABLE
             + " WHERE destination_id = ? UNION SELECT DISTINCT destination_id FROM " + PERSONAL_MESSAGE_TABLE
             + " WHERE account_author_id = ?;";
-    private static final String GET_ALL_PRIVATE_MESSAGES_WITH_ACCOUNT = "SELECT id, account_author_id, destination_id, " +
-            "message_text, message_image, creation_date FROM " + PERSONAL_MESSAGE_TABLE + " WHERE account_author_id = " +
-            "? AND destination_id = ? UNION SELECT id, account_author_id, destination_id, message_text, message_image" +
-            ", creation_date FROM " + PERSONAL_MESSAGE_TABLE + " WHERE account_author_id = ? AND destination_id = ? "
+    private static final String GET_ALL_PRIVATE_MESSAGES_WITH_ACCOUNT = "SELECT id, account_author_id, destination_id, "
+            + "message_text, message_image, creation_date FROM " + PERSONAL_MESSAGE_TABLE + " WHERE account_author_id = "
+            + "? AND destination_id = ? UNION SELECT id, account_author_id, destination_id, message_text, message_image"
+            + ", creation_date FROM " + PERSONAL_MESSAGE_TABLE + " WHERE account_author_id = ? AND destination_id = ? "
             + "ORDER BY creation_date DESC;";
     private static final String GET_BY_ID = "SELECT id, account_author_id, creation_date, message_text, " +
             "message_image, destination_id FROM " + PERSONAL_MESSAGE_TABLE + " WHERE id = ?;";

@@ -4,11 +4,11 @@ import com.getjavajob.training.timashovy.socialnetwork.common.message.Message;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.MessageDao;
 import org.junit.jupiter.api.*;
 
-import java.time.LocalDate;
 import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.GroupMessageDaoImpl.createInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
+import static java.time.LocalDate.of;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GroupMessageDaoImplTest {
@@ -24,7 +24,7 @@ class GroupMessageDaoImplTest {
             .destinationId(1L)
             .accountAuthorId(1L)
             .text("test")
-            .creationDate(LocalDate.of(2020, 1, 1))
+            .creationDate(of(2020, 1, 1))
             .build();
 
     @BeforeAll
