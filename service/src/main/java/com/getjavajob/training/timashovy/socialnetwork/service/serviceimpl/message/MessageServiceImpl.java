@@ -25,7 +25,7 @@ public class MessageServiceImpl implements MessageService {
         this.accountService = accountService;
     }
 
-    public static MessageServiceImpl createInstance(MessageDao groupMessageDao, MessageDao accountWallMessageDao,
+    public static MessageService createInstance(MessageDao groupMessageDao, MessageDao accountWallMessageDao,
                                                     PersonalMessageDaoImpl personalMessageDao,
                                                     AccountService accountService) {
         return new MessageServiceImpl(groupMessageDao, accountWallMessageDao, personalMessageDao, accountService);

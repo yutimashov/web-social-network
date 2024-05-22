@@ -24,7 +24,7 @@ public class SearchGroupDaoImpl implements SearchDao<Group> {
     private SearchGroupDaoImpl() {
     }
 
-    public static SearchGroupDaoImpl createInstance() {
+    public static SearchDao<Group> createInstance() {
         return SEARCH_GROUP_DAO;
     }
 

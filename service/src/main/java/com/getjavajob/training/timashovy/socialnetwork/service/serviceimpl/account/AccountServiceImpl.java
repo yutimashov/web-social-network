@@ -36,7 +36,7 @@ public class AccountServiceImpl implements AccountService {
         this.phoneDao = phoneDao;
     }
 
-    public static AccountServiceImpl createInstance(BaseDao<Account> accountDao, FriendshipDao friendshipDao,
+    public static AccountService createInstance(BaseDao<Account> accountDao, FriendshipDao friendshipDao,
                                                     FriendshipChecker friendshipChecker, PhoneDao phoneDao) {
         return new AccountServiceImpl(accountDao, friendshipDao, friendshipChecker, phoneDao);
     }

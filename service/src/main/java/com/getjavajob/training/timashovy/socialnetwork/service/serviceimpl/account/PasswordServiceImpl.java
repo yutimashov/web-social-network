@@ -17,7 +17,7 @@ public class PasswordServiceImpl implements PasswordService {
         this.passwordDao = passwordDao;
     }
 
-    public static PasswordServiceImpl createInstance(PasswordDao passwordDao) {
+    public static PasswordService createInstance(PasswordDao passwordDao) {
         return new PasswordServiceImpl(passwordDao);
     }
 

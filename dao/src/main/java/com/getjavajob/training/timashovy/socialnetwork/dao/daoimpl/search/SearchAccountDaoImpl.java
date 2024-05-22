@@ -24,7 +24,7 @@ public class SearchAccountDaoImpl implements SearchDao<Account> {
     private SearchAccountDaoImpl() {
     }
 
-    public static SearchAccountDaoImpl createInstance() {
+    public static SearchDao<Account> createInstance() {
         return SEARCH_ACCOUNT_DAO;
     }
 

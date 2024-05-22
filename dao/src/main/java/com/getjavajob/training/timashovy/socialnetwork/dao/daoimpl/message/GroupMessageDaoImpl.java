@@ -30,7 +30,7 @@ public class GroupMessageDaoImpl implements MessageDao {
             + "creation_date FROM " + GROUP_MESSAGE_TABLE + " WHERE group_id = ? ORDER BY creation_date DESC;";
     private static final GroupMessageDaoImpl MESSAGE_DAO = new GroupMessageDaoImpl();
 
-    public static GroupMessageDaoImpl createInstance() {
+    public static MessageDao createInstance() {
         return MESSAGE_DAO;
     }
 

@@ -27,7 +27,7 @@ public class PhoneDaoImpl implements PhoneDao {
     private PhoneDaoImpl() {
     }
 
-    public static PhoneDaoImpl createInstance() {
+    public static PhoneDao createInstance() {
         return PHONE_DAO_IMPL;
     }
 

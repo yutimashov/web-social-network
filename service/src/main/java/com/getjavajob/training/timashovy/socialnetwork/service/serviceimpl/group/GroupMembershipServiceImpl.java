@@ -21,7 +21,7 @@ public class GroupMembershipServiceImpl implements GroupMembershipService {
         this.groupMembershipDao = groupMembershipDao;
     }
 
-    public static GroupMembershipServiceImpl createInstance(AccountService accountService,
+    public static GroupMembershipService createInstance(AccountService accountService,
                                                             GroupMembershipDao groupMembershipDao) {
         return new GroupMembershipServiceImpl(accountService, groupMembershipDao);
     }

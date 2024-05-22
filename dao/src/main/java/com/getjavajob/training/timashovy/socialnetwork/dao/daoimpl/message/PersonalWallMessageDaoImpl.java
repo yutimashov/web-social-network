@@ -31,7 +31,7 @@ public class PersonalWallMessageDaoImpl implements MessageDao {
     private PersonalWallMessageDaoImpl() {
     }
 
-    public static PersonalWallMessageDaoImpl createInstance() {
+    public static MessageDao createInstance() {
         return PERSONAL_WALL_MESSAGE_DAO;
     }
 

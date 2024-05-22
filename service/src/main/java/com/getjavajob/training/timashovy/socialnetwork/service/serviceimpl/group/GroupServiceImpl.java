@@ -15,7 +15,7 @@ public class GroupServiceImpl implements GroupService {
         this.groupDaoInstance = groupDaoInstance;
     }
 
-    public static GroupServiceImpl createInstance(BaseDao<Group> groupDaoInstance) {
+    public static GroupService createInstance(BaseDao<Group> groupDaoInstance) {
         return new GroupServiceImpl(groupDaoInstance);
     }
 

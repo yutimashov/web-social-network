@@ -22,7 +22,7 @@ public class LoginServiceImpl implements LoginService {
         this.passwordService = passwordService;
     }
 
-    public static LoginServiceImpl createInstance(AccountService accountService, PasswordService passwordService) {
+    public static LoginService createInstance(AccountService accountService, PasswordService passwordService) {
         return new LoginServiceImpl(accountService, passwordService);
     }
 

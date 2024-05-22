@@ -36,7 +36,7 @@ public class PersonalMessageDaoImpl implements MessageDao {
     private PersonalMessageDaoImpl() {
     }
 
-    public static PersonalMessageDaoImpl createInstance() {
+    public static MessageDao createInstance() {
         return PERSONAL_MESSAGE_DAO;
     }
 

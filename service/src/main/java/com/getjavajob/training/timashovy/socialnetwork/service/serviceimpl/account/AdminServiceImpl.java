@@ -13,7 +13,7 @@ public class AdminServiceImpl implements AdminService {
         this.accountService = accountService;
     }
 
-    public static AdminServiceImpl createInstance(AccountService accountService) {
+    public static AdminService createInstance(AccountService accountService) {
         return new AdminServiceImpl(accountService);
     }
 

@@ -22,7 +22,7 @@ public class FriendshipCheckerDaoImpl implements FriendshipChecker {
     private FriendshipCheckerDaoImpl() {
     }
 
-    public static FriendshipCheckerDaoImpl createInstance() {
+    public static FriendshipChecker createInstance() {
         return FRIENDSHIP_CHECKER_INSTANCE;
     }
 

@@ -35,7 +35,7 @@ public class FriendshipDaoImpl implements FriendshipDao {
     private FriendshipDaoImpl() {
     }
 
-    public static FriendshipDaoImpl createInstance() {
+    public static FriendshipDao createInstance() {
         return FRIENDSHIP_DAO_INSTANCE;
     }
 

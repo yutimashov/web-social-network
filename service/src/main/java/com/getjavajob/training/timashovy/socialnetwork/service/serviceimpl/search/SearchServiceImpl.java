@@ -17,7 +17,7 @@ public class SearchServiceImpl implements SearchService {
         this.searchGroupDao = searchGroupDao;
     }
 
-    public static SearchServiceImpl createInstance(SearchDao<Account> searchAccountDao, SearchDao<Group> searchGroupDao) {
+    public static SearchService createInstance(SearchDao<Account> searchAccountDao, SearchDao<Group> searchGroupDao) {
         return new SearchServiceImpl(searchAccountDao, searchGroupDao);
     }
 
