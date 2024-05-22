@@ -12,7 +12,7 @@ import static java.util.Objects.isNull;
 
 public class ShowImageServlet extends HttpServlet {
 
-    private static final int BUFFER_SIZE = 4096;
+    private static final int BUFFER_SIZE = 8192;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

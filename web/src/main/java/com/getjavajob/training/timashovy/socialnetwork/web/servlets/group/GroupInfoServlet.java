@@ -4,7 +4,6 @@ import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group.GroupAvatarServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -20,8 +19,6 @@ import static java.lang.Long.valueOf;
 public class GroupInfoServlet extends HttpServlet {
 
     private final GroupService groupService = getServiceSingletonRegistry().getSingleton(GROUP_SERVICE_SINGLETON);
-    private final GroupAvatarServiceImpl avatarService = getServiceSingletonRegistry()
-            .getSingleton(GROUP_AVATAR_SERVICE_SINGLETON);
     private final MessageService messageService = getServiceSingletonRegistry().getSingleton(MESSAGE_SERVICE_SINGLETON);
     private final AccountService accountService = getServiceSingletonRegistry().getSingleton(ACCOUNT_SERVICE_SINGLETON);
 
@@ -30,7 +27,7 @@ public class GroupInfoServlet extends HttpServlet {
         Long groupId = valueOf(req.getParameter("id"));
         if (groupService.getById(groupId).isPresent()) {
             req.setAttribute("group", groupService.getById(groupId).get());
-            req.setAttribute("avatarInputStream", avatarService.get(groupId));
+            req.setAttribute("avatarInputStream", groupService.getById(groupId).get().getAvatar());
             Long accountId = ((Account) req.getSession(false).getAttribute("account")).getId();
             req.setAttribute("isAdmin", groupService.isAdmin(groupId, accountId));
             req.setAttribute("isSubscriber", groupService.isSubscriber(groupId, accountId));

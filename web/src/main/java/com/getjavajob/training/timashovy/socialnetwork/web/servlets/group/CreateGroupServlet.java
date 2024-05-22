@@ -3,7 +3,6 @@ package com.getjavajob.training.timashovy.socialnetwork.web.servlets.group;
 import com.getjavajob.training.timashovy.socialnetwork.common.Group;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupService;
-import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.ImageService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,14 +11,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonRegistry.getServiceSingletonRegistry;
-import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.GROUP_AVATAR_SERVICE_SINGLETON;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.GROUP_SERVICE_SINGLETON;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 
 public class CreateGroupServlet extends HttpServlet {
 
     private final GroupService groupService = getServiceSingletonRegistry().getSingleton(GROUP_SERVICE_SINGLETON);
-    private final ImageService avatarService = getServiceSingletonRegistry().getSingleton(GROUP_AVATAR_SERVICE_SINGLETON);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -34,9 +31,12 @@ public class CreateGroupServlet extends HttpServlet {
 
     private void createGroup(HttpServletRequest req) throws ServletException, IOException {
         Long accountId = ((Account) req.getSession(false).getAttribute("account")).getId();
-        Long groupId = groupService.create(new Group(req.getParameter("name"), req.getParameter("description"),
-                accountId));
-        avatarService.create(groupId, req.getPart("avatar").getInputStream());
+        Long groupId = groupService.create(new Group.Builder()
+                .groupName(req.getParameter("name"))
+                .description(req.getParameter("description"))
+                .accountOwnerId(accountId)
+                .avatar(req.getPart("avatar").getInputStream())
+                .build());
         groupService.sendRequest(groupId, accountId);
         groupService.makeMember(groupId, accountId);
         groupService.makeAdmin(groupId, accountId);
