@@ -4,6 +4,7 @@ import com.getjavajob.training.timashovy.socialnetwork.common.Group;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import org.junit.jupiter.api.*;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,8 @@ class GroupDaoImplTest {
     private static final String EMPTY_TEST_TABLES_FILEPATH = "scripts/group/clear_test_db.sql";
     private static final String DROP_TEST_DB_FILEPATH = "scripts/group/drop_test_db.sql";
     private static final BaseDao<Group> GROUP_DAO_INSTANCE = createInstance();
-    private static final Group TEST_GROUP = new Group("", "", 1L);
+    private static final Group TEST_GROUP = new Group.Builder().groupName("").description("").accountOwnerId(1L)
+            .build();
 
     private void restoreTestGroupDefaultState() {
         TEST_GROUP.setGroupName("");
@@ -32,6 +34,7 @@ class GroupDaoImplTest {
         TEST_GROUP.setGroupName("test");
         TEST_GROUP.setDescription("test");
         TEST_GROUP.setAccountOwnerId(1L);
+        TEST_GROUP.setAvatar(new ByteArrayInputStream("testAvatar".getBytes()));
     }
 
     @BeforeAll
@@ -60,7 +63,7 @@ class GroupDaoImplTest {
     class TestCreateGroup {
 
         @Test
-        public void testCreateOneNewRecord() {
+        public void shouldReturn2WhenCreateSecondGroup() {
             assertEquals(2L, GROUP_DAO_INSTANCE.create(TEST_GROUP));
         }
 
@@ -71,7 +74,7 @@ class GroupDaoImplTest {
     class TestGetGroupById {
 
         @Test
-        public void testGetByIdGetNonExistingGroup() {
+        public void shouldReturnEmptyOptionalWhenGroupIsNotExisted() {
             emptyTestTables();
             assertEquals(empty(), GROUP_DAO_INSTANCE.getById(1L));
         }
@@ -83,7 +86,7 @@ class GroupDaoImplTest {
     class TestGetAllGroups {
 
         @Test
-        public void testGetAllOnEmptyTable() {
+        public void shouldReturnEmptyListWhenNoGroupExists() {
             emptyTestTables();
             assertEquals(new ArrayList<Group>(), GROUP_DAO_INSTANCE.getAll());
         }
@@ -93,7 +96,7 @@ class GroupDaoImplTest {
             setTestGroupEqualsToRecordInTestTable();
             List<Group> groups = new ArrayList<>();
             groups.add(TEST_GROUP);
-            assertEquals(groups, GROUP_DAO_INSTANCE.getAll());
+            assertIterableEquals(groups, GROUP_DAO_INSTANCE.getAll());
         }
 
     }

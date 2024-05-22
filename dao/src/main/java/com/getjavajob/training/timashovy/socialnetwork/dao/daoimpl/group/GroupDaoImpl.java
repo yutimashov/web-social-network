@@ -24,14 +24,14 @@ import static java.util.Optional.of;
 public class GroupDaoImpl implements BaseDao<Group>, GroupDao, TableConstraintsValidator {
 
     private static final GroupDaoImpl GROUP_DAO_INSTANCE = new GroupDaoImpl();
-    private static final String SAVE_GROUP = "INSERT INTO " + GROUP_TABLE + " (group_name, description, owner_id) "
-            + "VALUES(?, ?, ?)";
-    private static final String GET_GROUP_BY_ID = "SELECT id, group_name, description, owner_id "
+    private static final String SAVE_GROUP = "INSERT INTO " + GROUP_TABLE + " (group_name, description, owner_id, "
+            + "avatar) VALUES(?, ?, ?, ?)";
+    private static final String GET_GROUP_BY_ID = "SELECT id, group_name, description, owner_id, avatar "
             + "FROM " + GROUP_TABLE + " WHERE id = ?";
-    private static final String GET_ALL_GROUPS = "SELECT id, group_name, description, owner_id "
+    private static final String GET_ALL_GROUPS = "SELECT id, group_name, description, owner_id, avatar "
             + "FROM " + GROUP_TABLE + ";";
     private static final String UPDATE_GROUP_BY_ID = "UPDATE " + GROUP_TABLE + " SET group_name = ?, description = ?, "
-            + "owner_id = ? WHERE id = ?";
+            + "owner_id = ?, avatar = ? WHERE id = ?";
     private static final String DELETE_GROUP_BY_ID = "DELETE FROM " + GROUP_TABLE + " WHERE id = ?";
     private static final String ADD_USER = "INSERT INTO " + GROUP_MEMBERS_TABLE + " (account_id, group_id) "
             + "VALUES(?, ?);";
@@ -83,6 +83,7 @@ public class GroupDaoImpl implements BaseDao<Group>, GroupDao, TableConstraintsV
         preparedStatement.setString(1, group.getGroupName());
         preparedStatement.setString(2, group.getDescription());
         preparedStatement.setLong(3, group.getAccountOwnerId());
+        preparedStatement.setBinaryStream(4, group.getAvatar());
     }
 
     @Override
@@ -90,15 +91,14 @@ public class GroupDaoImpl implements BaseDao<Group>, GroupDao, TableConstraintsV
         try (PreparedStatement preparedStatement = getPreparedStatement(GET_GROUP_BY_ID)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            Group receivedGroup;
             if (resultSet.next()) {
-                receivedGroup = new Group(
-                        resultSet.getLong("id"),
-                        resultSet.getString("group_name"),
-                        resultSet.getString("description"),
-                        resultSet.getLong("owner_id")
-                );
-                return of(receivedGroup);
+                return of(new Group.Builder()
+                        .id(resultSet.getLong("id"))
+                        .groupName(resultSet.getString("group_name"))
+                        .description(resultSet.getString("description"))
+                        .accountOwnerId(resultSet.getLong("owner_id"))
+                        .avatar(resultSet.getBinaryStream("avatar"))
+                        .build());
             } else {
                 return empty();
             }
@@ -113,12 +113,13 @@ public class GroupDaoImpl implements BaseDao<Group>, GroupDao, TableConstraintsV
             List<Group> receivedGroups = new ArrayList<>();
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                receivedGroups.add(new Group(
-                        resultSet.getLong("id"),
-                        resultSet.getString("group_name"),
-                        resultSet.getString("description"),
-                        resultSet.getLong("owner_id")
-                ));
+                receivedGroups.add(new Group.Builder()
+                        .id(resultSet.getLong("id"))
+                        .groupName(resultSet.getString("group_name"))
+                        .description(resultSet.getString("description"))
+                        .accountOwnerId(resultSet.getLong("owner_id"))
+                        .avatar(resultSet.getBinaryStream("avatar"))
+                        .build());
             }
             return receivedGroups;
         } catch (SQLException e) {
@@ -130,7 +131,7 @@ public class GroupDaoImpl implements BaseDao<Group>, GroupDao, TableConstraintsV
     public boolean updateById(Long id, Group group) {
         try (PreparedStatement preparedStatement = getPreparedStatement(UPDATE_GROUP_BY_ID)) {
             setGroupData(group, preparedStatement);
-            preparedStatement.setLong(4, id);
+            preparedStatement.setLong(5, id);
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DaoException("dao: update group by id method failed: " + e.getMessage());
@@ -212,8 +213,7 @@ public class GroupDaoImpl implements BaseDao<Group>, GroupDao, TableConstraintsV
         try (PreparedStatement preparedStatement = getPreparedStatement(CHECK_ACCOUNT_SUBSCRIBER)) {
             preparedStatement.setLong(1, groupId);
             preparedStatement.setLong(2, accountId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            return resultSet.next();
+            return preparedStatement.executeQuery().next();
         } catch (SQLException e) {
             throw new DaoException("dao: check account is group subscriber method failed: ", e);
         }
@@ -224,8 +224,7 @@ public class GroupDaoImpl implements BaseDao<Group>, GroupDao, TableConstraintsV
         try (PreparedStatement preparedStatement = getPreparedStatement(CHECK_ACCOUNT_MEMBER)) {
             preparedStatement.setLong(1, groupId);
             preparedStatement.setLong(2, accountId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            return resultSet.next();
+            return preparedStatement.executeQuery().next();
         } catch (SQLException e) {
             throw new DaoException("dao: check account is group member method failed: ", e);
         }

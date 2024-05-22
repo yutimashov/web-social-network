@@ -4,5 +4,5 @@ VALUES ('test', 'test', 'test', '1800-01-01', 'test', 'test', 'test', 'test', 't
        ('test1', 'test1', 'test1', '1800-01-01', 'test1', 'test1', 'test1', 'test1', 'test1', 'test1'),
        ('test2', 'test2', 'test2', '1800-01-01', 'test2', 'test2', 'test2', 'test2', 'test2', 'test2'),
        ('test3', 'test3', 'test3', '1800-01-01', 'test3', 'test3', 'test3', 'test3', 'test3', 'test3');
-INSERT INTO group_data.groups (group_name, description, owner_id, group_status)
-VALUES ('test', 'test', '1', 'test');
+INSERT INTO group_data.groups (group_name, description, owner_id, avatar)
+VALUES ('test', 'test', '1', 'testAvatar');

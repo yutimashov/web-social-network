@@ -22,9 +22,9 @@ SET SCHEMA group_data;
 CREATE TABLE group_data.groups
 (
     id            INT PRIMARY KEY AUTO_INCREMENT,
+    owner_id      INT REFERENCES account_data.account (id) ON DELETE CASCADE,
     group_name    VARCHAR(255) NOT NULL UNIQUE,
     description   TEXT,
     creation_date TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    owner_id      INT REFERENCES account_data.account (id) ON DELETE CASCADE,
-    group_status  VARCHAR(50)
+    avatar        BYTEA
 );

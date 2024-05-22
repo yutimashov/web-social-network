@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.servlets.group;
 
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group.GroupAvatarServiceImpl;
+import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.ImageService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -14,7 +14,7 @@ import static java.lang.Long.valueOf;
 
 public class GroupAvatarServlet extends HttpServlet {
 
-    private final GroupAvatarServiceImpl avatarService = getServiceSingletonRegistry().getSingleton(GROUP_AVATAR_SERVICE_SINGLETON);
+    private final ImageService avatarService = getServiceSingletonRegistry().getSingleton(GROUP_AVATAR_SERVICE_SINGLETON);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

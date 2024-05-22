@@ -37,12 +37,11 @@ public class SearchGroupDaoImpl implements SearchDao<Group> {
             preparedStatement.setInt(3, recordsPerPage);
             ResultSet groupRequestsResult = preparedStatement.executeQuery();
             while (groupRequestsResult.next()) {
-                groups.add(new Group(
-                        groupRequestsResult.getLong("id"),
-                        groupRequestsResult.getString("group_name"),
-                        groupRequestsResult.getString("description"),
-                        groupRequestsResult.getLong("owner_id")
-                ));
+                groups.add(new Group.Builder().id(groupRequestsResult.getLong("id"))
+                        .groupName(groupRequestsResult.getString("group_name"))
+                        .description(groupRequestsResult.getString("description"))
+                        .accountOwnerId(groupRequestsResult.getLong("owner_id"))
+                        .avatar(groupRequestsResult.getBinaryStream("avatar")).build());
             }
             return groups;
         } catch (SQLException e) {

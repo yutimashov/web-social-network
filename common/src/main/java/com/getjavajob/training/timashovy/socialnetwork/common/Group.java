@@ -1,5 +1,8 @@
 package com.getjavajob.training.timashovy.socialnetwork.common;
 
+import com.getjavajob.training.timashovy.socialnetwork.common.util.InputStreamUtils;
+
+import java.io.InputStream;
 import java.util.Objects;
 
 import static java.util.Objects.hash;
@@ -18,16 +21,64 @@ public class Group {
     private String groupName;
     private String description;
     private Long accountOwnerId;
+    private InputStream avatar;
 
-    public Group(String groupName, String description, Long ownerId) {
-        this.groupName = groupName;
-        this.description = description;
-        this.accountOwnerId = ownerId;
+    private Group(Builder builder) {
+        id = builder.id;
+        groupName = builder.groupName;
+        description = builder.description;
+        accountOwnerId = builder.accountOwnerId;
+        avatar = builder.avatar;
     }
 
-    public Group(Long id, String groupName, String description, Long ownerId) {
-        this(groupName, description, ownerId);
-        this.id = id;
+    public static final class Builder {
+
+        private Long id;
+        private String groupName;
+        private String description;
+        private Long accountOwnerId;
+        private InputStream avatar;
+
+        public Builder() {
+        }
+
+        public Builder(Group group) {
+            this.id = group.getId();
+            this.groupName = group.getGroupName();
+            this.description = group.getDescription();
+            this.accountOwnerId = group.getAccountOwnerId();
+            this.avatar = group.getAvatar();
+        }
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder groupName(String groupName) {
+            this.groupName = groupName;
+            return this;
+        }
+
+        public Builder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder accountOwnerId(Long accountOwnerId) {
+            this.accountOwnerId = accountOwnerId;
+            return this;
+        }
+
+        public Builder avatar(InputStream avatar) {
+            this.avatar = avatar;
+            return this;
+        }
+
+        public Group build() {
+            return new Group(this);
+        }
+
     }
 
     public Long getId() {
@@ -62,6 +113,14 @@ public class Group {
         this.accountOwnerId = accountOwnerId;
     }
 
+    public InputStream getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(InputStream avatar) {
+        this.avatar = avatar;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -73,18 +132,18 @@ public class Group {
         Group group = (Group) o;
         return Objects.equals(id, group.id) && Objects.equals(groupName, group.groupName)
                 && Objects.equals(description, group.description) && Objects.equals(accountOwnerId,
-                group.accountOwnerId);
+                group.accountOwnerId) && InputStreamUtils.isEqual(avatar, group.avatar);
     }
 
     @Override
     public int hashCode() {
-        return hash(id, groupName, description, accountOwnerId);
+        return hash(id, groupName, description, accountOwnerId, avatar);
     }
 
     @Override
     public String toString() {
         return "Group {id=" + id + ", groupName=" + groupName + ", description=" + description + ", ownerId="
-                + accountOwnerId + "}";
+                + accountOwnerId + ", avatar=" + avatar + "}";
     }
 
 }
