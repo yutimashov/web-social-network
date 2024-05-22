@@ -9,7 +9,7 @@ public class ServiceSingletonsNames {
     public static final String MESSAGE_SERVICE_SINGLETON = "messageServiceSingleton";
     public static final String PHONE_SERVICE_SINGLETON = "phoneServiceSingleton";
     public static final String GROUP_SERVICE_SINGLETON = "groupServiceSingleton";
-    public static final String GROUP_AVATAR_SERVICE_SINGLETON = "groupAvatarServiceSingleton";
     public static final String SEARCH_SERVICE_SINGLETON = "searchServiceSingleton";
+    public static final String GROUP_MEMBERSHIP_SERVICE_SINGLETON = "groupMembershipServiceSingleton";
 
 }

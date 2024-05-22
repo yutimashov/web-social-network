@@ -28,9 +28,7 @@ class AccountDaoImplTest {
     private static final String DROP_DB_FILEPATH = "scripts/account/drop.sql";
     private static final BaseDao<Account> ACCOUNT_DAO_INSTANCE = createInstance(PhoneDaoImpl.createInstance());
     private static final Account TEST_ACCOUNT = new Account.Builder()
-            .id(1L)
-            .firstName("")
-            .lastName("")
+            .id(1L).firstName("").lastName("")
             .middleName("")
             .birthDate(of(2000, 1, 1))
             .personalPhoneNumber(new ArrayList<>())

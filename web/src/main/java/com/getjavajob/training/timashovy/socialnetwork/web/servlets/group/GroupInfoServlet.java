@@ -2,6 +2,7 @@ package com.getjavajob.training.timashovy.socialnetwork.web.servlets.group;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
+import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupMembershipService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
 
@@ -21,6 +22,8 @@ public class GroupInfoServlet extends HttpServlet {
     private final GroupService groupService = getServiceSingletonRegistry().getSingleton(GROUP_SERVICE_SINGLETON);
     private final MessageService messageService = getServiceSingletonRegistry().getSingleton(MESSAGE_SERVICE_SINGLETON);
     private final AccountService accountService = getServiceSingletonRegistry().getSingleton(ACCOUNT_SERVICE_SINGLETON);
+    private final GroupMembershipService groupMembershipService = getServiceSingletonRegistry()
+            .getSingleton(GROUP_MEMBERSHIP_SERVICE_SINGLETON);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -29,9 +32,9 @@ public class GroupInfoServlet extends HttpServlet {
             req.setAttribute("group", groupService.getById(groupId).get());
             req.setAttribute("avatarInputStream", groupService.getById(groupId).get().getAvatar());
             Long accountId = ((Account) req.getSession(false).getAttribute("account")).getId();
-            req.setAttribute("isAdmin", groupService.isAdmin(groupId, accountId));
-            req.setAttribute("isSubscriber", groupService.isSubscriber(groupId, accountId));
-            req.setAttribute("isMember", groupService.isMember(groupId, accountId));
+            req.setAttribute("isAdmin", groupMembershipService.isAdmin(groupId, accountId));
+            req.setAttribute("isSubscriber", groupMembershipService.isSubscriber(groupId, accountId));
+            req.setAttribute("isMember", groupMembershipService.isMember(groupId, accountId));
             req.setAttribute("groupPosts", messageService.getAllGroupMessages(groupId));
             req.setAttribute("accountService", accountService);
         }

@@ -7,7 +7,7 @@ public class DaoSingletonNames {
     public static final String PASSWORD_DAO_SINGLETON = "passwordDao";
     public static final String FRIENDSHIP_DAO_SINGLETON = "friendshipDao";
     public static final String FRIENDSHIP_CHECKER_SINGLETON = "friendshipCheckerDao";
-    public static final String GROUP_AVATAR_SINGLETON = "groupAvatarDao";
+    public static final String GROUP_MEMBERSHIP_DAO_SINGLETON = "groupMembershipDao";
     public static final String GROUP_DAO_SINGLETON = "groupDao";
     public static final String GROUP_MESSAGE_DAO_SINGLETON = "groupMessageDao";
     public static final String PERSONAL_MESSAGE_DAO_SINGLETON = "personalMessageDao";

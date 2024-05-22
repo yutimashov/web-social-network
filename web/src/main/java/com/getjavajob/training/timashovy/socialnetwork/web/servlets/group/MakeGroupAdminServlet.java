@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.servlets.group;
 
-import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupService;
+import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupMembershipService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -9,16 +9,17 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonRegistry.getServiceSingletonRegistry;
-import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.GROUP_SERVICE_SINGLETON;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.GROUP_MEMBERSHIP_SERVICE_SINGLETON;
 import static java.lang.Long.valueOf;
 
 public class MakeGroupAdminServlet extends HttpServlet {
 
-    private final GroupService groupService = getServiceSingletonRegistry().getSingleton(GROUP_SERVICE_SINGLETON);
+    private final GroupMembershipService groupMembershipService = getServiceSingletonRegistry()
+            .getSingleton(GROUP_MEMBERSHIP_SERVICE_SINGLETON);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        groupService.makeAdmin(valueOf(req.getParameter("groupId")),
+        groupMembershipService.makeAdmin(valueOf(req.getParameter("groupId")),
                 valueOf(req.getParameter("accountId")));
         resp.sendRedirect("/group?id=" + valueOf(req.getParameter("groupId")));
     }

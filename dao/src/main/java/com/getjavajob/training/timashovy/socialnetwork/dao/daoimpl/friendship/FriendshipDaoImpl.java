@@ -9,25 +9,28 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.FriendshipTableFields.FRIENDSHIP_ACCEPTER_FIELD;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.FriendshipTableFields.FRIENDSHIP_REQUESTER_FIELD;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.FRIENDSHIP_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.FriendshipTableFields.*;
 
 public class FriendshipDaoImpl implements FriendshipDao {
 
     private static final FriendshipDaoImpl FRIENDSHIP_DAO_INSTANCE = new FriendshipDaoImpl();
-    private static final String ACCEPT_REQUEST = "UPDATE " + FRIENDSHIP_TABLE + " SET status = TRUE " +
-            "WHERE " + FRIENDSHIP_ACCEPTER_FIELD + " = ? AND " + FRIENDSHIP_REQUESTER_FIELD + " = ?;";
-    private static final String GET_FRIENDS = "SELECT id_1 FROM " + FRIENDSHIP_TABLE + " WHERE id_2 = ? "
-            + "AND status = TRUE UNION SELECT id_2 FROM " + FRIENDSHIP_TABLE + " WHERE id_1 = ? AND status = TRUE;";
-    private static final String DELETE_FRIEND = "DELETE FROM " + FRIENDSHIP_TABLE + " WHERE id_1 = ? AND id_2 = ?;";
-    private static final String SEND_REQUEST = "INSERT INTO " + FRIENDSHIP_TABLE + " (id_1, id_2, requester_id, " +
-            "accepter_id) VALUES(?, ?, ?, ?);";
-    private static final String GET_INCOMING_REQUESTS = "SELECT requester_id FROM " + FRIENDSHIP_TABLE
-            + " WHERE status = FALSE AND accepter_id = ?;";
-    private static final String GET_OUTGOING_REQUESTS = "SELECT accepter_id FROM " + FRIENDSHIP_TABLE
-            + " WHERE status = FALSE AND requester_id = ?;";
+    private static final String ACCEPT_REQUEST = "UPDATE " + FRIENDSHIP_TABLE + " SET " + FRIENDSHIP_STATUS + " = "
+            + "TRUE WHERE " + FRIENDSHIP_ACCEPTER_ID + " = ? AND " + FRIENDSHIP_REQUESTER_ID + " = ?;";
+    private static final String GET_FRIENDS = "SELECT " + FRIENDSHIP_ACCOUNT_ID_1 + " FROM " + FRIENDSHIP_TABLE
+            + " WHERE " + FRIENDSHIP_ACCOUNT_ID_2 + " = ? AND " + FRIENDSHIP_STATUS + " = TRUE UNION SELECT "
+            + FRIENDSHIP_ACCOUNT_ID_2 + " FROM " + FRIENDSHIP_TABLE + " WHERE " + FRIENDSHIP_ACCOUNT_ID_1 + " = ? AND "
+            + FRIENDSHIP_STATUS + " = TRUE;";
+    private static final String DELETE_FRIEND = "DELETE FROM " + FRIENDSHIP_TABLE + " WHERE " + FRIENDSHIP_ACCOUNT_ID_1
+            + " = ? AND " + FRIENDSHIP_ACCOUNT_ID_2 + " = ?;";
+    private static final String SEND_REQUEST = "INSERT INTO " + FRIENDSHIP_TABLE + " (" + FRIENDSHIP_ACCOUNT_ID_1
+            + ", " + FRIENDSHIP_ACCOUNT_ID_2 + ", " + FRIENDSHIP_REQUESTER_ID + ", " + FRIENDSHIP_ACCEPTER_ID + ") "
+            + "VALUES(?, ?, ?, ?);";
+    private static final String GET_INCOMING_REQUESTS = "SELECT " + FRIENDSHIP_REQUESTER_ID + " FROM "
+            + FRIENDSHIP_TABLE + " WHERE " + FRIENDSHIP_STATUS + " = FALSE AND " + FRIENDSHIP_ACCEPTER_ID + " = ?;";
+    private static final String GET_OUTGOING_REQUESTS = "SELECT " + FRIENDSHIP_ACCEPTER_ID + " FROM "
+            + FRIENDSHIP_TABLE + " WHERE " + FRIENDSHIP_STATUS + " = FALSE AND " + FRIENDSHIP_REQUESTER_ID + " = ?;";
 
     private FriendshipDaoImpl() {
     }

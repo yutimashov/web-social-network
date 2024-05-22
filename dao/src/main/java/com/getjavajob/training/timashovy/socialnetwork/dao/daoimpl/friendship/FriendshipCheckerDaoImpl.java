@@ -6,18 +6,18 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.FriendshipTableFields.FRIENDSHIP_ID_1_FIELD;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.FriendshipTableFields.FRIENDSHIP_ID_2_FIELD;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.FRIENDSHIP_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.FriendshipTableFields.*;
 
 public class FriendshipCheckerDaoImpl implements FriendshipChecker {
 
     private static final FriendshipCheckerDaoImpl FRIENDSHIP_CHECKER_INSTANCE = new FriendshipCheckerDaoImpl();
     private static final String FRIENDSHIP_RECORD_EXISTENCE = "SELECT 1 FROM " + FRIENDSHIP_TABLE + " WHERE "
-            + FRIENDSHIP_ID_1_FIELD + "= ? AND " + FRIENDSHIP_ID_2_FIELD + " = ?;";
+            + FRIENDSHIP_ACCOUNT_ID_1 + "= ? AND " + FRIENDSHIP_ACCOUNT_ID_2 + " = ?;";
     private static final String ARE_USERS_FRIENDS = "SELECT 1 FROM " + FRIENDSHIP_TABLE + " WHERE "
-            + FRIENDSHIP_ID_1_FIELD + " = ? AND " + FRIENDSHIP_ID_2_FIELD + " = ? AND status = TRUE;";
+            + FRIENDSHIP_ACCOUNT_ID_1 + " = ? AND " + FRIENDSHIP_ACCOUNT_ID_2 + " = ? AND " + FRIENDSHIP_STATUS
+            + " = TRUE;";
 
     private FriendshipCheckerDaoImpl() {
     }

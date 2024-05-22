@@ -1,13 +1,10 @@
-package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces;
+package com.getjavajob.training.timashovy.socialnetwork.service.interfaces;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.Group;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 
 import java.util.List;
 
-/**
- * Interface contains all the methods relevant to group functionality
- */
-public interface GroupDao extends BaseDao<Group> {
+public interface GroupMembershipService {
 
     void sendRequest(Long groupId, Long accountId);
 
@@ -23,10 +20,10 @@ public interface GroupDao extends BaseDao<Group> {
 
     boolean isMember(Long groupId, Long accountId);
 
-    List<Long> getRegularMembers(Long groupId);
+    List<Account> getIncomingRequests(Long groupId);
 
-    List<Long> getAdmins(Long groupId);
+    List<Account> getRegularMembers(Long groupId);
 
-    List<Long> getRequests(Long groupId);
+    List<Account> getAdmins(Long groupId);
 
 }

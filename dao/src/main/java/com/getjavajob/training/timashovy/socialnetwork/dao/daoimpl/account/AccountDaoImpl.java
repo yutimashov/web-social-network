@@ -30,19 +30,27 @@ import static java.util.stream.Collectors.toList;
 
 public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidator {
 
-    private static final String CREATE = "INSERT INTO " + ACCOUNT_TABLE + " (first_name, last_name, "
-            + "middle_name, birth_date, personal_address, work_address, email, icq, skype, additional_info, "
-            + "role_type, avatar) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-    private static final String GET_BY_ID = "SELECT id, first_name, last_name, middle_name, birth_date, "
-            + "personal_address, work_address, email, icq, skype, additional_info, role_type, avatar FROM "
-            + ACCOUNT_TABLE + " WHERE id = ?;";
-    private static final String GET_ALL = "SELECT id, first_name, last_name, middle_name, birth_date, "
-            + "personal_address, work_address, email, icq, skype, additional_info, role_type, avatar FROM "
-            + ACCOUNT_TABLE + ";";
-    private static final String UPDATE_BY_ID = "UPDATE " + ACCOUNT_TABLE + " SET first_name = ?, last_name = ?, "
-            + "middle_name = ?, birth_date = ?, personal_address = ?, work_address = ?, email = ?, icq = ?, "
-            + "skype = ?, additional_info = ?, role_type = ?, avatar = ? WHERE id = ?;";
-    private static final String DELETE_BY_ID = "DELETE FROM " + ACCOUNT_TABLE + " WHERE id = ?;";
+    private static final String CREATE = "INSERT INTO " + ACCOUNT_TABLE + " (" + ACCOUNT_FIRST_NAME + ", "
+            + ACCOUNT_LAST_NAME + ", " + ACCOUNT_MIDDLE_NAME + ", " + ACCOUNT_BIRTH_DATE + ", "
+            + ACCOUNT_PERSONAL_ADDRESS + ", " + ACCOUNT_WORK_ADDRESS + ", " + ACCOUNT_EMAIL + ", " + ACCOUNT_ICQ + ", "
+            + ACCOUNT_SKYPE + ", " + ACCOUNT_ADDITIONAL_INFO + ", " + ACCOUNT_ROLE_TYPE + ", " + ACCOUNT_AVATAR
+            + ") VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    private static final String GET_BY_ID = "SELECT " + ACCOUNT_ID + ", " + ACCOUNT_FIRST_NAME + ", "
+            + ACCOUNT_LAST_NAME + ", " + ACCOUNT_MIDDLE_NAME + ", " + ACCOUNT_BIRTH_DATE + ", "
+            + ACCOUNT_PERSONAL_ADDRESS + ", " + ACCOUNT_WORK_ADDRESS + ", " + ACCOUNT_EMAIL + ", " + ACCOUNT_ICQ + ", "
+            + ACCOUNT_SKYPE + ", " + ACCOUNT_ADDITIONAL_INFO + ", " + ACCOUNT_ROLE_TYPE + ", " + ACCOUNT_AVATAR
+            + " FROM " + ACCOUNT_TABLE + " WHERE " + ACCOUNT_ID + " = ?;";
+    private static final String GET_ALL = "SELECT " + ACCOUNT_ID + ", " + ACCOUNT_FIRST_NAME + ", " + ACCOUNT_LAST_NAME
+            + ", " + ACCOUNT_MIDDLE_NAME + ", " + ACCOUNT_BIRTH_DATE + ", " + ACCOUNT_PERSONAL_ADDRESS + ", "
+            + ACCOUNT_WORK_ADDRESS + ", " + ACCOUNT_EMAIL + ", " + ACCOUNT_ICQ + ", " + ACCOUNT_SKYPE + ", "
+            + ACCOUNT_ADDITIONAL_INFO + ", " + ACCOUNT_ROLE_TYPE + ", " + ACCOUNT_AVATAR + " FROM " + ACCOUNT_TABLE
+            + ";";
+    private static final String UPDATE_BY_ID = "UPDATE " + ACCOUNT_TABLE + " SET " + ACCOUNT_FIRST_NAME + " = ?, "
+            + ACCOUNT_LAST_NAME + " = ?, " + ACCOUNT_MIDDLE_NAME + " = ?, " + ACCOUNT_BIRTH_DATE + " = ?, "
+            + ACCOUNT_PERSONAL_ADDRESS + " = ?, " + ACCOUNT_WORK_ADDRESS + " = ?, " + ACCOUNT_EMAIL + " = ?, "
+            + ACCOUNT_ICQ + "= ?, " + ACCOUNT_SKYPE + "= ?, " + ACCOUNT_ADDITIONAL_INFO + " = ?, " + ACCOUNT_ROLE_TYPE
+            + " = ?, " + ACCOUNT_AVATAR + " = ? WHERE " + ACCOUNT_ID + " = ?;";
+    private static final String DELETE_BY_ID = "DELETE FROM " + ACCOUNT_TABLE + " WHERE " + ACCOUNT_ID + " = ?;";
     private final PhoneDao phoneDao;
 
     private AccountDaoImpl(PhoneDao phoneDao) {
@@ -134,20 +142,20 @@ public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidat
 
     private Account createAccountFromResultSet(ResultSet resultSet) throws SQLException {
         return new Account.Builder()
-                .id(resultSet.getLong(ACCOUNT_ID_FIELD))
-                .firstName(resultSet.getString(ACCOUNT_FIRST_NAME_FIELD))
-                .lastName(resultSet.getString(ACCOUNT_LAST_NAME_FIELD))
-                .email(resultSet.getString(ACCOUNT_EMAIL_FIELD))
-                .birthDate(resultSet.getDate(ACCOUNT_BIRTHDATE_FIELD) != null
-                        ? resultSet.getDate(ACCOUNT_BIRTHDATE_FIELD).toLocalDate() : null)
-                .middleName(resultSet.getString(ACCOUNT_MIDDLE_NAME_FIELD))
-                .personalAddress(resultSet.getString(ACCOUNT_PERSONAL_ADDRESS_FIELD))
-                .workAddress(resultSet.getString(ACCOUNT_WORK_ADDRESS_FIELD))
-                .icq(resultSet.getString(ACCOUNT_ICQ_FIELD))
-                .skype(resultSet.getString(ACCOUNT_SKYPE_FIELD))
-                .additionalInfo(resultSet.getString(ACCOUNT_ADDITIONAL_INFO_FIELD))
-                .role(AccountRole.valueOf(resultSet.getString(ACCOUNT_ROLE_TYPE_FIELD)))
-                .avatar(resultSet.getBinaryStream(ACCOUNT_AVATAR_FIELD))
+                .id(resultSet.getLong(ACCOUNT_ID))
+                .firstName(resultSet.getString(ACCOUNT_FIRST_NAME))
+                .lastName(resultSet.getString(ACCOUNT_LAST_NAME))
+                .email(resultSet.getString(ACCOUNT_EMAIL))
+                .birthDate(resultSet.getDate(ACCOUNT_BIRTH_DATE) != null
+                        ? resultSet.getDate(ACCOUNT_BIRTH_DATE).toLocalDate() : null)
+                .middleName(resultSet.getString(ACCOUNT_MIDDLE_NAME))
+                .personalAddress(resultSet.getString(ACCOUNT_PERSONAL_ADDRESS))
+                .workAddress(resultSet.getString(ACCOUNT_WORK_ADDRESS))
+                .icq(resultSet.getString(ACCOUNT_ICQ))
+                .skype(resultSet.getString(ACCOUNT_SKYPE))
+                .additionalInfo(resultSet.getString(ACCOUNT_ADDITIONAL_INFO))
+                .role(AccountRole.valueOf(resultSet.getString(ACCOUNT_ROLE_TYPE)))
+                .avatar(resultSet.getBinaryStream(ACCOUNT_AVATAR))
                 .build();
     }
 

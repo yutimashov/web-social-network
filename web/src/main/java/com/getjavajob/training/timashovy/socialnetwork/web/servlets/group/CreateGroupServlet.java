@@ -2,6 +2,7 @@ package com.getjavajob.training.timashovy.socialnetwork.web.servlets.group;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.Group;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupMembershipService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupService;
 
 import javax.servlet.ServletException;
@@ -11,12 +12,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonRegistry.getServiceSingletonRegistry;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.GROUP_MEMBERSHIP_SERVICE_SINGLETON;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.GROUP_SERVICE_SINGLETON;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 
 public class CreateGroupServlet extends HttpServlet {
 
     private final GroupService groupService = getServiceSingletonRegistry().getSingleton(GROUP_SERVICE_SINGLETON);
+    private final GroupMembershipService groupMembershipService = getServiceSingletonRegistry()
+            .getSingleton(GROUP_MEMBERSHIP_SERVICE_SINGLETON);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -37,9 +41,9 @@ public class CreateGroupServlet extends HttpServlet {
                 .accountOwnerId(accountId)
                 .avatar(req.getPart("avatar").getInputStream())
                 .build());
-        groupService.sendRequest(groupId, accountId);
-        groupService.makeMember(groupId, accountId);
-        groupService.makeAdmin(groupId, accountId);
+        groupMembershipService.sendRequest(groupId, accountId);
+        groupMembershipService.makeMember(groupId, accountId);
+        groupMembershipService.makeAdmin(groupId, accountId);
     }
 
 }
