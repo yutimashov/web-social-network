@@ -4,23 +4,22 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
 
-public class FriendshipCheckerImpl implements FriendshipChecker {
+public class FriendshipCheckerDaoImpl implements FriendshipChecker {
 
-    private static final FriendshipCheckerImpl FRIENDSHIP_CHECKER_INSTANCE = new FriendshipCheckerImpl();
+    private static final FriendshipCheckerDaoImpl FRIENDSHIP_CHECKER_INSTANCE = new FriendshipCheckerDaoImpl();
     private static final String FRIENDSHIP_RECORD_EXISTENCE = "SELECT 1 FROM friend_data.friendship WHERE id_1 = ? "
             + "AND id_2 = ?;";
     private static final String ARE_USERS_FRIENDS = "SELECT 1 FROM friend_data.friendship WHERE id_1 = ? AND id_2 = ? "
             + "AND status = TRUE;";
 
-    private FriendshipCheckerImpl() {
+    private FriendshipCheckerDaoImpl() {
     }
 
-    public static FriendshipCheckerImpl createInstance() {
+    public static FriendshipCheckerDaoImpl createInstance() {
         return FRIENDSHIP_CHECKER_INSTANCE;
     }
 
@@ -33,17 +32,8 @@ public class FriendshipCheckerImpl implements FriendshipChecker {
         }
     }
 
-    @Override
-    public boolean checkUsersAreFriends(Long requesterId, Long accepterId) {
-        try (PreparedStatement checkFriends = getPreparedStatement(ARE_USERS_FRIENDS)) {
-            return verifyOrderOfAccountIdsInQuery(requesterId, accepterId, checkFriends);
-        } catch (SQLException e) {
-            throw new DaoException("dao: areUsersFriends method failed: " + e.getMessage());
-        }
-    }
-
-    private boolean verifyOrderOfAccountIdsInQuery(Long requesterId, Long accepterId,
-                                                   PreparedStatement checkFriends) throws SQLException {
+    private boolean verifyOrderOfAccountIdsInQuery(Long requesterId, Long accepterId, PreparedStatement checkFriends)
+            throws SQLException {
         if (requesterId < accepterId) {
             checkFriends.setLong(1, requesterId);
             checkFriends.setLong(2, accepterId);
@@ -51,8 +41,16 @@ public class FriendshipCheckerImpl implements FriendshipChecker {
             checkFriends.setLong(1, accepterId);
             checkFriends.setLong(2, requesterId);
         }
-        ResultSet resultSet = checkFriends.executeQuery();
-        return resultSet.next();
+        return checkFriends.executeQuery().next();
+    }
+
+    @Override
+    public boolean checkUsersAreFriends(Long requesterId, Long accepterId) {
+        try (PreparedStatement checkFriends = getPreparedStatement(ARE_USERS_FRIENDS)) {
+            return verifyOrderOfAccountIdsInQuery(requesterId, accepterId, checkFriends);
+        } catch (SQLException e) {
+            throw new DaoException("dao: areUsersFriends method failed: " + e.getMessage());
+        }
     }
 
 }

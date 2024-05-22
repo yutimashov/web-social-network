@@ -2,7 +2,7 @@ package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AccountDaoImpl;
-import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship.FriendshipCheckerImpl;
+import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship.FriendshipCheckerDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship.FriendshipDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PhoneDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountServiceImpl;
@@ -33,7 +33,7 @@ class AccountServiceImplTest {
     @Mock
     private FriendshipDaoImpl friendshipDao;
     @Mock
-    private FriendshipCheckerImpl friendshipChecker;
+    private FriendshipCheckerDaoImpl friendshipChecker;
     @Mock
     private PhoneDaoImpl phoneDao;
     @InjectMocks

@@ -12,11 +12,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FriendshipDaoImplTest {
 
-    private static final String CREATE_TEST_TABLES_FILEPATH = "scripts/create_test_db.sql";
-    private static final String LOAD_TEST_TABLES_FILEPATH = "scripts/load_test_data.sql";
-    private static final String CLEAR_TEST_TABLES_FILEPATH = "scripts/clear_test_db.sql";
-    private static final String DROP_TEST_DB_FILEPATH = "scripts/drop_test_db.sql";
-    private static final FriendshipDao FRIENDSHIP_DAO_INSTANCE = createInstance();
+    private static final String CREATE_TEST_TABLES_FILEPATH = "scripts/friendship/create_test_db.sql";
+    private static final String LOAD_TEST_TABLES_FILEPATH = "scripts/friendship/load_test_data.sql";
+    private static final String CLEAR_TEST_TABLES_FILEPATH = "scripts/friendship/clear_test_db.sql";
+    private static final String DROP_TEST_DB_FILEPATH = "scripts/friendship/drop_test_db.sql";
+    private static final FriendshipDao FRIENDSHIP_DAO = createInstance();
 
     @BeforeAll
     public static void createTestTables() {
@@ -43,8 +43,8 @@ class FriendshipDaoImplTest {
     class TestSendFriendRequest {
 
         @Test
-        void whenTwoAccountExists() {
-            assertTrue(FRIENDSHIP_DAO_INSTANCE.sendRequest(1L, 4L));
+        void shouldReturnTrueWhenTwoAccountsExist() {
+            assertTrue(FRIENDSHIP_DAO.sendRequest(1L, 4L));
         }
 
     }
@@ -54,13 +54,13 @@ class FriendshipDaoImplTest {
     class TestAcceptFriendRequest {
 
         @Test
-        void whenRecordAlreadyExistsWithStatusFalse() {
-            assertFalse(FRIENDSHIP_DAO_INSTANCE.acceptRequest(4L, 3L));
+        void shouldReturnFalseWhenRecordExistsWithStatusFalse() {
+            assertFalse(FRIENDSHIP_DAO.acceptRequest(4L, 3L));
         }
 
         @Test
-        void whenRecordAlreadyExistsWithStatusFalseButInWrongOrder() {
-            assertTrue(FRIENDSHIP_DAO_INSTANCE.acceptRequest(3L, 4L));
+        void shouldReturnTrueWhenRecordExistsWithStatusFalseButInWrongOrder() {
+            assertTrue(FRIENDSHIP_DAO.acceptRequest(3L, 4L));
         }
 
     }
@@ -70,20 +70,20 @@ class FriendshipDaoImplTest {
     class TestGetFriends {
 
         @Test
-        void whenOnlyOneFriendExistedWithStatusTrue() {
-            List<Long> friendsId = new ArrayList<>();
-            friendsId.add(2L);
-            assertEquals(friendsId, FRIENDSHIP_DAO_INSTANCE.getFriendsIds(1L));
+        void shouldReturnListWithOneRecordWhenOnlyOneFriendExistsWithStatusFalse() {
+            List<Long> friendsIds = new ArrayList<>();
+            friendsIds.add(2L);
+            assertEquals(friendsIds, FRIENDSHIP_DAO.getFriendsIds(1L));
         }
 
         @Test
-        void whenOnlyOneFriendExistedWithStatusFalse() {
-            assertEquals(new ArrayList<>(), FRIENDSHIP_DAO_INSTANCE.getFriendsIds(3L));
+        void shouldReturnEmptyListWhenOneFriendExistsWithStatusFalse() {
+            assertEquals(new ArrayList<>(), FRIENDSHIP_DAO.getFriendsIds(3L));
         }
 
         @Test
-        void whenAccountHasNoFriends() {
-            assertEquals(new ArrayList<>(), FRIENDSHIP_DAO_INSTANCE.getFriendsIds(-1L));
+        void shouldReturnEmptyListWhenAccountHasNoFriends() {
+            assertEquals(new ArrayList<>(), FRIENDSHIP_DAO.getFriendsIds(-1L));
         }
 
     }
@@ -93,13 +93,13 @@ class FriendshipDaoImplTest {
     class TestDeleteFriend {
 
         @Test
-        void whenRecordWithFriendsExists() {
-            assertTrue(FRIENDSHIP_DAO_INSTANCE.deleteFriend(1L, 2L));
+        void shouldReturnTrueWhenRecordWithFriendCanBeDeleted() {
+            assertTrue(FRIENDSHIP_DAO.deleteFriend(1L, 2L));
         }
 
         @Test
-        void whenRecordWithFriendsIsNotExisted() {
-            assertFalse(FRIENDSHIP_DAO_INSTANCE.deleteFriend(999L, 777L));
+        void shouldReturnFalseWhenRecordWithFriendIsNotExisted() {
+            assertFalse(FRIENDSHIP_DAO.deleteFriend(-1L, -2L));
         }
 
     }

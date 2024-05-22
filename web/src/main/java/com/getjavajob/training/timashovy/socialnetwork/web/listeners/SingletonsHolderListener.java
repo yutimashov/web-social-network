@@ -3,7 +3,7 @@ package com.getjavajob.training.timashovy.socialnetwork.web.listeners;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AccountDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PasswordDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PhoneDaoImpl;
-import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship.FriendshipCheckerImpl;
+import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship.FriendshipCheckerDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship.FriendshipDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group.GroupAvatarDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group.GroupDaoImpl;
@@ -42,7 +42,7 @@ public class SingletonsHolderListener implements ServletContextListener {
         daoSingletonRegistry.registerSingleton(ACCOUNT_DAO_SINGLETON, AccountDaoImpl.createInstance(
                 getDaoRegistryInstance().getSingleton(PHONE_DAO_SINGLETON)));
         daoSingletonRegistry.registerSingleton(FRIENDSHIP_DAO_SINGLETON, FriendshipDaoImpl.createInstance());
-        daoSingletonRegistry.registerSingleton(FRIENDSHIP_CHECKER_SINGLETON, FriendshipCheckerImpl.createInstance());
+        daoSingletonRegistry.registerSingleton(FRIENDSHIP_CHECKER_SINGLETON, FriendshipCheckerDaoImpl.createInstance());
         daoSingletonRegistry.registerSingleton(PASSWORD_DAO_SINGLETON, PasswordDaoImpl.createInstance());
         daoSingletonRegistry.registerSingleton(GROUP_AVATAR_SINGLETON, GroupAvatarDaoImpl.createInstance());
         daoSingletonRegistry.registerSingleton(GROUP_DAO_SINGLETON, GroupDaoImpl.createInstance());

@@ -30,19 +30,19 @@ public class GroupDaoImpl implements BaseDao<Group>, GroupDao, TableConstraintsV
             + "FROM " + GROUP_TABLE + " WHERE id = ?";
     private static final String GET_ALL_GROUPS = "SELECT id, group_name, description, owner_id "
             + "FROM " + GROUP_TABLE + ";";
-    private static final String UPDATE_GROUP_BY_ID = "UPDATE " + GROUP_TABLE + " SET group_name = ?, description = ?,"
-            + " owner_id = ? WHERE id = ?";
+    private static final String UPDATE_GROUP_BY_ID = "UPDATE " + GROUP_TABLE + " SET group_name = ?, description = ?, "
+            + "owner_id = ? WHERE id = ?";
     private static final String DELETE_GROUP_BY_ID = "DELETE FROM " + GROUP_TABLE + " WHERE id = ?";
-    private static final String ADD_USER = "INSERT INTO " + GROUP_MEMBERS_TABLE + " (account_id, group_id) " +
-            "VALUES(?, ?);";
-    private static final String MAKE_USER_GROUP_ADMIN = "UPDATE " + GROUP_MEMBERS_TABLE + " SET is_admin = TRUE WHERE " +
-            "group_id = ? AND account_id = ?;";
-    private static final String MAKE_USER_GROUP_MEMBER = "UPDATE " + GROUP_MEMBERS_TABLE + " SET is_member = TRUE " +
-            "WHERE group_id = ? AND account_id = ?;";
+    private static final String ADD_USER = "INSERT INTO " + GROUP_MEMBERS_TABLE + " (account_id, group_id) "
+            + "VALUES(?, ?);";
+    private static final String MAKE_USER_GROUP_ADMIN = "UPDATE " + GROUP_MEMBERS_TABLE + " SET is_admin = TRUE WHERE "
+            + "group_id = ? AND account_id = ?;";
+    private static final String MAKE_USER_GROUP_MEMBER = "UPDATE " + GROUP_MEMBERS_TABLE + " SET is_member = TRUE "
+            + "WHERE group_id = ? AND account_id = ?;";
     private static final String GET_GROUP_FOLLOWERS = "SELECT account_id FROM " + GROUP_MEMBERS_TABLE
             + " WHERE group_id = ? AND is_member = FALSE ORDER BY registration_date DESC;";
-    private static final String DELETE_GROUP_MEMBER = "DELETE FROM " + GROUP_MEMBERS_TABLE
-            + " WHERE group_id = ? AND account_id = ?;";
+    private static final String DELETE_GROUP_MEMBER = "DELETE FROM " + GROUP_MEMBERS_TABLE + " WHERE group_id = ? AND "
+            + "account_id = ?;";
     private static final String CHECK_ACCOUNT_ADMIN = "SELECT id FROM " + GROUP_MEMBERS_TABLE
             + " WHERE group_id = ? AND account_id = ? AND is_admin = TRUE;";
     private static final String CHECK_ACCOUNT_SUBSCRIBER = "SELECT id FROM " + GROUP_MEMBERS_TABLE
@@ -51,8 +51,8 @@ public class GroupDaoImpl implements BaseDao<Group>, GroupDao, TableConstraintsV
             + " WHERE group_id = ? AND account_id = ? AND is_member = TRUE;";
     private static final String GET_REGULAR_MEMBERS = "SELECT account_id FROM " + GROUP_MEMBERS_TABLE
             + " WHERE group_id = ? AND is_member = TRUE AND is_admin = FALSE;";
-    private static final String GET_ADMINS = "SELECT account_id FROM " + GROUP_MEMBERS_TABLE
-            + " WHERE group_id = ? AND is_member = TRUE AND is_admin = TRUE;";
+    private static final String GET_ADMINS = "SELECT account_id FROM " + GROUP_MEMBERS_TABLE + " WHERE group_id = ? "
+            + "AND is_member = TRUE AND is_admin = TRUE;";
 
     private GroupDaoImpl() {
     }
