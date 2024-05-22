@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.PropertiesUtil.get;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.PropertiesUtil.getProperty;
 import static java.lang.Class.forName;
 import static java.lang.Integer.parseInt;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
@@ -31,7 +31,7 @@ public final class ConnectionManager {
     private static final String POOL_SIZE_KEY = "db.pool.size";
     private static final String DRIVER_CLASS = "org.postgresql.Driver";
     private static volatile BlockingQueue<Connection> connectionPool;
-    private static final Integer DEFAULT_POOL_SIZE = 10;
+    private static final int DEFAULT_POOL_SIZE = 10;
 
     /**
      * Class is not considered to have any instances.
@@ -44,7 +44,7 @@ public final class ConnectionManager {
     }
 
     public static PreparedStatement getPreparedStatement(String query) throws SQLException {
-        try (Connection connection = ConnectionManager.getConnection()) {
+        try (Connection connection = getConnection()) {
             return connection.prepareStatement(query);
         } catch (SQLException e) {
             throw new DaoException("dao: create prepared statement failed: " + e.getMessage());
@@ -52,7 +52,7 @@ public final class ConnectionManager {
     }
 
     public static PreparedStatement getPreparedStatementWithGeneratedKeys(String query) throws SQLException {
-        try (Connection connection = ConnectionManager.getConnection()) {
+        try (Connection connection = getConnection()) {
             return connection.prepareStatement(query, RETURN_GENERATED_KEYS);
         } catch (SQLException e) {
             throw new DaoException("dao: create prepared statement failed: " + e.getMessage());
@@ -80,7 +80,7 @@ public final class ConnectionManager {
     }
 
     private static void initializeConnectionPool() {
-        String poolSize = get(POOL_SIZE_KEY);
+        String poolSize = getProperty(POOL_SIZE_KEY);
         int size = poolSize == null ? DEFAULT_POOL_SIZE : parseInt(poolSize);
         connectionPool = new ArrayBlockingQueue<>(size);
         loadDriver();
@@ -108,7 +108,8 @@ public final class ConnectionManager {
      */
     private static Connection createConnection() {
         try {
-            Connection realConnection = DriverManager.getConnection(get(URL_KEY), get(LOGIN_KEY), get(PASSWORD_KEY));
+            Connection realConnection = DriverManager.getConnection(getProperty(URL_KEY), getProperty(LOGIN_KEY),
+                    getProperty(PASSWORD_KEY));
             return new ConnectionWrapper(realConnection, connectionPool);
         } catch (SQLException e) {
             throw new DaoException("Cannot create connection to db");
