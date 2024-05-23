@@ -13,6 +13,7 @@ import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.d
 import static java.lang.Class.forName;
 import static java.lang.Integer.parseInt;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
+import static java.util.Objects.isNull;
 
 /**
  * Class is responsible for creation and managing connections to DB.
@@ -64,7 +65,7 @@ public final class ConnectionManager {
      *
      * @return connection to DB
      */
-    private static synchronized Connection getConnectionFromPool() {
+    private static Connection getConnectionFromPool() {
         try {
             return getConnectionPool().take();
         } catch (InterruptedException e) {
@@ -73,8 +74,12 @@ public final class ConnectionManager {
     }
 
     private static BlockingQueue<Connection> getConnectionPool() {
-        if (connectionPool == null) {
-            initializeConnectionPool();
+        if (isNull(connectionPool)) {
+            synchronized (ConnectionManager.class) {
+                if (isNull(connectionPool)) {
+                    initializeConnectionPool();
+                }
+            }
         }
         return connectionPool;
     }
