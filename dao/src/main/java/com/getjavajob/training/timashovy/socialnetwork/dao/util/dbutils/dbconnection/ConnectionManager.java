@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.PropertiesUtil.getProperty;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.PropertiesUtil.getDbConfigProperty;
 import static java.lang.Class.forName;
 import static java.lang.Integer.parseInt;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
@@ -44,7 +44,7 @@ public final class ConnectionManager {
     }
 
     public static PreparedStatement getPreparedStatement(String query) throws SQLException {
-        try (Connection connection = getConnection()) {
+        try (Connection connection = getConnectionFromPool()) {
             return connection.prepareStatement(query);
         } catch (SQLException e) {
             throw new DaoException("dao: create prepared statement failed: " + e.getMessage());
@@ -52,7 +52,7 @@ public final class ConnectionManager {
     }
 
     public static PreparedStatement getPreparedStatementWithGeneratedKeys(String query) throws SQLException {
-        try (Connection connection = getConnection()) {
+        try (Connection connection = getConnectionFromPool()) {
             return connection.prepareStatement(query, RETURN_GENERATED_KEYS);
         } catch (SQLException e) {
             throw new DaoException("dao: create prepared statement failed: " + e.getMessage());
@@ -60,11 +60,11 @@ public final class ConnectionManager {
     }
 
     /**
-     * Method for further manipulation with created connection to db.
+     * Get connection from connection pool and provide it to the client.
      *
      * @return connection to DB
      */
-    private static Connection getConnection() {
+    private static synchronized Connection getConnectionFromPool() {
         try {
             return getConnectionPool().take();
         } catch (InterruptedException e) {
@@ -79,8 +79,11 @@ public final class ConnectionManager {
         return connectionPool;
     }
 
+    /**
+     * Get size of connection pool. Create and fill connection pool with connections, available for usage.
+     */
     private static void initializeConnectionPool() {
-        String poolSize = getProperty(POOL_SIZE_KEY);
+        String poolSize = getDbConfigProperty(POOL_SIZE_KEY);
         int size = poolSize == null ? DEFAULT_POOL_SIZE : parseInt(poolSize);
         connectionPool = new ArrayBlockingQueue<>(size);
         loadDriver();
@@ -98,18 +101,18 @@ public final class ConnectionManager {
     }
 
     /**
-     * This method is private in order to avoid any custom creation of connection to DB.
-     * It only allows to work with connection through connection pool.
-     * So this method is used to create connections to DB with connection pool.
-     * This method uses fake connection - instance of ConnectionWrapper in order to
-     * return used connection to connection pool, rather than just close it.
+     * Create new connection to DB using config data.
+     * ConnectionWrapper is a fake class, mocking behaviour of true Connection class.
+     * The difference with real Connection is in method close().
+     * This method of ConnectionWrapper is overridden such that after closing it is returned
+     * to the existing connection pool.
      *
      * @return connection instance to database, based on config extracted data
      */
     private static Connection createConnection() {
         try {
-            Connection realConnection = DriverManager.getConnection(getProperty(URL_KEY), getProperty(LOGIN_KEY),
-                    getProperty(PASSWORD_KEY));
+            Connection realConnection = DriverManager.getConnection(getDbConfigProperty(URL_KEY),
+                    getDbConfigProperty(LOGIN_KEY), getDbConfigProperty(PASSWORD_KEY));
             return new ConnectionWrapper(realConnection, connectionPool);
         } catch (SQLException e) {
             throw new DaoException("Cannot create connection to db");

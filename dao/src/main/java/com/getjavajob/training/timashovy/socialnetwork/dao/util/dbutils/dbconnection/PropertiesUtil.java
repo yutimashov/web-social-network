@@ -8,7 +8,7 @@ import java.util.Properties;
 
 /**
  * Class for extracting values from db config files essential for establishing connection to database.
- * Class provides only one static method for clients {@link PropertiesUtil#getProperty(String)}.
+ * Class provides only one static method for clients {@link PropertiesUtil#getDbConfigProperty(String)}.
  * This method is responsible for extracting desirable value from config file.
  *
  * @author Timashov Yuriy
@@ -30,7 +30,7 @@ public final class PropertiesUtil {
         throw new AssertionError();
     }
 
-    public static String getProperty(String key) {
+    public static String getDbConfigProperty(String key) {
         if (PROPERTIES.isEmpty()) {
             loadProperties();
         }
