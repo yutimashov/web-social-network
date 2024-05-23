@@ -1,0 +1,85 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<html>
+<head>
+    <title>Edit account</title>
+</head>
+<body>
+<jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
+<h2>Edit account: ${requestScope.account.firstName} ${requestScope.account.lastName}</h2>
+<hr>
+<form action="${pageContext.request.contextPath}/account/edit?id=${requestScope.account.id}" method="POST"
+      enctype="multipart/form-data">
+    <label for="avatar">Current avatar:<br>
+        <c:if test="${requestScope.avatarInputStream != null}">
+            <img src="${pageContext.request.contextPath}/avatar?id=${requestScope.account.id}" alt="Profile avatar"
+                 width="250px" height="250px">
+        </c:if>
+        <br>
+        New avatar: <input type="file" name="avatar" id="avatar">
+    </label>
+    <hr>
+    <label for="name">First name<br>
+        Current: <strong>${requestScope.account.firstName}</strong><br>
+        New: <input type="text" name="name" id="name">
+    </label>
+    <hr>
+    <label for="lastName">Last name<br>
+        Current: <strong>${requestScope.account.lastName}</strong><br>
+        New: <input type="text" name="lastName" id="lastName">
+    </label>
+    <hr>
+    <label for="middleName">Middle name<br>
+        Current: <strong>${requestScope.account.middleName}</strong><br>
+        New: <input type="text" name="middleName" id="middleName">
+    </label>
+    <hr>
+    <label for="birthDate">Birthdate<br>
+        Current: <strong>${requestScope.account.birthDate}</strong><br>
+        New: <input type="date" name="birthDate" id="birthDate">
+    </label>
+    <hr>
+    <label for="personalPhoneValue">Personal phones<br>
+        <c:forEach items="${requestScope.personalPhones}" var="phone">
+        <span>&nbsp;&nbsp;Current:&nbsp;&nbsp;${phone.number}&nbsp;&nbsp;
+            <input type="hidden" name="personalPhoneId" value="${phone.id}">
+            New:&nbsp;&nbsp;<input type="text" name="personalPhoneValue" id="personalPhoneValue"
+                                   placeholder="Enter new phone number">
+        </span><br>
+        </c:forEach>
+        <br>
+    </label>
+    <hr>
+    <label for="workingPhoneValue">Working phones<br>
+        <c:forEach items="${requestScope.workingPhones}" var="phone">
+        <span>&nbsp;&nbsp;Current:&nbsp;&nbsp;${phone.number}&nbsp;&nbsp;
+            <input type="hidden" name="workingPhoneId" value="${phone.id}">
+            New:&nbsp;&nbsp;<input type="text" name="workingPhoneValue" id="workingPhoneValue"
+                                   placeholder="Enter new phone number">
+        </span><br>
+        </c:forEach>
+    </label>
+    <hr>
+    <label for="skype">Skype<br>
+        Current: <strong>${requestScope.account.skype}</strong><br>
+        New: <input type="text" name="skype" id="skype">
+    </label>
+    <hr>
+    <label for="icq">ICQ<br>
+        Current: <strong>${requestScope.account.icq}</strong><br>
+        New: <input type="text" name="icq" id="icq">
+    </label>
+    <hr>
+    <label for="email">Email<br>
+        Current: <strong>${requestScope.account.email}</strong><br>
+        New: <input type="email" id="email" name="email">
+    </label>
+    <hr>
+    <label for="email">Password<br>
+        New: <input type="password" id="password" name="password">
+    </label>
+    <hr>
+    <button type="submit">Apply changes</button>
+</form>
+</body>
+</html>

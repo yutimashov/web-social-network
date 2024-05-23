@@ -39,7 +39,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <db.url>jdbc:postgresql://localhost:5432/postgres</db.url>
+                <db.url>jdbc:postgresql://localhost:5432/social_network</db.url>
                 <db.login>postgres</db.login>
                 <db.password>21122012loliwe+</db.password>
             </properties>
