@@ -8,6 +8,7 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConst
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,6 +24,7 @@ import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.T
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
 import static java.lang.String.valueOf;
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.util.Objects.isNull;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -81,20 +83,21 @@ public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidat
     }
 
     @Override
-    public Long create(Account account) {
-        try (PreparedStatement createAccountStatement = getPreparedStatementWithGeneratedKeys(CREATE)) {
-            setAccountData(account, createAccountStatement);
-            if (createAccountStatement.executeUpdate() > 0) {
-                ResultSet generatedKeys = createAccountStatement.getGeneratedKeys();
-                if (generatedKeys.next()) {
-                    account.setId(generatedKeys.getLong(1));
+    public Long create(Connection connection, Account account) {
+        try (PreparedStatement accountStatement = connection.prepareStatement(CREATE, RETURN_GENERATED_KEYS)) {
+            setAccountData(account, accountStatement);
+            if (accountStatement.executeUpdate() > 0) {
+                try (ResultSet generatedKeys = accountStatement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        account.setId(generatedKeys.getLong(1));
+                    }
                 }
                 return account.getId();
             } else {
                 throw new DaoException("dao: create account method failed: no rows affected.");
             }
         } catch (SQLException e) {
-            throw new DaoException("dao: create account method failed: " + e.getMessage());
+            throw new DaoException("dao: create account method failed: " + e.getMessage(), e);
         }
     }
 

@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface PasswordService {
 
-    Long create(Long accountId, String rawPassword);
+    Password create(Long accountId, String rawPassword);
 
     Optional<Password> get(Long accountId);
 

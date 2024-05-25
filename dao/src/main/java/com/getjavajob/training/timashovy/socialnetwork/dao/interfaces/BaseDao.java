@@ -1,5 +1,8 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces;
 
+import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
+
+import java.sql.Connection;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,7 +13,7 @@ import java.util.Optional;
  */
 public interface BaseDao<T> {
 
-    Long create(T t);
+    Long create(Connection connection, T t);
 
     Optional<T> getById(Long id);
 

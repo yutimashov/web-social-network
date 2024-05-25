@@ -1,16 +1,23 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.AccountRole;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
+import com.getjavajob.training.timashovy.socialnetwork.common.util.AccountRegisterData;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PasswordDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipChecker;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipDao;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
+import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
+import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneService;
+import com.getjavajob.training.timashovy.socialnetwork.service.util.exceptions.ServiceException;
 
 import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +25,7 @@ import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
 import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toList;
 
@@ -26,45 +34,77 @@ public class AccountServiceImpl implements AccountService {
     private final BaseDao<Account> accountDao;
     private final FriendshipDao friendshipDao;
     private final FriendshipChecker friendshipChecker;
+    private final PhoneService phoneService;
     private final PhoneDao phoneDao;
+    private final PasswordService passwordService;
+    private final PasswordDao passwordDao;
 
     private AccountServiceImpl(BaseDao<Account> accountDao, FriendshipDao friendshipDao,
-                               FriendshipChecker friendshipChecker, PhoneDao phoneDao) {
+                               FriendshipChecker friendshipChecker, PhoneService phoneService, PhoneDao phoneDao,
+                               PasswordService passwordService, PasswordDao passwordDao) {
         this.accountDao = accountDao;
         this.friendshipDao = friendshipDao;
         this.friendshipChecker = friendshipChecker;
+        this.phoneService = phoneService;
         this.phoneDao = phoneDao;
+        this.passwordService = passwordService;
+        this.passwordDao = passwordDao;
     }
 
     public static AccountService createInstance(BaseDao<Account> accountDao, FriendshipDao friendshipDao,
-                                                    FriendshipChecker friendshipChecker, PhoneDao phoneDao) {
-        return new AccountServiceImpl(accountDao, friendshipDao, friendshipChecker, phoneDao);
+                                                FriendshipChecker friendshipChecker, PhoneService phoneService,
+                                                PhoneDao phoneDao, PasswordService passwordService,
+                                                PasswordDao passwordDao) {
+        return new AccountServiceImpl(accountDao, friendshipDao, friendshipChecker, phoneService, phoneDao,
+                passwordService, passwordDao);
     }
 
     /**
      * Create new account inserting it in database with auto generated incremented key
      *
-     * @param account object which data will be inserted in db as new account
+     * @param accountRegisterData object which data will be inserted in db as new account
      * @return id of created account
      */
     @Override
-    public Long create(Account account) {
-        validateAccount(account);
-        return accountDao.create(account);
+    public Long create(AccountRegisterData accountRegisterData) {
+        validateAccount(accountRegisterData.getAccount());
+        try (Connection conn = getConnection()) {
+            conn.setAutoCommit(false);
+            try {
+                Long accountId = accountDao.create(conn, accountRegisterData.getAccount());
+                passwordDao.create(conn, passwordService.create(accountId, accountRegisterData.getPassword()));
+                List<Phone> personalPhones = phoneService.createPersonalPhones(accountId,
+                        accountRegisterData.getPersonalPhoneNumbers());
+                for (Phone personalPhone : personalPhones) {
+                    phoneDao.create(conn, personalPhone);
+                }
+                List<Phone> workingPhones = phoneService.createWorkingPhones(accountId,
+                        accountRegisterData.getWorkingPhoneNumbers());
+                for (Phone workingPhone : workingPhones) {
+                    phoneDao.create(conn, workingPhone);
+                }
+                conn.commit();
+                return accountId;
+            } catch (SQLException e) {
+                conn.rollback();
+                throw new ServiceException("service exception: register new account: " + e.getMessage(), e);
+            }
+        } catch (SQLException e) {
+            throw new ServiceException("service exception: register new account: " + e.getMessage(), e);
+        }
     }
 
     private void validateAccount(Account account) {
-        if (isNull(account)) {
-            throw new IllegalArgumentException("Account should not be null");
-        }
-        if (isNull(account.getFirstName()) || isNull(account.getLastName()) || isNull(account.getEmail())) {
+        if (isNull(account) || isNull(account.getFirstName()) || isNull(account.getLastName())
+                || isNull(account.getEmail())) {
             throw new IllegalArgumentException("Account validation error: field not null constraint violation");
         }
         if (!isNull(account.getIcq()) || !("".equals(account.getIcq()))) {
             ((TableConstraintsValidator) accountDao).validateEntityFieldUniqueness("icq", account.getIcq());
         }
         if (!isNull(account.getSkype())) {
-            ((TableConstraintsValidator) accountDao).validateEntityFieldUniqueness("skype", account.getSkype());
+            ((TableConstraintsValidator) accountDao).validateEntityFieldUniqueness("skype",
+                    account.getSkype());
         }
         ((TableConstraintsValidator) accountDao).validateEntityFieldUniqueness("email", account.getEmail());
     }

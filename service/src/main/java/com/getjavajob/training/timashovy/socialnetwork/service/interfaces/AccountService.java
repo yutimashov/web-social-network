@@ -2,6 +2,7 @@ package com.getjavajob.training.timashovy.socialnetwork.service.interfaces;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.AccountRole;
+import com.getjavajob.training.timashovy.socialnetwork.common.util.AccountRegisterData;
 
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -14,7 +15,7 @@ import java.util.Optional;
  */
 public interface AccountService {
 
-    Long create(Account account);
+    Long create(AccountRegisterData accountRegisterData);
 
     boolean update(Long accountId, Account updatedAccount);
 

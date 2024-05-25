@@ -45,7 +45,7 @@ public final class ConnectionManager {
     }
 
     public static PreparedStatement getPreparedStatement(String query) throws SQLException {
-        try (Connection connection = getConnectionFromPool()) {
+        try (Connection connection = getConnection()) {
             return connection.prepareStatement(query);
         } catch (SQLException e) {
             throw new DaoException("dao: create prepared statement failed: " + e.getMessage());
@@ -53,7 +53,7 @@ public final class ConnectionManager {
     }
 
     public static PreparedStatement getPreparedStatementWithGeneratedKeys(String query) throws SQLException {
-        try (Connection connection = getConnectionFromPool()) {
+        try (Connection connection = getConnection()) {
             return connection.prepareStatement(query, RETURN_GENERATED_KEYS);
         } catch (SQLException e) {
             throw new DaoException("dao: create prepared statement failed: " + e.getMessage());
@@ -65,7 +65,7 @@ public final class ConnectionManager {
      *
      * @return connection to DB
      */
-    private static Connection getConnectionFromPool() {
+    public static Connection getConnection() {
         try {
             return getConnectionPool().take();
         } catch (InterruptedException e) {

@@ -15,6 +15,7 @@ import static com.getjavajob.training.timashovy.socialnetwork.common.account.Acc
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AccountDaoImpl.createInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static java.time.LocalDate.of;
 import static java.util.Optional.empty;
@@ -145,14 +146,14 @@ class AccountDaoImplTest {
         @Test
         void shouldReturn1LWhenAccountCreatedInEmptyTable() {
             executeScript(CLEAR_TABLES_FILEPATH);
-            assertEquals(1L, ACCOUNT_DAO_INSTANCE.create(TEST_ACCOUNT));
+            assertEquals(1L, ACCOUNT_DAO_INSTANCE.create(getConnection(), TEST_ACCOUNT));
         }
 
         @Test
         void shouldThrowExceptionWhenFirstNameIsNull() {
             TEST_ACCOUNT.setFirstName(null);
             Throwable exception = assertThrows(DaoException.class, () -> {
-                ACCOUNT_DAO_INSTANCE.create(TEST_ACCOUNT);
+                ACCOUNT_DAO_INSTANCE.create(getConnection(), TEST_ACCOUNT);
                 throw new UnsupportedOperationException("Not supported");
             });
             restoreTestAccountDefaultState();
@@ -163,7 +164,7 @@ class AccountDaoImplTest {
         void shouldThrowExceptionWhenLastNameIsNull() {
             TEST_ACCOUNT.setLastName(null);
             Throwable exception = assertThrows(DaoException.class, () -> {
-                ACCOUNT_DAO_INSTANCE.create(TEST_ACCOUNT);
+                ACCOUNT_DAO_INSTANCE.create(getConnection(), TEST_ACCOUNT);
                 throw new UnsupportedOperationException("Not supported");
             });
             restoreTestAccountDefaultState();

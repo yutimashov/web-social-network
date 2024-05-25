@@ -13,12 +13,12 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.Perso
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.search.SearchAccountDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.search.SearchGroupDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.singletonsregistry.DaoSingletonRegistry;
+import com.getjavajob.training.timashovy.socialnetwork.dao.util.singletonsregistry.SingletonRegistry;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.*;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group.GroupMembershipServiceImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group.GroupServiceImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.message.MessageServiceImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.search.SearchServiceImpl;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.singletonsregistry.SingletonRegistry;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -48,20 +48,27 @@ public class SingletonsHolderListener implements ServletContextListener {
         daoSingletonRegistry.registerSingleton(GROUP_MEMBERSHIP_DAO_SINGLETON, GroupMembershipDaoImpl.createInstance());
         daoSingletonRegistry.registerSingleton(GROUP_MESSAGE_DAO_SINGLETON, GroupMessageDaoImpl.createInstance());
         daoSingletonRegistry.registerSingleton(PERSONAL_MESSAGE_DAO_SINGLETON, PersonalMessageDaoImpl.createInstance());
-        daoSingletonRegistry.registerSingleton(PERSONAL_WALL_MESSAGE_DAO_SINGLETON, PersonalWallMessageDaoImpl.createInstance());
+        daoSingletonRegistry.registerSingleton(PERSONAL_WALL_MESSAGE_DAO_SINGLETON,
+                PersonalWallMessageDaoImpl.createInstance());
         daoSingletonRegistry.registerSingleton(SEARCH_ACCOUNT_DAO_SINGLETON, SearchAccountDaoImpl.createInstance());
         daoSingletonRegistry.registerSingleton(SEARCH_GROUP_DAO_SINGLETON, SearchGroupDaoImpl.createInstance());
     }
 
     private void registerServiceSingletons() {
         SingletonRegistry serviceSingletonRegistry = getServiceSingletonRegistry();
+        serviceSingletonRegistry.registerSingleton(PASSWORD_SERVICE_SINGLETON, PasswordServiceImpl.createInstance(
+                getDaoRegistryInstance().getSingleton(PASSWORD_DAO_SINGLETON)
+        ));
+        serviceSingletonRegistry.registerSingleton(PHONE_SERVICE_SINGLETON, PhoneServiceImpl.createInstance(
+                getDaoRegistryInstance().getSingleton(PHONE_DAO_SINGLETON)
+        ));
         serviceSingletonRegistry.registerSingleton(ACCOUNT_SERVICE_SINGLETON, AccountServiceImpl.createInstance(
                 getDaoRegistryInstance().getSingleton(ACCOUNT_DAO_SINGLETON),
                 getDaoRegistryInstance().getSingleton(FRIENDSHIP_DAO_SINGLETON),
                 getDaoRegistryInstance().getSingleton(FRIENDSHIP_CHECKER_SINGLETON),
-                getDaoRegistryInstance().getSingleton(PHONE_DAO_SINGLETON)
-        ));
-        serviceSingletonRegistry.registerSingleton(PASSWORD_SERVICE_SINGLETON, PasswordServiceImpl.createInstance(
+                getServiceSingletonRegistry().getSingleton(PHONE_SERVICE_SINGLETON),
+                getDaoRegistryInstance().getSingleton(PHONE_DAO_SINGLETON),
+                getServiceSingletonRegistry().getSingleton(PASSWORD_SERVICE_SINGLETON),
                 getDaoRegistryInstance().getSingleton(PASSWORD_DAO_SINGLETON)
         ));
         serviceSingletonRegistry.registerSingleton(LOGIN_SERVICE_SINGLETON, LoginServiceImpl.createInstance(
@@ -77,16 +84,15 @@ public class SingletonsHolderListener implements ServletContextListener {
                 getDaoRegistryInstance().getSingleton(PERSONAL_MESSAGE_DAO_SINGLETON),
                 getServiceSingletonRegistry().getSingleton(ACCOUNT_SERVICE_SINGLETON)
         ));
-        serviceSingletonRegistry.registerSingleton(PHONE_SERVICE_SINGLETON, PhoneServiceImpl.createInstance(
-                getDaoRegistryInstance().getSingleton(PHONE_DAO_SINGLETON)
-        ));
+
         serviceSingletonRegistry.registerSingleton(GROUP_SERVICE_SINGLETON, GroupServiceImpl.createInstance(
                 getDaoRegistryInstance().getSingleton(GROUP_DAO_SINGLETON)
         ));
-        serviceSingletonRegistry.registerSingleton(GROUP_MEMBERSHIP_SERVICE_SINGLETON, GroupMembershipServiceImpl.createInstance(
-                getServiceSingletonRegistry().getSingleton(ACCOUNT_SERVICE_SINGLETON),
-                getDaoRegistryInstance().getSingleton(GROUP_MEMBERSHIP_DAO_SINGLETON)
-        ));
+        serviceSingletonRegistry.registerSingleton(GROUP_MEMBERSHIP_SERVICE_SINGLETON,
+                GroupMembershipServiceImpl.createInstance(
+                        getServiceSingletonRegistry().getSingleton(ACCOUNT_SERVICE_SINGLETON),
+                        getDaoRegistryInstance().getSingleton(GROUP_MEMBERSHIP_DAO_SINGLETON)
+                ));
         serviceSingletonRegistry.registerSingleton(SEARCH_SERVICE_SINGLETON, SearchServiceImpl.createInstance(
                 getDaoRegistryInstance().getSingleton(SEARCH_ACCOUNT_DAO_SINGLETON),
                 getDaoRegistryInstance().getSingleton(SEARCH_GROUP_DAO_SINGLETON)

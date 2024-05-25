@@ -4,6 +4,7 @@ import com.getjavajob.training.timashovy.socialnetwork.common.account.Password;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PasswordDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,6 +17,7 @@ import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.d
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.AccountTableFields.ACCOUNT_ID;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.AccountTableFields.ACCOUNT_EMAIL;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.PasswordTableFields.*;
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
@@ -39,13 +41,13 @@ public class PasswordDaoImpl implements PasswordDao {
     }
 
     @Override
-    public Long create(Long accountId, Password password) {
-        try (PreparedStatement createPasswordStatement = getPreparedStatementWithGeneratedKeys(CREATE)) {
-            createPasswordStatement.setLong(1, accountId);
-            createPasswordStatement.setString(2, password.getPassword());
-            createPasswordStatement.setString(3, password.getSalt());
-            if (createPasswordStatement.executeUpdate() > 0) {
-                ResultSet generatedKeys = createPasswordStatement.getGeneratedKeys();
+    public Long create(Connection conn, Password password) {
+        try (PreparedStatement passwordStatement = conn.prepareStatement(CREATE, RETURN_GENERATED_KEYS)) {
+            passwordStatement.setLong(1, password.getAccountId());
+            passwordStatement.setString(2, password.getPassword());
+            passwordStatement.setString(3, password.getSalt());
+            if (passwordStatement.executeUpdate() > 0) {
+                ResultSet generatedKeys = passwordStatement.getGeneratedKeys();
                 if (generatedKeys.next()) {
                     password.setId(generatedKeys.getLong(1));
                 }

@@ -6,6 +6,7 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.Passwo
 
 import java.util.Optional;
 
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.PasswordUtil.generateSalt;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.PasswordUtil.hashCredentialData;
 
@@ -22,9 +23,9 @@ public class PasswordServiceImpl implements PasswordService {
     }
 
     @Override
-    public Long create(Long accountId, String rawPassword) {
+    public Password create(Long accountId, String rawPassword) {
         String salt = generateSalt();
-        return passwordDao.create(accountId, new Password(accountId, hashCredentialData(rawPassword, salt), salt));
+        return new Password(accountId, hashCredentialData(rawPassword, salt), salt);
     }
 
     @Override

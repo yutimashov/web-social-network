@@ -7,6 +7,8 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupS
 import java.util.List;
 import java.util.Optional;
 
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
+
 public class GroupServiceImpl implements GroupService {
 
     private final BaseDao<Group> groupDaoInstance;
@@ -21,7 +23,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public Long create(Group group) {
-        return groupDaoInstance.create(group);
+        return groupDaoInstance.create(getConnection(), group);
     }
 
     @Override

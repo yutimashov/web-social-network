@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group.GroupDaoImpl.createInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.*;
@@ -64,7 +65,7 @@ class GroupDaoImplTest {
 
         @Test
         public void shouldReturn2WhenCreateSecondGroup() {
-            assertEquals(2L, GROUP_DAO_INSTANCE.create(TEST_GROUP));
+            assertEquals(2L, GROUP_DAO_INSTANCE.create(getConnection(), TEST_GROUP));
         }
 
     }

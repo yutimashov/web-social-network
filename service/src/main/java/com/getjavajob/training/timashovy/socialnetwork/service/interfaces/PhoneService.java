@@ -7,7 +7,9 @@ import java.util.List;
 
 public interface PhoneService {
 
-    void createPhone(Long accountId, String phoneNumbers, PhoneType phoneType);
+    List<Phone> createPersonalPhones(Long accountId, String phoneNumbers);
+
+    List<Phone> createWorkingPhones(Long accountId, String phoneNumbers);
 
     List<Phone> getPersonalPhoneNumbers(Long accountId);
 

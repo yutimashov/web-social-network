@@ -5,6 +5,7 @@ import com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,11 +14,11 @@ import java.util.List;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNT_PHONES_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
 public class PhoneDaoImpl implements PhoneDao {
 
-    private static final String CREATE_PHONE = "INSERT INTO " + ACCOUNT_PHONES_TABLE + " (account_id, phone_type, "
+    private static final String CREATE = "INSERT INTO " + ACCOUNT_PHONES_TABLE + " (account_id, phone_type, "
             + "phone_number) VALUES (?, ?, ?);";
     private static final String GET_PHONE = "SELECT id, phone_type, phone_number, account_id FROM "
             + ACCOUNT_PHONES_TABLE + " WHERE account_id = ?;";
@@ -32,9 +33,11 @@ public class PhoneDaoImpl implements PhoneDao {
     }
 
     @Override
-    public Long create(Phone phone) {
-        try (PreparedStatement createPhoneStatement = getPreparedStatementWithGeneratedKeys(CREATE_PHONE)) {
-            setPhoneData(phone, createPhoneStatement);
+    public Long create(Connection conn, Phone phone) {
+        try (PreparedStatement createPhoneStatement = conn.prepareStatement(CREATE, RETURN_GENERATED_KEYS)) {
+            createPhoneStatement.setLong(1, phone.getAccountId());
+            createPhoneStatement.setString(2, phone.getPhoneType().name());
+            createPhoneStatement.setString(3, phone.getNumber());
             if (createPhoneStatement.executeUpdate() > 0) {
                 ResultSet generatedKeys = createPhoneStatement.getGeneratedKeys();
                 if (generatedKeys.next()) {
@@ -47,12 +50,6 @@ public class PhoneDaoImpl implements PhoneDao {
         } catch (SQLException e) {
             throw new DaoException("dao: create phone failed: " + e.getMessage());
         }
-    }
-
-    private void setPhoneData(Phone phone, PreparedStatement preparedStatement) throws SQLException {
-        preparedStatement.setLong(1, phone.getAccountId());
-        preparedStatement.setString(2, phone.getPhoneType().name());
-        preparedStatement.setString(3, phone.getNumber());
     }
 
     @Override

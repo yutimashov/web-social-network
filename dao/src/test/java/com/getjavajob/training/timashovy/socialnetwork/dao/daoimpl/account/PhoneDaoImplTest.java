@@ -11,6 +11,7 @@ import java.util.List;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PhoneDaoImpl.createInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.*;
@@ -46,13 +47,13 @@ class PhoneDaoImplTest {
 
         @Test
         void shouldReturnPhoneIdWhenPhoneWasCreated() {
-            assertEquals(3L, PHONE_DAO.create(new Phone(PERSONAL, "test", 1L)));
+            assertEquals(3L, PHONE_DAO.create(getConnection(), new Phone(PERSONAL, "test", 1L)));
         }
 
         @Test
         void shouldThrowExceptionWhenCreationFailed() {
             Throwable exception = assertThrows(DaoException.class, () -> {
-                PHONE_DAO.create(new Phone(PERSONAL, "test", -1L));
+                PHONE_DAO.create(getConnection(), new Phone(PERSONAL, "test", -1L));
                 throw new UnsupportedOperationException("Not supported");
             });
             assertEquals(DaoException.class, exception.getClass());

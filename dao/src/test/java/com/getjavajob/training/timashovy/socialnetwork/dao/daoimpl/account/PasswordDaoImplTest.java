@@ -6,6 +6,7 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 import org.junit.jupiter.api.*;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PasswordDaoImpl.createInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,14 +37,14 @@ class PasswordDaoImplTest {
 
         @Test
         void shouldReturnPasswordIdWhenPasswordIsCreated() {
-            assertEquals(2L, PASSWORD_DAO.create(2L, new Password(1L, "test", "test")));
+            assertEquals(2L, PASSWORD_DAO.create(getConnection(), new Password(1L, "test", "test")));
         }
 
         @Test
         void shouldThrowExceptionWhenAccountIdDoesNotExist() {
             Long nonExistingAccountId = -1L;
             Throwable exception = assertThrows(DaoException.class, () -> {
-                PASSWORD_DAO.create(nonExistingAccountId, new Password(nonExistingAccountId, "test", "test"));
+                PASSWORD_DAO.create(getConnection(), new Password(nonExistingAccountId, "test", "test"));
                 throw new UnsupportedOperationException("Not supported");
             });
             assertEquals(DaoException.class, exception.getClass());
