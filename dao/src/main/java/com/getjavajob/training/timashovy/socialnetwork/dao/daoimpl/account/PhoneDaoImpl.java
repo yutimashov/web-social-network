@@ -4,6 +4,7 @@ import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
+import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionWrapper;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -33,7 +34,7 @@ public class PhoneDaoImpl implements PhoneDao {
     }
 
     @Override
-    public Long create(Connection conn, Phone phone) {
+    public Long create(ConnectionWrapper conn, Phone phone) {
         try (PreparedStatement createPhoneStatement = conn.prepareStatement(CREATE, RETURN_GENERATED_KEYS)) {
             createPhoneStatement.setLong(1, phone.getAccountId());
             createPhoneStatement.setString(2, phone.getPhoneType().name());

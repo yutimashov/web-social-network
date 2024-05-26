@@ -45,7 +45,7 @@ public final class ConnectionManager {
     }
 
     public static PreparedStatement getPreparedStatement(String query) throws SQLException {
-        try (Connection connection = getConnection()) {
+        try (ConnectionWrapper connection = getConnection()) {
             return connection.prepareStatement(query);
         } catch (SQLException e) {
             throw new DaoException("dao: create prepared statement failed: " + e.getMessage());
@@ -53,7 +53,7 @@ public final class ConnectionManager {
     }
 
     public static PreparedStatement getPreparedStatementWithGeneratedKeys(String query) throws SQLException {
-        try (Connection connection = getConnection()) {
+        try (ConnectionWrapper connection = getConnection()) {
             return connection.prepareStatement(query, RETURN_GENERATED_KEYS);
         } catch (SQLException e) {
             throw new DaoException("dao: create prepared statement failed: " + e.getMessage());
@@ -65,9 +65,9 @@ public final class ConnectionManager {
      *
      * @return connection to DB
      */
-    public static Connection getConnection() {
+    public static ConnectionWrapper getConnection() {
         try {
-            return getConnectionPool().take();
+            return (ConnectionWrapper) getConnectionPool().take();
         } catch (InterruptedException e) {
             throw new DaoException("Cannot establish connection to db");
         }
@@ -114,7 +114,7 @@ public final class ConnectionManager {
      *
      * @return connection instance to database, based on config extracted data
      */
-    private static Connection createConnection() {
+    private static ConnectionWrapper createConnection() {
         try {
             Connection realConnection = DriverManager.getConnection(getDbConfigProperty(URL_KEY),
                     getDbConfigProperty(LOGIN_KEY), getDbConfigProperty(PASSWORD_KEY));

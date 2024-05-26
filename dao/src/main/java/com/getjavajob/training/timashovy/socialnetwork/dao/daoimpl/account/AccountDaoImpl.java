@@ -7,6 +7,7 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
+import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionWrapper;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -83,7 +84,7 @@ public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidat
     }
 
     @Override
-    public Long create(Connection connection, Account account) {
+    public Long create(ConnectionWrapper connection, Account account) {
         try (PreparedStatement accountStatement = connection.prepareStatement(CREATE, RETURN_GENERATED_KEYS)) {
             setAccountData(account, accountStatement);
             if (accountStatement.executeUpdate() > 0) {

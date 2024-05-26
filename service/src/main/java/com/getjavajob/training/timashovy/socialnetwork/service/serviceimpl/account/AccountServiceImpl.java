@@ -10,13 +10,13 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.Pa
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipChecker;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionWrapper;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneService;
 import com.getjavajob.training.timashovy.socialnetwork.service.util.exceptions.ServiceException;
 
 import java.io.InputStream;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -68,7 +68,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Long create(AccountRegisterData accountRegisterData) {
         validateAccount(accountRegisterData.getAccount());
-        try (Connection conn = getConnection()) {
+        try (ConnectionWrapper conn = getConnection()) {
             conn.setAutoCommit(false);
             try {
                 Long accountId = accountDao.create(conn, accountRegisterData.getAccount());
