@@ -9,7 +9,6 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.Ph
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionWrapper;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,7 +22,6 @@ import static com.getjavajob.training.timashovy.socialnetwork.common.account.Pho
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.AccountTableFields.*;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNT_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
 import static java.lang.String.valueOf;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.util.Objects.isNull;
@@ -55,13 +53,21 @@ public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidat
             + " = ?, " + ACCOUNT_AVATAR + " = ? WHERE " + ACCOUNT_ID + " = ?;";
     private static final String DELETE_BY_ID = "DELETE FROM " + ACCOUNT_TABLE + " WHERE " + ACCOUNT_ID + " = ?;";
     private final PhoneDao phoneDao;
+    private static volatile BaseDao<Account> instance;
 
     private AccountDaoImpl(PhoneDao phoneDao) {
         this.phoneDao = phoneDao;
     }
 
-    public static AccountDaoImpl createInstance(PhoneDao phoneDao) {
-        return new AccountDaoImpl(phoneDao);
+    public static BaseDao<Account> getInstance(PhoneDao phoneDao) {
+        if (instance == null) {
+            synchronized (AccountDaoImpl.class) {
+                if (instance == null) {
+                    instance = new AccountDaoImpl(phoneDao);
+                }
+            }
+        }
+        return instance;
     }
 
     @Override

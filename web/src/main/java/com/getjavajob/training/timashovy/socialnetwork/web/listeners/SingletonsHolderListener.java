@@ -38,8 +38,8 @@ public class SingletonsHolderListener implements ServletContextListener {
 
     private void registerDaoSingletons() {
         DaoSingletonRegistry daoSingletonRegistry = getDaoRegistryInstance();
-        daoSingletonRegistry.registerSingleton(PHONE_DAO_SINGLETON, PhoneDaoImpl.createInstance());
-        daoSingletonRegistry.registerSingleton(ACCOUNT_DAO_SINGLETON, AccountDaoImpl.createInstance(
+        daoSingletonRegistry.registerSingleton(PHONE_DAO_SINGLETON, PhoneDaoImpl.getInstance());
+        daoSingletonRegistry.registerSingleton(ACCOUNT_DAO_SINGLETON, AccountDaoImpl.getInstance(
                 getDaoRegistryInstance().getSingleton(PHONE_DAO_SINGLETON)));
         daoSingletonRegistry.registerSingleton(FRIENDSHIP_DAO_SINGLETON, FriendshipDaoImpl.createInstance());
         daoSingletonRegistry.registerSingleton(FRIENDSHIP_CHECKER_SINGLETON, FriendshipCheckerDaoImpl.createInstance());

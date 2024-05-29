@@ -6,7 +6,6 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.Ph
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionWrapper;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,13 +23,20 @@ public class PhoneDaoImpl implements PhoneDao {
     private static final String GET_PHONE = "SELECT id, phone_type, phone_number, account_id FROM "
             + ACCOUNT_PHONES_TABLE + " WHERE account_id = ?;";
     private static final String UPDATE = "UPDATE " + ACCOUNT_PHONES_TABLE + " SET phone_number = ? WHERE id = ?;";
-    private static final PhoneDaoImpl PHONE_DAO_IMPL = new PhoneDaoImpl();
+    private static volatile PhoneDao instance;
 
     private PhoneDaoImpl() {
     }
 
-    public static PhoneDao createInstance() {
-        return PHONE_DAO_IMPL;
+    public static PhoneDao getInstance() {
+        if (instance == null) {
+            synchronized (PhoneDaoImpl.class) {
+                if (instance == null) {
+                    instance = new PhoneDaoImpl();
+                }
+            }
+        }
+        return instance;
     }
 
     @Override
