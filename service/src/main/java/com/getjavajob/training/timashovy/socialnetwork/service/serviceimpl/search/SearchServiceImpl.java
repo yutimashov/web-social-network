@@ -11,6 +11,7 @@ public class SearchServiceImpl implements SearchService {
 
     private final SearchDao<Account> searchAccountDao;
     private final SearchDao<Group> searchGroupDao;
+    private static volatile SearchService instance;
 
     private SearchServiceImpl(SearchDao<Account> searchAccountDao, SearchDao<Group> searchGroupDao) {
         this.searchAccountDao = searchAccountDao;
@@ -18,7 +19,14 @@ public class SearchServiceImpl implements SearchService {
     }
 
     public static SearchService createInstance(SearchDao<Account> searchAccountDao, SearchDao<Group> searchGroupDao) {
-        return new SearchServiceImpl(searchAccountDao, searchGroupDao);
+        if (instance == null) {
+            synchronized (SearchServiceImpl.class) {
+                if (instance == null) {
+                    instance = new SearchServiceImpl(searchAccountDao, searchGroupDao);
+                }
+            }
+        }
+        return instance;
     }
 
     @Override

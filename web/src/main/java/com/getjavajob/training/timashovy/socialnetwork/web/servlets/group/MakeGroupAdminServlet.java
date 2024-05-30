@@ -8,13 +8,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonRegistry.getServiceSingletonRegistry;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonRegistry.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.GROUP_MEMBERSHIP_SERVICE_SINGLETON;
 import static java.lang.Long.valueOf;
 
 public class MakeGroupAdminServlet extends HttpServlet {
 
-    private final GroupMembershipService groupMembershipService = getServiceSingletonRegistry()
+    private final GroupMembershipService groupMembershipService = getInstance()
             .getSingleton(GROUP_MEMBERSHIP_SERVICE_SINGLETON);
 
     @Override

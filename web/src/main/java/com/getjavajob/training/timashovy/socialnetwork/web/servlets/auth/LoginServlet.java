@@ -3,8 +3,6 @@ package com.getjavajob.training.timashovy.socialnetwork.web.servlets.auth;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.LoginServiceImpl;
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.PasswordServiceImpl;
-import com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonRegistry;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -14,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonRegistry.getServiceSingletonRegistry;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonRegistry.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.LOGIN_SERVICE_SINGLETON;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.PASSWORD_SERVICE_SINGLETON;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.ErrorTypes.AUTH_DATA_ERROR;
@@ -34,8 +32,8 @@ public class LoginServlet extends HttpServlet {
     private final PasswordService passwordService;
 
     public LoginServlet() {
-        this.loginService = getServiceSingletonRegistry().getSingleton(LOGIN_SERVICE_SINGLETON);
-        this.passwordService = getServiceSingletonRegistry().getSingleton(PASSWORD_SERVICE_SINGLETON);
+        this.loginService = getInstance().getSingleton(LOGIN_SERVICE_SINGLETON);
+        this.passwordService = getInstance().getSingleton(PASSWORD_SERVICE_SINGLETON);
     }
 
     public LoginServlet(LoginServiceImpl loginService, PasswordService passwordService) {

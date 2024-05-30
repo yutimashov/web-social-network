@@ -6,13 +6,13 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.IOException;
 
-import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonRegistry.getServiceSingletonRegistry;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonRegistry.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.MESSAGE_SERVICE_SINGLETON;
 import static java.lang.Long.valueOf;
 
 public class ShowImagesServlet extends HttpServlet {
 
-    private final MessageServiceImpl messageService = getServiceSingletonRegistry()
+    private final MessageServiceImpl messageService = getInstance()
             .getSingleton(MESSAGE_SERVICE_SINGLETON);
 
     @Override

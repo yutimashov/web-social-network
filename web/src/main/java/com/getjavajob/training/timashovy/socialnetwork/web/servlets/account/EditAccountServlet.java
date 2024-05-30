@@ -14,7 +14,7 @@ import java.time.LocalDate;
 
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
-import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonRegistry.getServiceSingletonRegistry;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonRegistry.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.ACCOUNT_SERVICE_SINGLETON;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.PHONE_SERVICE_SINGLETON;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
@@ -30,8 +30,8 @@ public class EditAccountServlet extends HttpServlet {
     private static final String SKYPE_PARAMETER_NAME = "skype";
     private static final String ICQ_PARAMETER_NAME = "icq";
     private static final String EMAIL_PARAMETER_NAME = "email";
-    private final AccountService accountService = getServiceSingletonRegistry().getSingleton(ACCOUNT_SERVICE_SINGLETON);
-    private final PhoneServiceImpl phoneService = getServiceSingletonRegistry().getSingleton(PHONE_SERVICE_SINGLETON);
+    private final AccountService accountService = getInstance().getSingleton(ACCOUNT_SERVICE_SINGLETON);
+    private final PhoneServiceImpl phoneService = getInstance().getSingleton(PHONE_SERVICE_SINGLETON);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

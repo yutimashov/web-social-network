@@ -38,6 +38,7 @@ public class AccountServiceImpl implements AccountService {
     private final PhoneDao phoneDao;
     private final PasswordService passwordService;
     private final PasswordDao passwordDao;
+    private static volatile AccountService instance;
 
     private AccountServiceImpl(BaseDao<Account> accountDao, FriendshipDao friendshipDao,
                                FriendshipChecker friendshipChecker, PhoneService phoneService, PhoneDao phoneDao,
@@ -51,12 +52,19 @@ public class AccountServiceImpl implements AccountService {
         this.passwordDao = passwordDao;
     }
 
-    public static AccountService createInstance(BaseDao<Account> accountDao, FriendshipDao friendshipDao,
-                                                FriendshipChecker friendshipChecker, PhoneService phoneService,
-                                                PhoneDao phoneDao, PasswordService passwordService,
-                                                PasswordDao passwordDao) {
-        return new AccountServiceImpl(accountDao, friendshipDao, friendshipChecker, phoneService, phoneDao,
-                passwordService, passwordDao);
+    public static AccountService getInstance(BaseDao<Account> accountDao, FriendshipDao friendshipDao,
+                                             FriendshipChecker friendshipChecker, PhoneService phoneService,
+                                             PhoneDao phoneDao, PasswordService passwordService,
+                                             PasswordDao passwordDao) {
+        if (instance == null) {
+            synchronized (AccountServiceImpl.class) {
+                if (instance == null) {
+                    instance = new AccountServiceImpl(accountDao, friendshipDao, friendshipChecker, phoneService,
+                            phoneDao, passwordService, passwordDao);
+                }
+            }
+        }
+        return instance;
     }
 
     /**

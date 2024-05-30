@@ -6,20 +6,27 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.Passwo
 
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.PasswordUtil.generateSalt;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.PasswordUtil.hashCredentialData;
 
 public class PasswordServiceImpl implements PasswordService {
 
     private final PasswordDao passwordDao;
+    private static volatile PasswordService instance;
 
     private PasswordServiceImpl(PasswordDao passwordDao) {
         this.passwordDao = passwordDao;
     }
 
-    public static PasswordService createInstance(PasswordDao passwordDao) {
-        return new PasswordServiceImpl(passwordDao);
+    public static PasswordService getInstance(PasswordDao passwordDao) {
+        if (instance == null) {
+            synchronized (PasswordServiceImpl.class) {
+                if (instance == null) {
+                    instance = new PasswordServiceImpl(passwordDao);
+                }
+            }
+        }
+        return instance;
     }
 
     @Override

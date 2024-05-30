@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonRegistry.getServiceSingletonRegistry;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonRegistry.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.LOGIN_SERVICE_SINGLETON;
 import static java.util.Objects.isNull;
 
@@ -18,7 +18,7 @@ public class RememberMeFilter implements Filter {
 
     private static final String LOGIN_COOKIE_NAME = "login";
     private static final String PASSWORD_COOKIE_NAME = "password";
-    private final LoginServiceImpl loginService = getServiceSingletonRegistry().getSingleton(LOGIN_SERVICE_SINGLETON);
+    private final LoginServiceImpl loginService = getInstance().getSingleton(LOGIN_SERVICE_SINGLETON);
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)

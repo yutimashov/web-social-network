@@ -2,8 +2,8 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.util.singletonsregis
 
 public interface SingletonRegistry {
 
-    <T> void registerSingleton(String key, T singleton);
+    <T> void addSingleton(String singletonName, T singleton);
 
-    <T> T getSingleton(String key);
+    <T> T getSingleton(String singletonName);
 
 }

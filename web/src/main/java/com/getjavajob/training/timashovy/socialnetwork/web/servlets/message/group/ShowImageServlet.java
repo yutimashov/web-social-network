@@ -12,7 +12,7 @@ import static java.lang.Long.valueOf;
 
 public class ShowImageServlet extends HttpServlet {
 
-    private final MessageService messageService = ServiceSingletonRegistry.getServiceSingletonRegistry()
+    private final MessageService messageService = ServiceSingletonRegistry.getInstance()
             .getSingleton(MESSAGE_SERVICE_SINGLETON);
 
     @Override

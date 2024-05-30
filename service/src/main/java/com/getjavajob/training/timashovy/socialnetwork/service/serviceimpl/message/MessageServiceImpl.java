@@ -16,6 +16,7 @@ public class MessageServiceImpl implements MessageService {
     private final MessageDao accountWallMessageDao;
     private final PersonalMessageDaoImpl personalMessageDao;
     private final AccountService accountService;
+    private static volatile MessageService instance;
 
     private MessageServiceImpl(MessageDao groupMessageDao, MessageDao accountWallMessageDao,
                                PersonalMessageDaoImpl personalMessageDao, AccountService accountService) {
@@ -25,10 +26,18 @@ public class MessageServiceImpl implements MessageService {
         this.accountService = accountService;
     }
 
-    public static MessageService createInstance(MessageDao groupMessageDao, MessageDao accountWallMessageDao,
-                                                    PersonalMessageDaoImpl personalMessageDao,
-                                                    AccountService accountService) {
-        return new MessageServiceImpl(groupMessageDao, accountWallMessageDao, personalMessageDao, accountService);
+    public static MessageService getInstance(MessageDao groupMessageDao, MessageDao accountWallMessageDao,
+                                             PersonalMessageDaoImpl personalMessageDao,
+                                             AccountService accountService) {
+        if (instance == null) {
+            synchronized (MessageServiceImpl.class) {
+                if (instance == null) {
+                    instance = new MessageServiceImpl(groupMessageDao, accountWallMessageDao, personalMessageDao,
+                            accountService);
+                }
+            }
+        }
+        return instance;
     }
 
     @Override

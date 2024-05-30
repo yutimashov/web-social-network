@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonRegistry.getServiceSingletonRegistry;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonRegistry.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.SEARCH_SERVICE_SINGLETON;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspPagePaths.SEARCH_RESULT;
@@ -19,7 +19,7 @@ import static java.lang.Integer.parseInt;
 
 public class SearchServlet extends HttpServlet {
 
-    private final SearchService searchService = getServiceSingletonRegistry().getSingleton(SEARCH_SERVICE_SINGLETON);
+    private final SearchService searchService = getInstance().getSingleton(SEARCH_SERVICE_SINGLETON);
     private static final int RESULTS_PER_PAGE = 5;
 
     @Override

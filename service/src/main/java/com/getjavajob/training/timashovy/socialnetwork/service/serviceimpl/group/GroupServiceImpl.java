@@ -12,13 +12,21 @@ import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.d
 public class GroupServiceImpl implements GroupService {
 
     private final BaseDao<Group> groupDaoInstance;
+    private static volatile GroupService instance;
 
     private GroupServiceImpl(BaseDao<Group> groupDaoInstance) {
         this.groupDaoInstance = groupDaoInstance;
     }
 
-    public static GroupService createInstance(BaseDao<Group> groupDaoInstance) {
-        return new GroupServiceImpl(groupDaoInstance);
+    public static GroupService getInstance(BaseDao<Group> groupDaoInstance) {
+        if (instance == null) {
+            synchronized (GroupServiceImpl.class) {
+                if (instance == null) {
+                    instance = new GroupServiceImpl(groupDaoInstance);
+                }
+            }
+        }
+        return instance;
     }
 
     @Override

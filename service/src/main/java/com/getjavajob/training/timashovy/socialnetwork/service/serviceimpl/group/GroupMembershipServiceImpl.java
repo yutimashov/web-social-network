@@ -4,26 +4,34 @@ import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.GroupMembershipDao;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupMembershipService;
+import com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonRegistry.getServiceSingletonRegistry;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.ACCOUNT_SERVICE_SINGLETON;
 
 public class GroupMembershipServiceImpl implements GroupMembershipService {
 
     private final AccountService accountService;
     private final GroupMembershipDao groupMembershipDao;
+    private static volatile GroupMembershipService instance;
 
     private GroupMembershipServiceImpl(AccountService accountService, GroupMembershipDao groupMembershipDao) {
         this.accountService = accountService;
         this.groupMembershipDao = groupMembershipDao;
     }
 
-    public static GroupMembershipService createInstance(AccountService accountService,
-                                                            GroupMembershipDao groupMembershipDao) {
-        return new GroupMembershipServiceImpl(accountService, groupMembershipDao);
+    public static GroupMembershipService getInstance(AccountService accountService,
+                                                     GroupMembershipDao groupMembershipDao) {
+        if (instance == null) {
+            synchronized (GroupMembershipServiceImpl.class) {
+                if (instance == null) {
+                    instance = new GroupMembershipServiceImpl(accountService, groupMembershipDao);
+                }
+            }
+        }
+        return instance;
     }
 
     @Override
@@ -45,7 +53,7 @@ public class GroupMembershipServiceImpl implements GroupMembershipService {
     public List<Account> getIncomingRequests(Long groupId) {
         List<Long> accountsId = groupMembershipDao.getRequests(groupId);
         List<Account> accounts = new ArrayList<>();
-        AccountService accountService = getServiceSingletonRegistry().getSingleton(ACCOUNT_SERVICE_SINGLETON);
+        AccountService accountService = ServiceSingletonRegistry.getInstance().getSingleton(ACCOUNT_SERVICE_SINGLETON);
         for (Long accountId : accountsId) {
             if (accountService.getById(accountId).isPresent()) {
                 accounts.add(accountService.getById(accountId).get());

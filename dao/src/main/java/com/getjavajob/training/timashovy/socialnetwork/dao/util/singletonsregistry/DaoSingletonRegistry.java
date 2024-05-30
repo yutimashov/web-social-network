@@ -12,12 +12,12 @@ public class DaoSingletonRegistry implements SingletonRegistry {
         daoSingletons = new HashMap<>();
     }
 
-    public static DaoSingletonRegistry getDaoRegistryInstance() {
+    public static DaoSingletonRegistry getInstance() {
         return DAO_REGISTRY_INSTANCE;
     }
 
     @Override
-    public synchronized <T> void registerSingleton(String key, T singleton) {
+    public synchronized <T> void addSingleton(String key, T singleton) {
         daoSingletons.put(key, singleton);
     }
 

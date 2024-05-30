@@ -8,13 +8,21 @@ import static com.getjavajob.training.timashovy.socialnetwork.common.account.Acc
 public class AdminServiceImpl implements AdminService {
 
     private final AccountService accountService;
+    private static volatile AdminService instance;
 
     private AdminServiceImpl(AccountService accountService) {
         this.accountService = accountService;
     }
 
-    public static AdminService createInstance(AccountService accountService) {
-        return new AdminServiceImpl(accountService);
+    public static AdminService getInstance(AccountService accountService) {
+        if (instance == null) {
+            synchronized (AdminServiceImpl.class) {
+                if (instance == null) {
+                    instance = new AdminServiceImpl(accountService);
+                }
+            }
+        }
+        return instance;
     }
 
     @Override
