@@ -6,7 +6,6 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConst
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionWrapper;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,33 +13,40 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.GROUP_TABLE;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.GROUPS_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.GroupTableFields.*;
 import static java.util.Objects.isNull;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
+//TODO: getInstance() should return BaseDao<Group>. Extract TableConstraintsValidator in separate class.
 public class GroupDaoImpl implements BaseDao<Group>, TableConstraintsValidator {
 
-    private static final GroupDaoImpl GROUP_DAO_INSTANCE = new GroupDaoImpl();
-    private static final String SAVE_GROUP = "INSERT INTO " + GROUP_TABLE + " (" + GROUP_NAME + ", "
+    private static final String SAVE_GROUP = "INSERT INTO " + GROUPS_TABLE + " (" + GROUP_NAME + ", "
             + GROUP_DESCRIPTION + ", " + GROUP_OWNER_ID + ", " + GROUP_AVATAR + ") VALUES(?, ?, ?, ?)";
     private static final String GET_GROUP_BY_ID = "SELECT " + GROUP_ID + ", " + GROUP_NAME + ", " + GROUP_DESCRIPTION
-            + ", " + GROUP_OWNER_ID + ", " + GROUP_AVATAR + " FROM " + GROUP_TABLE + " WHERE " + GROUP_ID + " = ?";
+            + ", " + GROUP_OWNER_ID + ", " + GROUP_AVATAR + " FROM " + GROUPS_TABLE + " WHERE " + GROUP_ID + " = ?";
     private static final String GET_ALL_GROUPS = "SELECT " + GROUP_ID + ", " + GROUP_NAME + ", " + GROUP_DESCRIPTION
-            + ", " + GROUP_OWNER_ID + ", " + GROUP_AVATAR + " FROM " + GROUP_TABLE + ";";
-    private static final String UPDATE_GROUP_BY_ID = "UPDATE " + GROUP_TABLE + " SET " + GROUP_NAME + " = ?, "
+            + ", " + GROUP_OWNER_ID + ", " + GROUP_AVATAR + " FROM " + GROUPS_TABLE + ";";
+    private static final String UPDATE_GROUP_BY_ID = "UPDATE " + GROUPS_TABLE + " SET " + GROUP_NAME + " = ?, "
             + GROUP_DESCRIPTION + " = ?, " + GROUP_OWNER_ID + " = ?, " + GROUP_AVATAR + " = ? WHERE " + GROUP_ID
             + " = ?";
-    private static final String DELETE_GROUP_BY_ID = "DELETE FROM " + GROUP_TABLE + " WHERE " + GROUP_ID + " = ?";
+    private static final String DELETE_GROUP_BY_ID = "DELETE FROM " + GROUPS_TABLE + " WHERE " + GROUP_ID + " = ?";
+    private static volatile GroupDaoImpl instance;
 
     private GroupDaoImpl() {
     }
 
-    public static GroupDaoImpl createInstance() {
-        return GROUP_DAO_INSTANCE;
+    public static GroupDaoImpl getInstance() {
+        if (instance == null) {
+            synchronized (GroupDaoImpl.class) {
+                if (instance == null) {
+                    instance = new GroupDaoImpl();
+                }
+            }
+        }
+        return instance;
     }
 
     @Override

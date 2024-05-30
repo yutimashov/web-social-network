@@ -11,36 +11,52 @@ import java.util.List;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.GROUP_MEMBERS_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.GroupMembersFields.*;
 
 public class GroupMembershipDaoImpl implements GroupMembershipDao {
 
-    private static final String ADD_USER = "INSERT INTO " + GROUP_MEMBERS_TABLE + " (account_id, group_id) "
-            + "VALUES(?, ?);";
-    private static final String MAKE_USER_GROUP_ADMIN = "UPDATE " + GROUP_MEMBERS_TABLE + " SET is_admin = TRUE WHERE "
-            + "group_id = ? AND account_id = ?;";
-    private static final String MAKE_USER_GROUP_MEMBER = "UPDATE " + GROUP_MEMBERS_TABLE + " SET is_member = TRUE "
-            + "WHERE group_id = ? AND account_id = ?;";
-    private static final String GET_GROUP_FOLLOWERS = "SELECT account_id FROM " + GROUP_MEMBERS_TABLE
-            + " WHERE group_id = ? AND is_member = FALSE ORDER BY registration_date DESC;";
-    private static final String DELETE_GROUP_MEMBER = "DELETE FROM " + GROUP_MEMBERS_TABLE + " WHERE group_id = ? AND "
-            + "account_id = ?;";
-    private static final String CHECK_ACCOUNT_ADMIN = "SELECT id FROM " + GROUP_MEMBERS_TABLE
-            + " WHERE group_id = ? AND account_id = ? AND is_admin = TRUE;";
-    private static final String CHECK_ACCOUNT_SUBSCRIBER = "SELECT id FROM " + GROUP_MEMBERS_TABLE
-            + " WHERE group_id = ? AND account_id = ? AND is_member = FALSE;";
-    private static final String CHECK_ACCOUNT_MEMBER = "SELECT id FROM " + GROUP_MEMBERS_TABLE
-            + " WHERE group_id = ? AND account_id = ? AND is_member = TRUE;";
-    private static final String GET_REGULAR_MEMBERS = "SELECT account_id FROM " + GROUP_MEMBERS_TABLE
-            + " WHERE group_id = ? AND is_member = TRUE AND is_admin = FALSE;";
-    private static final String GET_ADMINS = "SELECT account_id FROM " + GROUP_MEMBERS_TABLE + " WHERE group_id = ? "
-            + "AND is_member = TRUE AND is_admin = TRUE;";
-    private static final GroupMembershipDao GROUP_MEMBERSHIP_DAO = new GroupMembershipDaoImpl();
+    private static final String ADD_USER = "INSERT INTO " + GROUP_MEMBERS_TABLE + " (" + GROUP_MEMBERS_ACCOUNT_ID
+            + ", " + GROUP_MEMBERS_GROUP_ID + ") VALUES(?, ?);";
+    private static final String MAKE_USER_GROUP_ADMIN = "UPDATE " + GROUP_MEMBERS_TABLE + " SET "
+            + GROUP_MEMBERS_IS_ADMIN + " = TRUE WHERE " + GROUP_MEMBERS_GROUP_ID + " = ? AND "
+            + GROUP_MEMBERS_ACCOUNT_ID + " = ?;";
+    private static final String MAKE_USER_GROUP_MEMBER = "UPDATE " + GROUP_MEMBERS_TABLE + " SET "
+            + GROUP_MEMBERS_IS_MEMBER + " = TRUE " + "WHERE " + GROUP_MEMBERS_GROUP_ID + " = ? AND "
+            + GROUP_MEMBERS_ACCOUNT_ID + " = ?;";
+    private static final String GET_GROUP_FOLLOWERS = "SELECT " + GROUP_MEMBERS_ACCOUNT_ID + " FROM "
+            + GROUP_MEMBERS_TABLE + " WHERE " + GROUP_MEMBERS_GROUP_ID + " = ? AND " + GROUP_MEMBERS_IS_MEMBER
+            + " = FALSE ORDER BY " + GROUP_MEMBERS_REGISTRATION_DATE + " DESC;";
+    private static final String DELETE_GROUP_MEMBER = "DELETE FROM " + GROUP_MEMBERS_TABLE + " WHERE "
+            + GROUP_MEMBERS_GROUP_ID + " = ? AND " + GROUP_MEMBERS_ACCOUNT_ID + " = ?;";
+    private static final String CHECK_ACCOUNT_ADMIN = "SELECT " + GROUP_MEMBERS_ID + " FROM " + GROUP_MEMBERS_TABLE
+            + " WHERE " + GROUP_MEMBERS_GROUP_ID + " = ? AND " + GROUP_MEMBERS_ACCOUNT_ID + " = ? AND "
+            + GROUP_MEMBERS_IS_ADMIN + " = TRUE;";
+    private static final String CHECK_ACCOUNT_SUBSCRIBER = "SELECT " + GROUP_MEMBERS_ID + " FROM " + GROUP_MEMBERS_TABLE
+            + " WHERE " + GROUP_MEMBERS_GROUP_ID + " = ? AND " + GROUP_MEMBERS_ACCOUNT_ID + " = ? AND "
+            + GROUP_MEMBERS_IS_MEMBER + " = FALSE;";
+    private static final String CHECK_ACCOUNT_MEMBER = "SELECT " + GROUP_MEMBERS_ID + " FROM " + GROUP_MEMBERS_TABLE
+            + " WHERE " + GROUP_MEMBERS_GROUP_ID + " = ? AND " + GROUP_MEMBERS_ACCOUNT_ID + " = ? AND "
+            + GROUP_MEMBERS_IS_MEMBER + " = TRUE;";
+    private static final String GET_REGULAR_MEMBERS = "SELECT " + GROUP_MEMBERS_ACCOUNT_ID + " FROM "
+            + GROUP_MEMBERS_TABLE + " WHERE " + GROUP_MEMBERS_GROUP_ID + " = ? AND " + GROUP_MEMBERS_IS_MEMBER
+            + " = TRUE AND " + GROUP_MEMBERS_IS_ADMIN + " = FALSE;";
+    private static final String GET_ADMINS = "SELECT " + GROUP_MEMBERS_ACCOUNT_ID + " FROM " + GROUP_MEMBERS_TABLE
+            + " WHERE " + GROUP_MEMBERS_GROUP_ID + " = ? " + "AND " + GROUP_MEMBERS_IS_MEMBER + " = TRUE AND "
+            + GROUP_MEMBERS_IS_ADMIN + " = TRUE;";
+    private static volatile GroupMembershipDao instance;
 
     private GroupMembershipDaoImpl() {
     }
 
-    public static GroupMembershipDao createInstance() {
-        return GROUP_MEMBERSHIP_DAO;
+    public static GroupMembershipDao getInstance() {
+        if (instance == null) {
+            synchronized (GroupMembershipDaoImpl.class) {
+                if (instance == null) {
+                    instance = new GroupMembershipDaoImpl();
+                }
+            }
+        }
+        return instance;
     }
 
     @Override

@@ -10,22 +10,34 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.GROUP_TABLE;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.GROUPS_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.GroupTableFields.*;
 
+/**
+ * Singleton class responsible for working with {@link com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames#GROUPS_TABLE groups table}.
+ * It provides safe multithreading approach for creating singleton object using synchronization mechanism.
+ */
 public class SearchGroupDaoImpl implements SearchDao<Group> {
 
-    private static final SearchGroupDaoImpl SEARCH_GROUP_DAO = new SearchGroupDaoImpl();
-    private static final String FIND_GROUPS = "SELECT * FROM " + GROUP_TABLE + " WHERE group_name ILIKE ? OFFSET ? "
-            + "LIMIT ?;";
-    private static final String FIND_GROUPS_AMOUNT = "SELECT COUNT(*) AS total FROM " + GROUP_TABLE
-            + " WHERE group_name ILIKE ?;";
+    private static final String FIND_GROUPS = "SELECT * FROM " + GROUPS_TABLE + " WHERE " + GROUP_NAME
+            + " ILIKE ? OFFSET ? LIMIT ?;";
+    private static final String FIND_GROUPS_AMOUNT = "SELECT COUNT(*) AS " + TOTAL_GROUP_AMOUNT_ALIAS + " FROM "
+            + GROUPS_TABLE + " WHERE " + GROUP_NAME + " ILIKE ?;";
+    private static volatile SearchDao<Group> instance;
 
     private SearchGroupDaoImpl() {
     }
 
-    public static SearchDao<Group> createInstance() {
-        return SEARCH_GROUP_DAO;
+    public static SearchDao<Group> getInstance() {
+        if (instance == null) {
+            synchronized (SearchGroupDaoImpl.class) {
+                if (instance == null) {
+                    instance = new SearchGroupDaoImpl();
+                }
+            }
+        }
+        return instance;
     }
 
     @Override
@@ -37,11 +49,11 @@ public class SearchGroupDaoImpl implements SearchDao<Group> {
             preparedStatement.setInt(3, recordsPerPage);
             ResultSet groupRequestsResult = preparedStatement.executeQuery();
             while (groupRequestsResult.next()) {
-                groups.add(new Group.Builder().id(groupRequestsResult.getLong("id"))
-                        .groupName(groupRequestsResult.getString("group_name"))
-                        .description(groupRequestsResult.getString("description"))
-                        .accountOwnerId(groupRequestsResult.getLong("owner_id"))
-                        .avatar(groupRequestsResult.getBinaryStream("avatar")).build());
+                groups.add(new Group.Builder().id(groupRequestsResult.getLong(GROUP_ID))
+                        .groupName(groupRequestsResult.getString(GROUP_NAME))
+                        .description(groupRequestsResult.getString(GROUP_DESCRIPTION))
+                        .accountOwnerId(groupRequestsResult.getLong(GROUP_OWNER_ID))
+                        .avatar(groupRequestsResult.getBinaryStream(GROUP_AVATAR)).build());
             }
             return groups;
         } catch (SQLException e) {
@@ -55,7 +67,7 @@ public class SearchGroupDaoImpl implements SearchDao<Group> {
             preparedStatement.setString(1, "%" + searchQuery + "%");
             ResultSet accountsAmount = preparedStatement.executeQuery();
             if (accountsAmount.next()) {
-                return accountsAmount.getInt("total");
+                return accountsAmount.getInt(TOTAL_GROUP_AMOUNT_ALIAS);
             }
             return -1;
         } catch (SQLException e) {

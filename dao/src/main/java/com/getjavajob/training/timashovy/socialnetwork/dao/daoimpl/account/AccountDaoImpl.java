@@ -20,7 +20,7 @@ import static com.getjavajob.training.timashovy.socialnetwork.common.account.Acc
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.AccountTableFields.*;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNT_TABLE;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNTS_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
 import static java.lang.String.valueOf;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
@@ -29,9 +29,13 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
 
+/**
+ * Singleton class responsible for working with {@link com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames#ACCOUNTS_TABLE accounts table}.
+ * It provides safe multithreading approach for creating singleton object using synchronization mechanism.
+ */
 public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidator {
 
-    private static final String CREATE = "INSERT INTO " + ACCOUNT_TABLE + " (" + ACCOUNT_FIRST_NAME + ", "
+    private static final String CREATE = "INSERT INTO " + ACCOUNTS_TABLE + " (" + ACCOUNT_FIRST_NAME + ", "
             + ACCOUNT_LAST_NAME + ", " + ACCOUNT_MIDDLE_NAME + ", " + ACCOUNT_BIRTH_DATE + ", "
             + ACCOUNT_PERSONAL_ADDRESS + ", " + ACCOUNT_WORK_ADDRESS + ", " + ACCOUNT_EMAIL + ", " + ACCOUNT_ICQ + ", "
             + ACCOUNT_SKYPE + ", " + ACCOUNT_ADDITIONAL_INFO + ", " + ACCOUNT_ROLE_TYPE + ", " + ACCOUNT_AVATAR
@@ -40,18 +44,18 @@ public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidat
             + ACCOUNT_LAST_NAME + ", " + ACCOUNT_MIDDLE_NAME + ", " + ACCOUNT_BIRTH_DATE + ", "
             + ACCOUNT_PERSONAL_ADDRESS + ", " + ACCOUNT_WORK_ADDRESS + ", " + ACCOUNT_EMAIL + ", " + ACCOUNT_ICQ + ", "
             + ACCOUNT_SKYPE + ", " + ACCOUNT_ADDITIONAL_INFO + ", " + ACCOUNT_ROLE_TYPE + ", " + ACCOUNT_AVATAR
-            + " FROM " + ACCOUNT_TABLE + " WHERE " + ACCOUNT_ID + " = ?;";
+            + " FROM " + ACCOUNTS_TABLE + " WHERE " + ACCOUNT_ID + " = ?;";
     private static final String GET_ALL = "SELECT " + ACCOUNT_ID + ", " + ACCOUNT_FIRST_NAME + ", " + ACCOUNT_LAST_NAME
             + ", " + ACCOUNT_MIDDLE_NAME + ", " + ACCOUNT_BIRTH_DATE + ", " + ACCOUNT_PERSONAL_ADDRESS + ", "
             + ACCOUNT_WORK_ADDRESS + ", " + ACCOUNT_EMAIL + ", " + ACCOUNT_ICQ + ", " + ACCOUNT_SKYPE + ", "
-            + ACCOUNT_ADDITIONAL_INFO + ", " + ACCOUNT_ROLE_TYPE + ", " + ACCOUNT_AVATAR + " FROM " + ACCOUNT_TABLE
+            + ACCOUNT_ADDITIONAL_INFO + ", " + ACCOUNT_ROLE_TYPE + ", " + ACCOUNT_AVATAR + " FROM " + ACCOUNTS_TABLE
             + ";";
-    private static final String UPDATE_BY_ID = "UPDATE " + ACCOUNT_TABLE + " SET " + ACCOUNT_FIRST_NAME + " = ?, "
+    private static final String UPDATE_BY_ID = "UPDATE " + ACCOUNTS_TABLE + " SET " + ACCOUNT_FIRST_NAME + " = ?, "
             + ACCOUNT_LAST_NAME + " = ?, " + ACCOUNT_MIDDLE_NAME + " = ?, " + ACCOUNT_BIRTH_DATE + " = ?, "
             + ACCOUNT_PERSONAL_ADDRESS + " = ?, " + ACCOUNT_WORK_ADDRESS + " = ?, " + ACCOUNT_EMAIL + " = ?, "
             + ACCOUNT_ICQ + "= ?, " + ACCOUNT_SKYPE + "= ?, " + ACCOUNT_ADDITIONAL_INFO + " = ?, " + ACCOUNT_ROLE_TYPE
             + " = ?, " + ACCOUNT_AVATAR + " = ? WHERE " + ACCOUNT_ID + " = ?;";
-    private static final String DELETE_BY_ID = "DELETE FROM " + ACCOUNT_TABLE + " WHERE " + ACCOUNT_ID + " = ?;";
+    private static final String DELETE_BY_ID = "DELETE FROM " + ACCOUNTS_TABLE + " WHERE " + ACCOUNT_ID + " = ?;";
     private final PhoneDao phoneDao;
     private static volatile BaseDao<Account> instance;
 
@@ -76,7 +80,7 @@ public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidat
             throw new IllegalArgumentException("uniqueness field violation: either fieldName or fieldValue is null");
         }
         if (!fieldValue.toString().isEmpty()) {
-            String CHECK_RECORD_EXISTENCE_QUERY = "SELECT id FROM " + ACCOUNT_TABLE + " WHERE " + fieldName + " = ?";
+            String CHECK_RECORD_EXISTENCE_QUERY = "SELECT id FROM " + ACCOUNTS_TABLE + " WHERE " + fieldName + " = ?";
             try (PreparedStatement recordsSet = getPreparedStatement(CHECK_RECORD_EXISTENCE_QUERY)) {
                 recordsSet.setObject(1, fieldValue);
                 ResultSet existedRecords = recordsSet.executeQuery();

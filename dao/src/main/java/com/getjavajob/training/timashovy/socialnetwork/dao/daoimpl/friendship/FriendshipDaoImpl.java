@@ -13,9 +13,12 @@ import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.T
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.FriendshipTableFields.*;
 
+/**
+ * Singleton class responsible for working with `account_data.friendship` table in DB.
+ * It provides safe multithreading approach for creating singleton object using synchronization mechanism.
+ */
 public class FriendshipDaoImpl implements FriendshipDao {
 
-    private static final FriendshipDaoImpl FRIENDSHIP_DAO_INSTANCE = new FriendshipDaoImpl();
     private static final String ACCEPT_REQUEST = "UPDATE " + FRIENDSHIP_TABLE + " SET " + FRIENDSHIP_STATUS + " = "
             + "TRUE WHERE " + FRIENDSHIP_ACCEPTER_ID + " = ? AND " + FRIENDSHIP_REQUESTER_ID + " = ?;";
     private static final String GET_FRIENDS = "SELECT " + FRIENDSHIP_ACCOUNT_ID_1 + " FROM " + FRIENDSHIP_TABLE
@@ -31,12 +34,20 @@ public class FriendshipDaoImpl implements FriendshipDao {
             + FRIENDSHIP_TABLE + " WHERE " + FRIENDSHIP_STATUS + " = FALSE AND " + FRIENDSHIP_ACCEPTER_ID + " = ?;";
     private static final String GET_OUTGOING_REQUESTS = "SELECT " + FRIENDSHIP_ACCEPTER_ID + " FROM "
             + FRIENDSHIP_TABLE + " WHERE " + FRIENDSHIP_STATUS + " = FALSE AND " + FRIENDSHIP_REQUESTER_ID + " = ?;";
+    private static volatile FriendshipDao instance;
 
     private FriendshipDaoImpl() {
     }
 
-    public static FriendshipDao createInstance() {
-        return FRIENDSHIP_DAO_INSTANCE;
+    public static FriendshipDao getInstance() {
+        if (instance == null) {
+            synchronized (FriendshipDaoImpl.class) {
+                if (instance == null) {
+                    instance = new FriendshipDaoImpl();
+                }
+            }
+        }
+        return instance;
     }
 
     /**

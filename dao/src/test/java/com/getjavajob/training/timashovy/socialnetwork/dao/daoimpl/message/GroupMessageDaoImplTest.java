@@ -6,7 +6,7 @@ import org.junit.jupiter.api.*;
 
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.GroupMessageDaoImpl.createInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.GroupMessageDaoImpl.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static java.time.LocalDate.of;
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,7 +18,7 @@ class GroupMessageDaoImplTest {
     private static final String EMPTY_TEST_TABLES_FILEPATH = "scripts/message/clear.sql";
     private static final String DROP_TEST_DB_FILEPATH = "scripts/message/drop.sql";
 
-    private static final MessageDao MESSAGE_DAO = createInstance();
+    private static final MessageDao MESSAGE_DAO = getInstance();
     private static final Message TEST_MESSAGE = new Message.Builder()
             .id(1L)
             .destinationId(1L)

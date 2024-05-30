@@ -10,22 +10,35 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNT_TABLE;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNTS_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.AccountTableFields.*;
 
+/**
+ * Singleton class responsible for working with {@link com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames#ACCOUNTS_TABLE accounts table}.
+ * It provides safe multithreading approach for creating singleton object using synchronization mechanism.
+ */
 public class SearchAccountDaoImpl implements SearchDao<Account> {
 
-    private static final SearchAccountDaoImpl SEARCH_ACCOUNT_DAO = new SearchAccountDaoImpl();
-    private static final String FIND_ACCOUNTS = "SELECT id, first_name, last_name FROM " + ACCOUNT_TABLE
-            + " WHERE first_name ILIKE ? OR last_name ILIKE ? OFFSET ? LIMIT ?;";
-    private static final String FIND_ACCOUNTS_AMOUNT = "SELECT COUNT(*) AS total FROM " + ACCOUNT_TABLE
-            + " WHERE first_name ILIKE ? OR last_name ILIKE ?;";
+    private static final String FIND_ACCOUNTS = "SELECT " + ACCOUNT_ID + ", " + ACCOUNT_FIRST_NAME + ", "
+            + ACCOUNT_LAST_NAME + " FROM " + ACCOUNTS_TABLE + " WHERE " + ACCOUNT_FIRST_NAME + " ILIKE ? OR "
+            + ACCOUNT_LAST_NAME + " ILIKE ? OFFSET ? LIMIT ?;";
+    private static final String FIND_ACCOUNTS_AMOUNT = "SELECT COUNT(*) AS " + TOTAL_ACCOUNTS_AMOUNT_ALIAS + " FROM "
+            + ACCOUNTS_TABLE + " WHERE " + ACCOUNT_FIRST_NAME + " ILIKE ? OR " + ACCOUNT_LAST_NAME + " ILIKE ?;";
+    private static volatile SearchDao<Account> instance;
 
     private SearchAccountDaoImpl() {
     }
 
     public static SearchDao<Account> createInstance() {
-        return SEARCH_ACCOUNT_DAO;
+        if (instance == null) {
+            synchronized (SearchAccountDaoImpl.class) {
+                if (instance == null) {
+                    instance = new SearchAccountDaoImpl();
+                }
+            }
+        }
+        return instance;
     }
 
     @Override
@@ -39,9 +52,9 @@ public class SearchAccountDaoImpl implements SearchDao<Account> {
             List<Account> accounts = new ArrayList<>();
             while (friendRequestsResult.next()) {
                 accounts.add(new Account.Builder()
-                        .id(friendRequestsResult.getLong("id"))
-                        .firstName(friendRequestsResult.getString("first_name"))
-                        .lastName(friendRequestsResult.getString("last_name"))
+                        .id(friendRequestsResult.getLong(ACCOUNT_ID))
+                        .firstName(friendRequestsResult.getString(ACCOUNT_FIRST_NAME))
+                        .lastName(friendRequestsResult.getString(ACCOUNT_LAST_NAME))
                         .build());
             }
             return accounts;
@@ -56,7 +69,7 @@ public class SearchAccountDaoImpl implements SearchDao<Account> {
             preparedStatement.setString(2, "%" + searchQuery + "%");
             ResultSet accountsAmount = preparedStatement.executeQuery();
             if (accountsAmount.next()) {
-                return accountsAmount.getInt("total");
+                return accountsAmount.getInt(TOTAL_ACCOUNTS_AMOUNT_ALIAS);
             }
             return -1;
         } catch (SQLException e) {

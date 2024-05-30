@@ -8,7 +8,7 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group.GroupDaoImpl.createInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group.GroupDaoImpl.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static java.util.Optional.empty;
@@ -20,7 +20,7 @@ class GroupDaoImplTest {
     private static final String LOAD_DATA_INTO_TEST_TABLES_FILEPATH = "scripts/group/load_test_data.sql";
     private static final String EMPTY_TEST_TABLES_FILEPATH = "scripts/group/clear_test_db.sql";
     private static final String DROP_TEST_DB_FILEPATH = "scripts/group/drop_test_db.sql";
-    private static final BaseDao<Group> GROUP_DAO_INSTANCE = createInstance();
+    private static final BaseDao<Group> GROUP_DAO_INSTANCE = getInstance();
     private static final Group TEST_GROUP = new Group.Builder().groupName("").description("").accountOwnerId(1L)
             .build();
 

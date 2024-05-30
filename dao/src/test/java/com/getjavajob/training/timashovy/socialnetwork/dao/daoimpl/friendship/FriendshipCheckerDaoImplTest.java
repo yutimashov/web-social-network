@@ -3,7 +3,7 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipChecker;
 import org.junit.jupiter.api.*;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship.FriendshipCheckerDaoImpl.createInstance;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship.FriendshipCheckerDaoImpl.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -14,7 +14,7 @@ class FriendshipCheckerDaoImplTest {
     private static final String LOAD_TEST_TABLES_FILEPATH = "scripts/friendship/load_test_data.sql";
     private static final String CLEAR_TEST_TABLES_FILEPATH = "scripts/friendship/clear_test_db.sql";
     private static final String DROP_TEST_DB_FILEPATH = "scripts/friendship/drop_test_db.sql";
-    private static final FriendshipChecker FRIENDSHIP_CHECKER_DAO = createInstance();
+    private static final FriendshipChecker FRIENDSHIP_CHECKER_DAO = getInstance();
 
     @BeforeAll
     public static void createTestTables() {

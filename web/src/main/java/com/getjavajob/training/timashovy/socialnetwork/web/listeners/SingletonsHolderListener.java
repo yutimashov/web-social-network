@@ -41,17 +41,17 @@ public class SingletonsHolderListener implements ServletContextListener {
         daoSingletonRegistry.registerSingleton(PHONE_DAO_SINGLETON, PhoneDaoImpl.getInstance());
         daoSingletonRegistry.registerSingleton(ACCOUNT_DAO_SINGLETON, AccountDaoImpl.getInstance(
                 getDaoRegistryInstance().getSingleton(PHONE_DAO_SINGLETON)));
-        daoSingletonRegistry.registerSingleton(FRIENDSHIP_DAO_SINGLETON, FriendshipDaoImpl.createInstance());
-        daoSingletonRegistry.registerSingleton(FRIENDSHIP_CHECKER_SINGLETON, FriendshipCheckerDaoImpl.createInstance());
-        daoSingletonRegistry.registerSingleton(PASSWORD_DAO_SINGLETON, PasswordDaoImpl.createInstance());
-        daoSingletonRegistry.registerSingleton(GROUP_DAO_SINGLETON, GroupDaoImpl.createInstance());
-        daoSingletonRegistry.registerSingleton(GROUP_MEMBERSHIP_DAO_SINGLETON, GroupMembershipDaoImpl.createInstance());
-        daoSingletonRegistry.registerSingleton(GROUP_MESSAGE_DAO_SINGLETON, GroupMessageDaoImpl.createInstance());
-        daoSingletonRegistry.registerSingleton(PERSONAL_MESSAGE_DAO_SINGLETON, PersonalMessageDaoImpl.createInstance());
+        daoSingletonRegistry.registerSingleton(FRIENDSHIP_DAO_SINGLETON, FriendshipDaoImpl.getInstance());
+        daoSingletonRegistry.registerSingleton(FRIENDSHIP_CHECKER_SINGLETON, FriendshipCheckerDaoImpl.getInstance());
+        daoSingletonRegistry.registerSingleton(PASSWORD_DAO_SINGLETON, PasswordDaoImpl.getInstance());
+        daoSingletonRegistry.registerSingleton(GROUP_DAO_SINGLETON, GroupDaoImpl.getInstance());
+        daoSingletonRegistry.registerSingleton(GROUP_MEMBERSHIP_DAO_SINGLETON, GroupMembershipDaoImpl.getInstance());
+        daoSingletonRegistry.registerSingleton(GROUP_MESSAGE_DAO_SINGLETON, GroupMessageDaoImpl.getInstance());
+        daoSingletonRegistry.registerSingleton(PERSONAL_MESSAGE_DAO_SINGLETON, PersonalMessageDaoImpl.getInstance());
         daoSingletonRegistry.registerSingleton(PERSONAL_WALL_MESSAGE_DAO_SINGLETON,
                 PersonalWallMessageDaoImpl.createInstance());
         daoSingletonRegistry.registerSingleton(SEARCH_ACCOUNT_DAO_SINGLETON, SearchAccountDaoImpl.createInstance());
-        daoSingletonRegistry.registerSingleton(SEARCH_GROUP_DAO_SINGLETON, SearchGroupDaoImpl.createInstance());
+        daoSingletonRegistry.registerSingleton(SEARCH_GROUP_DAO_SINGLETON, SearchGroupDaoImpl.getInstance());
     }
 
     private void registerServiceSingletons() {

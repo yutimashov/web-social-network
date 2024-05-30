@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNT_PASSWORDS_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNT_TABLE;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNTS_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.AccountTableFields.ACCOUNT_ID;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.AccountTableFields.ACCOUNT_EMAIL;
@@ -20,6 +20,10 @@ import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
+/**
+ * Singleton class responsible for working with {@link com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames#ACCOUNTS_TABLE accounts table} table in DB.
+ * It provides safe multithreading approach for creating singleton object using synchronization mechanism.
+ */
 public class PasswordDaoImpl implements PasswordDao {
 
     private static final String CREATE = "INSERT INTO " + ACCOUNT_PASSWORDS_TABLE + " (" + PASSWORD_ACCOUNT_ID + ", "
@@ -27,16 +31,22 @@ public class PasswordDaoImpl implements PasswordDao {
     private static final String GET_BY_ACCOUNT_ID = "SELECT " + PASSWORD_ACCOUNT_ID + ", " + PASSWORD_HASH + ", "
             + PASSWORD_SALT + " FROM " + ACCOUNT_PASSWORDS_TABLE + " WHERE " + PASSWORD_ACCOUNT_ID + " = ?;";
     private static final String GET_BY_ACCOUNT_EMAIL = "SELECT " + PASSWORD_ACCOUNT_ID + ", " + PASSWORD_HASH + ", "
-            + PASSWORD_SALT + " FROM " + ACCOUNT_PASSWORDS_TABLE + " pass JOIN " + ACCOUNT_TABLE + " acc ON acc."
+            + PASSWORD_SALT + " FROM " + ACCOUNT_PASSWORDS_TABLE + " pass JOIN " + ACCOUNTS_TABLE + " acc ON acc."
             + ACCOUNT_ID + " = pass." + PASSWORD_ACCOUNT_ID + " WHERE acc." + ACCOUNT_EMAIL + " = ?;";
-
-    private static final PasswordDaoImpl PASSWORD_DAO_INSTANCE = new PasswordDaoImpl();
+    private static volatile PasswordDao instance;
 
     private PasswordDaoImpl() {
     }
 
-    public static PasswordDao createInstance() {
-        return PASSWORD_DAO_INSTANCE;
+    public static PasswordDao getInstance() {
+        if (instance == null) {
+            synchronized (PasswordDaoImpl.class) {
+                if (instance == null) {
+                    instance = new PasswordDaoImpl();
+                }
+            }
+        }
+        return instance;
     }
 
     @Override

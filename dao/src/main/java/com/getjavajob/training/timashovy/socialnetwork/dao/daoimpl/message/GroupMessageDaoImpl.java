@@ -14,27 +14,41 @@ import java.util.Optional;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.GROUP_MESSAGE_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.GroupMessageTableFields.*;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
 public class GroupMessageDaoImpl implements MessageDao {
 
-    private static final String CREATE = "INSERT INTO " + GROUP_MESSAGE_TABLE + " (account_author_id, group_id,"
-            + "message_text, message_image) VALUES (?, ?, ?, ?);";
-    private static final String DELETE_BY_ID = "DELETE FROM " + GROUP_MESSAGE_TABLE + " WHERE id = ?;";
-    private static final String UPDATE_BY_ID = "UPDATE " + GROUP_MESSAGE_TABLE + " SET message_text = ? "
-            + "WHERE id = ?;";
-    private static final String GET_BY_ID = "SELECT id, account_author_id, creation_date, message_text, "
-            + "message_image, group_id FROM " + GROUP_MESSAGE_TABLE + " WHERE id = ?;";
-    private static final String GET_ALL = "SELECT id, account_author_id, group_id, message_text, message_image, "
-            + "creation_date FROM " + GROUP_MESSAGE_TABLE + " WHERE group_id = ? ORDER BY creation_date DESC;";
-    private static final GroupMessageDaoImpl MESSAGE_DAO = new GroupMessageDaoImpl();
-
-    public static MessageDao createInstance() {
-        return MESSAGE_DAO;
-    }
+    private static final String CREATE = "INSERT INTO " + GROUP_MESSAGE_TABLE + " (" + GROUP_MESSAGE_ACCOUNT_AUTHOR_ID
+            + ", " + GROUP_MESSAGE_GROUP_ID + "," + GROUP_MESSAGE_MESSAGE_TEXT + ", " + GROUP_MESSAGE_MESSAGE_IMAGE
+            + ") VALUES (?, ?, ?, ?);";
+    private static final String DELETE_BY_ID = "DELETE FROM " + GROUP_MESSAGE_TABLE + " WHERE " + GROUP_MESSAGE_ID
+            + " = ?;";
+    private static final String UPDATE_BY_ID = "UPDATE " + GROUP_MESSAGE_TABLE + " SET " + GROUP_MESSAGE_MESSAGE_TEXT
+            + " = ? " + "WHERE " + GROUP_MESSAGE_ID + " = ?;";
+    private static final String GET_BY_ID = "SELECT " + GROUP_MESSAGE_ID + ", " + GROUP_MESSAGE_ACCOUNT_AUTHOR_ID
+            + ", " + GROUP_MESSAGE_CREATION_DATE + ", " + GROUP_MESSAGE_MESSAGE_TEXT + ", "
+            + GROUP_MESSAGE_MESSAGE_IMAGE + ", " + GROUP_MESSAGE_GROUP_ID + " FROM " + GROUP_MESSAGE_TABLE + " WHERE "
+            + GROUP_MESSAGE_ID + " = ?;";
+    private static final String GET_ALL = "SELECT " + GROUP_MESSAGE_ID + ", " + GROUP_MESSAGE_ACCOUNT_AUTHOR_ID + ", "
+            + GROUP_MESSAGE_GROUP_ID + ", " + GROUP_MESSAGE_MESSAGE_TEXT + ", " + GROUP_MESSAGE_MESSAGE_IMAGE + ", "
+            + GROUP_MESSAGE_CREATION_DATE + " FROM " + GROUP_MESSAGE_TABLE + " WHERE " + GROUP_MESSAGE_GROUP_ID
+            + " = ? ORDER BY " + GROUP_MESSAGE_CREATION_DATE + " DESC;";
+    private static volatile MessageDao instance;
 
     private GroupMessageDaoImpl() {
+    }
+
+    public static MessageDao getInstance() {
+        if (instance == null) {
+            synchronized (MessageDao.class) {
+                if (instance == null) {
+                    instance = new GroupMessageDaoImpl();
+                }
+            }
+        }
+        return instance;
     }
 
     @Override

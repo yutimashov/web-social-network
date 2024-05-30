@@ -14,15 +14,21 @@ import java.util.List;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNT_PHONES_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.PhonesTableFields.*;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
+/**
+ * Singleton class responsible for working with `account_data.phones` table in DB.
+ * It provides safe multithreading approach for creating singleton object using synchronization mechanism.
+ */
 public class PhoneDaoImpl implements PhoneDao {
 
-    private static final String CREATE = "INSERT INTO " + ACCOUNT_PHONES_TABLE + " (account_id, phone_type, "
-            + "phone_number) VALUES (?, ?, ?);";
-    private static final String GET_PHONE = "SELECT id, phone_type, phone_number, account_id FROM "
-            + ACCOUNT_PHONES_TABLE + " WHERE account_id = ?;";
-    private static final String UPDATE = "UPDATE " + ACCOUNT_PHONES_TABLE + " SET phone_number = ? WHERE id = ?;";
+    private static final String CREATE = "INSERT INTO " + ACCOUNT_PHONES_TABLE + " (" + ACCOUNT_ID + ", " + PHONE_TYPE
+            + ", " + PHONE_NUMBER + ") VALUES (?, ?, ?);";
+    private static final String GET = "SELECT " + PHONE_ID + ", " + PHONE_TYPE + ", " + PHONE_NUMBER + ", "
+            + ACCOUNT_ID + " FROM " + ACCOUNT_PHONES_TABLE + " WHERE " + ACCOUNT_ID + " = ?;";
+    private static final String UPDATE = "UPDATE " + ACCOUNT_PHONES_TABLE + " SET " + PHONE_NUMBER + " = ? WHERE "
+            + PHONE_ID + " = ?;";
     private static volatile PhoneDao instance;
 
     private PhoneDaoImpl() {
@@ -61,7 +67,7 @@ public class PhoneDaoImpl implements PhoneDao {
 
     @Override
     public List<Phone> getAll(Long accountId) {
-        try (PreparedStatement getPhoneStatement = getPreparedStatement(GET_PHONE)) {
+        try (PreparedStatement getPhoneStatement = getPreparedStatement(GET)) {
             List<Phone> phones = new ArrayList<>();
             getPhoneStatement.setLong(1, accountId);
             ResultSet phonesData = getPhoneStatement.executeQuery();

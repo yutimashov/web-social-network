@@ -14,30 +14,47 @@ import java.util.Optional;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.PERSONAL_MESSAGE_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.PersonalMessagesTableFields.*;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
 public class PersonalMessageDaoImpl implements MessageDao {
 
-    private static final String CREATE = "INSERT INTO " + PERSONAL_MESSAGE_TABLE + " (account_author_id, "
-            + "destination_id, message_text, message_image) VALUES (?, ?, ?, ?);";
-    private static final String GET_ALL_ACCOUNT_IDS = "SELECT DISTINCT account_author_id FROM " + PERSONAL_MESSAGE_TABLE
-            + " WHERE destination_id = ? UNION SELECT DISTINCT destination_id FROM " + PERSONAL_MESSAGE_TABLE
-            + " WHERE account_author_id = ?;";
-    private static final String GET_ALL_PRIVATE_MESSAGES_WITH_ACCOUNT = "SELECT id, account_author_id, destination_id, "
-            + "message_text, message_image, creation_date FROM " + PERSONAL_MESSAGE_TABLE + " WHERE account_author_id = "
-            + "? AND destination_id = ? UNION SELECT id, account_author_id, destination_id, message_text, message_image"
-            + ", creation_date FROM " + PERSONAL_MESSAGE_TABLE + " WHERE account_author_id = ? AND destination_id = ? "
-            + "ORDER BY creation_date DESC;";
-    private static final String GET_BY_ID = "SELECT id, account_author_id, creation_date, message_text, " +
-            "message_image, destination_id FROM " + PERSONAL_MESSAGE_TABLE + " WHERE id = ?;";
-    private static final PersonalMessageDaoImpl PERSONAL_MESSAGE_DAO = new PersonalMessageDaoImpl();
+    private static final String CREATE = "INSERT INTO " + PERSONAL_MESSAGE_TABLE + " ("
+            + PERSONAL_MESSAGE_ACCOUNT_AUTHOR_ID + ", " + PERSONAL_MESSAGE_ACCOUNT_DESTINATION_ID + ", "
+            + PERSONAL_MESSAGE_TEXT + ", " + PERSONAL_MESSAGE_IMAGE + ") VALUES (?, ?, ?, ?);";
+    private static final String GET_ALL_ACCOUNT_IDS = "SELECT DISTINCT " + PERSONAL_MESSAGE_ACCOUNT_AUTHOR_ID
+            + " FROM " + PERSONAL_MESSAGE_TABLE + " WHERE " + PERSONAL_MESSAGE_ACCOUNT_DESTINATION_ID
+            + " = ? UNION SELECT DISTINCT " + PERSONAL_MESSAGE_ACCOUNT_DESTINATION_ID + " FROM "
+            + PERSONAL_MESSAGE_TABLE + " WHERE " + PERSONAL_MESSAGE_ACCOUNT_AUTHOR_ID + " = ?;";
+    private static final String GET_ALL_PRIVATE_MESSAGES_WITH_ACCOUNT = "SELECT " + PERSONAL_MESSAGE_ID + ", "
+            + PERSONAL_MESSAGE_ACCOUNT_AUTHOR_ID + ", " + PERSONAL_MESSAGE_ACCOUNT_DESTINATION_ID + ", "
+            + PERSONAL_MESSAGE_TEXT + ", " + PERSONAL_MESSAGE_IMAGE + ", " + PERSONAL_MESSAGE_CREATION_DATE + " FROM "
+            + PERSONAL_MESSAGE_TABLE + " WHERE " + PERSONAL_MESSAGE_ACCOUNT_AUTHOR_ID + " = "
+            + "? AND " + PERSONAL_MESSAGE_ACCOUNT_DESTINATION_ID + " = ? UNION SELECT " + PERSONAL_MESSAGE_ID + ", "
+            + PERSONAL_MESSAGE_ACCOUNT_AUTHOR_ID + ", " + PERSONAL_MESSAGE_ACCOUNT_DESTINATION_ID + ", "
+            + PERSONAL_MESSAGE_TEXT + ", " + PERSONAL_MESSAGE_IMAGE + ", " + PERSONAL_MESSAGE_CREATION_DATE + " FROM "
+            + PERSONAL_MESSAGE_TABLE + " WHERE " + PERSONAL_MESSAGE_ACCOUNT_AUTHOR_ID + " = ? AND "
+            + PERSONAL_MESSAGE_ACCOUNT_DESTINATION_ID + " = ? " + "ORDER BY " + PERSONAL_MESSAGE_CREATION_DATE
+            + " DESC;";
+    private static final String GET_BY_ID = "SELECT " + PERSONAL_MESSAGE_ID + ", " + PERSONAL_MESSAGE_ACCOUNT_AUTHOR_ID
+            + ", " + PERSONAL_MESSAGE_CREATION_DATE + ", " + PERSONAL_MESSAGE_TEXT + ", " + PERSONAL_MESSAGE_IMAGE
+            + ", " + PERSONAL_MESSAGE_ACCOUNT_DESTINATION_ID + " FROM " + PERSONAL_MESSAGE_TABLE + " WHERE "
+            + PERSONAL_MESSAGE_ID + " = ?;";
+    private static volatile MessageDao instance;
 
     private PersonalMessageDaoImpl() {
     }
 
-    public static MessageDao createInstance() {
-        return PERSONAL_MESSAGE_DAO;
+    public static MessageDao getInstance() {
+        if (instance == null) {
+            synchronized (PersonalMessageDaoImpl.class) {
+                if (instance == null) {
+                    instance = new PersonalMessageDaoImpl();
+                }
+            }
+        }
+        return instance;
     }
 
     @Override

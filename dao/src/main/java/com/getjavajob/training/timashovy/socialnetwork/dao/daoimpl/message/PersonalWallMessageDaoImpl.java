@@ -14,25 +14,39 @@ import java.util.Optional;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.PERSONAL_WALL_MESSAGE_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.PersonalWallMessagesTableFields.*;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
+/**
+ * Singleton class responsible for working with {@link com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames#PERSONAL_WALL_MESSAGE_TABLE personal wall messages table}.
+ * It provides safe multithreading approach for creating singleton object using synchronization mechanism.
+ */
 public class PersonalWallMessageDaoImpl implements MessageDao {
 
-    private static final String CREATE = "INSERT INTO " + PERSONAL_WALL_MESSAGE_TABLE + " (account_author_id," +
-            "account_receiver_id, message_text, message_image) VALUES (?, ?, ?, ?);";
-    private static final String GET_ALL = "SELECT id, account_author_id, account_receiver_id, message_text, " +
-            "message_image, creation_date FROM " + PERSONAL_WALL_MESSAGE_TABLE + " WHERE account_receiver_id = ? " +
-            "ORDER BY creation_date DESC;";
-    private static final String GET_BY_ID = "SELECT id, account_author_id, creation_date, message_text, " +
-            "message_image, account_receiver_id FROM " + PERSONAL_WALL_MESSAGE_TABLE + " WHERE id = ?;";
-    private static final PersonalWallMessageDaoImpl PERSONAL_WALL_MESSAGE_DAO = new PersonalWallMessageDaoImpl();
+    private static final String CREATE = "INSERT INTO " + PERSONAL_WALL_MESSAGE_TABLE + " (" + ACCOUNT_AUTHOR_ID + ","
+            + ACCOUNT_RECEIVER_ID + ", " + MESSAGE_TEXT + ", " + MESSAGE_IMAGE + ") VALUES (?, ?, ?, ?);";
+    private static final String GET_ALL = "SELECT " + ID + ", " + ACCOUNT_AUTHOR_ID + ", " + ACCOUNT_RECEIVER_ID
+            + ", " + MESSAGE_TEXT + ", " + MESSAGE_IMAGE + ", " + CREATION_DATE + " FROM "
+            + PERSONAL_WALL_MESSAGE_TABLE + " WHERE " + ACCOUNT_RECEIVER_ID + " = ? " + "ORDER BY " + CREATION_DATE
+            + " DESC;";
+    private static final String GET_BY_ID = "SELECT " + ID + ", " + ACCOUNT_AUTHOR_ID + ", " + CREATION_DATE + ", "
+            + MESSAGE_TEXT + ", " + MESSAGE_IMAGE + ", " + ACCOUNT_RECEIVER_ID + " FROM " + PERSONAL_WALL_MESSAGE_TABLE
+            + " WHERE " + ID + " = ?;";
+    private static volatile MessageDao instance;
 
     private PersonalWallMessageDaoImpl() {
     }
 
     public static MessageDao createInstance() {
-        return PERSONAL_WALL_MESSAGE_DAO;
+        if (instance == null) {
+            synchronized (PersonalWallMessageDaoImpl.class) {
+                if (instance == null) {
+                    instance = new PersonalWallMessageDaoImpl();
+                }
+            }
+        }
+        return instance;
     }
 
     @Override
@@ -67,12 +81,12 @@ public class PersonalWallMessageDaoImpl implements MessageDao {
             ResultSet messageData = getMessageByIdStatement.executeQuery();
             if (messageData.next()) {
                 Message message = new Message.Builder()
-                        .id(messageData.getLong("id"))
-                        .accountAuthorId(messageData.getLong("account_author_id"))
-                        .creationDate(messageData.getDate("creation_date").toLocalDate())
-                        .destinationId(messageData.getLong("account_receiver_id"))
-                        .text(messageData.getString("message_text"))
-                        .photo(messageData.getBinaryStream("message_image"))
+                        .id(messageData.getLong(ID))
+                        .accountAuthorId(messageData.getLong(ACCOUNT_AUTHOR_ID))
+                        .creationDate(messageData.getDate(CREATION_DATE).toLocalDate())
+                        .destinationId(messageData.getLong(ACCOUNT_RECEIVER_ID))
+                        .text(messageData.getString(MESSAGE_TEXT))
+                        .photo(messageData.getBinaryStream(MESSAGE_IMAGE))
                         .build();
                 return of(message);
             } else {
@@ -91,11 +105,11 @@ public class PersonalWallMessageDaoImpl implements MessageDao {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 messages.add(new Message.Builder()
-                        .id(resultSet.getLong("id"))
-                        .accountAuthorId(resultSet.getLong("account_author_id"))
-                        .text(resultSet.getString("message_text"))
-                        .photo(resultSet.getBinaryStream("message_image"))
-                        .creationDate(resultSet.getDate("creation_date").toLocalDate())
+                        .id(resultSet.getLong(ID))
+                        .accountAuthorId(resultSet.getLong(ACCOUNT_AUTHOR_ID))
+                        .text(resultSet.getString(MESSAGE_TEXT))
+                        .photo(resultSet.getBinaryStream(MESSAGE_IMAGE))
+                        .creationDate(resultSet.getDate(CREATION_DATE).toLocalDate())
                         .build());
             }
             return messages;

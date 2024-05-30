@@ -10,20 +10,31 @@ import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.T
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.FriendshipTableFields.*;
 
+/**
+ * Singleton class responsible for working with `account_data.friendship` table in DB.
+ * It provides safe multithreading approach for creating singleton object using synchronization mechanism.
+ */
 public class FriendshipCheckerDaoImpl implements FriendshipChecker {
-
-    private static final FriendshipCheckerDaoImpl FRIENDSHIP_CHECKER_INSTANCE = new FriendshipCheckerDaoImpl();
+    
     private static final String FRIENDSHIP_RECORD_EXISTENCE = "SELECT 1 FROM " + FRIENDSHIP_TABLE + " WHERE "
             + FRIENDSHIP_ACCOUNT_ID_1 + "= ? AND " + FRIENDSHIP_ACCOUNT_ID_2 + " = ?;";
     private static final String ARE_USERS_FRIENDS = "SELECT 1 FROM " + FRIENDSHIP_TABLE + " WHERE "
             + FRIENDSHIP_ACCOUNT_ID_1 + " = ? AND " + FRIENDSHIP_ACCOUNT_ID_2 + " = ? AND " + FRIENDSHIP_STATUS
             + " = TRUE;";
+    private static volatile FriendshipChecker instance;
 
     private FriendshipCheckerDaoImpl() {
     }
 
-    public static FriendshipChecker createInstance() {
-        return FRIENDSHIP_CHECKER_INSTANCE;
+    public static FriendshipChecker getInstance() {
+        if (instance == null) {
+            synchronized (FriendshipCheckerDaoImpl.class) {
+                if (instance == null) {
+                    instance = new FriendshipCheckerDaoImpl();
+                }
+            }
+        }
+        return instance;
     }
 
     @Override
