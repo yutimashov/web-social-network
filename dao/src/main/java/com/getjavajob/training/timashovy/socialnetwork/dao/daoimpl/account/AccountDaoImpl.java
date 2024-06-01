@@ -8,6 +8,7 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConst
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionWrapper;
+import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.TransactionManager;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,11 +20,11 @@ import java.util.Optional;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.AccountRole.REGULAR;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.AccountTableFields.*;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNTS_TABLE;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPoolSize;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.AccountTableFields.*;
 import static java.lang.String.valueOf;
-import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.util.Objects.isNull;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -57,17 +58,19 @@ public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidat
             + " = ?, " + ACCOUNT_AVATAR + " = ? WHERE " + ACCOUNT_ID + " = ?;";
     private static final String DELETE_BY_ID = "DELETE FROM " + ACCOUNTS_TABLE + " WHERE " + ACCOUNT_ID + " = ?;";
     private final PhoneDao phoneDao;
+    private final TransactionManager transactionManager;
     private static volatile BaseDao<Account> instance;
 
-    private AccountDaoImpl(PhoneDao phoneDao) {
+    private AccountDaoImpl(PhoneDao phoneDao, TransactionManager transactionManager) {
         this.phoneDao = phoneDao;
+        this.transactionManager = transactionManager;
     }
 
-    public static BaseDao<Account> getInstance(PhoneDao phoneDao) {
+    public static BaseDao<Account> getInstance(PhoneDao phoneDao, TransactionManager transactionManager) {
         if (instance == null) {
             synchronized (AccountDaoImpl.class) {
                 if (instance == null) {
-                    instance = new AccountDaoImpl(phoneDao);
+                    instance = new AccountDaoImpl(phoneDao, transactionManager);
                 }
             }
         }
@@ -94,11 +97,12 @@ public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidat
     }
 
     @Override
-    public Long create(ConnectionWrapper connection, Account account) {
-        try (PreparedStatement accountStatement = connection.prepareStatement(CREATE, RETURN_GENERATED_KEYS)) {
-            setAccountData(account, accountStatement);
-            if (accountStatement.executeUpdate() > 0) {
-                try (ResultSet generatedKeys = accountStatement.getGeneratedKeys()) {
+    public Long create(Account account) {
+        try (PreparedStatement statement
+                     = transactionManager.getGetTransactionalPreparedStatementWithGeneratedKeys(CREATE)) {
+            setAccountData(account, statement);
+            if (statement.executeUpdate() > 0) {
+                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
                         account.setId(generatedKeys.getLong(1));
                     }

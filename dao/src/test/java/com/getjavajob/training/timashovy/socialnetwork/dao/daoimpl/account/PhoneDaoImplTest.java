@@ -3,6 +3,7 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
+import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.TransactionManager;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ class PhoneDaoImplTest {
     private static final String LOAD_DATA_FILEPATH = "scripts/account/load.sql";
     private static final String CLEAR_TABLES_FILEPATH = "scripts/account/clear.sql";
     private static final String DROP_DB_FILEPATH = "scripts/account/drop.sql";
-    private static final PhoneDao PHONE_DAO = getInstance();
+    private static final PhoneDao PHONE_DAO = getInstance(TransactionManager.getInstance());
 
     @BeforeEach
     public void fillTestTablesWith2Records() {
@@ -47,13 +48,13 @@ class PhoneDaoImplTest {
 
         @Test
         void shouldReturnPhoneIdWhenPhoneWasCreated() {
-            assertEquals(3L, PHONE_DAO.create(getConnection(), new Phone(PERSONAL, "test", 1L)));
+            assertEquals(3L, PHONE_DAO.create(new Phone(PERSONAL, "test", 1L)));
         }
 
         @Test
         void shouldThrowExceptionWhenCreationFailed() {
             Throwable exception = assertThrows(DaoException.class, () -> {
-                PHONE_DAO.create(getConnection(), new Phone(PERSONAL, "test", -1L));
+                PHONE_DAO.create(new Phone(PERSONAL, "test", -1L));
                 throw new UnsupportedOperationException("Not supported");
             });
             assertEquals(DaoException.class, exception.getClass());

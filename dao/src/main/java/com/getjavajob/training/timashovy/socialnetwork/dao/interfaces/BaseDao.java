@@ -14,7 +14,7 @@ import java.util.Optional;
  */
 public interface BaseDao<T> {
 
-    Long create(ConnectionWrapper connection, T t);
+    Long create(T t);
 
     Optional<T> getById(Long id);
 

@@ -7,19 +7,30 @@ import java.util.Map;
 
 public class ServiceSingletonRegistry implements SingletonRegistry {
 
-    private static final ServiceSingletonRegistry INSTANCE = new ServiceSingletonRegistry();
-    private final Map<String, Object> singletons = new HashMap<>();
+    private final Map<String, Object> singletons;
+    private static volatile ServiceSingletonRegistry instance;
 
-    private ServiceSingletonRegistry() {}
+    private ServiceSingletonRegistry() {
+        singletons = new HashMap<>();
+    }
 
     public static ServiceSingletonRegistry getInstance() {
-        return INSTANCE;
+        if (instance == null) {
+            synchronized (ServiceSingletonRegistry.class) {
+                instance = new ServiceSingletonRegistry();
+            }
+        }
+        return instance;
     }
 
     @Override
-    public synchronized <T> void addSingleton(String key, T singleton) {
+    public <T> void addSingleton(String key, T singleton) {
         if (!singletons.containsKey(key)) {
-            singletons.put(key, singleton);
+            synchronized (this) {
+                if (!singletons.containsKey(key)) {
+                    singletons.put(key, singleton);
+                }
+            }
         }
     }
 

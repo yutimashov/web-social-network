@@ -5,6 +5,7 @@ import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
+import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.TransactionManager;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
@@ -27,7 +28,8 @@ class AccountDaoImplTest {
     private static final String LOAD_DATA_FILEPATH = "scripts/account/load.sql";
     private static final String CLEAR_TABLES_FILEPATH = "scripts/account/clear.sql";
     private static final String DROP_DB_FILEPATH = "scripts/account/drop.sql";
-    private static final BaseDao<Account> ACCOUNT_DAO_INSTANCE = getInstance(PhoneDaoImpl.getInstance());
+    private static final BaseDao<Account> ACCOUNT_DAO_INSTANCE = getInstance(PhoneDaoImpl.getInstance(TransactionManager.getInstance()),
+            TransactionManager.getInstance());
     private static final Account TEST_ACCOUNT = new Account.Builder()
             .id(1L).firstName("").lastName("")
             .middleName("")
@@ -146,14 +148,14 @@ class AccountDaoImplTest {
         @Test
         void shouldReturn1LWhenAccountCreatedInEmptyTable() {
             executeScript(CLEAR_TABLES_FILEPATH);
-            assertEquals(1L, ACCOUNT_DAO_INSTANCE.create(getConnection(), TEST_ACCOUNT));
+            assertEquals(1L, ACCOUNT_DAO_INSTANCE.create(TEST_ACCOUNT));
         }
 
         @Test
         void shouldThrowExceptionWhenFirstNameIsNull() {
             TEST_ACCOUNT.setFirstName(null);
             Throwable exception = assertThrows(DaoException.class, () -> {
-                ACCOUNT_DAO_INSTANCE.create(getConnection(), TEST_ACCOUNT);
+                ACCOUNT_DAO_INSTANCE.create(TEST_ACCOUNT);
                 throw new UnsupportedOperationException("Not supported");
             });
             restoreTestAccountDefaultState();
@@ -164,7 +166,7 @@ class AccountDaoImplTest {
         void shouldThrowExceptionWhenLastNameIsNull() {
             TEST_ACCOUNT.setLastName(null);
             Throwable exception = assertThrows(DaoException.class, () -> {
-                ACCOUNT_DAO_INSTANCE.create(getConnection(), TEST_ACCOUNT);
+                ACCOUNT_DAO_INSTANCE.create(TEST_ACCOUNT);
                 throw new UnsupportedOperationException("Not supported");
             });
             restoreTestAccountDefaultState();

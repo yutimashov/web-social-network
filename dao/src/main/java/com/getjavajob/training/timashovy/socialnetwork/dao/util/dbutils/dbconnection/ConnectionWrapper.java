@@ -16,9 +16,9 @@ import java.util.concurrent.Executor;
 public final class ConnectionWrapper implements Connection {
 
     private final Connection connection;
-    private final BlockingQueue<ConnectionWrapper> connectionPool;
+    private final BlockingQueue<Connection> connectionPool;
 
-    public ConnectionWrapper(Connection connection, BlockingQueue<ConnectionWrapper> pool) {
+    public ConnectionWrapper(Connection connection, BlockingQueue<Connection> pool) {
         this.connection = connection;
         this.connectionPool = pool;
     }

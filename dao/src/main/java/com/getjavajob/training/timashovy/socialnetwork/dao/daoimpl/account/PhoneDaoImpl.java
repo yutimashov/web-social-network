@@ -5,6 +5,7 @@ import com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionWrapper;
+import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.TransactionManager;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,7 +16,6 @@ import java.util.List;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNT_PHONES_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.PhonesTableFields.*;
-import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
 /**
  * Singleton class responsible for working with `account_data.phones` table in DB.
@@ -29,16 +29,18 @@ public class PhoneDaoImpl implements PhoneDao {
             + ACCOUNT_ID + " FROM " + ACCOUNT_PHONES_TABLE + " WHERE " + ACCOUNT_ID + " = ?;";
     private static final String UPDATE = "UPDATE " + ACCOUNT_PHONES_TABLE + " SET " + PHONE_NUMBER + " = ? WHERE "
             + PHONE_ID + " = ?;";
+    private final TransactionManager transactionManager;
     private static volatile PhoneDao instance;
 
-    private PhoneDaoImpl() {
+    private PhoneDaoImpl(TransactionManager transactionManager) {
+        this.transactionManager = transactionManager;
     }
 
-    public static PhoneDao getInstance() {
+    public static PhoneDao getInstance(TransactionManager transactionManager) {
         if (instance == null) {
             synchronized (PhoneDaoImpl.class) {
                 if (instance == null) {
-                    instance = new PhoneDaoImpl();
+                    instance = new PhoneDaoImpl(transactionManager);
                 }
             }
         }
@@ -46,8 +48,9 @@ public class PhoneDaoImpl implements PhoneDao {
     }
 
     @Override
-    public Long create(ConnectionWrapper conn, Phone phone) {
-        try (PreparedStatement createPhoneStatement = conn.prepareStatement(CREATE, RETURN_GENERATED_KEYS)) {
+    public Long create(Phone phone) {
+        try (PreparedStatement createPhoneStatement
+                     = transactionManager.getGetTransactionalPreparedStatementWithGeneratedKeys(CREATE)) {
             createPhoneStatement.setLong(1, phone.getAccountId());
             createPhoneStatement.setString(2, phone.getPhoneType().name());
             createPhoneStatement.setString(3, phone.getNumber());

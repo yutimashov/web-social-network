@@ -31,7 +31,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public Long create(Group group) {
-        return groupDaoInstance.create(getConnection(), group);
+        return groupDaoInstance.create(group);
     }
 
     @Override

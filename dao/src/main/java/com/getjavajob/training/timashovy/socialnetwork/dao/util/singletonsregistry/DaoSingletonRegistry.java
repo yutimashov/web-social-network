@@ -5,26 +5,39 @@ import java.util.Map;
 
 public class DaoSingletonRegistry implements SingletonRegistry {
 
-    private static final DaoSingletonRegistry DAO_REGISTRY_INSTANCE = new DaoSingletonRegistry();
-    private final Map<String, Object> daoSingletons;
+    private final Map<String, Object> singletons;
+    private static volatile DaoSingletonRegistry instance;
 
     private DaoSingletonRegistry() {
-        daoSingletons = new HashMap<>();
+        singletons = new HashMap<>();
     }
 
     public static DaoSingletonRegistry getInstance() {
-        return DAO_REGISTRY_INSTANCE;
+        if (instance == null) {
+            synchronized (DaoSingletonRegistry.class) {
+                if (instance == null) {
+                    instance = new DaoSingletonRegistry();
+                }
+            }
+        }
+        return instance;
     }
 
     @Override
-    public synchronized <T> void addSingleton(String key, T singleton) {
-        daoSingletons.put(key, singleton);
+    public <T> void addSingleton(String key, T singleton) {
+        if (!singletons.containsKey(key)) {
+            synchronized (this) {
+                if (!singletons.containsKey(key)) {
+                    singletons.put(key, singleton);
+                }
+            }
+        }
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T> T getSingleton(String key) {
-        return (T) daoSingletons.get(key);
+        return (T) singletons.get(key);
     }
 
 }

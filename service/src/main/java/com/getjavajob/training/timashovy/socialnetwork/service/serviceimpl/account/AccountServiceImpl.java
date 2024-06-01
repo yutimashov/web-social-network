@@ -2,6 +2,7 @@ package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.acco
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.AccountRole;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.Password;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.common.util.AccountRegisterData;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
@@ -10,13 +11,16 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.Pa
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipChecker;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionWrapper;
+import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.TransactionManager;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneService;
 import com.getjavajob.training.timashovy.socialnetwork.service.util.exceptions.ServiceException;
 
 import java.io.InputStream;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -25,7 +29,6 @@ import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
 import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toList;
 
@@ -38,11 +41,13 @@ public class AccountServiceImpl implements AccountService {
     private final PhoneDao phoneDao;
     private final PasswordService passwordService;
     private final PasswordDao passwordDao;
+    private final TransactionManager transactionManager;
     private static volatile AccountService instance;
 
     private AccountServiceImpl(BaseDao<Account> accountDao, FriendshipDao friendshipDao,
                                FriendshipChecker friendshipChecker, PhoneService phoneService, PhoneDao phoneDao,
-                               PasswordService passwordService, PasswordDao passwordDao) {
+                               PasswordService passwordService, PasswordDao passwordDao,
+                               TransactionManager transactionManager) {
         this.accountDao = accountDao;
         this.friendshipDao = friendshipDao;
         this.friendshipChecker = friendshipChecker;
@@ -50,17 +55,18 @@ public class AccountServiceImpl implements AccountService {
         this.phoneDao = phoneDao;
         this.passwordService = passwordService;
         this.passwordDao = passwordDao;
+        this.transactionManager = transactionManager;
     }
 
     public static AccountService getInstance(BaseDao<Account> accountDao, FriendshipDao friendshipDao,
                                              FriendshipChecker friendshipChecker, PhoneService phoneService,
                                              PhoneDao phoneDao, PasswordService passwordService,
-                                             PasswordDao passwordDao) {
+                                             PasswordDao passwordDao, TransactionManager transactionManager) {
         if (instance == null) {
             synchronized (AccountServiceImpl.class) {
                 if (instance == null) {
                     instance = new AccountServiceImpl(accountDao, friendshipDao, friendshipChecker, phoneService,
-                            phoneDao, passwordService, passwordDao);
+                            phoneDao, passwordService, passwordDao, transactionManager);
                 }
             }
         }
@@ -75,31 +81,37 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public Long create(AccountRegisterData accountRegisterData) {
-        validateAccount(accountRegisterData.getAccount());
-        try (ConnectionWrapper conn = getConnection()) {
-            conn.setAutoCommit(false);
+        try (Connection conn = transactionManager.getTransactionalConnection()) {
+            transactionManager.beginTransaction(conn);
             try {
-                Long accountId = accountDao.create(conn, accountRegisterData.getAccount());
-                passwordDao.create(conn, passwordService.create(accountId, accountRegisterData.getPassword()));
+                Long accountId = accountDao.create(accountRegisterData.getAccount());
+                passwordDao.create(passwordService.create(accountId, accountRegisterData.getPassword()));
                 List<Phone> personalPhones = phoneService.createPersonalPhones(accountId,
                         accountRegisterData.getPersonalPhoneNumbers());
                 for (Phone personalPhone : personalPhones) {
-                    phoneDao.create(conn, personalPhone);
+                    phoneDao.create(personalPhone);
                 }
                 List<Phone> workingPhones = phoneService.createWorkingPhones(accountId,
                         accountRegisterData.getWorkingPhoneNumbers());
                 for (Phone workingPhone : workingPhones) {
-                    phoneDao.create(conn, workingPhone);
+                    phoneDao.create(workingPhone);
                 }
-                conn.commit();
+                transactionManager.commitTransaction(conn);
                 return accountId;
-            } catch (SQLException e) {
-                conn.rollback();
-                throw new ServiceException("service exception: register new account: " + e.getMessage(), e);
+            } catch (Exception e) {
+                transactionManager.rollbackTransaction(conn);
+                throw new ServiceException("create account failed : " + e.getMessage(), e);
             }
         } catch (SQLException e) {
-            throw new ServiceException("service exception: register new account: " + e.getMessage(), e);
+            throw new ServiceException("create account failed : " + e.getMessage(), e);
         }
+    }
+
+    @Override
+    public boolean update(Long accountId, Account updatedAccount) {
+        validateAccountId(accountId);
+        validateAccount(updatedAccount);
+        return accountDao.updateById(accountId, updatedAccount);
     }
 
     private void validateAccount(Account account) {
@@ -116,14 +128,6 @@ public class AccountServiceImpl implements AccountService {
         }
         ((TableConstraintsValidator) accountDao).validateEntityFieldUniqueness("email", account.getEmail());
     }
-
-    @Override
-    public boolean update(Long accountId, Account updatedAccount) {
-        validateAccountId(accountId);
-        validateAccount(updatedAccount);
-        return accountDao.updateById(accountId, updatedAccount);
-    }
-
     /**
      * According to database constraints, accountId cannot be less or equal to zero, and it cannot be null.
      *

@@ -3,6 +3,7 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Password;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PasswordDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
+import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.TransactionManager;
 import org.junit.jupiter.api.*;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PasswordDaoImpl.getInstance;
@@ -17,7 +18,7 @@ class PasswordDaoImplTest {
     private static final String CREATE_TABLES_FILEPATH = "scripts/account/create.sql";
     private static final String LOAD_DATA_FILEPATH = "scripts/account/load.sql";
     private static final String DROP_DB_FILEPATH = "scripts/account/drop.sql";
-    private static final PasswordDao PASSWORD_DAO = getInstance();
+    private static final PasswordDao PASSWORD_DAO = getInstance(TransactionManager.getInstance());
     private static final Password TEST_PASSWORD = new Password(1L, "test", "test");
 
     @BeforeAll
@@ -37,14 +38,14 @@ class PasswordDaoImplTest {
 
         @Test
         void shouldReturnPasswordIdWhenPasswordIsCreated() {
-            assertEquals(2L, PASSWORD_DAO.create(getConnection(), new Password(1L, "test", "test")));
+            assertEquals(2L, PASSWORD_DAO.create(new Password(1L, "test", "test")));
         }
 
         @Test
         void shouldThrowExceptionWhenAccountIdDoesNotExist() {
             Long nonExistingAccountId = -1L;
             Throwable exception = assertThrows(DaoException.class, () -> {
-                PASSWORD_DAO.create(getConnection(), new Password(nonExistingAccountId, "test", "test"));
+                PASSWORD_DAO.create(new Password(nonExistingAccountId, "test", "test"));
                 throw new UnsupportedOperationException("Not supported");
             });
             assertEquals(DaoException.class, exception.getClass());

@@ -12,6 +12,8 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.Perso
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.PersonalWallMessageDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.search.SearchAccountDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.search.SearchGroupDaoImpl;
+import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager;
+import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.TransactionManager;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.singletonsregistry.DaoSingletonRegistry;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.*;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group.GroupMembershipServiceImpl;
@@ -28,6 +30,7 @@ import static com.getjavajob.training.timashovy.socialnetwork.service.util.singl
 
 public class SingletonsHolderListener implements ServletContextListener {
 
+    private final TransactionManager transactionManager = TransactionManager.getInstance();
     private final DaoSingletonRegistry daoSingletonRegistry = DaoSingletonRegistry.getInstance();
     private final ServiceSingletonRegistry serviceSingletonRegistry = ServiceSingletonRegistry.getInstance();
 
@@ -38,12 +41,12 @@ public class SingletonsHolderListener implements ServletContextListener {
     }
 
     private void registerDaoSingletons() {
-        daoSingletonRegistry.addSingleton(PHONE_DAO_SINGLETON, PhoneDaoImpl.getInstance());
+        daoSingletonRegistry.addSingleton(PHONE_DAO_SINGLETON, PhoneDaoImpl.getInstance(transactionManager));
         daoSingletonRegistry.addSingleton(ACCOUNT_DAO_SINGLETON, AccountDaoImpl.getInstance(
-                daoSingletonRegistry.getSingleton(PHONE_DAO_SINGLETON)));
+                daoSingletonRegistry.getSingleton(PHONE_DAO_SINGLETON), transactionManager));
         daoSingletonRegistry.addSingleton(FRIENDSHIP_DAO_SINGLETON, FriendshipDaoImpl.getInstance());
         daoSingletonRegistry.addSingleton(FRIENDSHIP_DAO_CHECKER_SINGLETON, FriendshipCheckerDaoImpl.getInstance());
-        daoSingletonRegistry.addSingleton(PASSWORD_DAO_SINGLETON, PasswordDaoImpl.getInstance());
+        daoSingletonRegistry.addSingleton(PASSWORD_DAO_SINGLETON, PasswordDaoImpl.getInstance(transactionManager));
         daoSingletonRegistry.addSingleton(GROUP_DAO_SINGLETON, GroupDaoImpl.getInstance());
         daoSingletonRegistry.addSingleton(GROUP_MEMBERSHIP_DAO_SINGLETON, GroupMembershipDaoImpl.getInstance());
         daoSingletonRegistry.addSingleton(GROUP_MESSAGE_DAO_SINGLETON, GroupMessageDaoImpl.getInstance());
@@ -68,7 +71,7 @@ public class SingletonsHolderListener implements ServletContextListener {
                 serviceSingletonRegistry.getSingleton(PHONE_SERVICE_SINGLETON),
                 daoSingletonRegistry.getSingleton(PHONE_DAO_SINGLETON),
                 serviceSingletonRegistry.getSingleton(PASSWORD_SERVICE_SINGLETON),
-                daoSingletonRegistry.getSingleton(PASSWORD_DAO_SINGLETON)
+                daoSingletonRegistry.getSingleton(PASSWORD_DAO_SINGLETON), transactionManager
         ));
         serviceSingletonRegistry.addSingleton(LOGIN_SERVICE_SINGLETON, LoginServiceImpl.getInstance(
                 serviceSingletonRegistry.getSingleton(ACCOUNT_SERVICE_SINGLETON),

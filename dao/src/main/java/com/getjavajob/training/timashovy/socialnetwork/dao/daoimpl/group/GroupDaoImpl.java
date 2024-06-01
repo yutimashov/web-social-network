@@ -4,7 +4,6 @@ import com.getjavajob.training.timashovy.socialnetwork.common.Group;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionWrapper;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -50,8 +49,8 @@ public class GroupDaoImpl implements BaseDao<Group>, TableConstraintsValidator {
     }
 
     @Override
-    public Long create(ConnectionWrapper connection, Group group) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SAVE_GROUP)) {
+    public Long create(Group group) {
+        try (PreparedStatement preparedStatement = getPreparedStatement(SAVE_GROUP)) {
             setGroupData(group, preparedStatement);
             if (preparedStatement.executeUpdate() > 0) {
                 ResultSet generatedKeys = preparedStatement.getGeneratedKeys();

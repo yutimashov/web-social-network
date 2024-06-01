@@ -31,21 +31,18 @@ public final class ConnectionManager {
     private static final String PASSWORD_KEY = "db.password";
     private static final String POOL_SIZE_KEY = "db.pool.size";
     private static final String DRIVER_CLASS = "org.postgresql.Driver";
-    private static volatile BlockingQueue<ConnectionWrapper> connectionPool;
+    private static volatile BlockingQueue<Connection> connectionPool;
     private static final int DEFAULT_POOL_SIZE = 10;
 
-    /**
-     * Class is not considered to have any instances.
-     * It provides only one static util method.
-     *
-     * @throws AssertionError trying to create instance
-     */
+    public static String getPoolSize() {
+        return "Pool size: " + connectionPool.size();
+    }
+
     private ConnectionManager() {
-        throw new AssertionError();
     }
 
     public static PreparedStatement getPreparedStatement(String query) throws SQLException {
-        try (ConnectionWrapper connection = getConnection()) {
+        try (Connection connection = getConnection()) {
             return connection.prepareStatement(query);
         } catch (SQLException e) {
             throw new DaoException("dao: create prepared statement failed: " + e.getMessage());
@@ -53,7 +50,7 @@ public final class ConnectionManager {
     }
 
     public static PreparedStatement getPreparedStatementWithGeneratedKeys(String query) throws SQLException {
-        try (ConnectionWrapper connection = getConnection()) {
+        try (Connection connection = getConnection()) {
             return connection.prepareStatement(query, RETURN_GENERATED_KEYS);
         } catch (SQLException e) {
             throw new DaoException("dao: create prepared statement failed: " + e.getMessage());
@@ -65,7 +62,7 @@ public final class ConnectionManager {
      *
      * @return connection to DB
      */
-    public static ConnectionWrapper getConnection() {
+    public static synchronized Connection getConnection() {
         try {
             return getConnectionPool().take();
         } catch (InterruptedException e) {
@@ -73,7 +70,7 @@ public final class ConnectionManager {
         }
     }
 
-    private static BlockingQueue<ConnectionWrapper> getConnectionPool() {
+    private static BlockingQueue<Connection> getConnectionPool() {
         if (isNull(connectionPool)) {
             synchronized (ConnectionManager.class) {
                 if (isNull(connectionPool)) {
@@ -116,9 +113,9 @@ public final class ConnectionManager {
      */
     private static ConnectionWrapper createConnection() {
         try {
-            Connection realConnection = DriverManager.getConnection(getDbConfigProperty(URL_KEY),
+            Connection connection = DriverManager.getConnection(getDbConfigProperty(URL_KEY),
                     getDbConfigProperty(LOGIN_KEY), getDbConfigProperty(PASSWORD_KEY));
-            return new ConnectionWrapper(realConnection, connectionPool);
+            return new ConnectionWrapper(connection, connectionPool);
         } catch (SQLException e) {
             throw new DaoException("Cannot create connection to db");
         }
