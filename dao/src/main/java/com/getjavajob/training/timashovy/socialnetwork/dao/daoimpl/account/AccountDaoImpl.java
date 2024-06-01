@@ -7,7 +7,6 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionWrapper;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.TransactionManager;
 
 import java.sql.PreparedStatement;
@@ -21,7 +20,6 @@ import static com.getjavajob.training.timashovy.socialnetwork.common.account.Acc
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNTS_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPoolSize;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.AccountTableFields.*;
 import static java.lang.String.valueOf;
@@ -137,7 +135,7 @@ public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidat
 
     @Override
     public Optional<Account> getById(Long accountId) {
-        try (PreparedStatement getAccountByIdStatement = getPreparedStatement(GET_BY_ID)) {
+        try (PreparedStatement getAccountByIdStatement = transactionManager.getTransactionalPreparedStatement(GET_BY_ID)) {
             getAccountByIdStatement.setLong(1, accountId);
             ResultSet accountData = getAccountByIdStatement.executeQuery();
             if (accountData.next()) {
@@ -193,7 +191,8 @@ public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidat
 
     @Override
     public boolean updateById(Long id, Account account) {
-        try (PreparedStatement updateByIdStatement = getPreparedStatement(UPDATE_BY_ID)) {
+        try (PreparedStatement updateByIdStatement = transactionManager
+                .getGetTransactionalPreparedStatementWithGeneratedKeys(UPDATE_BY_ID)) {
             setAccountData(account, updateByIdStatement);
             updateByIdStatement.setLong(13, id);
             return updateByIdStatement.executeUpdate() > 0;

@@ -1,6 +1,8 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.servlets.account;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
+import com.getjavajob.training.timashovy.socialnetwork.common.util.AccountUpdatingData;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.PhoneServiceImpl;
 
@@ -8,9 +10,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
 import java.io.IOException;
-import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
@@ -19,6 +22,7 @@ import static com.getjavajob.training.timashovy.socialnetwork.service.util.singl
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.PHONE_SERVICE_SINGLETON;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 import static java.lang.Long.valueOf;
+import static java.time.LocalDate.parse;
 import static java.util.Objects.isNull;
 
 public class EditAccountServlet extends HttpServlet {
@@ -30,6 +34,7 @@ public class EditAccountServlet extends HttpServlet {
     private static final String SKYPE_PARAMETER_NAME = "skype";
     private static final String ICQ_PARAMETER_NAME = "icq";
     private static final String EMAIL_PARAMETER_NAME = "email";
+    private static final String PASSWORD_PARAMETER_NAME = "password";
     private final AccountService accountService = getInstance().getSingleton(ACCOUNT_SERVICE_SINGLETON);
     private final PhoneServiceImpl phoneService = getInstance().getSingleton(PHONE_SERVICE_SINGLETON);
 
@@ -49,71 +54,78 @@ public class EditAccountServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        updateAccountData(req);
-        resp.sendRedirect("/account?id=" + req.getParameter("id"));
-    }
-
-    private void updateAccountData(HttpServletRequest req) throws ServletException, IOException {
         Long accountId = valueOf(req.getParameter("id"));
-        Part avatarPart = req.getPart("avatar");
-        if (avatarPart != null && avatarPart.getSize() > 0) {
-            accountService.updateAvatar(accountId, avatarPart.getInputStream());
-        }
-        String updatedFirstName = getParameter(req, FIRST_NAME_PARAMETER_NAME);
-        if (checkParameterHasValue(updatedFirstName)) {
-            accountService.updateFirstName(accountId, updatedFirstName);
-        }
-        String updatedLastName = getParameter(req, LAST_NAME_PARAMETER_NAME);
-        if (checkParameterHasValue(updatedLastName)) {
-            accountService.updateLastName(accountId, updatedLastName);
-        }
-        String updatedMiddleName = getParameter(req, MIDDLE_NAME_PARAMETER_NAME);
-        if (checkParameterHasValue(updatedMiddleName)) {
-            accountService.updateMiddleName(accountId, updatedMiddleName);
-        }
-        String updatedBirthDate = getParameter(req, BIRTHDATE_PARAMETER_NAME);
-        if (checkParameterHasValue(updatedBirthDate)) {
-            accountService.updateBirthDate(accountId, LocalDate.parse(updatedBirthDate));
-        }
-        String updatedSkype = getParameter(req, SKYPE_PARAMETER_NAME);
-        if (checkParameterHasValue(updatedSkype)) {
-            accountService.updateSkype(accountId, updatedSkype);
-        }
-        processPhoneNumber(req, PERSONAL);
-        processPhoneNumber(req, WORKING);
-        String updatedICQ = getParameter(req, ICQ_PARAMETER_NAME);
-        if (checkParameterHasValue(updatedICQ)) {
-            accountService.updateIcq(accountId, updatedICQ);
-        }
-        String updatedEmail = getParameter(req, EMAIL_PARAMETER_NAME);
-        if (checkParameterHasValue(updatedEmail)) {
-            accountService.updateEmail(accountId, updatedEmail);
-        }
+        accountService.update(accountId, updateAccountData(req));
+        resp.sendRedirect("/account?id=" + accountId);
     }
 
-    private String getParameter(HttpServletRequest req, String parameterName) {
-        return req.getParameter(parameterName);
+    //TODO: !isNull(parameterValue) && !parameterValue.isEmpty()
+    private AccountUpdatingData updateAccountData(HttpServletRequest req) throws ServletException, IOException {
+        return new AccountUpdatingData.Builder()
+                .account(new Account.Builder()
+                        .id(valueOf(req.getParameter("id")))
+                        .avatar(req.getPart("avatar") != null && req.getPart("avatar").getSize() > 0
+                                ? req.getPart("avatar").getInputStream() : null)
+                        .firstName(req.getParameter(FIRST_NAME_PARAMETER_NAME))
+                        .lastName(req.getParameter(LAST_NAME_PARAMETER_NAME))
+                        .middleName(req.getParameter(MIDDLE_NAME_PARAMETER_NAME))
+                        .birthDate(!isNull(req.getParameter(BIRTHDATE_PARAMETER_NAME))
+                                && !req.getParameter(BIRTHDATE_PARAMETER_NAME).isEmpty()
+                                ? parse(req.getParameter(BIRTHDATE_PARAMETER_NAME))
+                                : null)
+                        .skype(req.getParameter(SKYPE_PARAMETER_NAME))
+                        .icq(req.getParameter(ICQ_PARAMETER_NAME))
+                        .email(req.getParameter(EMAIL_PARAMETER_NAME))
+                        .personalPhoneNumber(getUpdatedPersonalPhones(req))
+                        .workPhoneNumber(getUpdatedWorkingPhones(req))
+                        .build())
+                .password(req.getParameter(PASSWORD_PARAMETER_NAME))
+                .build();
     }
 
-    private boolean checkParameterHasValue(String parameterValue) {
-        return !isNull(parameterValue) && !parameterValue.isEmpty();
-    }
-
-    private void processPhoneNumber(HttpServletRequest req, PhoneType phoneType) {
-        String[] phoneIds;
-        String[] phoneValues;
-        if (phoneType == PERSONAL) {
-            phoneIds = req.getParameterValues("personalPhoneId");
-            phoneValues = req.getParameterValues("personalPhoneValue");
-        } else {
-            phoneIds = req.getParameterValues("workingPhoneId");
-            phoneValues = req.getParameterValues("workingPhoneValue");
-        }
-        if (!isNull(phoneIds) && !isNull(phoneValues)) {
-            for (int i = 0; i < phoneIds.length; i++) {
-                phoneService.updateById(valueOf(phoneIds[i]), phoneValues[i]);
+    /**
+     * Get updated phone numbers.
+     * From servlet page we get array of phonesIds and array of new phoneValues.
+     * There will be match between id and phoneValue. If there was no update, value will be empty.
+     *
+     * @param req request from servlet page
+     * @return list of updated phones with new values or empty list if there were no updates
+     */
+    private List<Phone> getUpdatedPersonalPhones(HttpServletRequest req) {
+        List<Phone> updatedPhones = new ArrayList<>();
+        Long accountId = valueOf(req.getParameter("id"));
+        String[] phonesIds = req.getParameterValues("personalPhoneId");
+        String[] phoneValues = req.getParameterValues("personalPhoneValue");
+        System.out.println("Updating personal phones ids: " + Arrays.toString(phonesIds));
+        System.out.println("Updating personal phones numbers: " + Arrays.toString(phoneValues));
+        if (!isNull(phonesIds) && !isNull(phoneValues)) {
+            for (int i = 0; i < phonesIds.length; i++) {
+                if (!isNull(phonesIds[i]) && !phonesIds[i].isEmpty() && !phoneValues[i].isEmpty()) {
+                    updatedPhones.add(new Phone(valueOf(phonesIds[i]), PERSONAL, phoneValues[i], accountId));
+                }
             }
         }
+        System.out.println("Updating list of personal phones: " + updatedPhones);
+        System.out.println("=====================================");
+        return updatedPhones;
+    }
+
+    private List<Phone> getUpdatedWorkingPhones(HttpServletRequest req) {
+        List<Phone> updatedPhones = new ArrayList<>();
+        Long accountId = valueOf(req.getParameter("id"));
+        String[] phonesIds = req.getParameterValues("workingPhoneId");
+        String[] phoneValues = req.getParameterValues("workingPhoneValue");
+        System.out.println("Updating personal phones ids: " + Arrays.toString(phonesIds));
+        System.out.println("Updating personal phones numbers: " + Arrays.toString(phoneValues));
+        if (!isNull(phonesIds) && !isNull(phoneValues)) {
+            for (int i = 0; i < phonesIds.length; i++) {
+                if (!isNull(phonesIds[i]) && !phonesIds[i].isEmpty() && !phoneValues[i].isEmpty()) {
+                    updatedPhones.add(new Phone(valueOf(phonesIds[i]), WORKING, phoneValues[i], accountId));
+                }
+            }
+        }
+        System.out.println("Updating list of working phones: " + updatedPhones);
+        return updatedPhones;
     }
 
 }

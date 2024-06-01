@@ -3,7 +3,8 @@ package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.acco
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.AccountRole;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
-import com.getjavajob.training.timashovy.socialnetwork.common.util.AccountRegisterData;
+import com.getjavajob.training.timashovy.socialnetwork.common.util.AccountRegistrationData;
+import com.getjavajob.training.timashovy.socialnetwork.common.util.AccountUpdatingData;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PasswordDao;
@@ -70,6 +71,8 @@ public class AccountServiceImpl implements AccountService {
         return instance;
     }
 
+    //TODO: validation methods
+
     /**
      * Create new account inserting it in database with auto generated incremented key
      *
@@ -77,7 +80,7 @@ public class AccountServiceImpl implements AccountService {
      * @return id of created account
      */
     @Override
-    public Long create(AccountRegisterData accountRegisterData) {
+    public Long create(AccountRegistrationData accountRegisterData) {
         try (Connection conn = transactionManager.getTransactionalConnection()) {
             transactionManager.beginTransaction(conn);
             try {
@@ -104,11 +107,62 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
+    //TODO: validation methods
     @Override
-    public boolean update(Long accountId, Account updatedAccount) {
+    public void update(Long accountId, AccountUpdatingData accountUpdatingData) {
         validateAccountId(accountId);
-        validateAccount(updatedAccount);
-        return accountDao.updateById(accountId, updatedAccount);
+        try (Connection conn = transactionManager.getTransactionalConnection()) {
+            transactionManager.beginTransaction(conn);
+            try {
+                Account updatedAccountData = accountUpdatingData.getAccount();
+                Account newAccount = accountDao.getById(accountId).isPresent() ? accountDao.getById(accountId).get()
+                        : null;
+                if (newAccount == null) {
+                    throw new ServiceException("updating non-existing account");
+                }
+                if (updatedAccountData.getAvatar() != null) {
+                    newAccount.setAvatar(updatedAccountData.getAvatar());
+                }
+                if (updatedAccountData.getFirstName() != null && !updatedAccountData.getFirstName().isEmpty()) {
+                    newAccount.setFirstName(updatedAccountData.getFirstName());
+                }
+                if (updatedAccountData.getLastName() != null && !updatedAccountData.getLastName().isEmpty()) {
+                    newAccount.setLastName(updatedAccountData.getLastName());
+                }
+                if (updatedAccountData.getMiddleName() != null && !updatedAccountData.getMiddleName().isEmpty()) {
+                    newAccount.setMiddleName(updatedAccountData.getMiddleName());
+                }
+                if (updatedAccountData.getBirthDate() != null) {
+                    newAccount.setBirthDate(updatedAccountData.getBirthDate());
+                }
+                if (updatedAccountData.getSkype() != null && !updatedAccountData.getSkype().isEmpty()) {
+                    newAccount.setSkype(updatedAccountData.getSkype());
+                }
+                if (updatedAccountData.getIcq() != null && !updatedAccountData.getIcq().isEmpty()) {
+                    newAccount.setIcq(updatedAccountData.getIcq());
+                }
+                if (updatedAccountData.getEmail() != null && !updatedAccountData.getEmail().isEmpty()) {
+                    newAccount.setEmail(updatedAccountData.getEmail());
+                }
+                accountDao.updateById(accountId, newAccount);
+                if (!isNull(updatedAccountData.getPersonalPhoneNumber())) {
+                    for (Phone phone : updatedAccountData.getPersonalPhoneNumber()) {
+                        phoneDao.update(phone.getId(), phone.getNumber());
+                    }
+                }
+                if (!isNull(updatedAccountData.getWorkPhoneNumber())) {
+                    for (Phone phone : updatedAccountData.getWorkPhoneNumber()) {
+                        phoneDao.update(phone.getId(), phone.getNumber());
+                    }
+                }
+                transactionManager.commitTransaction(conn);
+            } catch (Exception e) {
+                transactionManager.rollbackTransaction(conn);
+                throw new ServiceException("create account failed : " + e.getMessage(), e);
+            }
+        } catch (SQLException e) {
+            throw new ServiceException("create account failed : " + e.getMessage(), e);
+        }
     }
 
     private void validateAccount(Account account) {
@@ -125,6 +179,7 @@ public class AccountServiceImpl implements AccountService {
         }
         ((TableConstraintsValidator) accountDao).validateEntityFieldUniqueness("email", account.getEmail());
     }
+
     /**
      * According to database constraints, accountId cannot be less or equal to zero, and it cannot be null.
      *

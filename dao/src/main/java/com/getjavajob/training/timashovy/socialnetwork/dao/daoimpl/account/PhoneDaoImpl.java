@@ -92,7 +92,8 @@ public class PhoneDaoImpl implements PhoneDao {
 
     @Override
     public boolean update(Long phoneId, String newPhoneNumber) {
-        try (PreparedStatement updateByIdStatement = getPreparedStatement(UPDATE)) {
+        try (PreparedStatement updateByIdStatement
+                     = transactionManager.getGetTransactionalPreparedStatementWithGeneratedKeys(UPDATE)) {
             updateByIdStatement.setString(1, newPhoneNumber);
             updateByIdStatement.setLong(2, phoneId);
             return updateByIdStatement.executeUpdate() > 0;

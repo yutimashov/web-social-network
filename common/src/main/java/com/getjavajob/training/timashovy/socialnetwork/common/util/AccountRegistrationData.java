@@ -2,14 +2,14 @@ package com.getjavajob.training.timashovy.socialnetwork.common.util;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 
-public class AccountRegisterData {
+public class AccountRegistrationData {
 
     private final Account account;
     private final String password;
     private final String personalPhoneNumber;
     private final String workPhoneNumber;
 
-    private AccountRegisterData(Builder builder) {
+    private AccountRegistrationData(Builder builder) {
         this.account = builder.account;
         this.password = builder.password;
         this.personalPhoneNumber = builder.personalPhoneNumber;
@@ -58,8 +58,8 @@ public class AccountRegisterData {
             return this;
         }
 
-        public AccountRegisterData build() {
-            return new AccountRegisterData(this);
+        public AccountRegistrationData build() {
+            return new AccountRegistrationData(this);
         }
 
     }

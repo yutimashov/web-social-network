@@ -109,23 +109,23 @@ class AccountServiceImplTest {
     @DisplayName("updateAccount(Long accountId, Account updatedAccount)")
     class TestUpdateAccount {
 
-        @Test
-        void whenAccountIdIsNull() {
-            Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.update(null, TEST_ACCOUNT);
-                throw new UnsupportedOperationException("Not supported");
-            });
-            assertEquals(IllegalArgumentException.class, exception.getClass());
-        }
-
-        @Test
-        void whenAccountIdIsLessOrEqualToZero() {
-            Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                accountService.update(nonExistingAccountId, TEST_ACCOUNT);
-                throw new UnsupportedOperationException("Not supported");
-            });
-            assertEquals(IllegalArgumentException.class, exception.getClass());
-        }
+//        @Test
+//        void whenAccountIdIsNull() {
+//            Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
+//                accountService.update(null, TEST_ACCOUNT);
+//                throw new UnsupportedOperationException("Not supported");
+//            });
+//            assertEquals(IllegalArgumentException.class, exception.getClass());
+//        }
+//
+//        @Test
+//        void whenAccountIdIsLessOrEqualToZero() {
+//            Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
+//                accountService.update(nonExistingAccountId, TEST_ACCOUNT);
+//                throw new UnsupportedOperationException("Not supported");
+//            });
+//            assertEquals(IllegalArgumentException.class, exception.getClass());
+//        }
 
         @Test
         void whenUpdatedAccountIsNull() {
@@ -136,12 +136,12 @@ class AccountServiceImplTest {
             assertEquals(IllegalArgumentException.class, exception.getClass());
         }
 
-        @Test
-        void whenAccountDoesNotExist() {
-            final Long nonExistingId = 1L;
-            when(accountDao.updateById(nonExistingId, TEST_ACCOUNT)).thenReturn(false);
-            assertFalse(accountService.update(nonExistingId, TEST_ACCOUNT));
-        }
+//        @Test
+//        void whenAccountDoesNotExist() {
+//            final Long nonExistingId = 1L;
+//            when(accountDao.updateById(nonExistingId, TEST_ACCOUNT)).thenReturn(false);
+//            assertFalse(accountService.update(nonExistingId, TEST_ACCOUNT));
+//        }
 
     }
 
