@@ -31,7 +31,7 @@ public final class ConnectionManager {
     private static final String PASSWORD_KEY = "db.password";
     private static final String POOL_SIZE_KEY = "db.pool.size";
     private static final String DRIVER_CLASS = "org.postgresql.Driver";
-    private static volatile BlockingQueue<Connection> connectionPool;
+    private static volatile BlockingQueue<ConnectionWrapper> connectionPool;
     private static final int DEFAULT_POOL_SIZE = 10;
 
     /**
@@ -67,13 +67,13 @@ public final class ConnectionManager {
      */
     public static ConnectionWrapper getConnection() {
         try {
-            return (ConnectionWrapper) getConnectionPool().take();
+            return getConnectionPool().take();
         } catch (InterruptedException e) {
             throw new DaoException("Cannot establish connection to db");
         }
     }
 
-    private static BlockingQueue<Connection> getConnectionPool() {
+    private static BlockingQueue<ConnectionWrapper> getConnectionPool() {
         if (isNull(connectionPool)) {
             synchronized (ConnectionManager.class) {
                 if (isNull(connectionPool)) {
