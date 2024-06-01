@@ -1,13 +1,10 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPoolSize;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
 /**
@@ -46,7 +43,6 @@ public class TransactionManager implements AutoCloseable {
         return connection;
     }
 
-    // взял соединение и закрыл его. Было 9 свободных, стало 10 свободных.
     public PreparedStatement getTransactionalPreparedStatement(String query) throws SQLException {
         return getTransactionalConnection().prepareStatement(query);
     }
