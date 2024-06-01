@@ -1,7 +1,5 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames;
 
-import sun.jvm.hotspot.utilities.AssertionFailure;
-
 /**
  * Util class contains names of the fields of {@link com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames#GROUP_MESSAGE_TABLE group messages table}.
  * Class is not intended to have any instances - private constructor with exception throwing implements this requirement.
@@ -21,7 +19,7 @@ public class GroupMessageTableFields {
      * @throws AssertionError when someone tries to call constructor
      */
     private GroupMessageTableFields() {
-        throw new AssertionFailure();
+        throw new AssertionError();
     }
 
 }
