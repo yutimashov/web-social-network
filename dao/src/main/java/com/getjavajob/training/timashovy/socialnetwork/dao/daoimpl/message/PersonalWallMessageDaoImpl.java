@@ -38,7 +38,7 @@ public class PersonalWallMessageDaoImpl implements MessageDao {
     private PersonalWallMessageDaoImpl() {
     }
 
-    public static MessageDao createInstance() {
+    public static MessageDao getInstance() {
         if (instance == null) {
             synchronized (PersonalWallMessageDaoImpl.class) {
                 if (instance == null) {

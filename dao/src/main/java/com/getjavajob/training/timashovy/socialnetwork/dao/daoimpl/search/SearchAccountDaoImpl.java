@@ -30,7 +30,7 @@ public class SearchAccountDaoImpl implements SearchDao<Account> {
     private SearchAccountDaoImpl() {
     }
 
-    public static SearchDao<Account> createInstance() {
+    public static SearchDao<Account> getInstance() {
         if (instance == null) {
             synchronized (SearchAccountDaoImpl.class) {
                 if (instance == null) {

@@ -50,9 +50,8 @@ public class SingletonsHolderListener implements ServletContextListener {
         daoSingletonRegistry.addSingleton(GROUP_MEMBERSHIP_DAO_SINGLETON, GroupMembershipDaoImpl.getInstance());
         daoSingletonRegistry.addSingleton(GROUP_MESSAGE_DAO_SINGLETON, GroupMessageDaoImpl.getInstance());
         daoSingletonRegistry.addSingleton(PERSONAL_MESSAGE_DAO_SINGLETON, PersonalMessageDaoImpl.getInstance());
-        daoSingletonRegistry.addSingleton(PERSONAL_WALL_MESSAGE_DAO_SINGLETON,
-                PersonalWallMessageDaoImpl.createInstance());
-        daoSingletonRegistry.addSingleton(SEARCH_ACCOUNT_DAO_SINGLETON, SearchAccountDaoImpl.createInstance());
+        daoSingletonRegistry.addSingleton(PERSONAL_WALL_MESSAGE_DAO_SINGLETON, PersonalWallMessageDaoImpl.getInstance());
+        daoSingletonRegistry.addSingleton(SEARCH_ACCOUNT_DAO_SINGLETON, SearchAccountDaoImpl.getInstance());
         daoSingletonRegistry.addSingleton(SEARCH_GROUP_DAO_SINGLETON, SearchGroupDaoImpl.getInstance());
     }
 
@@ -94,7 +93,7 @@ public class SingletonsHolderListener implements ServletContextListener {
                         serviceSingletonRegistry.getSingleton(ACCOUNT_SERVICE_SINGLETON),
                         daoSingletonRegistry.getSingleton(GROUP_MEMBERSHIP_DAO_SINGLETON)
                 ));
-        serviceSingletonRegistry.addSingleton(SEARCH_SERVICE_SINGLETON, SearchServiceImpl.createInstance(
+        serviceSingletonRegistry.addSingleton(SEARCH_SERVICE_SINGLETON, SearchServiceImpl.getInstance(
                 daoSingletonRegistry.getSingleton(SEARCH_ACCOUNT_DAO_SINGLETON),
                 daoSingletonRegistry.getSingleton(SEARCH_GROUP_DAO_SINGLETON)
         ));
