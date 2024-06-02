@@ -33,21 +33,6 @@ public class PersonalWallMessageDaoImpl implements MessageDao {
     private static final String GET_BY_ID = "SELECT " + ID + ", " + ACCOUNT_AUTHOR_ID + ", " + CREATION_DATE + ", "
             + MESSAGE_TEXT + ", " + MESSAGE_IMAGE + ", " + ACCOUNT_RECEIVER_ID + " FROM " + PERSONAL_WALL_MESSAGE_TABLE
             + " WHERE " + ID + " = ?;";
-    private static volatile MessageDao instance;
-
-    private PersonalWallMessageDaoImpl() {
-    }
-
-    public static MessageDao getInstance() {
-        if (instance == null) {
-            synchronized (PersonalWallMessageDaoImpl.class) {
-                if (instance == null) {
-                    instance = new PersonalWallMessageDaoImpl();
-                }
-            }
-        }
-        return instance;
-    }
 
     @Override
     public Long create(Message message) {

@@ -6,7 +6,6 @@ import org.junit.jupiter.api.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship.FriendshipDaoImpl.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,7 +15,7 @@ class FriendshipDaoImplTest {
     private static final String LOAD_TEST_TABLES_FILEPATH = "scripts/friendship/load_test_data.sql";
     private static final String CLEAR_TEST_TABLES_FILEPATH = "scripts/friendship/clear_test_db.sql";
     private static final String DROP_TEST_DB_FILEPATH = "scripts/friendship/drop_test_db.sql";
-    private static final FriendshipDao FRIENDSHIP_DAO = getInstance();
+    private static final FriendshipDao FRIENDSHIP_DAO = new FriendshipDaoImpl();
 
     @BeforeAll
     public static void createTestTables() {

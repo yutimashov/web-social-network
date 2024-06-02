@@ -41,21 +41,6 @@ public class PersonalMessageDaoImpl implements MessageDao {
             + ", " + PERSONAL_MESSAGE_CREATION_DATE + ", " + PERSONAL_MESSAGE_TEXT + ", " + PERSONAL_MESSAGE_IMAGE
             + ", " + PERSONAL_MESSAGE_ACCOUNT_DESTINATION_ID + " FROM " + PERSONAL_MESSAGE_TABLE + " WHERE "
             + PERSONAL_MESSAGE_ID + " = ?;";
-    private static volatile MessageDao instance;
-
-    private PersonalMessageDaoImpl() {
-    }
-
-    public static MessageDao getInstance() {
-        if (instance == null) {
-            synchronized (PersonalMessageDaoImpl.class) {
-                if (instance == null) {
-                    instance = new PersonalMessageDaoImpl();
-                }
-            }
-        }
-        return instance;
-    }
 
     @Override
     public Long create(Message message) {

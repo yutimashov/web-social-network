@@ -6,8 +6,6 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.TransactionManager;
 import org.junit.jupiter.api.*;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PasswordDaoImpl.getInstance;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,7 +16,7 @@ class PasswordDaoImplTest {
     private static final String CREATE_TABLES_FILEPATH = "scripts/account/create.sql";
     private static final String LOAD_DATA_FILEPATH = "scripts/account/load.sql";
     private static final String DROP_DB_FILEPATH = "scripts/account/drop.sql";
-    private static final PasswordDao PASSWORD_DAO = getInstance(TransactionManager.getInstance());
+    private static final PasswordDao PASSWORD_DAO = new PasswordDaoImpl(new TransactionManager());
     private static final Password TEST_PASSWORD = new Password(1L, "test", "test");
 
     @BeforeAll

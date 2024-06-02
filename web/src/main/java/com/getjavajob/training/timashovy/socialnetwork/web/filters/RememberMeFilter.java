@@ -1,7 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.filters;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.LoginServiceImpl;
+import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.LoginService;
 
 import javax.servlet.*;
 import javax.servlet.http.Cookie;
@@ -10,15 +10,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonRegistry.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.LOGIN_SERVICE_SINGLETON;
+import static com.getjavajob.training.timashovy.socialnetwork.web.listeners.SingletonsHolderListener.serviceSingletonRegistry;
 import static java.util.Objects.isNull;
 
 public class RememberMeFilter implements Filter {
 
-    private static final String LOGIN_COOKIE_NAME = "login";
-    private static final String PASSWORD_COOKIE_NAME = "password";
-    private final LoginServiceImpl loginService = getInstance().getSingleton(LOGIN_SERVICE_SINGLETON);
+    private final LoginService loginService = serviceSingletonRegistry.getSingleton(LOGIN_SERVICE_SINGLETON);
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
@@ -26,8 +24,8 @@ public class RememberMeFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
         Cookie[] cookies = req.getCookies();
-        Cookie emailCookie = findCookieByName(cookies, LOGIN_COOKIE_NAME);
-        Cookie passwordCookie = findCookieByName(cookies, PASSWORD_COOKIE_NAME);
+        Cookie emailCookie = findCookieByName(cookies, "login");
+        Cookie passwordCookie = findCookieByName(cookies, "password");
         if (!isNull(emailCookie) && !isNull(passwordCookie)) {
             Optional<Account> loggedInAccount = loginService.getLoggedInAccount(emailCookie.getValue(),
                     passwordCookie.getValue());

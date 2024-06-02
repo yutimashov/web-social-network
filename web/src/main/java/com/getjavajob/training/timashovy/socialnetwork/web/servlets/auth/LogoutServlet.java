@@ -12,8 +12,6 @@ import static java.util.Objects.isNull;
 
 public class LogoutServlet extends HttpServlet {
 
-    private static final int EXPIRATION_COOKIE_TIME = 0;
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getSession().invalidate();
@@ -25,6 +23,7 @@ public class LogoutServlet extends HttpServlet {
         Cookie[] cookies = req.getCookies();
         if (!isNull(cookies)) {
             for (Cookie cookie : cookies) {
+                int EXPIRATION_COOKIE_TIME = 0;
                 cookie.setMaxAge(EXPIRATION_COOKIE_TIME);
                 resp.addCookie(cookie);
             }

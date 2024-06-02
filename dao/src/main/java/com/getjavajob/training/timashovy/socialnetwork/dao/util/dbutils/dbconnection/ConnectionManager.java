@@ -38,19 +38,11 @@ public final class ConnectionManager {
     }
 
     public static PreparedStatement getPreparedStatement(String query) throws SQLException {
-        try (Connection connection = getConnection()) {
-            return connection.prepareStatement(query);
-        } catch (SQLException e) {
-            throw new DaoException("dao: create prepared statement failed: " + e.getMessage());
-        }
+        return getConnection().prepareStatement(query);
     }
 
     public static PreparedStatement getPreparedStatementWithGeneratedKeys(String query) throws SQLException {
-        try (Connection connection = getConnection()) {
-            return connection.prepareStatement(query, RETURN_GENERATED_KEYS);
-        } catch (SQLException e) {
-            throw new DaoException("dao: create prepared statement failed: " + e.getMessage());
-        }
+        return getConnection().prepareStatement(query, RETURN_GENERATED_KEYS);
     }
 
     /**
@@ -60,7 +52,9 @@ public final class ConnectionManager {
      */
     public static synchronized Connection getConnection() {
         try {
-            return getConnectionPool().take();
+            BlockingQueue<Connection> pool = getConnectionPool();
+            System.out.println("Took connection: size: " + connectionPool.size());
+            return pool.take();
         } catch (InterruptedException e) {
             throw new DaoException("Cannot establish connection to db");
         }
@@ -86,7 +80,7 @@ public final class ConnectionManager {
         connectionPool = new ArrayBlockingQueue<>(size);
         loadDriver();
         for (int i = 0; i < size; i++) {
-            connectionPool.add(createConnection());
+            connectionPool.add(createWrappedConnection());
         }
     }
 
@@ -107,11 +101,14 @@ public final class ConnectionManager {
      *
      * @return connection instance to database, based on config extracted data
      */
-    private static ConnectionWrapper createConnection() {
+    private static ConnectionWrapper createWrappedConnection() {
         try {
-            Connection connection = DriverManager.getConnection(getDbConfigProperty(URL_KEY),
-                    getDbConfigProperty(LOGIN_KEY), getDbConfigProperty(PASSWORD_KEY));
-            return new ConnectionWrapper(connection, connectionPool);
+            Connection realConnection = DriverManager.getConnection(
+                    getDbConfigProperty(URL_KEY),
+                    getDbConfigProperty(LOGIN_KEY),
+                    getDbConfigProperty(PASSWORD_KEY)
+            );
+            return new ConnectionWrapper(realConnection, connectionPool);
         } catch (SQLException e) {
             throw new DaoException("Cannot create connection to db");
         }

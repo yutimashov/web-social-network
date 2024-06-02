@@ -40,9 +40,8 @@ public class AccountServiceImpl implements AccountService {
     private final PasswordService passwordService;
     private final PasswordDao passwordDao;
     private final TransactionManager transactionManager;
-    private static volatile AccountService instance;
 
-    private AccountServiceImpl(BaseDao<Account> accountDao, FriendshipDao friendshipDao,
+    public AccountServiceImpl(BaseDao<Account> accountDao, FriendshipDao friendshipDao,
                                FriendshipChecker friendshipChecker, PhoneService phoneService, PhoneDao phoneDao,
                                PasswordService passwordService, PasswordDao passwordDao,
                                TransactionManager transactionManager) {
@@ -56,27 +55,14 @@ public class AccountServiceImpl implements AccountService {
         this.transactionManager = transactionManager;
     }
 
-    public static AccountService getInstance(BaseDao<Account> accountDao, FriendshipDao friendshipDao,
-                                             FriendshipChecker friendshipChecker, PhoneService phoneService,
-                                             PhoneDao phoneDao, PasswordService passwordService,
-                                             PasswordDao passwordDao, TransactionManager transactionManager) {
-        if (instance == null) {
-            synchronized (AccountServiceImpl.class) {
-                if (instance == null) {
-                    instance = new AccountServiceImpl(accountDao, friendshipDao, friendshipChecker, phoneService,
-                            phoneDao, passwordService, passwordDao, transactionManager);
-                }
-            }
-        }
-        return instance;
-    }
-
     /**
      * Create new account inserting it in database with auto generated incremented key
      *
      * @param accountRegisterData object which data will be inserted in db as new account
      * @return id of created account
      */
+    //TODO: avoid duplicated code
+    //TODO: exceptions (Exception -> DAO | Service)
     @Override
     public Long create(AccountRegistrationData accountRegisterData) {
         try (Connection conn = transactionManager.getTransactionalConnection()) {

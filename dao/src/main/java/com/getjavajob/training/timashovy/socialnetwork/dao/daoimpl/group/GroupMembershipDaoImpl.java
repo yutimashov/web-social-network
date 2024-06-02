@@ -43,21 +43,6 @@ public class GroupMembershipDaoImpl implements GroupMembershipDao {
     private static final String GET_ADMINS = "SELECT " + GROUP_MEMBERS_ACCOUNT_ID + " FROM " + GROUP_MEMBERS_TABLE
             + " WHERE " + GROUP_MEMBERS_GROUP_ID + " = ? " + "AND " + GROUP_MEMBERS_IS_MEMBER + " = TRUE AND "
             + GROUP_MEMBERS_IS_ADMIN + " = TRUE;";
-    private static volatile GroupMembershipDao instance;
-
-    private GroupMembershipDaoImpl() {
-    }
-
-    public static GroupMembershipDao getInstance() {
-        if (instance == null) {
-            synchronized (GroupMembershipDaoImpl.class) {
-                if (instance == null) {
-                    instance = new GroupMembershipDaoImpl();
-                }
-            }
-        }
-        return instance;
-    }
 
     @Override
     public void sendRequest(Long groupId, Long accountId) {

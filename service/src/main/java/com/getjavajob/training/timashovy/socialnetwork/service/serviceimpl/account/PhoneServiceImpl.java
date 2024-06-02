@@ -14,21 +14,9 @@ import static java.util.stream.Collectors.toList;
 public class PhoneServiceImpl implements PhoneService {
 
     private final PhoneDao phoneDao;
-    private static volatile PhoneService instance;
 
-    private PhoneServiceImpl(PhoneDao phoneDao) {
+    public PhoneServiceImpl(PhoneDao phoneDao) {
         this.phoneDao = phoneDao;
-    }
-
-    public static PhoneService getInstance(PhoneDao phoneDao) {
-        if (instance == null) {
-            synchronized (PhoneServiceImpl.class) {
-                if (instance == null) {
-                    instance = new PhoneServiceImpl(phoneDao);
-                }
-            }
-        }
-        return instance;
     }
 
     @Override

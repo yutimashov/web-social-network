@@ -64,8 +64,9 @@ public final class ConnectionWrapper implements Connection {
     }
 
     @Override
-    public void close() throws SQLException {
+    public void close() {
         connectionPool.add(this);
+        System.out.println("Close connection: size: " + connectionPool.size());
     }
 
     @Override

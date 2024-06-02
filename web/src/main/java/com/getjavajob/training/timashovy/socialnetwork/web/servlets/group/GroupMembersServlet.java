@@ -7,16 +7,16 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.IOException;
 
-import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonRegistry.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.GROUP_MEMBERSHIP_SERVICE_SINGLETON;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.GROUP_SERVICE_SINGLETON;
+import static com.getjavajob.training.timashovy.socialnetwork.web.listeners.SingletonsHolderListener.serviceSingletonRegistry;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 import static java.lang.Long.valueOf;
 
 public class GroupMembersServlet extends HttpServlet {
 
-    private final GroupService groupService = getInstance().getSingleton(GROUP_SERVICE_SINGLETON);
-    private final GroupMembershipService groupMembershipService = getInstance()
+    private final GroupService groupService = serviceSingletonRegistry.getSingleton(GROUP_SERVICE_SINGLETON);
+    private final GroupMembershipService groupMembershipService = serviceSingletonRegistry
             .getSingleton(GROUP_MEMBERSHIP_SERVICE_SINGLETON);
 
     @Override

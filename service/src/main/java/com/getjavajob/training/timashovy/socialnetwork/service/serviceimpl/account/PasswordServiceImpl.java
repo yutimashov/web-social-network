@@ -12,21 +12,9 @@ import static com.getjavajob.training.timashovy.socialnetwork.service.util.Passw
 public class PasswordServiceImpl implements PasswordService {
 
     private final PasswordDao passwordDao;
-    private static volatile PasswordService instance;
 
-    private PasswordServiceImpl(PasswordDao passwordDao) {
+    public PasswordServiceImpl(PasswordDao passwordDao) {
         this.passwordDao = passwordDao;
-    }
-
-    public static PasswordService getInstance(PasswordDao passwordDao) {
-        if (instance == null) {
-            synchronized (PasswordServiceImpl.class) {
-                if (instance == null) {
-                    instance = new PasswordServiceImpl(passwordDao);
-                }
-            }
-        }
-        return instance;
     }
 
     @Override

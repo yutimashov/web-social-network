@@ -34,21 +34,6 @@ public class FriendshipDaoImpl implements FriendshipDao {
             + FRIENDSHIP_TABLE + " WHERE " + FRIENDSHIP_STATUS + " = FALSE AND " + FRIENDSHIP_ACCEPTER_ID + " = ?;";
     private static final String GET_OUTGOING_REQUESTS = "SELECT " + FRIENDSHIP_ACCEPTER_ID + " FROM "
             + FRIENDSHIP_TABLE + " WHERE " + FRIENDSHIP_STATUS + " = FALSE AND " + FRIENDSHIP_REQUESTER_ID + " = ?;";
-    private static volatile FriendshipDao instance;
-
-    private FriendshipDaoImpl() {
-    }
-
-    public static FriendshipDao getInstance() {
-        if (instance == null) {
-            synchronized (FriendshipDaoImpl.class) {
-                if (instance == null) {
-                    instance = new FriendshipDaoImpl();
-                }
-            }
-        }
-        return instance;
-    }
 
     /**
      * Add a new record to `friend_data.friendship` table

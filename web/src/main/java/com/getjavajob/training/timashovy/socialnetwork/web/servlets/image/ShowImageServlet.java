@@ -12,14 +12,13 @@ import static java.util.Objects.isNull;
 
 public class ShowImageServlet extends HttpServlet {
 
-    private static final int BUFFER_SIZE = 8192;
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         InputStream inputStreamImage = ((InputStream) req.getAttribute("inputStreamImage"));
         if (!(isNull(inputStreamImage))) {
             resp.setContentType("image/jpeg");
             try (OutputStream out = resp.getOutputStream()) {
+                int BUFFER_SIZE = 8192;
                 byte[] buffer = new byte[BUFFER_SIZE];
                 int bytesRead;
                 while ((bytesRead = inputStreamImage.read(buffer)) != -1) {

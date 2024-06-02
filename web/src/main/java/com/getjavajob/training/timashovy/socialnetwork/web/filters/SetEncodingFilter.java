@@ -5,11 +5,10 @@ import java.io.IOException;
 
 public class SetEncodingFilter implements Filter {
 
-    private static final String encoding = "UTF-8";
-
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {
+        String encoding = "UTF-8";
         servletRequest.setCharacterEncoding(encoding);
         servletResponse.setContentType("text/html; charset=" + encoding);
         servletResponse.setCharacterEncoding(encoding);

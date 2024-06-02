@@ -25,21 +25,6 @@ public class SearchAccountDaoImpl implements SearchDao<Account> {
             + ACCOUNT_LAST_NAME + " ILIKE ? OFFSET ? LIMIT ?;";
     private static final String FIND_ACCOUNTS_AMOUNT = "SELECT COUNT(*) AS " + TOTAL_ACCOUNTS_AMOUNT_ALIAS + " FROM "
             + ACCOUNTS_TABLE + " WHERE " + ACCOUNT_FIRST_NAME + " ILIKE ? OR " + ACCOUNT_LAST_NAME + " ILIKE ?;";
-    private static volatile SearchDao<Account> instance;
-
-    private SearchAccountDaoImpl() {
-    }
-
-    public static SearchDao<Account> getInstance() {
-        if (instance == null) {
-            synchronized (SearchAccountDaoImpl.class) {
-                if (instance == null) {
-                    instance = new SearchAccountDaoImpl();
-                }
-            }
-        }
-        return instance;
-    }
 
     @Override
     public List<Account> searchAccounts(String searchQuery, int currentPage, int recordsPerPage) {

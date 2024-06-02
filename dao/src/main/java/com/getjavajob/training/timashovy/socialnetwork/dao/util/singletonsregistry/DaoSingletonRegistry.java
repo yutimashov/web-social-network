@@ -6,21 +6,9 @@ import java.util.Map;
 public class DaoSingletonRegistry implements SingletonRegistry {
 
     private final Map<String, Object> singletons;
-    private static volatile DaoSingletonRegistry instance;
 
-    private DaoSingletonRegistry() {
+    public DaoSingletonRegistry() {
         singletons = new HashMap<>();
-    }
-
-    public static DaoSingletonRegistry getInstance() {
-        if (instance == null) {
-            synchronized (DaoSingletonRegistry.class) {
-                if (instance == null) {
-                    instance = new DaoSingletonRegistry();
-                }
-            }
-        }
-        return instance;
     }
 
     @Override

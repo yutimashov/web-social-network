@@ -24,21 +24,6 @@ public class SearchGroupDaoImpl implements SearchDao<Group> {
             + " ILIKE ? OFFSET ? LIMIT ?;";
     private static final String FIND_GROUPS_AMOUNT = "SELECT COUNT(*) AS " + TOTAL_GROUP_AMOUNT_ALIAS + " FROM "
             + GROUPS_TABLE + " WHERE " + GROUP_NAME + " ILIKE ?;";
-    private static volatile SearchDao<Group> instance;
-
-    private SearchGroupDaoImpl() {
-    }
-
-    public static SearchDao<Group> getInstance() {
-        if (instance == null) {
-            synchronized (SearchGroupDaoImpl.class) {
-                if (instance == null) {
-                    instance = new SearchGroupDaoImpl();
-                }
-            }
-        }
-        return instance;
-    }
 
     @Override
     public List<Group> searchAccounts(String searchQuery, int currentPage, int recordsPerPage) {

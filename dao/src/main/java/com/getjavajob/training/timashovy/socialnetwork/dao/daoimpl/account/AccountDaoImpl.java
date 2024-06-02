@@ -57,22 +57,10 @@ public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidat
     private static final String DELETE_BY_ID = "DELETE FROM " + ACCOUNTS_TABLE + " WHERE " + ACCOUNT_ID + " = ?;";
     private final PhoneDao phoneDao;
     private final TransactionManager transactionManager;
-    private static volatile BaseDao<Account> instance;
 
-    private AccountDaoImpl(PhoneDao phoneDao, TransactionManager transactionManager) {
+    public AccountDaoImpl(PhoneDao phoneDao, TransactionManager transactionManager) {
         this.phoneDao = phoneDao;
         this.transactionManager = transactionManager;
-    }
-
-    public static BaseDao<Account> getInstance(PhoneDao phoneDao, TransactionManager transactionManager) {
-        if (instance == null) {
-            synchronized (AccountDaoImpl.class) {
-                if (instance == null) {
-                    instance = new AccountDaoImpl(phoneDao, transactionManager);
-                }
-            }
-        }
-        return instance;
     }
 
     @Override

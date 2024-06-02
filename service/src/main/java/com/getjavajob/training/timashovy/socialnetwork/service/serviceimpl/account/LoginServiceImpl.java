@@ -16,22 +16,10 @@ public class LoginServiceImpl implements LoginService {
 
     private final AccountService accountService;
     private final PasswordService passwordService;
-    private static volatile LoginService instance;
 
-    private LoginServiceImpl(AccountService accountService, PasswordService passwordService) {
+    public LoginServiceImpl(AccountService accountService, PasswordService passwordService) {
         this.accountService = accountService;
         this.passwordService = passwordService;
-    }
-
-    public static LoginService getInstance(AccountService accountService, PasswordService passwordService) {
-        if (instance == null) {
-            synchronized (LoginServiceImpl.class) {
-                if (instance == null) {
-                    instance = new LoginServiceImpl(accountService, passwordService);
-                }
-            }
-        }
-        return instance;
     }
 
     @Override

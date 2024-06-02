@@ -31,21 +31,6 @@ public class GroupDaoImpl implements BaseDao<Group>, TableConstraintsValidator {
             + GROUP_DESCRIPTION + " = ?, " + GROUP_OWNER_ID + " = ?, " + GROUP_AVATAR + " = ? WHERE " + GROUP_ID
             + " = ?";
     private static final String DELETE_GROUP_BY_ID = "DELETE FROM " + GROUPS_TABLE + " WHERE " + GROUP_ID + " = ?";
-    private static volatile GroupDaoImpl instance;
-
-    private GroupDaoImpl() {
-    }
-
-    public static GroupDaoImpl getInstance() {
-        if (instance == null) {
-            synchronized (GroupDaoImpl.class) {
-                if (instance == null) {
-                    instance = new GroupDaoImpl();
-                }
-            }
-        }
-        return instance;
-    }
 
     @Override
     public Long create(Group group) {

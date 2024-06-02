@@ -30,21 +30,9 @@ public class PhoneDaoImpl implements PhoneDao {
     private static final String UPDATE = "UPDATE " + ACCOUNT_PHONES_TABLE + " SET " + PHONE_NUMBER + " = ? WHERE "
             + PHONE_ID + " = ?;";
     private final TransactionManager transactionManager;
-    private static volatile PhoneDao instance;
 
-    private PhoneDaoImpl(TransactionManager transactionManager) {
+    public PhoneDaoImpl(TransactionManager transactionManager) {
         this.transactionManager = transactionManager;
-    }
-
-    public static PhoneDao getInstance(TransactionManager transactionManager) {
-        if (instance == null) {
-            synchronized (PhoneDaoImpl.class) {
-                if (instance == null) {
-                    instance = new PhoneDaoImpl(transactionManager);
-                }
-            }
-        }
-        return instance;
     }
 
     @Override

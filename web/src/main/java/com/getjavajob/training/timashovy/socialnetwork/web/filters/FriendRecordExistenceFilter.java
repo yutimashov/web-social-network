@@ -7,21 +7,20 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonRegistry.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.ACCOUNT_SERVICE_SINGLETON;
+import static com.getjavajob.training.timashovy.socialnetwork.web.listeners.SingletonsHolderListener.serviceSingletonRegistry;
 import static java.lang.Long.valueOf;
 
 public class FriendRecordExistenceFilter implements Filter {
 
-    private final AccountService accountService = getInstance().getSingleton(ACCOUNT_SERVICE_SINGLETON);
+    private final AccountService accountService = serviceSingletonRegistry.getSingleton(ACCOUNT_SERVICE_SINGLETON);
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         if (accountService.checkFriendshipRecordExistence(((Account) req.getSession(false)
-                        .getAttribute("account")).getId(),
-                valueOf(req.getParameter("id")))) {
+                .getAttribute("account")).getId(), valueOf(req.getParameter("id")))) {
             req.setAttribute("alreadySentFriendRequest", true);
         }
         filterChain.doFilter(req, servletResponse);

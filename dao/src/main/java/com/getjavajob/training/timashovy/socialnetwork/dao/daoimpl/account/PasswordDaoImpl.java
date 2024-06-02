@@ -33,21 +33,9 @@ public class PasswordDaoImpl implements PasswordDao {
             + PASSWORD_SALT + " FROM " + ACCOUNT_PASSWORDS_TABLE + " pass JOIN " + ACCOUNTS_TABLE + " acc ON acc."
             + ACCOUNT_ID + " = pass." + PASSWORD_ACCOUNT_ID + " WHERE acc." + ACCOUNT_EMAIL + " = ?;";
     private final TransactionManager transactionManager;
-    private static volatile PasswordDao instance;
 
-    private PasswordDaoImpl(TransactionManager transactionManager) {
+    public PasswordDaoImpl(TransactionManager transactionManager) {
         this.transactionManager = transactionManager;
-    }
-
-    public static PasswordDao getInstance(TransactionManager transactionManager) {
-        if (instance == null) {
-            synchronized (PasswordDaoImpl.class) {
-                if (instance == null) {
-                    instance = new PasswordDaoImpl(transactionManager);
-                }
-            }
-        }
-        return instance;
     }
 
     @Override

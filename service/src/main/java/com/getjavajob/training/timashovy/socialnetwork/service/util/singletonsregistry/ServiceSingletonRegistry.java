@@ -8,19 +8,9 @@ import java.util.Map;
 public class ServiceSingletonRegistry implements SingletonRegistry {
 
     private final Map<String, Object> singletons;
-    private static volatile ServiceSingletonRegistry instance;
 
-    private ServiceSingletonRegistry() {
+    public ServiceSingletonRegistry() {
         singletons = new HashMap<>();
-    }
-
-    public static ServiceSingletonRegistry getInstance() {
-        if (instance == null) {
-            synchronized (ServiceSingletonRegistry.class) {
-                instance = new ServiceSingletonRegistry();
-            }
-        }
-        return instance;
     }
 
     @Override

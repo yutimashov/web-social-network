@@ -15,20 +15,8 @@ import static java.sql.Statement.RETURN_GENERATED_KEYS;
 public class TransactionManager implements AutoCloseable {
 
     private static final ThreadLocal<Connection> threadLocalConnection = new ThreadLocal<>();
-    private static volatile TransactionManager instance;
 
-    private TransactionManager() {
-    }
-
-    public static TransactionManager getInstance() {
-        if (instance == null) {
-            synchronized (TransactionManager.class) {
-                if (instance == null) {
-                    instance = new TransactionManager();
-                }
-            }
-        }
-        return instance;
+    public TransactionManager() {
     }
 
     /**

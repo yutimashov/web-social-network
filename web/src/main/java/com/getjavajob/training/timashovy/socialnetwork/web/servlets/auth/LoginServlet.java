@@ -1,8 +1,8 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.servlets.auth;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.LoginService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
-import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.LoginServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -12,9 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonRegistry.getInstance;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.LOGIN_SERVICE_SINGLETON;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.PASSWORD_SERVICE_SINGLETON;
+import static com.getjavajob.training.timashovy.socialnetwork.web.listeners.SingletonsHolderListener.serviceSingletonRegistry;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.ErrorTypes.AUTH_DATA_ERROR;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspPagePaths.LOGIN;
@@ -25,21 +25,9 @@ import static java.util.concurrent.TimeUnit.HOURS;
 
 public class LoginServlet extends HttpServlet {
 
-    private static final String LOGIN_COOKIE_NAME = "login";
-    private static final String PASSWORD_COOKIE_NAME = "password";
-    private static final int REMEMBER_ME_COOKIE_LIFETIME = (int) HOURS.toSeconds(1);
-    private final LoginServiceImpl loginService;
-    private final PasswordService passwordService;
-
-    public LoginServlet() {
-        this.loginService = getInstance().getSingleton(LOGIN_SERVICE_SINGLETON);
-        this.passwordService = getInstance().getSingleton(PASSWORD_SERVICE_SINGLETON);
-    }
-
-    public LoginServlet(LoginServiceImpl loginService, PasswordService passwordService) {
-        this.loginService = loginService;
-        this.passwordService = passwordService;
-    }
+    private final int rememberMeCookieLifetime = (int) HOURS.toSeconds(1);
+    private final PasswordService passwordService = serviceSingletonRegistry.getSingleton(PASSWORD_SERVICE_SINGLETON);
+    private final LoginService loginService = serviceSingletonRegistry.getSingleton(LOGIN_SERVICE_SINGLETON);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -49,7 +37,8 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Optional<Account> loggedInAccount = loginService.getLoggedInAccount(req.getParameter("email"),
-                req.getParameter("password"));
+                req.getParameter("password")
+        );
         if (loggedInAccount.isPresent()) {
             Account account = loggedInAccount.get();
             req.getSession().setAttribute("account", account);
@@ -63,15 +52,15 @@ public class LoginServlet extends HttpServlet {
     }
 
     private void createRememberMeCookies(Account account, HttpServletResponse resp) {
-        prepareCookie(resp, LOGIN_COOKIE_NAME, account.getEmail());
+        prepareCookie(resp, "login", account.getEmail());
         if (passwordService.get(account.getId()).isPresent()) {
-            prepareCookie(resp, PASSWORD_COOKIE_NAME, passwordService.get(account.getId()).get().getPassword());
+            prepareCookie(resp, "password", passwordService.get(account.getId()).get().getPassword());
         }
     }
 
     private void prepareCookie(HttpServletResponse resp, String cookieName, String cookieValue) {
         Cookie cookie = new Cookie(cookieName, cookieValue);
-        cookie.setMaxAge(REMEMBER_ME_COOKIE_LIFETIME);
+        cookie.setMaxAge(rememberMeCookieLifetime);
         resp.addCookie(cookie);
     }
 

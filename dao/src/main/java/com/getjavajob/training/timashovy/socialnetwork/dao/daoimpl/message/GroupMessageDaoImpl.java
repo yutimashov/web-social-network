@@ -35,21 +35,6 @@ public class GroupMessageDaoImpl implements MessageDao {
             + GROUP_MESSAGE_GROUP_ID + ", " + GROUP_MESSAGE_MESSAGE_TEXT + ", " + GROUP_MESSAGE_MESSAGE_IMAGE + ", "
             + GROUP_MESSAGE_CREATION_DATE + " FROM " + GROUP_MESSAGE_TABLE + " WHERE " + GROUP_MESSAGE_GROUP_ID
             + " = ? ORDER BY " + GROUP_MESSAGE_CREATION_DATE + " DESC;";
-    private static volatile MessageDao instance;
-
-    private GroupMessageDaoImpl() {
-    }
-
-    public static MessageDao getInstance() {
-        if (instance == null) {
-            synchronized (MessageDao.class) {
-                if (instance == null) {
-                    instance = new GroupMessageDaoImpl();
-                }
-            }
-        }
-        return instance;
-    }
 
     @Override
     public Long create(Message message) {
