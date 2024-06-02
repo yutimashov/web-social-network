@@ -77,8 +77,14 @@ public class TransactionManager implements AutoCloseable {
         }
     }
 
+    /**
+     * Close transactional connection, remove value from {@link TransactionManager#threadLocalConnection}
+     * variable and return connection to connection pool.
+     *
+     * @throws SQLException if connection cannot be closed
+     */
     @Override
-    public void close() throws Exception {
+    public void close() throws SQLException {
         Connection connection = getTransactionalConnection();
         if (connection != null) {
             connection.close();

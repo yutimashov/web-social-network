@@ -12,7 +12,6 @@ import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNTS_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNT_PASSWORDS_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPoolSize;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.AccountTableFields.ACCOUNT_EMAIL;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.AccountTableFields.ACCOUNT_ID;
@@ -53,7 +52,6 @@ public class PasswordDaoImpl implements PasswordDao {
 
     @Override
     public Long create(Password password) {
-        System.out.println("Inside create Password : " + getPoolSize());
         try (PreparedStatement statement
                      = transactionManager.getGetTransactionalPreparedStatementWithGeneratedKeys(CREATE)) {
             statement.setLong(1, password.getAccountId());

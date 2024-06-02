@@ -34,10 +34,6 @@ public final class ConnectionManager {
     private static volatile BlockingQueue<Connection> connectionPool;
     private static final int DEFAULT_POOL_SIZE = 10;
 
-    public static String getPoolSize() {
-        return "Pool size: " + connectionPool.size();
-    }
-
     private ConnectionManager() {
     }
 

@@ -2,6 +2,7 @@ package com.getjavajob.training.timashovy.socialnetwork.web.servlets.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType;
 import com.getjavajob.training.timashovy.socialnetwork.common.util.AccountUpdatingData;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.PhoneServiceImpl;
@@ -59,7 +60,6 @@ public class EditAccountServlet extends HttpServlet {
         resp.sendRedirect("/account?id=" + accountId);
     }
 
-    //TODO: !isNull(parameterValue) && !parameterValue.isEmpty()
     private AccountUpdatingData updateAccountData(HttpServletRequest req) throws ServletException, IOException {
         return new AccountUpdatingData.Builder()
                 .account(new Account.Builder()
@@ -76,8 +76,8 @@ public class EditAccountServlet extends HttpServlet {
                         .skype(req.getParameter(SKYPE_PARAMETER_NAME))
                         .icq(req.getParameter(ICQ_PARAMETER_NAME))
                         .email(req.getParameter(EMAIL_PARAMETER_NAME))
-                        .personalPhoneNumber(getUpdatedPersonalPhones(req))
-                        .workPhoneNumber(getUpdatedWorkingPhones(req))
+                        .personalPhoneNumber(getUpdatedPhones(req, "personal", PERSONAL))
+                        .workPhoneNumber(getUpdatedPhones(req, "working", WORKING))
                         .build())
                 .password(req.getParameter(PASSWORD_PARAMETER_NAME))
                 .build();
@@ -91,40 +91,18 @@ public class EditAccountServlet extends HttpServlet {
      * @param req request from servlet page
      * @return list of updated phones with new values or empty list if there were no updates
      */
-    private List<Phone> getUpdatedPersonalPhones(HttpServletRequest req) {
+    private List<Phone> getUpdatedPhones(HttpServletRequest req, String phoneTypeParam, PhoneType phoneType) {
         List<Phone> updatedPhones = new ArrayList<>();
         Long accountId = valueOf(req.getParameter("id"));
-        String[] phonesIds = req.getParameterValues("personalPhoneId");
-        String[] phoneValues = req.getParameterValues("personalPhoneValue");
-        System.out.println("Updating personal phones ids: " + Arrays.toString(phonesIds));
-        System.out.println("Updating personal phones numbers: " + Arrays.toString(phoneValues));
+        String[] phonesIds = req.getParameterValues(phoneTypeParam + "PhoneId");
+        String[] phoneValues = req.getParameterValues(phoneTypeParam + "PhoneValue");
         if (!isNull(phonesIds) && !isNull(phoneValues)) {
             for (int i = 0; i < phonesIds.length; i++) {
                 if (!isNull(phonesIds[i]) && !phonesIds[i].isEmpty() && !phoneValues[i].isEmpty()) {
-                    updatedPhones.add(new Phone(valueOf(phonesIds[i]), PERSONAL, phoneValues[i], accountId));
+                    updatedPhones.add(new Phone(valueOf(phonesIds[i]), phoneType, phoneValues[i], accountId));
                 }
             }
         }
-        System.out.println("Updating list of personal phones: " + updatedPhones);
-        System.out.println("=====================================");
-        return updatedPhones;
-    }
-
-    private List<Phone> getUpdatedWorkingPhones(HttpServletRequest req) {
-        List<Phone> updatedPhones = new ArrayList<>();
-        Long accountId = valueOf(req.getParameter("id"));
-        String[] phonesIds = req.getParameterValues("workingPhoneId");
-        String[] phoneValues = req.getParameterValues("workingPhoneValue");
-        System.out.println("Updating personal phones ids: " + Arrays.toString(phonesIds));
-        System.out.println("Updating personal phones numbers: " + Arrays.toString(phoneValues));
-        if (!isNull(phonesIds) && !isNull(phoneValues)) {
-            for (int i = 0; i < phonesIds.length; i++) {
-                if (!isNull(phonesIds[i]) && !phonesIds[i].isEmpty() && !phoneValues[i].isEmpty()) {
-                    updatedPhones.add(new Phone(valueOf(phonesIds[i]), WORKING, phoneValues[i], accountId));
-                }
-            }
-        }
-        System.out.println("Updating list of working phones: " + updatedPhones);
         return updatedPhones;
     }
 

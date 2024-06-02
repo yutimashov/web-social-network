@@ -64,8 +64,8 @@ class GroupDaoImplTest {
     class TestCreateGroup {
 
         @Test
-        public void shouldReturn2WhenCreateSecondGroup() {
-            assertEquals(2L, GROUP_DAO_INSTANCE.create(TEST_GROUP));
+        public void shouldReturn1WhenCreateGroup() {
+            assertEquals(1L, GROUP_DAO_INSTANCE.create(TEST_GROUP));
         }
 
     }

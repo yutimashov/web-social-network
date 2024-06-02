@@ -5,8 +5,6 @@ import com.getjavajob.training.timashovy.socialnetwork.common.account.AccountRol
 import com.getjavajob.training.timashovy.socialnetwork.common.util.AccountRegistrationData;
 import com.getjavajob.training.timashovy.socialnetwork.common.util.AccountUpdatingData;
 
-import java.io.InputStream;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,28 +30,12 @@ public interface AccountService {
 
     List<Account> getFriends(Long accountId);
 
-    boolean updateFirstName(Long accountId, String firstName);
-
     List<Account> getIncomingFriendRequests(Long accountId);
 
     List<Account> getOutgoingFriendRequests(Long accountId);
 
-    boolean updateLastName(Long accountId, String updatedLastName);
-
-    boolean updateMiddleName(Long accountId, String updatedMiddleName);
-
-    boolean updateBirthDate(Long accountId, LocalDate parse);
-
-    boolean updateSkype(Long accountId, String updatedSkype);
-
-    boolean updateIcq(Long accountId, String updatedICQ);
-
-    boolean updateEmail(Long accountId, String updatedEmail);
-
-    boolean updateRole(Long accountId, AccountRole role);
+    void updateRole(Long accountId, AccountRole role);
 
     boolean checkFriendshipRecordExistence(Long requesterId, Long accepterId);
-
-    boolean updateAvatar(Long accountId, InputStream updatedAvatar);
 
 }

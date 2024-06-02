@@ -19,7 +19,6 @@ import static java.util.Objects.isNull;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
-//TODO: getInstance() should return BaseDao<Group>. Extract TableConstraintsValidator in separate class.
 public class GroupDaoImpl implements BaseDao<Group>, TableConstraintsValidator {
 
     private static final String SAVE_GROUP = "INSERT INTO " + GROUPS_TABLE + " (" + GROUP_NAME + ", "

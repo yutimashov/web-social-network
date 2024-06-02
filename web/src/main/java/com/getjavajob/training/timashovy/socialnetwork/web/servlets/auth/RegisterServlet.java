@@ -32,6 +32,8 @@ public class RegisterServlet extends HttpServlet {
             accountService.create(new AccountRegistrationData.Builder()
                     .account(
                             new Account.Builder()
+                                    .avatar(req.getPart("avatar") != null && req.getPart("avatar").getSize() > 0
+                                            ? req.getPart("avatar").getInputStream() : null)
                                     .firstName(req.getParameter("name"))
                                     .lastName(req.getParameter("lastName"))
                                     .middleName(req.getParameter("middleName"))

@@ -9,7 +9,7 @@
 <form action="${pageContext.request.contextPath}/login" method="POST">
     <div>
         <c:choose>
-            <c:when test="${param.error eq 'auth-data'}"><span
+            <c:when test="${param.error eq 'auth_data'}"><span
                     style="color:red">Incorrect email or password</span></c:when>
             <c:when test="${param.error eq 'authorization'}"><span
                     style="color:red">You are not authorized!</span></c:when>

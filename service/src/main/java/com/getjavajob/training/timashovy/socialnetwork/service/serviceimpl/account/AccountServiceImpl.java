@@ -6,7 +6,6 @@ import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.common.util.AccountRegistrationData;
 import com.getjavajob.training.timashovy.socialnetwork.common.util.AccountUpdatingData;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PasswordDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipChecker;
@@ -17,10 +16,8 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.Passwo
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneService;
 import com.getjavajob.training.timashovy.socialnetwork.service.util.exceptions.ServiceException;
 
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +27,9 @@ import static com.getjavajob.training.timashovy.socialnetwork.common.account.Pho
 import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toList;
 
+/**
+ * Singleton class for working with methods, managing Account functionality.
+ */
 public class AccountServiceImpl implements AccountService {
 
     private final BaseDao<Account> accountDao;
@@ -71,8 +71,6 @@ public class AccountServiceImpl implements AccountService {
         return instance;
     }
 
-    //TODO: validation methods
-
     /**
      * Create new account inserting it in database with auto generated incremented key
      *
@@ -107,7 +105,6 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
-    //TODO: validation methods
     @Override
     public void update(Long accountId, AccountUpdatingData accountUpdatingData) {
         validateAccountId(accountId);
@@ -165,21 +162,6 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
-    private void validateAccount(Account account) {
-        if (isNull(account) || isNull(account.getFirstName()) || isNull(account.getLastName())
-                || isNull(account.getEmail())) {
-            throw new IllegalArgumentException("Account validation error: field not null constraint violation");
-        }
-        if (!isNull(account.getIcq()) || !("".equals(account.getIcq()))) {
-            ((TableConstraintsValidator) accountDao).validateEntityFieldUniqueness("icq", account.getIcq());
-        }
-        if (!isNull(account.getSkype())) {
-            ((TableConstraintsValidator) accountDao).validateEntityFieldUniqueness("skype",
-                    account.getSkype());
-        }
-        ((TableConstraintsValidator) accountDao).validateEntityFieldUniqueness("email", account.getEmail());
-    }
-
     /**
      * According to database constraints, accountId cannot be less or equal to zero, and it cannot be null.
      *
@@ -198,95 +180,13 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public boolean updateFirstName(Long accountId, String firstName) {
-        validateAccountId(accountId);
-        validateAccountFieldNotNull(firstName);
-        return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
-                new Account.Builder(accountDao.getById(accountId).get()).firstName(firstName).build());
-    }
-
-    @Override
-    public boolean updateLastName(Long accountId, String lastName) {
-        validateAccountId(accountId);
-        validateAccountFieldNotNull(lastName);
-        return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
-                new Account.Builder(accountDao.getById(accountId).get()).lastName(lastName).build());
-    }
-
-    @Override
-    public boolean updateMiddleName(Long accountId, String middleName) {
-        validateAccountId(accountId);
-        validateAccountFieldNotNull(middleName);
-        return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
-                new Account.Builder(accountDao.getById(accountId).get()).middleName(middleName).build());
-    }
-
-    @Override
-    public boolean updateBirthDate(Long accountId, LocalDate birthDate) {
-        validateAccountId(accountId);
-        validateAccountFieldNotNull(birthDate);
-        return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
-                new Account.Builder(accountDao.getById(accountId).get()).birthDate(birthDate).build());
-    }
-
-    public boolean updateAccountWorkAddress(Long accountId, String workAddress) {
-        validateAccountId(accountId);
-        validateAccountFieldNotNull(workAddress);
-        return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
-                new Account.Builder(accountDao.getById(accountId).get()).workAddress(workAddress).build());
-    }
-
-    public boolean updateAccountPersonalAddress(Long accountId, String personalAddress) {
-        validateAccountId(accountId);
-        validateAccountFieldNotNull(personalAddress);
-        return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
-                new Account.Builder(accountDao.getById(accountId).get()).personalAddress(personalAddress).build());
-    }
-
-    @Override
-    public boolean updateEmail(Long accountId, String email) {
-        validateAccountId(accountId);
-        validateAccountFieldNotNull(email);
-        return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
-                new Account.Builder(accountDao.getById(accountId).get()).email(email).build());
-    }
-
-    @Override
-    public boolean updateIcq(Long accountId, String icq) {
-        validateAccountId(accountId);
-        validateAccountFieldNotNull(icq);
-        return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
-                new Account.Builder(accountDao.getById(accountId).get()).icq(icq).build());
-    }
-
-    @Override
-    public boolean updateSkype(Long accountId, String skype) {
-        validateAccountId(accountId);
-        validateAccountFieldNotNull(skype);
-        return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
-                new Account.Builder(accountDao.getById(accountId).get()).skype(skype).build());
-    }
-
-    public boolean updateAccountAdditionalInfo(Long accountId, String additionalInfo) {
-        validateAccountId(accountId);
-        validateAccountFieldNotNull(additionalInfo);
-        return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
-                new Account.Builder(accountDao.getById(accountId).get()).additionalInfo(additionalInfo).build());
-    }
-
-    @Override
-    public boolean updateRole(Long accountId, AccountRole role) {
+    public void updateRole(Long accountId, AccountRole role) {
         validateAccountId(accountId);
         validateAccountFieldNotNull(role);
-        return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
-                new Account.Builder(accountDao.getById(accountId).get()).role(role).build());
-    }
-
-    @Override
-    public boolean updateAvatar(Long accountId, InputStream updatedAvatar) {
-        validateAccountId(accountId);
-        return accountDao.getById(accountId).isPresent() && accountDao.updateById(accountId,
-                new Account.Builder(accountDao.getById(accountId).get()).avatar(updatedAvatar).build());
+        if (accountDao.getById(accountId).isPresent()) {
+            accountDao.updateById(accountId,
+                    new Account.Builder(accountDao.getById(accountId).get()).role(role).build());
+        }
     }
 
     @Override

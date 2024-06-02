@@ -12,7 +12,6 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.Perso
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.PersonalWallMessageDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.search.SearchAccountDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.search.SearchGroupDaoImpl;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.TransactionManager;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.singletonsregistry.DaoSingletonRegistry;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.*;
