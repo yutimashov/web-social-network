@@ -7,6 +7,7 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionWrapper;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.TransactionManager;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,8 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNT_PHONES_TABLE;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.PhonesTableFields.*;
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
 /**
  * Singleton class responsible for working with `account_data.phones` table in DB.
@@ -58,7 +61,8 @@ public class PhoneDaoImpl implements PhoneDao {
 
     @Override
     public List<Phone> getAll(Long accountId) {
-        try (PreparedStatement getPhoneStatement = getPreparedStatement(GET)) {
+        try (Connection conn = transactionManager.getTransactionalConnection();
+             PreparedStatement getPhoneStatement = conn.prepareStatement(GET, RETURN_GENERATED_KEYS)) {
             List<Phone> phones = new ArrayList<>();
             getPhoneStatement.setLong(1, accountId);
             ResultSet phonesData = getPhoneStatement.executeQuery();
@@ -80,8 +84,8 @@ public class PhoneDaoImpl implements PhoneDao {
 
     @Override
     public boolean update(Long phoneId, String newPhoneNumber) {
-        try (PreparedStatement updateByIdStatement
-                     = transactionManager.getGetTransactionalPreparedStatementWithGeneratedKeys(UPDATE)) {
+        try (Connection conn = transactionManager.getTransactionalConnection();
+             PreparedStatement updateByIdStatement = conn.prepareStatement(UPDATE, RETURN_GENERATED_KEYS)) {
             updateByIdStatement.setString(1, newPhoneNumber);
             updateByIdStatement.setLong(2, phoneId);
             return updateByIdStatement.executeUpdate() > 0;

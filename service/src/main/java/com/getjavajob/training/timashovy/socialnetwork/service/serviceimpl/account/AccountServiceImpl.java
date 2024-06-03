@@ -65,86 +65,78 @@ public class AccountServiceImpl implements AccountService {
     //TODO: exceptions (Exception -> DAO | Service)
     @Override
     public Long create(AccountRegistrationData accountRegisterData) {
-        try (Connection conn = transactionManager.getTransactionalConnection()) {
-            transactionManager.beginTransaction(conn);
-            try {
-                Long accountId = accountDao.create(accountRegisterData.getAccount());
-                passwordDao.create(passwordService.create(accountId, accountRegisterData.getPassword()));
-                List<Phone> personalPhones = phoneService.createPersonalPhones(accountId,
-                        accountRegisterData.getPersonalPhoneNumbers());
-                for (Phone personalPhone : personalPhones) {
-                    phoneDao.create(personalPhone);
-                }
-                List<Phone> workingPhones = phoneService.createWorkingPhones(accountId,
-                        accountRegisterData.getWorkingPhoneNumbers());
-                for (Phone workingPhone : workingPhones) {
-                    phoneDao.create(workingPhone);
-                }
-                transactionManager.commitTransaction(conn);
-                return accountId;
-            } catch (Exception e) {
-                transactionManager.rollbackTransaction(conn);
-                throw new ServiceException("create account failed : " + e.getMessage(), e);
+        transactionManager.beginTransaction();
+        try {
+            Long accountId = accountDao.create(accountRegisterData.getAccount());
+            passwordDao.create(passwordService.create(accountId, accountRegisterData.getPassword()));
+            List<Phone> personalPhones = phoneService.createPersonalPhones(accountId,
+                    accountRegisterData.getPersonalPhoneNumbers());
+            for (Phone personalPhone : personalPhones) {
+                phoneDao.create(personalPhone);
             }
-        } catch (SQLException e) {
-            throw new ServiceException("create account failed : " + e.getMessage(), e);
+            List<Phone> workingPhones = phoneService.createWorkingPhones(accountId,
+                    accountRegisterData.getWorkingPhoneNumbers());
+            for (Phone workingPhone : workingPhones) {
+                phoneDao.create(workingPhone);
+            }
+            transactionManager.commitTransaction();
+            return accountId;
+        } catch (Exception e) {
+            transactionManager.rollbackTransaction();
+            throw new ServiceException("create account transaction failed : ", e.getCause());
         }
     }
 
     @Override
     public void update(Long accountId, AccountUpdatingData accountUpdatingData) {
         validateAccountId(accountId);
-        try (Connection conn = transactionManager.getTransactionalConnection()) {
-            transactionManager.beginTransaction(conn);
-            try {
-                Account updatedAccountData = accountUpdatingData.getAccount();
-                Account newAccount = accountDao.getById(accountId).isPresent() ? accountDao.getById(accountId).get()
-                        : null;
-                if (newAccount == null) {
-                    throw new ServiceException("updating non-existing account");
-                }
-                if (updatedAccountData.getAvatar() != null) {
-                    newAccount.setAvatar(updatedAccountData.getAvatar());
-                }
-                if (updatedAccountData.getFirstName() != null && !updatedAccountData.getFirstName().isEmpty()) {
-                    newAccount.setFirstName(updatedAccountData.getFirstName());
-                }
-                if (updatedAccountData.getLastName() != null && !updatedAccountData.getLastName().isEmpty()) {
-                    newAccount.setLastName(updatedAccountData.getLastName());
-                }
-                if (updatedAccountData.getMiddleName() != null && !updatedAccountData.getMiddleName().isEmpty()) {
-                    newAccount.setMiddleName(updatedAccountData.getMiddleName());
-                }
-                if (updatedAccountData.getBirthDate() != null) {
-                    newAccount.setBirthDate(updatedAccountData.getBirthDate());
-                }
-                if (updatedAccountData.getSkype() != null && !updatedAccountData.getSkype().isEmpty()) {
-                    newAccount.setSkype(updatedAccountData.getSkype());
-                }
-                if (updatedAccountData.getIcq() != null && !updatedAccountData.getIcq().isEmpty()) {
-                    newAccount.setIcq(updatedAccountData.getIcq());
-                }
-                if (updatedAccountData.getEmail() != null && !updatedAccountData.getEmail().isEmpty()) {
-                    newAccount.setEmail(updatedAccountData.getEmail());
-                }
-                accountDao.updateById(accountId, newAccount);
-                if (!isNull(updatedAccountData.getPersonalPhoneNumber())) {
-                    for (Phone phone : updatedAccountData.getPersonalPhoneNumber()) {
-                        phoneDao.update(phone.getId(), phone.getNumber());
-                    }
-                }
-                if (!isNull(updatedAccountData.getWorkPhoneNumber())) {
-                    for (Phone phone : updatedAccountData.getWorkPhoneNumber()) {
-                        phoneDao.update(phone.getId(), phone.getNumber());
-                    }
-                }
-                transactionManager.commitTransaction(conn);
-            } catch (Exception e) {
-                transactionManager.rollbackTransaction(conn);
-                throw new ServiceException("create account failed : " + e.getMessage(), e);
+        transactionManager.beginTransaction();
+        try {
+            Account updatedAccountData = accountUpdatingData.getAccount();
+            Account newAccount = accountDao.getById(accountId).isPresent() ? accountDao.getById(accountId).get()
+                    : null;
+            if (newAccount == null) {
+                throw new ServiceException("updating non-existing account");
             }
-        } catch (SQLException e) {
-            throw new ServiceException("create account failed : " + e.getMessage(), e);
+            if (updatedAccountData.getAvatar() != null) {
+                newAccount.setAvatar(updatedAccountData.getAvatar());
+            }
+            if (updatedAccountData.getFirstName() != null && !updatedAccountData.getFirstName().isEmpty()) {
+                newAccount.setFirstName(updatedAccountData.getFirstName());
+            }
+            if (updatedAccountData.getLastName() != null && !updatedAccountData.getLastName().isEmpty()) {
+                newAccount.setLastName(updatedAccountData.getLastName());
+            }
+            if (updatedAccountData.getMiddleName() != null && !updatedAccountData.getMiddleName().isEmpty()) {
+                newAccount.setMiddleName(updatedAccountData.getMiddleName());
+            }
+            if (updatedAccountData.getBirthDate() != null) {
+                newAccount.setBirthDate(updatedAccountData.getBirthDate());
+            }
+            if (updatedAccountData.getSkype() != null && !updatedAccountData.getSkype().isEmpty()) {
+                newAccount.setSkype(updatedAccountData.getSkype());
+            }
+            if (updatedAccountData.getIcq() != null && !updatedAccountData.getIcq().isEmpty()) {
+                newAccount.setIcq(updatedAccountData.getIcq());
+            }
+            if (updatedAccountData.getEmail() != null && !updatedAccountData.getEmail().isEmpty()) {
+                newAccount.setEmail(updatedAccountData.getEmail());
+            }
+            accountDao.updateById(accountId, newAccount);
+            if (!isNull(updatedAccountData.getPersonalPhoneNumber())) {
+                for (Phone phone : updatedAccountData.getPersonalPhoneNumber()) {
+                    phoneDao.update(phone.getId(), phone.getNumber());
+                }
+            }
+            if (!isNull(updatedAccountData.getWorkPhoneNumber())) {
+                for (Phone phone : updatedAccountData.getWorkPhoneNumber()) {
+                    phoneDao.update(phone.getId(), phone.getNumber());
+                }
+            }
+            transactionManager.commitTransaction();
+        } catch (Exception e) {
+            transactionManager.rollbackTransaction();
+            throw new ServiceException("update account transaction failed : ", e.getCause());
         }
     }
 

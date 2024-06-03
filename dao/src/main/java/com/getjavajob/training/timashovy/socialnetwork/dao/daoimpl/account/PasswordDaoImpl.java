@@ -5,6 +5,7 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.Pa
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.TransactionManager;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,7 +13,7 @@ import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNTS_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNT_PASSWORDS_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.AccountTableFields.ACCOUNT_EMAIL;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.AccountTableFields.ACCOUNT_ID;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.PasswordTableFields.*;
@@ -61,7 +62,8 @@ public class PasswordDaoImpl implements PasswordDao {
 
     @Override
     public Optional<Password> getById(Long accountId) {
-        try (PreparedStatement preparedStatement = getPreparedStatement(GET_BY_ACCOUNT_ID)) {
+        try (Connection conn = getConnection();
+             PreparedStatement preparedStatement = conn.prepareStatement(GET_BY_ACCOUNT_ID)) {
             preparedStatement.setLong(1, accountId);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -76,7 +78,8 @@ public class PasswordDaoImpl implements PasswordDao {
 
     @Override
     public Optional<Password> findByEmail(String email) {
-        try (PreparedStatement preparedStatement = getPreparedStatement(GET_BY_ACCOUNT_EMAIL)) {
+        try (Connection conn = getConnection();
+             PreparedStatement preparedStatement = conn.prepareStatement(GET_BY_ACCOUNT_EMAIL)) {
             preparedStatement.setString(1, email);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
