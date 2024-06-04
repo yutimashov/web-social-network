@@ -17,8 +17,6 @@ import static java.util.Objects.isNull;
 
 /**
  * Class is responsible for creation and managing connections to DB.
- * It provides public methods for clients - {@link ConnectionManager#getPreparedStatement(String)} and
- * {@link ConnectionManager#getPreparedStatementWithGeneratedKeys(String)}.
  * All the work with connections to DB is organized via {@link ConnectionManager#connectionPool}.
  *
  * @author Yuriy Timashov
@@ -35,14 +33,6 @@ public final class ConnectionManager {
     private static final int DEFAULT_POOL_SIZE = 10;
 
     private ConnectionManager() {
-    }
-
-    public static PreparedStatement getPreparedStatement(String query) throws SQLException {
-        return getConnection().prepareStatement(query);
-    }
-
-    public static PreparedStatement getPreparedStatementWithGeneratedKeys(String query) throws SQLException {
-        return getConnection().prepareStatement(query, RETURN_GENERATED_KEYS);
     }
 
     /**

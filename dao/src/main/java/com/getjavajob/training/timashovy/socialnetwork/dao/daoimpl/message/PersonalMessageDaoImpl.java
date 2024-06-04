@@ -14,7 +14,6 @@ import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.PERSONAL_MESSAGE_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.PersonalMessagesTableFields.*;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.util.Optional.empty;

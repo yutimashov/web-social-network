@@ -4,7 +4,6 @@ import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.AccountRole;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.TransactionManager;
@@ -22,7 +21,6 @@ import static com.getjavajob.training.timashovy.socialnetwork.common.account.Pho
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNTS_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.AccountTableFields.*;
 import static java.lang.String.valueOf;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;

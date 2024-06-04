@@ -2,7 +2,6 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.Group;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 
 import java.sql.Connection;
@@ -15,13 +14,12 @@ import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.GROUPS_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.GroupTableFields.*;
 import static java.util.Objects.isNull;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
-public class GroupDaoImpl implements BaseDao<Group>, TableConstraintsValidator {
+public class GroupDaoImpl implements BaseDao<Group> {
 
     private static final String SAVE_GROUP = "INSERT INTO " + GROUPS_TABLE + " (" + GROUP_NAME + ", "
             + GROUP_DESCRIPTION + ", " + GROUP_OWNER_ID + ", " + GROUP_AVATAR + ") VALUES(?, ?, ?, ?)";
@@ -123,23 +121,6 @@ public class GroupDaoImpl implements BaseDao<Group>, TableConstraintsValidator {
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DaoException("dao: delete group by id method failed: ", e);
-        }
-    }
-
-    @Override
-    public <E> void validateEntityFieldUniqueness(String fieldName, E fieldValue) {
-        if (isNull(fieldName) || isNull(fieldValue)) {
-            throw new IllegalArgumentException("checking uniqueness field value: either fieldName or fieldValue is null");
-        }
-        String checkRecordExistenceQuery = "SELECT id FROM group_data.\"group\" WHERE " + fieldName + " = ?";
-        try (PreparedStatement checkUniqueness = getPreparedStatement(checkRecordExistenceQuery)) {
-            checkUniqueness.setObject(1, fieldValue);
-            ResultSet existedRecords = checkUniqueness.executeQuery();
-            if (existedRecords.next()) {
-                throw new IllegalArgumentException("group fields uniqueness failed while creating account");
-            }
-        } catch (SQLException e) {
-            throw new DaoException("dao: create group method failed: " + e.getMessage());
         }
     }
 

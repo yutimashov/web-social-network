@@ -3,7 +3,6 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.TransactionManager;
 import org.junit.jupiter.api.*;
@@ -99,45 +98,6 @@ class AccountDaoImplTest {
     @AfterAll
     public static void dropDataBaseAfterTestExecution() {
         executeScript(DROP_DB_FILEPATH);
-    }
-
-    @Nested
-    @DisplayName("validateEntityUniquenessFieldsConstraint(String fieldName, E fieldValue)")
-    class TestValidateUniquenessFieldConstraint {
-
-        @Test
-        void shouldThrowExceptionWhenEmailIsNotUnique() {
-            String duplicatedEmail = "test";
-            Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                ((TableConstraintsValidator) ACCOUNT_DAO_INSTANCE).validateEntityFieldUniqueness("email",
-                        duplicatedEmail);
-                throw new UnsupportedOperationException("Not supported");
-            });
-            assertEquals(IllegalArgumentException.class, exception.getClass());
-        }
-
-        @Test
-        void shouldThrowExceptionWhenICQIsNotUnique() {
-            String duplicatedIcq = "test";
-            Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                ((TableConstraintsValidator) ACCOUNT_DAO_INSTANCE).validateEntityFieldUniqueness("icq",
-                        duplicatedIcq);
-                throw new UnsupportedOperationException("Not supported");
-            });
-            assertEquals(IllegalArgumentException.class, exception.getClass());
-        }
-
-        @Test
-        void shouldThrowExceptionWhenSkypeIsNotUnique() {
-            String duplicatedSkype = "test";
-            Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-                ((TableConstraintsValidator) ACCOUNT_DAO_INSTANCE).validateEntityFieldUniqueness("skype",
-                        duplicatedSkype);
-                throw new UnsupportedOperationException("Not supported");
-            });
-            assertEquals(IllegalArgumentException.class, exception.getClass());
-        }
-
     }
 
     @Nested
