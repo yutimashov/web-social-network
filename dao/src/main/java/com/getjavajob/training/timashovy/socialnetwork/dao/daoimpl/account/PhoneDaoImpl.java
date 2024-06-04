@@ -61,7 +61,7 @@ public class PhoneDaoImpl implements PhoneDao {
 
     @Override
     public List<Phone> getAll(Long accountId) {
-        try (Connection conn = transactionManager.getTransactionalConnection();
+        try (Connection conn = getConnection();
              PreparedStatement getPhoneStatement = conn.prepareStatement(GET, RETURN_GENERATED_KEYS)) {
             List<Phone> phones = new ArrayList<>();
             getPhoneStatement.setLong(1, accountId);

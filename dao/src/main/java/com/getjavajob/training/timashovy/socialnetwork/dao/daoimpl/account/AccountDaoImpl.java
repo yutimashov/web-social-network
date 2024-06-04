@@ -9,6 +9,7 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.Ph
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.TransactionManager;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,9 +21,11 @@ import static com.getjavajob.training.timashovy.socialnetwork.common.account.Acc
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNTS_TABLE;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.AccountTableFields.*;
 import static java.lang.String.valueOf;
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.util.Objects.isNull;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -32,7 +35,7 @@ import static java.util.stream.Collectors.toList;
  * Singleton class responsible for working with {@link com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames#ACCOUNTS_TABLE accounts table}.
  * It provides safe multithreading approach for creating singleton object using synchronization mechanism.
  */
-public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidator {
+public class AccountDaoImpl implements BaseDao<Account> {
 
     private static final String CREATE = "INSERT INTO " + ACCOUNTS_TABLE + " (" + ACCOUNT_FIRST_NAME + ", "
             + ACCOUNT_LAST_NAME + ", " + ACCOUNT_MIDDLE_NAME + ", " + ACCOUNT_BIRTH_DATE + ", "
@@ -64,28 +67,9 @@ public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidat
     }
 
     @Override
-    public <E> void validateEntityFieldUniqueness(String fieldName, E fieldValue) {
-        if (isNull(fieldName) || isNull(fieldValue)) {
-            throw new IllegalArgumentException("uniqueness field violation: either fieldName or fieldValue is null");
-        }
-        if (!fieldValue.toString().isEmpty()) {
-            String CHECK_RECORD_EXISTENCE_QUERY = "SELECT id FROM " + ACCOUNTS_TABLE + " WHERE " + fieldName + " = ?";
-            try (PreparedStatement recordsSet = getPreparedStatement(CHECK_RECORD_EXISTENCE_QUERY)) {
-                recordsSet.setObject(1, fieldValue);
-                ResultSet existedRecords = recordsSet.executeQuery();
-                if (existedRecords.next()) {
-                    throw new IllegalArgumentException("account fields uniqueness violation");
-                }
-            } catch (SQLException e) {
-                throw new DaoException("dao: validate entity uniqueness method failed: " + e.getMessage());
-            }
-        }
-    }
-
-    @Override
     public Long create(Account account) {
-        try (PreparedStatement statement
-                     = transactionManager.getGetTransactionalPreparedStatementWithGeneratedKeys(CREATE)) {
+        try (Connection connection = transactionManager.getTransactionalConnection();
+             PreparedStatement statement = connection.prepareStatement(CREATE, RETURN_GENERATED_KEYS)) {
             setAccountData(account, statement);
             if (statement.executeUpdate() > 0) {
                 try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
@@ -123,7 +107,8 @@ public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidat
 
     @Override
     public Optional<Account> getById(Long accountId) {
-        try (PreparedStatement getAccountByIdStatement = transactionManager.getTransactionalPreparedStatement(GET_BY_ID)) {
+        try (Connection connection = getConnection();
+             PreparedStatement getAccountByIdStatement = connection.prepareStatement(GET_BY_ID)) {
             getAccountByIdStatement.setLong(1, accountId);
             ResultSet accountData = getAccountByIdStatement.executeQuery();
             if (accountData.next()) {
@@ -165,7 +150,8 @@ public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidat
 
     @Override
     public List<Account> getAll() {
-        try (PreparedStatement getAllAccountsStatement = getPreparedStatement(GET_ALL)) {
+        try (Connection connection = getConnection();
+             PreparedStatement getAllAccountsStatement = connection.prepareStatement(GET_ALL)) {
             List<Account> accounts = new ArrayList<>();
             ResultSet accountsSet = getAllAccountsStatement.executeQuery();
             while (accountsSet.next()) {
@@ -179,8 +165,8 @@ public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidat
 
     @Override
     public boolean updateById(Long id, Account account) {
-        try (PreparedStatement updateByIdStatement = transactionManager
-                .getGetTransactionalPreparedStatementWithGeneratedKeys(UPDATE_BY_ID)) {
+        try (Connection connection = transactionManager.getTransactionalConnection();
+             PreparedStatement updateByIdStatement = connection.prepareStatement(UPDATE_BY_ID, RETURN_GENERATED_KEYS)) {
             setAccountData(account, updateByIdStatement);
             updateByIdStatement.setLong(13, id);
             return updateByIdStatement.executeUpdate() > 0;
@@ -191,7 +177,8 @@ public class AccountDaoImpl implements BaseDao<Account>, TableConstraintsValidat
 
     @Override
     public boolean deleteById(Long id) {
-        try (PreparedStatement deleteByIdStatement = getPreparedStatement(DELETE_BY_ID)) {
+        try (Connection connection = getConnection();
+             PreparedStatement deleteByIdStatement = connection.prepareStatement(DELETE_BY_ID)) {
             deleteByIdStatement.setLong(1, id);
             return deleteByIdStatement.executeUpdate() > 0;
         } catch (SQLException e) {

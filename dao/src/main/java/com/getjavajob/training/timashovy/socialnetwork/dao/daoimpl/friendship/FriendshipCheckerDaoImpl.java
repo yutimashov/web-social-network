@@ -3,11 +3,12 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipChecker;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.FRIENDSHIP_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.FriendshipTableFields.*;
 
 /**
@@ -15,7 +16,7 @@ import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.f
  * It provides safe multithreading approach for creating singleton object using synchronization mechanism.
  */
 public class FriendshipCheckerDaoImpl implements FriendshipChecker {
-    
+
     private static final String FRIENDSHIP_RECORD_EXISTENCE = "SELECT 1 FROM " + FRIENDSHIP_TABLE + " WHERE "
             + FRIENDSHIP_ACCOUNT_ID_1 + " = ? AND " + FRIENDSHIP_ACCOUNT_ID_2 + " = ?;";
     private static final String ARE_USERS_FRIENDS = "SELECT 1 FROM " + FRIENDSHIP_TABLE + " WHERE "
@@ -24,7 +25,8 @@ public class FriendshipCheckerDaoImpl implements FriendshipChecker {
 
     @Override
     public boolean checkFriendshipRecordExistence(Long requesterId, Long accepterId) {
-        try (PreparedStatement friendshipExistence = getPreparedStatement(FRIENDSHIP_RECORD_EXISTENCE)) {
+        try (Connection connection = getConnection();
+             PreparedStatement friendshipExistence = connection.prepareStatement(FRIENDSHIP_RECORD_EXISTENCE)) {
             return verifyOrderOfAccountIdsInQuery(requesterId, accepterId, friendshipExistence);
         } catch (SQLException e) {
             throw new DaoException("dao: friendship record existence method failed: " + e.getMessage());
@@ -45,7 +47,8 @@ public class FriendshipCheckerDaoImpl implements FriendshipChecker {
 
     @Override
     public boolean checkUsersAreFriends(Long requesterId, Long accepterId) {
-        try (PreparedStatement checkFriends = getPreparedStatement(ARE_USERS_FRIENDS)) {
+        try (Connection connection = getConnection();
+             PreparedStatement checkFriends = connection.prepareStatement(ARE_USERS_FRIENDS)) {
             return verifyOrderOfAccountIdsInQuery(requesterId, accepterId, checkFriends);
         } catch (SQLException e) {
             throw new DaoException("dao: areUsersFriends method failed: " + e.getMessage());

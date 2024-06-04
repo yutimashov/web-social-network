@@ -4,6 +4,7 @@ import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.SearchDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNTS_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.AccountTableFields.*;
 
 /**
@@ -28,7 +29,8 @@ public class SearchAccountDaoImpl implements SearchDao<Account> {
 
     @Override
     public List<Account> searchAccounts(String searchQuery, int currentPage, int recordsPerPage) {
-        try (PreparedStatement preparedStatement = getPreparedStatement(FIND_ACCOUNTS)) {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_ACCOUNTS)) {
             preparedStatement.setString(1, "%" + searchQuery + "%");
             preparedStatement.setString(2, "%" + searchQuery + "%");
             preparedStatement.setInt(3, currentPage * recordsPerPage - recordsPerPage);
@@ -49,7 +51,8 @@ public class SearchAccountDaoImpl implements SearchDao<Account> {
     }
 
     public int findResultsAmount(String searchQuery) {
-        try (PreparedStatement preparedStatement = getPreparedStatement(FIND_ACCOUNTS_AMOUNT)) {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_ACCOUNTS_AMOUNT)) {
             preparedStatement.setString(1, "%" + searchQuery + "%");
             preparedStatement.setString(2, "%" + searchQuery + "%");
             ResultSet accountsAmount = preparedStatement.executeQuery();

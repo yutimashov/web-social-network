@@ -65,12 +65,9 @@ public final class ConnectionWrapper implements Connection {
 
     @Override
     public void close() {
-        System.out.println("Return connection to pool: size: " + connectionPool.size());
-        // Получаем стек вызовов
+        System.out.println("About to return connection to pool: size: " + connectionPool.size());
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-
-        // Выводим информацию о вызывающем коде
-        System.out.println("Method close() called from:");
+        System.out.println("Method close() called from: " + Thread.currentThread().getName());
         for (StackTraceElement element : stackTrace) {
             System.out.println("  " + element.getClassName() + "." + element.getMethodName() + "() at line " + element.getLineNumber());
         }

@@ -4,6 +4,7 @@ import com.getjavajob.training.timashovy.socialnetwork.common.message.Message;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.MessageDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,9 +13,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.PERSONAL_MESSAGE_TABLE;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.PersonalMessagesTableFields.*;
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
@@ -44,7 +46,8 @@ public class PersonalMessageDaoImpl implements MessageDao {
 
     @Override
     public Long create(Message message) {
-        try (PreparedStatement createMessageStatement = getPreparedStatementWithGeneratedKeys(CREATE)) {
+        try (Connection connection = getConnection();
+             PreparedStatement createMessageStatement = connection.prepareStatement(CREATE, RETURN_GENERATED_KEYS)) {
             setMessageData(message, createMessageStatement);
             if (createMessageStatement.executeUpdate() > 0) {
                 ResultSet generatedKeys = createMessageStatement.getGeneratedKeys();
@@ -69,7 +72,8 @@ public class PersonalMessageDaoImpl implements MessageDao {
 
     @Override
     public Optional<Message> getById(Long id) {
-        try (PreparedStatement getMessageByIdStatement = getPreparedStatement(GET_BY_ID)) {
+        try (Connection connection = getConnection();
+             PreparedStatement getMessageByIdStatement = connection.prepareStatement(GET_BY_ID)) {
             getMessageByIdStatement.setLong(1, id);
             ResultSet messageData = getMessageByIdStatement.executeQuery();
             if (messageData.next()) {
@@ -106,7 +110,8 @@ public class PersonalMessageDaoImpl implements MessageDao {
     }
 
     public List<Long> getAllAccountsIds(Long accountId) {
-        try (PreparedStatement preparedStatement = getPreparedStatement(GET_ALL_ACCOUNT_IDS)) {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_ACCOUNT_IDS)) {
             preparedStatement.setLong(1, accountId);
             preparedStatement.setLong(2, accountId);
             List<Long> ids = new ArrayList<>();
@@ -121,7 +126,8 @@ public class PersonalMessageDaoImpl implements MessageDao {
     }
 
     public List<Message> getAllPersonalMessagesWithAccount(Long authorId, Long receiverId) {
-        try (PreparedStatement preparedStatement = getPreparedStatement(GET_ALL_PRIVATE_MESSAGES_WITH_ACCOUNT)) {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_PRIVATE_MESSAGES_WITH_ACCOUNT)) {
             preparedStatement.setLong(1, authorId);
             preparedStatement.setLong(2, receiverId);
             preparedStatement.setLong(3, receiverId);

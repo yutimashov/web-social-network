@@ -53,12 +53,9 @@ public final class ConnectionManager {
     public static synchronized Connection getConnection() {
         try {
             BlockingQueue<Connection> pool = getConnectionPool();
-            System.out.println("Took connection: size: " + connectionPool.size());
-            // Получаем стек вызовов
+            System.out.println("About to take connection: size: " + connectionPool.size());
             StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-            // Выводим информацию о вызывающем коде
-            System.out.println("Поток: " + Thread.currentThread().getName());
-            System.out.println("Method take() called from:");
+            System.out.println("Method take() called from:" + Thread.currentThread().getName());
             for (StackTraceElement element : stackTrace) {
                 System.out.println("  " + element.getClassName() + "." + element.getMethodName() + "() at line " + element.getLineNumber());
             }

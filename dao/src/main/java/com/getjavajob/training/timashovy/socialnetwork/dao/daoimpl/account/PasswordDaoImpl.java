@@ -17,6 +17,7 @@ import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.d
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.AccountTableFields.ACCOUNT_EMAIL;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.AccountTableFields.ACCOUNT_ID;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.PasswordTableFields.*;
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
@@ -41,8 +42,8 @@ public class PasswordDaoImpl implements PasswordDao {
 
     @Override
     public Long create(Password password) {
-        try (PreparedStatement statement
-                     = transactionManager.getGetTransactionalPreparedStatementWithGeneratedKeys(CREATE)) {
+        try (Connection connection = transactionManager.getTransactionalConnection();
+             PreparedStatement statement = connection.prepareStatement(CREATE, RETURN_GENERATED_KEYS)) {
             statement.setLong(1, password.getAccountId());
             statement.setString(2, password.getPassword());
             statement.setString(3, password.getSalt());

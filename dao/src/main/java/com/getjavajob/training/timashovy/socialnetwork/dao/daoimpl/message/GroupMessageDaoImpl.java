@@ -4,6 +4,7 @@ import com.getjavajob.training.timashovy.socialnetwork.common.message.Message;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.MessageDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,9 +13,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.GROUP_MESSAGE_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatementWithGeneratedKeys;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.GroupMessageTableFields.*;
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
@@ -38,7 +39,8 @@ public class GroupMessageDaoImpl implements MessageDao {
 
     @Override
     public Long create(Message message) {
-        try (PreparedStatement createMessageStatement = getPreparedStatementWithGeneratedKeys(CREATE)) {
+        try (Connection connection = getConnection();
+             PreparedStatement createMessageStatement = connection.prepareStatement(CREATE, RETURN_GENERATED_KEYS)) {
             setMessageData(message, createMessageStatement);
             if (createMessageStatement.executeUpdate() > 0) {
                 ResultSet generatedKeys = createMessageStatement.getGeneratedKeys();
@@ -63,7 +65,8 @@ public class GroupMessageDaoImpl implements MessageDao {
 
     @Override
     public Optional<Message> getById(Long id) {
-        try (PreparedStatement getMessageByIdStatement = getPreparedStatement(GET_BY_ID)) {
+        try (Connection connection = getConnection();
+             PreparedStatement getMessageByIdStatement = connection.prepareStatement(GET_BY_ID)) {
             getMessageByIdStatement.setLong(1, id);
             ResultSet messageData = getMessageByIdStatement.executeQuery();
             if (messageData.next()) {
@@ -85,7 +88,8 @@ public class GroupMessageDaoImpl implements MessageDao {
     }
 
     public List<Message> getAll(Long groupId) {
-        try (PreparedStatement preparedStatement = getPreparedStatement(GET_ALL)) {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL)) {
             List<Message> messages = new ArrayList<>();
             preparedStatement.setLong(1, groupId);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -106,7 +110,8 @@ public class GroupMessageDaoImpl implements MessageDao {
 
     @Override
     public boolean updateById(Long id, Message message) {
-        try (PreparedStatement updateByIdStatement = getPreparedStatement(UPDATE_BY_ID)) {
+        try (Connection connection = getConnection();
+             PreparedStatement updateByIdStatement = connection.prepareStatement(UPDATE_BY_ID)) {
             updateByIdStatement.setString(1, message.getText());
             updateByIdStatement.setLong(2, id);
             return updateByIdStatement.executeUpdate() > 0;
@@ -117,7 +122,8 @@ public class GroupMessageDaoImpl implements MessageDao {
 
     @Override
     public boolean deleteById(Long id) {
-        try (PreparedStatement deleteByIdStatement = getPreparedStatement(DELETE_BY_ID)) {
+        try (Connection connection = getConnection();
+             PreparedStatement deleteByIdStatement = connection.prepareStatement(DELETE_BY_ID)) {
             deleteByIdStatement.setLong(1, id);
             return deleteByIdStatement.executeUpdate() > 0;
         } catch (SQLException e) {

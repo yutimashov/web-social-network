@@ -5,6 +5,7 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.TableConstraintsValidator;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.GROUPS_TABLE;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.GroupTableFields.*;
 import static java.util.Objects.isNull;
@@ -34,7 +36,8 @@ public class GroupDaoImpl implements BaseDao<Group>, TableConstraintsValidator {
 
     @Override
     public Long create(Group group) {
-        try (PreparedStatement preparedStatement = getPreparedStatement(SAVE_GROUP)) {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SAVE_GROUP)) {
             setGroupData(group, preparedStatement);
             if (preparedStatement.executeUpdate() > 0) {
                 ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
@@ -59,7 +62,8 @@ public class GroupDaoImpl implements BaseDao<Group>, TableConstraintsValidator {
 
     @Override
     public Optional<Group> getById(Long id) {
-        try (PreparedStatement preparedStatement = getPreparedStatement(GET_GROUP_BY_ID)) {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_GROUP_BY_ID)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -80,7 +84,8 @@ public class GroupDaoImpl implements BaseDao<Group>, TableConstraintsValidator {
 
     @Override
     public List<Group> getAll() {
-        try (PreparedStatement preparedStatement = getPreparedStatement(GET_ALL_GROUPS)) {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_GROUPS)) {
             List<Group> receivedGroups = new ArrayList<>();
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -100,7 +105,8 @@ public class GroupDaoImpl implements BaseDao<Group>, TableConstraintsValidator {
 
     @Override
     public boolean updateById(Long id, Group group) {
-        try (PreparedStatement preparedStatement = getPreparedStatement(UPDATE_GROUP_BY_ID)) {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_GROUP_BY_ID)) {
             setGroupData(group, preparedStatement);
             preparedStatement.setLong(5, id);
             return preparedStatement.executeUpdate() > 0;
@@ -111,7 +117,8 @@ public class GroupDaoImpl implements BaseDao<Group>, TableConstraintsValidator {
 
     @Override
     public boolean deleteById(Long id) {
-        try (PreparedStatement preparedStatement = getPreparedStatement(DELETE_GROUP_BY_ID)) {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_GROUP_BY_ID)) {
             preparedStatement.setLong(1, id);
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {

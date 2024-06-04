@@ -3,6 +3,7 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.GroupMembershipDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.GROUP_MEMBERS_TABLE;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getPreparedStatement;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.GroupMembersFields.*;
 
@@ -46,7 +48,8 @@ public class GroupMembershipDaoImpl implements GroupMembershipDao {
 
     @Override
     public void sendRequest(Long groupId, Long accountId) {
-        try (PreparedStatement preparedStatement = getPreparedStatement(ADD_USER)) {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(ADD_USER)) {
             preparedStatement.setLong(1, accountId);
             preparedStatement.setLong(2, groupId);
             preparedStatement.executeUpdate();
@@ -57,7 +60,8 @@ public class GroupMembershipDaoImpl implements GroupMembershipDao {
 
     @Override
     public void makeMember(Long groupId, Long accountId) {
-        try (PreparedStatement preparedStatement = getPreparedStatement(MAKE_USER_GROUP_MEMBER)) {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(MAKE_USER_GROUP_MEMBER)) {
             preparedStatement.setLong(1, groupId);
             preparedStatement.setLong(2, accountId);
             preparedStatement.executeUpdate();
@@ -68,7 +72,8 @@ public class GroupMembershipDaoImpl implements GroupMembershipDao {
 
     @Override
     public List<Long> getRequests(Long groupId) {
-        try (PreparedStatement preparedStatement = getPreparedStatement(GET_GROUP_FOLLOWERS)) {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_GROUP_FOLLOWERS)) {
             List<Long> groupFollowers = new ArrayList<>();
             preparedStatement.setLong(1, groupId);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -83,7 +88,8 @@ public class GroupMembershipDaoImpl implements GroupMembershipDao {
 
     @Override
     public void deleteMember(Long groupId, Long accountId) {
-        try (PreparedStatement preparedStatement = getPreparedStatement(DELETE_GROUP_MEMBER)) {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_GROUP_MEMBER)) {
             preparedStatement.setLong(1, groupId);
             preparedStatement.setLong(2, accountId);
             preparedStatement.executeUpdate();
@@ -94,7 +100,8 @@ public class GroupMembershipDaoImpl implements GroupMembershipDao {
 
     @Override
     public boolean isAdmin(Long groupId, Long accountId) {
-        try (PreparedStatement preparedStatement = getPreparedStatement(CHECK_ACCOUNT_ADMIN)) {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(CHECK_ACCOUNT_ADMIN)) {
             preparedStatement.setLong(1, groupId);
             preparedStatement.setLong(2, accountId);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -106,7 +113,8 @@ public class GroupMembershipDaoImpl implements GroupMembershipDao {
 
     @Override
     public boolean isSubscriber(Long groupId, Long accountId) {
-        try (PreparedStatement preparedStatement = getPreparedStatement(CHECK_ACCOUNT_SUBSCRIBER)) {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(CHECK_ACCOUNT_SUBSCRIBER)) {
             preparedStatement.setLong(1, groupId);
             preparedStatement.setLong(2, accountId);
             return preparedStatement.executeQuery().next();
@@ -117,7 +125,8 @@ public class GroupMembershipDaoImpl implements GroupMembershipDao {
 
     @Override
     public boolean isMember(Long groupId, Long accountId) {
-        try (PreparedStatement preparedStatement = getPreparedStatement(CHECK_ACCOUNT_MEMBER)) {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(CHECK_ACCOUNT_MEMBER)) {
             preparedStatement.setLong(1, groupId);
             preparedStatement.setLong(2, accountId);
             return preparedStatement.executeQuery().next();
@@ -128,7 +137,8 @@ public class GroupMembershipDaoImpl implements GroupMembershipDao {
 
     @Override
     public List<Long> getRegularMembers(Long groupId) {
-        try (PreparedStatement preparedStatement = getPreparedStatement(GET_REGULAR_MEMBERS)) {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_REGULAR_MEMBERS)) {
             List<Long> groupMembers = new ArrayList<>();
             preparedStatement.setLong(1, groupId);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -143,7 +153,8 @@ public class GroupMembershipDaoImpl implements GroupMembershipDao {
 
     @Override
     public List<Long> getAdmins(Long groupId) {
-        try (PreparedStatement preparedStatement = getPreparedStatement(GET_ADMINS)) {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_ADMINS)) {
             List<Long> groupMembers = new ArrayList<>();
             preparedStatement.setLong(1, groupId);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -158,7 +169,8 @@ public class GroupMembershipDaoImpl implements GroupMembershipDao {
 
     @Override
     public void makeAdmin(Long groupId, Long accountId) {
-        try (PreparedStatement preparedStatement = getPreparedStatement(MAKE_USER_GROUP_ADMIN)) {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(MAKE_USER_GROUP_ADMIN)) {
             preparedStatement.setLong(1, groupId);
             preparedStatement.setLong(2, accountId);
             preparedStatement.executeUpdate();
