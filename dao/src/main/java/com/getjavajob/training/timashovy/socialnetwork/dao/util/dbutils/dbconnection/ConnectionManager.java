@@ -40,7 +40,7 @@ public final class ConnectionManager {
      *
      * @return connection to DB
      */
-    public static synchronized Connection getConnection() {
+    public static Connection getConnection() {
         try {
             BlockingQueue<Connection> pool = getConnectionPool();
             System.out.println("About to take connection: size: " + connectionPool.size());

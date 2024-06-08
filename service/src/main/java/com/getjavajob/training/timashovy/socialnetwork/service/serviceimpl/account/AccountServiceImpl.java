@@ -10,6 +10,7 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.Pa
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipChecker;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.TransactionManager;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
@@ -65,8 +66,8 @@ public class AccountServiceImpl implements AccountService {
     //TODO: exceptions (Exception -> DAO | Service)
     @Override
     public Long create(AccountRegistrationData accountRegisterData) {
-        transactionManager.beginTransaction();
         try {
+            transactionManager.beginTransaction();
             Long accountId = accountDao.create(accountRegisterData.getAccount());
             passwordDao.create(passwordService.create(accountId, accountRegisterData.getPassword()));
             List<Phone> personalPhones = phoneService.createPersonalPhones(accountId,
@@ -81,7 +82,7 @@ public class AccountServiceImpl implements AccountService {
             }
             transactionManager.commitTransaction();
             return accountId;
-        } catch (Exception e) {
+        } catch (ServiceException | DaoException e) {
             transactionManager.rollbackTransaction();
             throw new ServiceException("create account transaction failed : ", e.getCause());
         }
@@ -89,9 +90,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void update(Long accountId, AccountUpdatingData accountUpdatingData) {
-        validateAccountId(accountId);
-        transactionManager.beginTransaction();
         try {
+            transactionManager.beginTransaction();
             Account updatedAccountData = accountUpdatingData.getAccount();
             Account newAccount = accountDao.getById(accountId).isPresent() ? accountDao.getById(accountId).get()
                     : null;

@@ -27,30 +27,26 @@ public class RegisterServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        try {
-            accountService.create(new AccountRegistrationData.Builder()
-                    .account(
-                            new Account.Builder()
-                                    .avatar(req.getPart("avatar") != null && req.getPart("avatar").getSize() > 0
-                                            ? req.getPart("avatar").getInputStream() : null)
-                                    .firstName(req.getParameter("name"))
-                                    .lastName(req.getParameter("lastName"))
-                                    .middleName(req.getParameter("middleName"))
-                                    .email(req.getParameter("email"))
-                                    .skype(req.getParameter("skype"))
-                                    .icq(req.getParameter("icq"))
-                                    .build()
-                    )
-                    .password(req.getParameter("password"))
-                    .personalPhoneNumber(req.getParameter("personalPhoneNumber"))
-                    .workPhoneNumber(req.getParameter("workPhoneNumber"))
-                    .build()
-            );
-            resp.sendRedirect(LOGIN_SERVLET_PATH);
-        } catch (Exception e) {
-            resp.sendRedirect(LOGIN_SERVLET_PATH + ACCOUNT_REGISTRATION_ERROR);
-        }
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+        accountService.create(new AccountRegistrationData.Builder()
+                .account(
+                        new Account.Builder()
+                                .avatar(req.getPart("avatar") != null && req.getPart("avatar").getSize() > 0
+                                        ? req.getPart("avatar").getInputStream() : null)
+                                .firstName(req.getParameter("name"))
+                                .lastName(req.getParameter("lastName"))
+                                .middleName(req.getParameter("middleName"))
+                                .email(req.getParameter("email"))
+                                .skype(req.getParameter("skype"))
+                                .icq(req.getParameter("icq"))
+                                .build()
+                )
+                .password(req.getParameter("password"))
+                .personalPhoneNumber(req.getParameter("personalPhoneNumber"))
+                .workPhoneNumber(req.getParameter("workPhoneNumber"))
+                .build()
+        );
+        resp.sendRedirect(LOGIN_SERVLET_PATH);
     }
 
 }

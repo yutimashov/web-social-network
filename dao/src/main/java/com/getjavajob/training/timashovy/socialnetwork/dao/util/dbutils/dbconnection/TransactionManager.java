@@ -3,11 +3,10 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconne
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
-import static java.sql.Statement.RETURN_GENERATED_KEYS;
+import static java.util.Objects.isNull;
 
 /**
  * Class is responsible for managing transactions in application.
@@ -26,19 +25,11 @@ public class TransactionManager {
      */
     public Connection getTransactionalConnection() {
         Connection connection = threadLocalConnection.get();
-        if (connection == null) {
+        if (isNull(connection)) {
             connection = getConnection();
             threadLocalConnection.set(connection);
         }
         return connection;
-    }
-
-    public PreparedStatement getTransactionalPreparedStatement(String query) throws SQLException {
-        return getTransactionalConnection().prepareStatement(query);
-    }
-
-    public PreparedStatement getGetTransactionalPreparedStatementWithGeneratedKeys(String query) throws SQLException {
-        return getTransactionalConnection().prepareStatement(query, RETURN_GENERATED_KEYS);
     }
 
     public void beginTransaction() {
@@ -75,7 +66,6 @@ public class TransactionManager {
      */
     private void closeTransactionConnection() {
         try {
-            getTransactionalConnection().setAutoCommit(true);
             getTransactionalConnection().close();
             threadLocalConnection.remove();
         } catch (SQLException e) {

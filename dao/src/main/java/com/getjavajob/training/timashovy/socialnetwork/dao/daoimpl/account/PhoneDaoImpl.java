@@ -38,8 +38,8 @@ public class PhoneDaoImpl implements PhoneDao {
 
     @Override
     public Long create(Phone phone) {
-        try (PreparedStatement createPhoneStatement
-                     = transactionManager.getGetTransactionalPreparedStatementWithGeneratedKeys(CREATE)) {
+        try (PreparedStatement createPhoneStatement = transactionManager.getTransactionalConnection()
+                     .prepareStatement(CREATE, RETURN_GENERATED_KEYS)) {
             createPhoneStatement.setLong(1, phone.getAccountId());
             createPhoneStatement.setString(2, phone.getPhoneType().name());
             createPhoneStatement.setString(3, phone.getNumber());

@@ -66,19 +66,16 @@ public class AccountDaoImpl implements BaseDao<Account> {
 
     @Override
     public Long create(Account account) {
-        try (Connection connection = transactionManager.getTransactionalConnection();
-             PreparedStatement statement = connection.prepareStatement(CREATE, RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement statement = transactionManager.getTransactionalConnection()
+                .prepareStatement(CREATE, RETURN_GENERATED_KEYS)) {
             setAccountData(account, statement);
             if (statement.executeUpdate() > 0) {
-                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        account.setId(generatedKeys.getLong(1));
-                    }
+                ResultSet generatedKeys = statement.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    account.setId(generatedKeys.getLong(1));
                 }
-                return account.getId();
-            } else {
-                throw new DaoException("dao: create account method failed: no rows affected.");
             }
+            return account.getId();
         } catch (SQLException e) {
             throw new DaoException("dao: create account method failed: " + e.getMessage(), e);
         }
@@ -163,8 +160,8 @@ public class AccountDaoImpl implements BaseDao<Account> {
 
     @Override
     public boolean updateById(Long id, Account account) {
-        try (Connection connection = transactionManager.getTransactionalConnection();
-             PreparedStatement updateByIdStatement = connection.prepareStatement(UPDATE_BY_ID, RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement updateByIdStatement = transactionManager.getTransactionalConnection()
+                .prepareStatement(UPDATE_BY_ID, RETURN_GENERATED_KEYS)) {
             setAccountData(account, updateByIdStatement);
             updateByIdStatement.setLong(13, id);
             return updateByIdStatement.executeUpdate() > 0;

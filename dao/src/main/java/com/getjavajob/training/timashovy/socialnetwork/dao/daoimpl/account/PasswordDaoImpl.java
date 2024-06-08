@@ -42,8 +42,8 @@ public class PasswordDaoImpl implements PasswordDao {
 
     @Override
     public Long create(Password password) {
-        try (Connection connection = transactionManager.getTransactionalConnection();
-             PreparedStatement statement = connection.prepareStatement(CREATE, RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement statement = transactionManager.getTransactionalConnection()
+                .prepareStatement(CREATE, RETURN_GENERATED_KEYS)) {
             statement.setLong(1, password.getAccountId());
             statement.setString(2, password.getPassword());
             statement.setString(3, password.getSalt());

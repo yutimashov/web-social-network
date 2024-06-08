@@ -1,9 +1,5 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionWrapper;
-
-import java.sql.Connection;
 import java.util.List;
 import java.util.Optional;
 
