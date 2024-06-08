@@ -14,7 +14,7 @@ import java.util.Optional;
  */
 public interface AccountService {
 
-    Long create(AccountRegistrationData accountRegisterData);
+    void create(AccountRegistrationData accountRegisterData);
 
     void update(Long accountId, AccountUpdatingData accountUpdatingData);
 

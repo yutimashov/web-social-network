@@ -17,8 +17,6 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.Passwo
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneService;
 import com.getjavajob.training.timashovy.socialnetwork.service.util.exceptions.ServiceException;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -60,14 +58,10 @@ public class AccountServiceImpl implements AccountService {
      * Create new account inserting it in database with auto generated incremented key
      *
      * @param accountRegisterData object which data will be inserted in db as new account
-     * @return id of created account
      */
-    //TODO: avoid duplicated code
-    //TODO: exceptions (Exception -> DAO | Service)
     @Override
-    public Long create(AccountRegistrationData accountRegisterData) {
-        try {
-            transactionManager.beginTransaction();
+    public void create(AccountRegistrationData accountRegisterData) {
+        executeTransaction(() -> {
             Long accountId = accountDao.create(accountRegisterData.getAccount());
             passwordDao.create(passwordService.create(accountId, accountRegisterData.getPassword()));
             List<Phone> personalPhones = phoneService.createPersonalPhones(accountId,
@@ -80,21 +74,30 @@ public class AccountServiceImpl implements AccountService {
             for (Phone workingPhone : workingPhones) {
                 phoneDao.create(workingPhone);
             }
+        });
+    }
+
+    /**
+     * Execute transaction logic which passed as argument.
+     *
+     * @param action transaction logic, i.e. methods within transaction
+     */
+    private void executeTransaction(Runnable action) {
+        try {
+            transactionManager.beginTransaction();
+            action.run();
             transactionManager.commitTransaction();
-            return accountId;
         } catch (ServiceException | DaoException e) {
             transactionManager.rollbackTransaction();
-            throw new ServiceException("create account transaction failed : ", e.getCause());
+            throw new ServiceException("Transaction failed: ", e.getCause());
         }
     }
 
     @Override
     public void update(Long accountId, AccountUpdatingData accountUpdatingData) {
-        try {
-            transactionManager.beginTransaction();
+        executeTransaction(() -> {
             Account updatedAccountData = accountUpdatingData.getAccount();
-            Account newAccount = accountDao.getById(accountId).isPresent() ? accountDao.getById(accountId).get()
-                    : null;
+            Account newAccount = accountDao.getById(accountId).isPresent() ? accountDao.getById(accountId).get() : null;
             if (newAccount == null) {
                 throw new ServiceException("updating non-existing account");
             }
@@ -123,21 +126,17 @@ public class AccountServiceImpl implements AccountService {
                 newAccount.setEmail(updatedAccountData.getEmail());
             }
             accountDao.updateById(accountId, newAccount);
-            if (!isNull(updatedAccountData.getPersonalPhoneNumber())) {
+            if (updatedAccountData.getPersonalPhoneNumber() != null) {
                 for (Phone phone : updatedAccountData.getPersonalPhoneNumber()) {
                     phoneDao.update(phone.getId(), phone.getNumber());
                 }
             }
-            if (!isNull(updatedAccountData.getWorkPhoneNumber())) {
+            if (updatedAccountData.getWorkPhoneNumber() != null) {
                 for (Phone phone : updatedAccountData.getWorkPhoneNumber()) {
                     phoneDao.update(phone.getId(), phone.getNumber());
                 }
             }
-            transactionManager.commitTransaction();
-        } catch (Exception e) {
-            transactionManager.rollbackTransaction();
-            throw new ServiceException("update account transaction failed : ", e.getCause());
-        }
+        });
     }
 
     /**
