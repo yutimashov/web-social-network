@@ -3,6 +3,7 @@ package com.getjavajob.training.timashovy.socialnetwork.web.servlets.auth;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.LoginService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
+import com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonRegistry;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -14,7 +15,7 @@ import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.LOGIN_SERVICE_SINGLETON;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.PASSWORD_SERVICE_SINGLETON;
-import static com.getjavajob.training.timashovy.socialnetwork.web.listeners.SingletonsHolderListener.serviceSingletonRegistry;
+import static com.getjavajob.training.timashovy.socialnetwork.web.listeners.SingletonsHolderListener.SERVICE_SINGLETON_REGISTRY_ATTR;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.ErrorTypes.AUTH_DATA_ERROR;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspPagePaths.LOGIN;
@@ -26,6 +27,8 @@ import static java.util.concurrent.TimeUnit.HOURS;
 public class LoginServlet extends HttpServlet {
 
     private final int rememberMeCookieLifetime = (int) HOURS.toSeconds(1);
+    private final ServiceSingletonRegistry serviceSingletonRegistry = (ServiceSingletonRegistry) getServletContext()
+            .getAttribute(SERVICE_SINGLETON_REGISTRY_ATTR);
     private final PasswordService passwordService = serviceSingletonRegistry.getSingleton(PASSWORD_SERVICE_SINGLETON);
     private final LoginService loginService = serviceSingletonRegistry.getSingleton(LOGIN_SERVICE_SINGLETON);
 
@@ -34,6 +37,7 @@ public class LoginServlet extends HttpServlet {
         req.getRequestDispatcher(getJspPagePath(LOGIN)).forward(req, resp);
     }
 
+    //TODO: add `successfully registered` message
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Optional<Account> loggedInAccount = loginService.getLoggedInAccount(req.getParameter("email"),

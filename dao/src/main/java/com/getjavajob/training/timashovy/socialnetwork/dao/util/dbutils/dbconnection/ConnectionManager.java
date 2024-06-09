@@ -4,7 +4,6 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -12,7 +11,6 @@ import java.util.concurrent.BlockingQueue;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.PropertiesUtil.getDbConfigProperty;
 import static java.lang.Class.forName;
 import static java.lang.Integer.parseInt;
-import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.util.Objects.isNull;
 
 /**

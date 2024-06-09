@@ -21,6 +21,7 @@ import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.messa
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.search.SearchServiceImpl;
 import com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonRegistry;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
@@ -29,17 +30,25 @@ import static com.getjavajob.training.timashovy.socialnetwork.service.util.singl
 
 public class SingletonsHolderListener implements ServletContextListener {
 
-    public static final TransactionManager transactionManager = new TransactionManager();
-    public static final DaoSingletonRegistry daoSingletonRegistry = new DaoSingletonRegistry();
-    public static final ServiceSingletonRegistry serviceSingletonRegistry = new ServiceSingletonRegistry();
+    public static final String TRANSACTION_MANAGER_ATTR = "transactionManager";
+    public static final String DAO_SINGLETON_REGISTRY_ATTR = "daoSingletonRegistry";
+    public static final String SERVICE_SINGLETON_REGISTRY_ATTR = "serviceSingletonRegistry";
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        registerDaoSingletons();
-        registerServiceSingletons();
+        ServletContext servletContext = sce.getServletContext();
+        TransactionManager transactionManager = new TransactionManager();
+        servletContext.setAttribute(TRANSACTION_MANAGER_ATTR, transactionManager);
+        DaoSingletonRegistry daoSingletonRegistry = new DaoSingletonRegistry();
+        servletContext.setAttribute(DAO_SINGLETON_REGISTRY_ATTR, daoSingletonRegistry);
+        registerDaoSingletons(transactionManager, daoSingletonRegistry);
+        ServiceSingletonRegistry serviceSingletonRegistry = new ServiceSingletonRegistry();
+        servletContext.setAttribute(SERVICE_SINGLETON_REGISTRY_ATTR, serviceSingletonRegistry);
+        registerServiceSingletons(transactionManager, daoSingletonRegistry, new ServiceSingletonRegistry());
     }
 
-    private void registerDaoSingletons() {
+    private void registerDaoSingletons(TransactionManager transactionManager,
+                                       DaoSingletonRegistry daoSingletonRegistry) {
         daoSingletonRegistry.addSingleton(PHONE_DAO_SINGLETON, new PhoneDaoImpl(transactionManager));
         daoSingletonRegistry.addSingleton(ACCOUNT_DAO_SINGLETON, new AccountDaoImpl(daoSingletonRegistry
                 .getSingleton(PHONE_DAO_SINGLETON), transactionManager));
@@ -55,7 +64,9 @@ public class SingletonsHolderListener implements ServletContextListener {
         daoSingletonRegistry.addSingleton(SEARCH_GROUP_DAO_SINGLETON, new SearchGroupDaoImpl());
     }
 
-    private void registerServiceSingletons() {
+    private void registerServiceSingletons(TransactionManager transactionManager,
+                                           DaoSingletonRegistry daoSingletonRegistry,
+                                           ServiceSingletonRegistry serviceSingletonRegistry) {
         serviceSingletonRegistry.addSingleton(PASSWORD_SERVICE_SINGLETON, new PasswordServiceImpl(
                 daoSingletonRegistry.getSingleton(PASSWORD_DAO_SINGLETON)
         ));

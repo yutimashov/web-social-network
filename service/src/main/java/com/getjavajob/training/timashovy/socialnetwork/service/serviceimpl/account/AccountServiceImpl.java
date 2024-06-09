@@ -10,7 +10,6 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.Pa
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipChecker;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.TransactionManager;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
@@ -41,9 +40,9 @@ public class AccountServiceImpl implements AccountService {
     private final TransactionManager transactionManager;
 
     public AccountServiceImpl(BaseDao<Account> accountDao, FriendshipDao friendshipDao,
-                               FriendshipChecker friendshipChecker, PhoneService phoneService, PhoneDao phoneDao,
-                               PasswordService passwordService, PasswordDao passwordDao,
-                               TransactionManager transactionManager) {
+                              FriendshipChecker friendshipChecker, PhoneService phoneService, PhoneDao phoneDao,
+                              PasswordService passwordService, PasswordDao passwordDao,
+                              TransactionManager transactionManager) {
         this.accountDao = accountDao;
         this.friendshipDao = friendshipDao;
         this.friendshipChecker = friendshipChecker;
