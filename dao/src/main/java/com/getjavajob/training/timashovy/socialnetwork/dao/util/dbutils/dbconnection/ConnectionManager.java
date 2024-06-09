@@ -43,12 +43,6 @@ public final class ConnectionManager {
     public static Connection getConnection() {
         try {
             BlockingQueue<Connection> pool = getConnectionPool();
-            System.out.println("About to take connection: size: " + connectionPool.size());
-            StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-            System.out.println("Method take() called from:" + Thread.currentThread().getName());
-            for (StackTraceElement element : stackTrace) {
-                System.out.println("  " + element.getClassName() + "." + element.getMethodName() + "() at line " + element.getLineNumber());
-            }
             return pool.take();
         } catch (InterruptedException e) {
             throw new DaoException("Cannot establish connection to db");

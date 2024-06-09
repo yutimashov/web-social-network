@@ -61,7 +61,7 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public void create(AccountRegistrationData accountRegisterData) {
-        executeTransaction(() -> {
+        transactionManager.executeTransaction(() -> {
             Long accountId = accountDao.create(accountRegisterData.getAccount());
             passwordDao.create(passwordService.create(accountId, accountRegisterData.getPassword()));
             List<Phone> personalPhones = phoneService.createPersonalPhones(accountId,
@@ -77,25 +77,9 @@ public class AccountServiceImpl implements AccountService {
         });
     }
 
-    /**
-     * Execute transaction logic which passed as argument.
-     *
-     * @param action transaction logic, i.e. methods within transaction
-     */
-    private void executeTransaction(Runnable action) {
-        try {
-            transactionManager.beginTransaction();
-            action.run();
-            transactionManager.commitTransaction();
-        } catch (ServiceException | DaoException e) {
-            transactionManager.rollbackTransaction();
-            throw new ServiceException("Transaction failed: ", e.getCause());
-        }
-    }
-
     @Override
     public void update(Long accountId, AccountUpdatingData accountUpdatingData) {
-        executeTransaction(() -> {
+        transactionManager.executeTransaction(() -> {
             Account updatedAccountData = accountUpdatingData.getAccount();
             Account newAccount = accountDao.getById(accountId).isPresent() ? accountDao.getById(accountId).get() : null;
             if (newAccount == null) {

@@ -32,7 +32,23 @@ public class TransactionManager {
         return connection;
     }
 
-    public void beginTransaction() {
+    /**
+     * Execute transaction logic which passed as argument.
+     *
+     * @param action transaction logic, i.e. methods within transaction
+     */
+    public void executeTransaction(Runnable action) {
+        try {
+            beginTransaction();
+            action.run();
+            commitTransaction();
+        } catch (DaoException e) {
+            rollbackTransaction();
+            throw new DaoException("Transaction failed: " + e.getMessage());
+        }
+    }
+
+    private void beginTransaction() {
         try {
             getTransactionalConnection().setAutoCommit(false);
         } catch (SQLException e) {
@@ -40,7 +56,7 @@ public class TransactionManager {
         }
     }
 
-    public void commitTransaction() {
+    private void commitTransaction() {
         try {
             getTransactionalConnection().commit();
             closeTransactionConnection();
@@ -49,7 +65,7 @@ public class TransactionManager {
         }
     }
 
-    public void rollbackTransaction() {
+    private void rollbackTransaction() {
         try {
             getTransactionalConnection().rollback();
             closeTransactionConnection();
