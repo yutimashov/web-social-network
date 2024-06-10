@@ -3,6 +3,7 @@ package com.getjavajob.training.timashovy.socialnetwork.web.servlets.search;
 import com.getjavajob.training.timashovy.socialnetwork.common.Group;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.SearchService;
+import com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonRegistry;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,14 +13,13 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.SEARCH_SERVICE_SINGLETON;
-import static com.getjavajob.training.timashovy.socialnetwork.web.listeners.SingletonsHolderListener.serviceSingletonRegistry;
+import static com.getjavajob.training.timashovy.socialnetwork.web.listeners.SingletonsHolderListener.SERVICE_SINGLETON_REGISTRY_ATTR;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspPagePaths.SEARCH_RESULT;
 import static java.lang.Integer.parseInt;
 
 public class SearchServlet extends HttpServlet {
 
-    private final SearchService searchService = serviceSingletonRegistry.getSingleton(SEARCH_SERVICE_SINGLETON);
     private static final int RESULTS_PER_PAGE = 5;
 
     @Override
@@ -31,6 +31,9 @@ public class SearchServlet extends HttpServlet {
         String searchType = req.getParameter("searchType");
         req.setAttribute("searchType", searchType);
         int numberOfPages = 0;
+        ServiceSingletonRegistry serviceSingletonRegistry = ((ServiceSingletonRegistry) getServletContext()
+                .getAttribute(SERVICE_SINGLETON_REGISTRY_ATTR));
+        SearchService searchService = serviceSingletonRegistry.getSingleton(SEARCH_SERVICE_SINGLETON);
         if ("account".equals(searchType)) {
             List<Account> accounts = searchService.findAccounts(searchQuery, currentPage, RESULTS_PER_PAGE);
             req.setAttribute("accounts", accounts);

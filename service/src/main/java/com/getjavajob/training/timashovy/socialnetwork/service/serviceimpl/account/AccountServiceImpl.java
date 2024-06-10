@@ -8,7 +8,7 @@ import com.getjavajob.training.timashovy.socialnetwork.common.util.AccountUpdati
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PasswordDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipChecker;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipCheckerDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.TransactionManager;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
@@ -32,7 +32,7 @@ public class AccountServiceImpl implements AccountService {
 
     private final BaseDao<Account> accountDao;
     private final FriendshipDao friendshipDao;
-    private final FriendshipChecker friendshipChecker;
+    private final FriendshipCheckerDao friendshipCheckerDao;
     private final PhoneService phoneService;
     private final PhoneDao phoneDao;
     private final PasswordService passwordService;
@@ -40,12 +40,12 @@ public class AccountServiceImpl implements AccountService {
     private final TransactionManager transactionManager;
 
     public AccountServiceImpl(BaseDao<Account> accountDao, FriendshipDao friendshipDao,
-                              FriendshipChecker friendshipChecker, PhoneService phoneService, PhoneDao phoneDao,
+                              FriendshipCheckerDao friendshipCheckerDao, PhoneService phoneService, PhoneDao phoneDao,
                               PasswordService passwordService, PasswordDao passwordDao,
                               TransactionManager transactionManager) {
         this.accountDao = accountDao;
         this.friendshipDao = friendshipDao;
-        this.friendshipChecker = friendshipChecker;
+        this.friendshipCheckerDao = friendshipCheckerDao;
         this.phoneService = phoneService;
         this.phoneDao = phoneDao;
         this.passwordService = passwordService;
@@ -195,10 +195,10 @@ public class AccountServiceImpl implements AccountService {
         if (requesterId.equals(accepterId)) {
             throw new IllegalArgumentException("Account cannot send friend request to themselves");
         }
-        if (!friendshipChecker.checkFriendshipRecordExistence(requesterId, accepterId)) {
+        if (!friendshipCheckerDao.checkFriendshipRecordExistence(requesterId, accepterId)) {
             return friendshipDao.sendRequest(requesterId, accepterId);
         }
-        if (friendshipChecker.checkUsersAreFriends(requesterId, accepterId)) {
+        if (friendshipCheckerDao.checkUsersAreFriends(requesterId, accepterId)) {
             return false;
         }
         return friendshipDao.acceptRequest(requesterId, accepterId);
@@ -254,7 +254,7 @@ public class AccountServiceImpl implements AccountService {
     public boolean checkFriendshipRecordExistence(Long requesterId, Long accepterId) {
         validateAccountId(requesterId);
         validateAccountId(accepterId);
-        return friendshipChecker.checkFriendshipRecordExistence(requesterId, accepterId);
+        return friendshipCheckerDao.checkFriendshipRecordExistence(requesterId, accepterId);
     }
 
 }

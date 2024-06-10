@@ -6,6 +6,7 @@ import com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType;
 import com.getjavajob.training.timashovy.socialnetwork.common.util.AccountUpdatingData;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneService;
+import com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonRegistry;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -19,7 +20,7 @@ import static com.getjavajob.training.timashovy.socialnetwork.common.account.Pho
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.ACCOUNT_SERVICE_SINGLETON;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.PHONE_SERVICE_SINGLETON;
-import static com.getjavajob.training.timashovy.socialnetwork.web.listeners.SingletonsHolderListener.serviceSingletonRegistry;
+import static com.getjavajob.training.timashovy.socialnetwork.web.listeners.SingletonsHolderListener.SERVICE_SINGLETON_REGISTRY_ATTR;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 import static java.lang.Long.valueOf;
 import static java.time.LocalDate.parse;
@@ -35,15 +36,17 @@ public class EditAccountServlet extends HttpServlet {
     private static final String ICQ_PARAMETER_NAME = "icq";
     private static final String EMAIL_PARAMETER_NAME = "email";
     private static final String PASSWORD_PARAMETER_NAME = "password";
-    private final AccountService accountService = serviceSingletonRegistry.getSingleton(ACCOUNT_SERVICE_SINGLETON);
-    private final PhoneService phoneService = serviceSingletonRegistry.getSingleton(PHONE_SERVICE_SINGLETON);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long accountId = valueOf(req.getParameter("id"));
+        ServiceSingletonRegistry serviceSingletonRegistry = ((ServiceSingletonRegistry) getServletContext()
+                .getAttribute(SERVICE_SINGLETON_REGISTRY_ATTR));
+        AccountService accountService = serviceSingletonRegistry.getSingleton(ACCOUNT_SERVICE_SINGLETON);
         if (accountService.getById(accountId).isPresent()) {
             req.setAttribute("account", accountService.getById(accountId).get());
             req.setAttribute("avatarInputStream", accountService.getById(accountId).get().getAvatar());
+            PhoneService phoneService = serviceSingletonRegistry.getSingleton(PHONE_SERVICE_SINGLETON);
             req.setAttribute("personalPhones", phoneService.getPersonalPhoneNumbers(accountId));
             req.setAttribute("workingPhones", phoneService.getWorkPhoneNumbers(accountId));
             req.getRequestDispatcher(getJspPagePath("/account/edit")).forward(req, resp);
@@ -55,6 +58,9 @@ public class EditAccountServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         Long accountId = valueOf(req.getParameter("id"));
+        ServiceSingletonRegistry serviceSingletonRegistry = ((ServiceSingletonRegistry) getServletContext()
+                .getAttribute(SERVICE_SINGLETON_REGISTRY_ATTR));
+        AccountService accountService = serviceSingletonRegistry.getSingleton(ACCOUNT_SERVICE_SINGLETON);
         accountService.update(accountId, updateAccountData(req));
         resp.sendRedirect("/account?id=" + accountId);
     }

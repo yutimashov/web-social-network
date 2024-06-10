@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipChecker;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipCheckerDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 
 import java.sql.Connection;
@@ -15,7 +15,7 @@ import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.f
  * Singleton class responsible for working with `account_data.friendship` table in DB.
  * It provides safe multithreading approach for creating singleton object using synchronization mechanism.
  */
-public class FriendshipCheckerDaoImpl implements FriendshipChecker {
+public class FriendshipCheckerDaoImpl implements FriendshipCheckerDao {
 
     private static final String FRIENDSHIP_RECORD_EXISTENCE = "SELECT 1 FROM " + FRIENDSHIP_TABLE + " WHERE "
             + FRIENDSHIP_ACCOUNT_ID_1 + " = ? AND " + FRIENDSHIP_ACCOUNT_ID_2 + " = ?;";

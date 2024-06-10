@@ -44,7 +44,7 @@ public class SingletonsHolderListener implements ServletContextListener {
         registerDaoSingletons(transactionManager, daoSingletonRegistry);
         ServiceSingletonRegistry serviceSingletonRegistry = new ServiceSingletonRegistry();
         servletContext.setAttribute(SERVICE_SINGLETON_REGISTRY_ATTR, serviceSingletonRegistry);
-        registerServiceSingletons(transactionManager, daoSingletonRegistry, new ServiceSingletonRegistry());
+        registerServiceSingletons(transactionManager, daoSingletonRegistry, serviceSingletonRegistry);
     }
 
     private void registerDaoSingletons(TransactionManager transactionManager,

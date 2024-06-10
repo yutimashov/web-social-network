@@ -27,10 +27,6 @@ import static java.util.concurrent.TimeUnit.HOURS;
 public class LoginServlet extends HttpServlet {
 
     private final int rememberMeCookieLifetime = (int) HOURS.toSeconds(1);
-    private final ServiceSingletonRegistry serviceSingletonRegistry = (ServiceSingletonRegistry) getServletContext()
-            .getAttribute(SERVICE_SINGLETON_REGISTRY_ATTR);
-    private final PasswordService passwordService = serviceSingletonRegistry.getSingleton(PASSWORD_SERVICE_SINGLETON);
-    private final LoginService loginService = serviceSingletonRegistry.getSingleton(LOGIN_SERVICE_SINGLETON);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -40,6 +36,9 @@ public class LoginServlet extends HttpServlet {
     //TODO: add `successfully registered` message
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        ServiceSingletonRegistry serviceSingletonRegistry = (ServiceSingletonRegistry) getServletContext()
+                .getAttribute(SERVICE_SINGLETON_REGISTRY_ATTR);
+        LoginService loginService = serviceSingletonRegistry.getSingleton(LOGIN_SERVICE_SINGLETON);
         Optional<Account> loggedInAccount = loginService.getLoggedInAccount(req.getParameter("email"),
                 req.getParameter("password")
         );
@@ -57,6 +56,9 @@ public class LoginServlet extends HttpServlet {
 
     private void createRememberMeCookies(Account account, HttpServletResponse resp) {
         prepareCookie(resp, "login", account.getEmail());
+        ServiceSingletonRegistry serviceSingletonRegistry = (ServiceSingletonRegistry) getServletContext()
+                .getAttribute(SERVICE_SINGLETON_REGISTRY_ATTR);
+        PasswordService passwordService = serviceSingletonRegistry.getSingleton(PASSWORD_SERVICE_SINGLETON);
         if (passwordService.get(account.getId()).isPresent()) {
             prepareCookie(resp, "password", passwordService.get(account.getId()).get().getPassword());
         }
