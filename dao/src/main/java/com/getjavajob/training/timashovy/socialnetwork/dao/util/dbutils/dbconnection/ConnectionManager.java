@@ -18,6 +18,13 @@ import java.sql.SQLException;
 public class ConnectionManager {
 
     /**
+     * Class is not intended to have any instances.
+     */
+    private ConnectionManager() {
+        throw new AssertionError();
+    }
+
+    /**
      * Get connection from connection pool and provide it to the client.
      *
      * @return connection to DB
