@@ -7,10 +7,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import static com.getjavajob.training.timashovy.socialnetwork.util.ConnectionManagerTestUtils.getH2Connection;
 import static java.lang.System.lineSeparator;
 import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
@@ -44,15 +44,6 @@ public final class TestScriptsLoader {
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DaoTestException("Cannot execute test script file: " + e.getMessage());
-        }
-    }
-
-    public static Connection getH2Connection() {
-        try {
-            Class.forName("org.h2.Driver");
-            return DriverManager.getConnection("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1", "admin", "admin");
-        } catch (ClassNotFoundException | SQLException e) {
-            throw new DaoTestException("Failed to create H2 connection" + e.getMessage());
         }
     }
 
