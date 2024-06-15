@@ -16,6 +16,7 @@ import static com.getjavajob.training.timashovy.socialnetwork.web.listeners.Sing
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspPagePaths.REGISTER;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.ServletPaths.LOGIN_SERVLET_PATH;
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.StatusTypes.REG_SUCCESS;
 
 public class RegisterServlet extends HttpServlet {
 
@@ -46,7 +47,7 @@ public class RegisterServlet extends HttpServlet {
                 .workPhoneNumber(req.getParameter("workPhoneNumber"))
                 .build()
         );
-        resp.sendRedirect(LOGIN_SERVLET_PATH);
+        resp.sendRedirect(LOGIN_SERVLET_PATH + REG_SUCCESS);
     }
 
 }

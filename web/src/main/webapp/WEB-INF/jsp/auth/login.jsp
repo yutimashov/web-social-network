@@ -15,6 +15,8 @@
                     style="color:red">You are not authorized!</span></c:when>
             <c:when test="${param.error eq 'reg'}"><span
                     style="color:red">Account has not been registered!</span></c:when>
+            <c:when test="${param.reg eq 'success'}"><span
+                    style="color:cadetblue">Account has been registered!</span></c:when>
         </c:choose>
     </div>
     <label for="email">Email:

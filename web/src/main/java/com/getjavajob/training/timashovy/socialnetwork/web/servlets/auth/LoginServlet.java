@@ -16,7 +16,7 @@ import java.util.Optional;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.LOGIN_SERVICE_SINGLETON;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.PASSWORD_SERVICE_SINGLETON;
 import static com.getjavajob.training.timashovy.socialnetwork.web.listeners.SingletonsHolderListener.SERVICE_SINGLETON_REGISTRY_ATTR;
-import static com.getjavajob.training.timashovy.socialnetwork.web.util.ErrorTypes.AUTH_DATA_ERROR;
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.StatusTypes.AUTH_DATA_ERROR;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspPagePaths.LOGIN;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.ServletPaths.ACCOUNT_SERVLET_PATH;
@@ -33,7 +33,6 @@ public class LoginServlet extends HttpServlet {
         req.getRequestDispatcher(getJspPagePath(LOGIN)).forward(req, resp);
     }
 
-    //TODO: add `successfully registered` message
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ServiceSingletonRegistry serviceSingletonRegistry = (ServiceSingletonRegistry) getServletContext()
