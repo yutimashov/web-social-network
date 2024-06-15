@@ -77,7 +77,7 @@ public class AccountDaoImpl implements BaseDao<Account> {
             }
             return account.getId();
         } catch (SQLException e) {
-            throw new DaoException("dao: create account method failed: " + e.getMessage(), e);
+            throw new DaoException("dao: create account method failed: " + e.getMessage());
         }
     }
 

@@ -39,7 +39,7 @@ public class PhoneDaoImpl implements PhoneDao {
     @Override
     public Long create(Phone phone) {
         try (PreparedStatement createPhoneStatement = transactionManager.getTransactionalConnection()
-                     .prepareStatement(CREATE, RETURN_GENERATED_KEYS)) {
+                .prepareStatement(CREATE, RETURN_GENERATED_KEYS)) {
             createPhoneStatement.setLong(1, phone.getAccountId());
             createPhoneStatement.setString(2, phone.getPhoneType().name());
             createPhoneStatement.setString(3, phone.getNumber());
@@ -82,8 +82,8 @@ public class PhoneDaoImpl implements PhoneDao {
 
     @Override
     public boolean update(Long phoneId, String newPhoneNumber) {
-        try (Connection conn = transactionManager.getTransactionalConnection();
-             PreparedStatement updateByIdStatement = conn.prepareStatement(UPDATE, RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement updateByIdStatement = transactionManager.getTransactionalConnection()
+                .prepareStatement(UPDATE, RETURN_GENERATED_KEYS)) {
             updateByIdStatement.setString(1, newPhoneNumber);
             updateByIdStatement.setLong(2, phoneId);
             return updateByIdStatement.executeUpdate() > 0;
