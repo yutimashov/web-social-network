@@ -14,6 +14,8 @@ import java.util.Optional;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.AccountRole.REGULAR;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
+import static com.getjavajob.training.timashovy.socialnetwork.util.ConnectionManagerTestUtils.clearConnectionManagerMocks;
+import static com.getjavajob.training.timashovy.socialnetwork.util.ConnectionManagerTestUtils.mockConnectionManager;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static java.time.LocalDate.of;
 import static java.util.Optional.empty;
@@ -89,10 +91,20 @@ class AccountDaoImplTest {
     }
 
     @BeforeEach
+    void setTestConnection() {
+        mockConnectionManager();
+    }
+
+    @BeforeEach
     public void fillTestTablesWith2Records() {
         restoreTestAccountDefaultState();
         executeScript(CLEAR_TABLES_FILEPATH);
         executeScript(LOAD_DATA_FILEPATH);
+    }
+
+    @AfterEach
+    void closeTestConnection() {
+        clearConnectionManagerMocks();
     }
 
     @AfterAll
@@ -141,11 +153,9 @@ class AccountDaoImplTest {
         @Test
         void shouldReturnOptionalWithAccountWhenAccountExists() {
             setTestAccountEqualsToRecordInTestTable();
-            Account actualAccount = null;
-            if (ACCOUNT_DAO_INSTANCE.getById(1L).isPresent()) {
-                actualAccount = ACCOUNT_DAO_INSTANCE.getById(1L).get();
-            }
-            assertEquals(Optional.of(TEST_ACCOUNT).get(), actualAccount);
+            Optional<Account> optionalAccount = ACCOUNT_DAO_INSTANCE.getById(1L);
+            assertTrue(optionalAccount.isPresent());
+            assertEquals(TEST_ACCOUNT, optionalAccount.get());
         }
 
         @Test

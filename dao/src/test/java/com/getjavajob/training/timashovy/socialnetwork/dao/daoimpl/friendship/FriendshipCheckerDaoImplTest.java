@@ -1,8 +1,10 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipCheckerDao;
+import com.getjavajob.training.timashovy.socialnetwork.util.ConnectionManagerTestUtils;
 import org.junit.jupiter.api.*;
 
+import static com.getjavajob.training.timashovy.socialnetwork.util.ConnectionManagerTestUtils.clearConnectionManagerMocks;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -21,8 +23,18 @@ class FriendshipCheckerDaoImplTest {
     }
 
     @BeforeEach
+    void setTestConnection() {
+        ConnectionManagerTestUtils.mockConnectionManager();
+    }
+
+    @BeforeEach
     public void loadTestTablesWithData() {
         executeScript(LOAD_TEST_TABLES_FILEPATH);
+    }
+
+    @AfterEach
+    void closeTestConnection() {
+        clearConnectionManagerMocks();
     }
 
     @AfterEach

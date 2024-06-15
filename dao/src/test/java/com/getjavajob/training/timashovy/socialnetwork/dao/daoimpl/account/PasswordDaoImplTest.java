@@ -4,12 +4,15 @@ import com.getjavajob.training.timashovy.socialnetwork.common.account.Password;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PasswordDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.TransactionManager;
+import com.getjavajob.training.timashovy.socialnetwork.util.ConnectionManagerTestUtils;
 import org.junit.jupiter.api.*;
 
+import java.util.Optional;
+
+import static com.getjavajob.training.timashovy.socialnetwork.util.ConnectionManagerTestUtils.clearConnectionManagerMocks;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.*;
-import static java.util.Optional.of;
 
 class PasswordDaoImplTest {
 
@@ -25,9 +28,19 @@ class PasswordDaoImplTest {
         executeScript(LOAD_DATA_FILEPATH);
     }
 
+    @BeforeEach
+    void setTestConnection() {
+        ConnectionManagerTestUtils.mockConnectionManager();
+    }
+
     @AfterAll
     public static void dropDataBaseAfterTestExecution() {
         executeScript(DROP_DB_FILEPATH);
+    }
+
+    @AfterEach
+    void closeTestConnection() {
+        clearConnectionManagerMocks();
     }
 
     @Nested
@@ -57,11 +70,9 @@ class PasswordDaoImplTest {
 
         @Test
         void shouldReturnOptionalWithPasswordWhenPasswordExists() {
-            Password actualPassword = null;
-            if (PASSWORD_DAO.getById(1L).isPresent()) {
-                actualPassword = PASSWORD_DAO.getById(1L).get();
-            }
-            assertEquals(of(TEST_PASSWORD).get(), actualPassword);
+            Optional<Password> optionalPassword = PASSWORD_DAO.getById(1L);
+            assertTrue(optionalPassword.isPresent());
+            assertEquals(TEST_PASSWORD, optionalPassword.get());
         }
 
         @Test
@@ -78,11 +89,9 @@ class PasswordDaoImplTest {
 
         @Test
         void shouldReturnOptionalWithPasswordWhenPasswordExists() {
-            Password actualPassword = null;
-            if (PASSWORD_DAO.findByEmail("test").isPresent()) {
-                actualPassword = PASSWORD_DAO.findByEmail("test").get();
-            }
-            assertEquals(of(TEST_PASSWORD).get(), actualPassword);
+            Optional<Password> optionalPassword = PASSWORD_DAO.findByEmail("test");
+            assertTrue(optionalPassword.isPresent());
+            assertEquals(TEST_PASSWORD, optionalPassword.get());
         }
 
         @Test

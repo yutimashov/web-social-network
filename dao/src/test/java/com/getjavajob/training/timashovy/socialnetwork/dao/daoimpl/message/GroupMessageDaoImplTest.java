@@ -2,10 +2,12 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.message.Message;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.MessageDao;
+import com.getjavajob.training.timashovy.socialnetwork.util.ConnectionManagerTestUtils;
 import org.junit.jupiter.api.*;
 
 import java.util.Optional;
 
+import static com.getjavajob.training.timashovy.socialnetwork.util.ConnectionManagerTestUtils.clearConnectionManagerMocks;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static java.time.LocalDate.of;
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,8 +34,18 @@ class GroupMessageDaoImplTest {
     }
 
     @BeforeEach
+    void setTestConnection() {
+        ConnectionManagerTestUtils.mockConnectionManager();
+    }
+
+    @BeforeEach
     public void fillTestTablesWith2Records() {
         executeScript(LOAD_DATA_INTO_TEST_TABLES_FILEPATH);
+    }
+
+    @AfterEach
+    void closeTestConnection() {
+        clearConnectionManagerMocks();
     }
 
     @AfterEach
