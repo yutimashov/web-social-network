@@ -16,10 +16,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GroupDaoImplTest {
 
-    private static final String CREATE_TEST_TABLES_FILEPATH = "scripts/group/create_test_db.sql";
-    private static final String LOAD_DATA_INTO_TEST_TABLES_FILEPATH = "scripts/group/load_test_data.sql";
-    private static final String EMPTY_TEST_TABLES_FILEPATH = "scripts/group/clear_test_db.sql";
-    private static final String DROP_TEST_DB_FILEPATH = "scripts/group/drop_test_db.sql";
+    private static final String CREATE_TEST_TABLES_FILEPATH = "scripts/group/create.sql";
+    private static final String LOAD_DATA_INTO_TEST_TABLES_FILEPATH = "scripts/group/load.sql";
+    private static final String EMPTY_TEST_TABLES_FILEPATH = "scripts/group/clear.sql";
+    private static final String DROP_TEST_DB_FILEPATH = "scripts/group/drop.sql";
     private static final BaseDao<Group> GROUP_DAO_INSTANCE = new GroupDaoImpl();
     private static final Group TEST_GROUP = new Group.Builder().groupName("").description("").accountOwnerId(1L)
             .build();

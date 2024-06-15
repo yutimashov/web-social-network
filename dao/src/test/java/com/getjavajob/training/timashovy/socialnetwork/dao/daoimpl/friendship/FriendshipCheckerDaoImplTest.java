@@ -11,10 +11,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FriendshipCheckerDaoImplTest {
 
-    private static final String CREATE_TEST_TABLES_FILEPATH = "scripts/friendship/create_test_db.sql";
-    private static final String LOAD_TEST_TABLES_FILEPATH = "scripts/friendship/load_test_data.sql";
-    private static final String CLEAR_TEST_TABLES_FILEPATH = "scripts/friendship/clear_test_db.sql";
-    private static final String DROP_TEST_DB_FILEPATH = "scripts/friendship/drop_test_db.sql";
+    private static final String CREATE_TEST_TABLES_FILEPATH = "scripts/friendship/create.sql";
+    private static final String LOAD_TEST_TABLES_FILEPATH = "scripts/friendship/load.sql";
+    private static final String CLEAR_TEST_TABLES_FILEPATH = "scripts/friendship/clear.sql";
+    private static final String DROP_TEST_DB_FILEPATH = "scripts/friendship/drop.sql";
     private static final FriendshipCheckerDao FRIENDSHIP_CHECKER_DAO = new FriendshipCheckerDaoImpl();
 
     @BeforeAll
