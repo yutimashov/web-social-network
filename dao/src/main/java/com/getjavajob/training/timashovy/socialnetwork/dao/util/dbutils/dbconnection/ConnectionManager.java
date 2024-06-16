@@ -17,6 +17,9 @@ import java.sql.SQLException;
  */
 public class ConnectionManager {
 
+    private static final String ENV_CONTEXT = "java:/comp/env";
+    private static final String DATASOURCE_NAME = "jdbc/socialNetwork";
+
     /**
      * Class is not intended to have any instances.
      */
@@ -32,11 +35,11 @@ public class ConnectionManager {
     public static Connection getConnection() {
         try {
             Context initContext = new InitialContext();
-            Context envContext = (Context) initContext.lookup("java:/comp/env");
-            DataSource ds = (DataSource) envContext.lookup("jdbc/socialNetwork");
+            Context envContext = (Context) initContext.lookup(ENV_CONTEXT);
+            DataSource ds = (DataSource) envContext.lookup(DATASOURCE_NAME);
             return ds.getConnection();
         } catch (NamingException | SQLException e) {
-            throw new DaoException("Cannot create connection " + e.getMessage());
+            throw new DaoException("Cannot get connection to DB: " + e.getMessage());
         }
     }
 
