@@ -35,9 +35,8 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        ServiceSingletonRegistry serviceSingletonRegistry = (ServiceSingletonRegistry) getServletContext()
-                .getAttribute(SERVICE_SINGLETON_REGISTRY_ATTR);
-        LoginService loginService = serviceSingletonRegistry.getSingleton(LOGIN_SERVICE_SINGLETON);
+        LoginService loginService = ((ServiceSingletonRegistry) getServletContext()
+                .getAttribute(SERVICE_SINGLETON_REGISTRY_ATTR)).getSingleton(LOGIN_SERVICE_SINGLETON);
         Optional<Account> loggedInAccount = loginService.getLoggedInAccount(req.getParameter("email"),
                 req.getParameter("password")
         );
@@ -55,9 +54,8 @@ public class LoginServlet extends HttpServlet {
 
     private void createRememberMeCookies(Account account, HttpServletResponse resp) {
         prepareCookie(resp, "login", account.getEmail());
-        ServiceSingletonRegistry serviceSingletonRegistry = (ServiceSingletonRegistry) getServletContext()
-                .getAttribute(SERVICE_SINGLETON_REGISTRY_ATTR);
-        PasswordService passwordService = serviceSingletonRegistry.getSingleton(PASSWORD_SERVICE_SINGLETON);
+        PasswordService passwordService = ((ServiceSingletonRegistry) getServletContext()
+                .getAttribute(SERVICE_SINGLETON_REGISTRY_ATTR)).getSingleton(PASSWORD_SERVICE_SINGLETON);
         if (passwordService.get(account.getId()).isPresent()) {
             prepareCookie(resp, "password", passwordService.get(account.getId()).get().getPassword());
         }
