@@ -1,8 +1,12 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.interfaces;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.Account;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.common.account.AccountRole;
+import com.getjavajob.training.timashovy.socialnetwork.common.util.AccountRegistrationData;
+import com.getjavajob.training.timashovy.socialnetwork.common.util.AccountUpdatingData;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Interface contains all methods for organizing logic in communication with {@link Account} entity in application.
@@ -10,18 +14,28 @@ import java.util.List;
  */
 public interface AccountService {
 
-    Long createAccount(Account account);
+    void create(AccountRegistrationData accountRegisterData);
 
-    boolean updateAccount(Long accountId, Account updatedAccount);
+    void update(Long accountId, AccountUpdatingData accountUpdatingData);
 
-    boolean deleteAccount(Long accountId);
+    boolean delete(Long accountId);
 
-    List<Account> getAllAccounts();
+    Optional<Account> getById(Long accountId);
+
+    List<Account> getAll();
 
     boolean addFriend(Long accountId, Long friendId);
 
     boolean deleteFriend(Long accountId, Long friendId);
 
     List<Account> getFriends(Long accountId);
+
+    List<Account> getIncomingFriendRequests(Long accountId);
+
+    List<Account> getOutgoingFriendRequests(Long accountId);
+
+    void updateRole(Long accountId, AccountRole role);
+
+    boolean checkFriendshipRecordExistence(Long requesterId, Long accepterId);
 
 }

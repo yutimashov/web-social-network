@@ -1,0 +1,92 @@
+package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship;
+
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipCheckerDao;
+import com.getjavajob.training.timashovy.socialnetwork.util.ConnectionManagerTestUtils;
+import org.junit.jupiter.api.*;
+
+import static com.getjavajob.training.timashovy.socialnetwork.util.ConnectionManagerTestUtils.clearConnectionManagerMocks;
+import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class FriendshipCheckerDaoImplTest {
+
+    private static final String CREATE_TEST_TABLES_FILEPATH = "scripts/friendship/create.sql";
+    private static final String LOAD_TEST_TABLES_FILEPATH = "scripts/friendship/load.sql";
+    private static final String CLEAR_TEST_TABLES_FILEPATH = "scripts/friendship/clear.sql";
+    private static final String DROP_TEST_DB_FILEPATH = "scripts/friendship/drop.sql";
+    private static final FriendshipCheckerDao FRIENDSHIP_CHECKER_DAO = new FriendshipCheckerDaoImpl();
+
+    @BeforeAll
+    public static void createTestTables() {
+        executeScript(CREATE_TEST_TABLES_FILEPATH);
+    }
+
+    @BeforeEach
+    void setTestConnection() {
+        ConnectionManagerTestUtils.mockConnectionManager();
+    }
+
+    @BeforeEach
+    public void loadTestTablesWithData() {
+        executeScript(LOAD_TEST_TABLES_FILEPATH);
+    }
+
+    @AfterEach
+    void closeTestConnection() {
+        clearConnectionManagerMocks();
+    }
+
+    @AfterEach
+    public void clearTestTables() {
+        executeScript(CLEAR_TEST_TABLES_FILEPATH);
+    }
+
+    @AfterAll
+    public static void dropDataBaseAfterTestExecution() {
+        executeScript(DROP_TEST_DB_FILEPATH);
+    }
+
+    @Nested
+    @DisplayName("boolean checkFriendshipRecordExistence(Long requesterId, Long accepterId)")
+    class TestCheckFriendshipRecordExistence {
+
+        @Test
+        void shouldReturnTrueWhenRecordExistsAndRequestedIdLessThanAccepterId() {
+            assertTrue(FRIENDSHIP_CHECKER_DAO.checkFriendshipRecordExistence(1L, 2L));
+        }
+
+        @Test
+        void shouldReturnTrueWhenRecordExistsAndRequestedIdGreaterThanAccepterId() {
+            assertTrue(FRIENDSHIP_CHECKER_DAO.checkFriendshipRecordExistence(2L, 1L));
+        }
+
+        @Test
+        void shouldReturnFalseWhenRecordIsNotExisted() {
+            assertFalse(FRIENDSHIP_CHECKER_DAO.checkFriendshipRecordExistence(-1L, 2L));
+        }
+
+    }
+
+    @Nested
+    @DisplayName("boolean checkUsersAreFriends(Long requesterId, Long accepterId)")
+    class TestCheckUsersAreFriends {
+
+        @Test
+        void shouldReturnTrueWhenUsersAreFriendsAndRequestedIdLessThanAccepterId() {
+            assertTrue(FRIENDSHIP_CHECKER_DAO.checkUsersAreFriends(1L, 2L));
+        }
+
+        @Test
+        void shouldReturnTrueWhenUsersAreFriendsAndRequestedIdGreaterThanAccepterId() {
+            assertTrue(FRIENDSHIP_CHECKER_DAO.checkUsersAreFriends(2L, 1L));
+        }
+
+        @Test
+        void shouldReturnFalseWhenUsersAreNotFriends() {
+            assertFalse(FRIENDSHIP_CHECKER_DAO.checkUsersAreFriends(-1L, 1L));
+        }
+
+    }
+
+}

@@ -6,13 +6,482 @@
 
     <display-name>social-network</display-name>
 
+    <resource-ref>
+        <description>DB Connection</description>
+        <res-ref-name>jdbc/socialNetwork</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+    </resource-ref>
+
+    <!-- auth servlets -->
+    <servlet>
+        <servlet-name>Login</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.auth.LoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Login</servlet-name>
+        <url-pattern>/login</url-pattern>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Registration</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.auth.RegisterServlet
+        </servlet-class>
+        <multipart-config>
+            <max-file-size>10485760</max-file-size>
+            <max-request-size>10485760</max-request-size>
+            <file-size-threshold>5242880</file-size-threshold>
+        </multipart-config>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Registration</servlet-name>
+        <url-pattern>/register</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Logout</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.auth.LogoutServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Logout</servlet-name>
+        <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+
+    <!-- account servlets -->
     <servlet>
         <servlet-name>Accounts</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.AccountsServlet</servlet-class>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.ShowAccountsListServlet
+        </servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Accounts</servlet-name>
-        <url-pattern>/</url-pattern>
+        <url-pattern>/accounts</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Make Admin</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.admin.MakeAppAdminServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Make Admin</servlet-name>
+        <url-pattern>/make-admin</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Account</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.AccountInfoServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Account</servlet-name>
+        <url-pattern>/account</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Edit Account</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.EditAccountServlet
+        </servlet-class>
+        <multipart-config>
+            <max-file-size>10485760</max-file-size>
+            <max-request-size>10485760</max-request-size>
+            <file-size-threshold>5242880</file-size-threshold>
+        </multipart-config>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Edit Account</servlet-name>
+        <url-pattern>/account/edit</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Account Avatar</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.AccountAvatarServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Account Avatar</servlet-name>
+        <url-pattern>/avatar</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Delete Account</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.admin.DeleteAccountServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Delete Account</servlet-name>
+        <url-pattern>/account/delete</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>All Accounts</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.ShowAccountsListServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>All Accounts</servlet-name>
+        <url-pattern>/account/all</url-pattern>
+    </servlet-mapping>
+
+    <!-- friends servlets -->
+    <servlet>
+        <servlet-name>Friends</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.friendship.FriendsListServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Friends</servlet-name>
+        <url-pattern>/friends</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Friend Requests</servlet-name>
+        <servlet-class>
+            com.getjavajob.training.timashovy.socialnetwork.web.servlets.friendship.FriendshipRequestsListServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Friend Requests</servlet-name>
+        <url-pattern>/friends/requests</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Incoming Friend Requests</servlet-name>
+        <servlet-class>
+            com.getjavajob.training.timashovy.socialnetwork.web.servlets.friendship.IncomingFriendRequestsServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Incoming Friend Requests</servlet-name>
+        <url-pattern>/friends/requests/incoming</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Outgoing Friend Requests</servlet-name>
+        <servlet-class>
+            com.getjavajob.training.timashovy.socialnetwork.web.servlets.friendship.OutgoingFriendRequestServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Outgoing Friend Requests</servlet-name>
+        <url-pattern>/friends/requests/outgoing</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Send Friend Request</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.friendship.SendFriendRequestServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Send Friend Request</servlet-name>
+        <url-pattern>/friends/send-request</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Delete Friend</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.friendship.DeleteFriendServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Delete Friend</servlet-name>
+        <url-pattern>/friends/delete</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Accept Friend Request</servlet-name>
+        <servlet-class>
+            com.getjavajob.training.timashovy.socialnetwork.web.servlets.friendship.AcceptFriendshipRequestServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Accept Friend Request</servlet-name>
+        <url-pattern>/friends/accept-request</url-pattern>
+    </servlet-mapping>
+
+    <!-- group servlets -->
+    <servlet>
+        <servlet-name>Create Group</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.CreateGroupServlet
+        </servlet-class>
+        <multipart-config>
+            <max-file-size>10485760</max-file-size>
+            <max-request-size>20971520</max-request-size>
+            <file-size-threshold>5242880</file-size-threshold>
+        </multipart-config>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Create Group</servlet-name>
+        <url-pattern>/group/create</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>All Groups</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.ListAllGroupsServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>All Groups</servlet-name>
+        <url-pattern>/group/all</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Send Group Request</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.SendGroupRequestServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Send Group Request</servlet-name>
+        <url-pattern>/group/send-request</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Group Info</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.GroupInfoServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Group Info</servlet-name>
+        <url-pattern>/group</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Group Avatar</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.GroupAvatarServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Group Avatar</servlet-name>
+        <url-pattern>/group-avatar</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Group members</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.GroupMembersServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Group members</servlet-name>
+        <url-pattern>/group/members</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Group Requests</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.GroupRequestsServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Group Requests</servlet-name>
+        <url-pattern>/group/requests</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Accept Account Group Request</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.AcceptGroupRequestServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Accept Account Group Request</servlet-name>
+        <url-pattern>/group/accept-request</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Delete Group Member</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.DeleteGroupMemberServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Delete Group Member</servlet-name>
+        <url-pattern>/group/decline-request</url-pattern>
+        <url-pattern>/group/delete-member</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Make admin</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.MakeGroupAdminServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Make admin</servlet-name>
+        <url-pattern>/group/make-admin</url-pattern>
+    </servlet-mapping>
+
+    <!-- message servlets -->
+    <servlet>
+        <servlet-name>Create group message</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.group.CreateMessageServlet
+        </servlet-class>
+        <multipart-config>
+            <max-file-size>10485760</max-file-size>
+            <max-request-size>20971520</max-request-size>
+            <file-size-threshold>5242880</file-size-threshold>
+        </multipart-config>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Create group message</servlet-name>
+        <url-pattern>/group/message/create</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Create personal wall message</servlet-name>
+        <servlet-class>
+            com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.wall.CreateMessageServlet
+        </servlet-class>
+        <multipart-config>
+            <max-file-size>10485760</max-file-size>
+            <max-request-size>10485760</max-request-size>
+            <file-size-threshold>5242880</file-size-threshold>
+        </multipart-config>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Create personal wall message</servlet-name>
+        <url-pattern>/account-wall/message/create</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Show group message image</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.group.ShowImageServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Show group message image</servlet-name>
+        <url-pattern>/group-message/image</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Show account wall message image</servlet-name>
+        <servlet-class>
+            com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.wall.ShowMessageServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Show account wall message image</servlet-name>
+        <url-pattern>/account-wall/image</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>All messages</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.personal.ShowMessagesServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>All messages</servlet-name>
+        <url-pattern>/account/messages</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Dialog</servlet-name>
+        <servlet-class>
+            com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.personal.ShowDialogServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Dialog</servlet-name>
+        <url-pattern>/account/messages/dialog</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Send personal message</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.personal.SendMessageServlet
+        </servlet-class>
+        <multipart-config>
+            <max-file-size>10485760</max-file-size>
+            <max-request-size>10485760</max-request-size>
+            <file-size-threshold>5242880</file-size-threshold>
+        </multipart-config>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Send personal message</servlet-name>
+        <url-pattern>/account/messages/create</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Show personal message image</servlet-name>
+        <servlet-class>
+            com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.personal.ShowImagesServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Show personal message image</servlet-name>
+        <url-pattern>/personal-message/image</url-pattern>
+    </servlet-mapping>
+
+    <!-- image servlets -->
+    <servlet>
+        <servlet-name>Show image</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.image.ShowImageServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Show image</servlet-name>
+        <url-pattern>/image/show</url-pattern>
+    </servlet-mapping>
+
+    <!-- search -->
+    <servlet>
+        <servlet-name>Search</servlet-name>
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.search.SearchServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Search</servlet-name>
+        <url-pattern>/search</url-pattern>
+    </servlet-mapping>
+
+    <!-- session config -->
+    <session-config>
+        <session-timeout>10</session-timeout>
+    </session-config>
+
+    <!-- filters -->
+    <filter>
+        <filter-name>Remember Me</filter-name>
+        <filter-class>com.getjavajob.training.timashovy.socialnetwork.web.filters.RememberMeFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>Remember Me</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>IsAuthorizedFilter</filter-name>
+        <filter-class>com.getjavajob.training.timashovy.socialnetwork.web.filters.IsAuthorizedFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>IsAuthorizedFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>FriendshipRecordExistenceFilter</filter-name>
+        <filter-class>com.getjavajob.training.timashovy.socialnetwork.web.filters.FriendRecordExistenceFilter
+        </filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>FriendshipRecordExistenceFilter</filter-name>
+        <url-pattern>/account</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>Set Encoding Filter</filter-name>
+        <filter-class>com.getjavajob.training.timashovy.socialnetwork.web.filters.SetEncodingFilter
+        </filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>Set Encoding Filter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- listeners -->
+    <listener>
+        <listener-class>com.getjavajob.training.timashovy.socialnetwork.web.listeners.SingletonsHolderListener
+        </listener-class>
+    </listener>
+
+    <!-- error pages -->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/jsp/error/404.jsp</location>
+    </error-page>
 
 </web-app>

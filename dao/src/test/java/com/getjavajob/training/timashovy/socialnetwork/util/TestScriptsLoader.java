@@ -6,10 +6,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbconnection.ConnectionManager.getPreparedStatement;
+import static com.getjavajob.training.timashovy.socialnetwork.util.ConnectionManagerTestUtils.getH2Connection;
 import static java.lang.System.lineSeparator;
 import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
@@ -38,7 +39,8 @@ public final class TestScriptsLoader {
      * @param filePath path of the script file to execute
      */
     public static void executeScript(String filePath) {
-        try (PreparedStatement statement = getPreparedStatement(readTestScriptFile(filePath))) {
+        try (Connection connection = getH2Connection();
+             PreparedStatement statement = connection.prepareStatement(readTestScriptFile(filePath))) {
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DaoTestException("Cannot execute test script file: " + e.getMessage());

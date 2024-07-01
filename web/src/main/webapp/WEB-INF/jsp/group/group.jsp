@@ -1,0 +1,66 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
+<c:set var="rootUrl" value="${pageContext.request.contextPath}"/>
+<html>
+<head>
+    <title>Group</title>
+</head>
+<body>
+<jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
+<h2>${requestScope.group.groupName}</h2>
+<p>${requestScope.group.description}</p>
+<c:if test="${requestScope.avatarInputStream ne null}">
+    <img src="${rootUrl}/group-avatar?id=${requestScope.group.id}" alt="Group avatar" width="250px" height="250px">
+</c:if>
+<hr>
+<c:if test="${requestScope.isSubscriber ne true and requestScope.isMember ne true}">
+    <a href="${rootUrl}/group/send-request?id=${requestScope.group.id}">
+        <button>Send join request</button>
+    </a>
+</c:if>
+<c:if test="${requestScope.isAdmin eq true}">
+    <p>Welcome, admin!</p>
+    <a href="${rootUrl}/group/requests?id=${requestScope.group.id}">
+        <button>Account requests</button>
+    </a>&nbsp;&nbsp;
+    <a href="${rootUrl}/group/members?id=${requestScope.group.id}">
+        <button>Account members</button>
+    </a>
+    <hr>
+</c:if>
+<c:if test="${requestScope.isMember eq true}">
+    <c:if test="${requestScope.isAdmin eq true}">
+        <div>
+            <form action="${rootUrl}/group/message/create" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="groupId" value="${requestScope.group.id}">
+                <label for="text">New post:</label><br>
+                <textarea id="text" name="text" rows="10" cols="40" placeholder="Enter post message"></textarea>
+                <br><br>
+                <label for="photo">Add post photo (optional):<br><input type="file" id="photo" name="photo"></label>
+                <br><br>
+                <button type="submit">Create post</button>
+            </form>
+            <hr>
+        </div>
+    </c:if>
+    <div>
+        <c:forEach items="${requestScope.groupPosts}" var="post">
+            <hr>
+            <span>Created: ${post.creationDate}</span><br>
+            <c:set var="accountAuthor"
+                   value="${requestScope.accountService.getById(post.accountAuthorId).get()}"/>
+            <span>Author:
+                <a href="${rootUrl}/account?id=${accountAuthor.id}">${accountAuthor.firstName} ${accountAuthor.lastName}
+                </a>
+            </span>
+            <p>${post.text}</p>
+            <c:if test="${post.photo ne null}">
+                <img src="${rootUrl}/group-message/image?id=${post.id}" alt="Message photo" width="250px"
+                     height="250px">
+            </c:if>
+            <hr>
+        </c:forEach>
+    </div>
+</c:if>
+</body>
+</html>

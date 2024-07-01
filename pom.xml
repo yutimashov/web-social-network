@@ -25,11 +25,14 @@
         <h2database.version>2.2.224</h2database.version>
         <mockito-core.version>4.8.1</mockito-core.version>
         <mockito-junit-jupiter.version>4.8.1</mockito-junit-jupiter.version>
+        <mockito-inline.version>5.2.0</mockito-inline.version>
         <javaxservlet-api.version>4.0.1</javaxservlet-api.version>
+        <jstl.version>1.2</jstl.version>
         <!-- plugins versions -->
         <maven-clean-plugin.version>3.3.2</maven-clean-plugin.version>
         <maven-compiler-plugin.version>3.12.1</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
+        <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -65,6 +68,12 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-inline</artifactId>
+                <version>${mockito-inline.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
                 <groupId>com.getjavajob</groupId>
                 <artifactId>domain</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
@@ -75,6 +84,11 @@
                 <artifactId>javax.servlet-api</artifactId>
                 <version>${javaxservlet-api.version}</version>
                 <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>jstl</artifactId>
+                <version>${jstl.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -96,6 +110,11 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven-surefire-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>${maven-war-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
