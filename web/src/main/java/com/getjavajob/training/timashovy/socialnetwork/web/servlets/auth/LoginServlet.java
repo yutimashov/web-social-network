@@ -3,7 +3,7 @@ package com.getjavajob.training.timashovy.socialnetwork.web.servlets.auth;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.LoginService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
-import com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonRegistry;
+import org.springframework.context.ApplicationContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -13,9 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.LOGIN_SERVICE_SINGLETON;
-import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.PASSWORD_SERVICE_SINGLETON;
-import static com.getjavajob.training.timashovy.socialnetwork.web.listeners.SingletonsHolderListener.SERVICE_SINGLETON_REGISTRY_ATTR;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.LOGIN_SERVICE_BEAN;
+import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.PASSWORD_SERVICE_BEAN;
+import static com.getjavajob.training.timashovy.socialnetwork.web.listeners.SingletonsHolderListener.APPLICATION_CONTEXT;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.StatusTypes.AUTH_DATA_ERROR;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspPagePaths.LOGIN;
@@ -35,8 +35,8 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        LoginService loginService = ((ServiceSingletonRegistry) getServletContext()
-                .getAttribute(SERVICE_SINGLETON_REGISTRY_ATTR)).getSingleton(LOGIN_SERVICE_SINGLETON);
+        LoginService loginService = (LoginService) ((ApplicationContext) req.getServletContext()
+                .getAttribute(APPLICATION_CONTEXT)).getBean(LOGIN_SERVICE_BEAN);
         Optional<Account> loggedInAccount = loginService.getLoggedInAccount(req.getParameter("email"),
                 req.getParameter("password")
         );
@@ -44,7 +44,7 @@ public class LoginServlet extends HttpServlet {
             Account account = loggedInAccount.get();
             req.getSession().setAttribute("account", account);
             if (!isNull(req.getParameter("rememberMe"))) {
-                createRememberMeCookies(account, resp);
+                createRememberMeCookies(account, req, resp);
             }
             resp.sendRedirect(ACCOUNT_SERVLET_PATH + "?id=" + account.getId());
         } else {
@@ -52,10 +52,10 @@ public class LoginServlet extends HttpServlet {
         }
     }
 
-    private void createRememberMeCookies(Account account, HttpServletResponse resp) {
+    private void createRememberMeCookies(Account account, HttpServletRequest req, HttpServletResponse resp) {
         prepareCookie(resp, "login", account.getEmail());
-        PasswordService passwordService = ((ServiceSingletonRegistry) getServletContext()
-                .getAttribute(SERVICE_SINGLETON_REGISTRY_ATTR)).getSingleton(PASSWORD_SERVICE_SINGLETON);
+        PasswordService passwordService = (PasswordService) ((ApplicationContext) req.getServletContext()
+                .getAttribute(APPLICATION_CONTEXT)).getBean(PASSWORD_SERVICE_BEAN);
         if (passwordService.get(account.getId()).isPresent()) {
             prepareCookie(resp, "password", passwordService.get(account.getId()).get().getPassword());
         }

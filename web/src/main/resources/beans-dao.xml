@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="transactionManager"
+          class="com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.TransactionManager">
+    </bean>
+
+    <bean id="phoneDaoImpl"
+          class="com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PhoneDaoImpl">
+        <constructor-arg ref="transactionManager"/>
+    </bean>
+
+    <bean id="accountDaoImpl"
+          class="com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AccountDaoImpl">
+        <constructor-arg ref="phoneDaoImpl"/>
+        <constructor-arg ref="transactionManager"/>
+    </bean>
+
+    <bean id="friendshipDaoImpl"
+          class="com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship.FriendshipDaoImpl">
+    </bean>
+
+    <bean id="friendshipCheckerDaoImpl"
+          class="com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship.FriendshipCheckerDaoImpl">
+    </bean>
+
+    <bean id="passwordDaoImpl"
+          class="com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PasswordDaoImpl">
+        <constructor-arg ref="transactionManager"/>
+    </bean>
+
+    <bean id="groupDaoImpl"
+          class="com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group.GroupDaoImpl">
+    </bean>
+
+    <bean id="groupMembershipDaoImpl"
+          class="com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group.GroupMembershipDaoImpl">
+    </bean>
+
+    <bean id="groupMessageDaoImpl"
+          class="com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.GroupMessageDaoImpl">
+    </bean>
+
+    <bean id="personalMessageDaoImpl"
+          class="com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.PersonalMessageDaoImpl">
+    </bean>
+
+    <bean id="personalWallMessageDaoImpl"
+          class="com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.PersonalWallMessageDaoImpl">
+    </bean>
+
+    <bean id="searchAccountDaoImpl"
+          class="com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.search.SearchAccountDaoImpl">
+    </bean>
+
+    <bean id="searchGroupDaoImpl"
+          class="com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.search.SearchGroupDaoImpl">
+    </bean>
+
+</beans>

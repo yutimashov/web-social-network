@@ -28,7 +28,7 @@
         <mockito-inline.version>5.2.0</mockito-inline.version>
         <javaxservlet-api.version>4.0.1</javaxservlet-api.version>
         <jstl.version>1.2</jstl.version>
-        <spring-context.version>5.3.37</spring-context.version>
+        <spring.version>5.3.37</spring.version>
         <!-- plugins versions -->
         <maven-clean-plugin.version>3.3.2</maven-clean-plugin.version>
         <maven-compiler-plugin.version>3.12.1</maven-compiler-plugin.version>
@@ -94,7 +94,7 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
-                <version>${spring-context.version}</version>
+                <version>${spring.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
