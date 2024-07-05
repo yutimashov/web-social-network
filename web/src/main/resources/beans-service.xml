@@ -8,30 +8,30 @@
 
     <bean id="passwordService"
           class="com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.PasswordServiceImpl">
-        <constructor-arg ref="passwordDaoImpl"/>
+        <constructor-arg ref="passwordDao"/>
     </bean>
 
     <bean id="phoneService"
           class="com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.PhoneServiceImpl">
-        <constructor-arg ref="phoneDaoImpl"/>
+        <constructor-arg ref="phoneDao"/>
     </bean>
 
     <bean id="accountService"
           class="com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountServiceImpl">
-        <constructor-arg ref="accountDaoImpl"/>
-        <constructor-arg ref="friendshipDaoImpl"/>
-        <constructor-arg ref="friendshipCheckerDaoImpl"/>
+        <constructor-arg ref="accountDao"/>
+        <constructor-arg ref="friendshipDao"/>
+        <constructor-arg ref="friendshipCheckerDao"/>
         <constructor-arg ref="phoneService"/>
-        <constructor-arg ref="phoneDaoImpl"/>
-        <constructor-arg ref="passwordServiceImpl"/>
-        <constructor-arg ref="passwordDaoImpl"/>
+        <constructor-arg ref="phoneDao"/>
+        <constructor-arg ref="passwordService"/>
+        <constructor-arg ref="passwordDao"/>
         <constructor-arg ref="transactionManager"/>
     </bean>
 
     <bean id="loginService"
           class="com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.LoginServiceImpl">
         <constructor-arg ref="accountService"/>
-        <constructor-arg ref="passwordServiceImpl"/>
+        <constructor-arg ref="passwordService"/>
     </bean>
 
     <bean id="adminService"
@@ -41,27 +41,27 @@
 
     <bean id="messageService"
           class="com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.message.MessageServiceImpl">
-        <constructor-arg ref="groupMessageDaoImpl"/>
-        <constructor-arg ref="personalWallMessageDaoImpl"/>
-        <constructor-arg ref="personalMessageDaoImpl"/>
+        <constructor-arg ref="groupMessageDao"/>
+        <constructor-arg ref="personalWallMessageDao"/>
+        <constructor-arg ref="personalMessageDao"/>
         <constructor-arg ref="accountService"/>
     </bean>
 
     <bean id="groupService"
           class="com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group.GroupServiceImpl">
-        <constructor-arg ref="groupDaoImpl"/>
+        <constructor-arg ref="groupDao"/>
     </bean>
 
     <bean id="groupMembershipService"
           class="com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group.GroupMembershipServiceImpl">
         <constructor-arg ref="accountService"/>
-        <constructor-arg ref="groupMembershipDaoImpl"/>
+        <constructor-arg ref="groupMembershipDao"/>
     </bean>
 
     <bean id="searchService"
           class="com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.search.SearchServiceImpl">
-        <constructor-arg ref="searchAccountDaoImpl"/>
-        <constructor-arg ref="searchGroupDaoImpl"/>
+        <constructor-arg ref="searchAccountDao"/>
+        <constructor-arg ref="searchGroupDao"/>
     </bean>
 
 </beans>
