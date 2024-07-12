@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.util;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
+import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

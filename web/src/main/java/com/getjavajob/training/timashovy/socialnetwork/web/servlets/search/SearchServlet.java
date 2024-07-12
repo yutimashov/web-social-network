@@ -3,7 +3,6 @@ package com.getjavajob.training.timashovy.socialnetwork.web.servlets.search;
 import com.getjavajob.training.timashovy.socialnetwork.common.Group;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.SearchService;
-import org.springframework.context.ApplicationContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,10 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.*;
-import static com.getjavajob.training.timashovy.socialnetwork.web.listeners.SingletonsHolderListener.APPLICATION_CONTEXT;
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.ServiceSingletonsNames.SEARCH_SERVICE_BEAN;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspPagePaths.SEARCH_RESULT;
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.WebContextUtils.getApplicationContext;
 import static java.lang.Integer.parseInt;
 
 public class SearchServlet extends HttpServlet {
@@ -31,8 +30,8 @@ public class SearchServlet extends HttpServlet {
         String searchType = req.getParameter("searchType");
         req.setAttribute("searchType", searchType);
         int numberOfPages = 0;
-        SearchService searchService = (SearchService) ((ApplicationContext) req.getServletContext()
-                .getAttribute(APPLICATION_CONTEXT)).getBean(SEARCH_SERVICE_BEAN);
+        SearchService searchService = getApplicationContext(req.getServletContext()).getBean(SEARCH_SERVICE_BEAN,
+                SearchService.class);
         if ("account".equals(searchType)) {
             List<Account> accounts = searchService.findAccounts(searchQuery, currentPage, RESULTS_PER_PAGE);
             req.setAttribute("accounts", accounts);

@@ -18,9 +18,10 @@ import java.util.List;
 
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
-import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.*;
-import static com.getjavajob.training.timashovy.socialnetwork.web.listeners.SingletonsHolderListener.APPLICATION_CONTEXT;
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.ServiceSingletonsNames.ACCOUNT_SERVICE_BEAN;
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.ServiceSingletonsNames.PHONE_SERVICE_BEAN;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.WebContextUtils.getApplicationContext;
 import static java.lang.Long.valueOf;
 import static java.time.LocalDate.parse;
 import static java.util.Objects.isNull;
@@ -39,8 +40,8 @@ public class EditAccountServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long accountId = valueOf(req.getParameter("id"));
-        ApplicationContext ctx = (ApplicationContext) req.getServletContext().getAttribute(APPLICATION_CONTEXT);
-        AccountService accountService = (AccountService) ctx.getBean(ACCOUNT_SERVICE_BEAN);
+        ApplicationContext ctx = getApplicationContext(req.getServletContext());
+        AccountService accountService = ctx.getBean(ACCOUNT_SERVICE_BEAN, AccountService.class);
         if (accountService.getById(accountId).isPresent()) {
             req.setAttribute("account", accountService.getById(accountId).get());
             req.setAttribute("avatarInputStream", accountService.getById(accountId).get().getAvatar());
@@ -56,9 +57,8 @@ public class EditAccountServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         Long accountId = valueOf(req.getParameter("id"));
-        ApplicationContext ctx = (ApplicationContext) req.getServletContext().getAttribute(APPLICATION_CONTEXT);
-        AccountService accountService = (AccountService) ctx.getBean(ACCOUNT_SERVICE_BEAN);
-        accountService.update(accountId, updateAccountData(req));
+        getApplicationContext(req.getServletContext()).getBean(ACCOUNT_SERVICE_BEAN, AccountService.class)
+                .update(accountId, updateAccountData(req));
         resp.sendRedirect("/account?id=" + accountId);
     }
 
