@@ -2,13 +2,16 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipCheckerDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.FRIENDSHIP_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.JdbcTemplateManager.getConnection;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.FriendshipTableFields.*;
 
 /**
@@ -22,37 +25,37 @@ public class FriendshipCheckerDaoImpl implements FriendshipCheckerDao {
     private static final String ARE_USERS_FRIENDS = "SELECT 1 FROM " + FRIENDSHIP_TABLE + " WHERE "
             + FRIENDSHIP_ACCOUNT_ID_1 + " = ? AND " + FRIENDSHIP_ACCOUNT_ID_2 + " = ? AND " + FRIENDSHIP_STATUS
             + " = TRUE;";
+    private final JdbcTemplate jdbcTemplate;
+
+    public FriendshipCheckerDaoImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
     public boolean checkFriendshipRecordExistence(Long requesterId, Long accepterId) {
-        try (Connection connection = getConnection();
-             PreparedStatement friendshipExistence = connection.prepareStatement(FRIENDSHIP_RECORD_EXISTENCE)) {
-            return verifyOrderOfAccountIdsInQuery(requesterId, accepterId, friendshipExistence);
-        } catch (SQLException e) {
-            throw new DaoException("dao: friendship record existence method failed: " + e.getMessage());
-        }
+        return Boolean.TRUE.equals(jdbcTemplate.query(FRIENDSHIP_RECORD_EXISTENCE,
+                new Object[]{getFirstId(requesterId, accepterId), getSecondId(requesterId, accepterId)}, (rs -> return rs.next());
+                new ResultSetExtractor<Boolean>() {
+                    @Override
+                    public Boolean extractData(ResultSet rs) throws SQLException {
+                        return rs.next();
+                    }
+                }));
     }
 
-    private boolean verifyOrderOfAccountIdsInQuery(Long requesterId, Long accepterId, PreparedStatement checkFriends)
-            throws SQLException {
-        if (requesterId < accepterId) {
-            checkFriends.setLong(1, requesterId);
-            checkFriends.setLong(2, accepterId);
-        } else {
-            checkFriends.setLong(1, accepterId);
-            checkFriends.setLong(2, requesterId);
-        }
-        return checkFriends.executeQuery().next();
+    private Long getFirstId(Long requesterId, Long accepterId) {
+        return requesterId < accepterId ? requesterId : accepterId;
+    }
+
+    private Long getSecondId(Long requesterId, Long accepterId) {
+        return requesterId < accepterId ? accepterId : requesterId;
     }
 
     @Override
     public boolean checkUsersAreFriends(Long requesterId, Long accepterId) {
-        try (Connection connection = getConnection();
-             PreparedStatement checkFriends = connection.prepareStatement(ARE_USERS_FRIENDS)) {
-            return verifyOrderOfAccountIdsInQuery(requesterId, accepterId, checkFriends);
-        } catch (SQLException e) {
-            throw new DaoException("dao: areUsersFriends method failed: " + e.getMessage());
-        }
+        return jdbcTemplate.query(ARE_USERS_FRIENDS,
+                new Object[]{getFirstId(requesterId, accepterId), getSecondId(requesterId, accepterId)},
+                ResultSet::next);
     }
 
 }

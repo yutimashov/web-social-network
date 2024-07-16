@@ -3,20 +3,19 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.TransactionManager;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNT_PHONES_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.PhonesTableFields.*;
-import static java.sql.Statement.RETURN_GENERATED_KEYS;
+import static java.util.Objects.isNull;
 
 /**
  * Singleton class responsible for working with `account_data.phones` table in DB.
@@ -30,66 +29,51 @@ public class PhoneDaoImpl implements PhoneDao {
             + ACCOUNT_ID + " FROM " + ACCOUNT_PHONES_TABLE + " WHERE " + ACCOUNT_ID + " = ?;";
     private static final String UPDATE = "UPDATE " + ACCOUNT_PHONES_TABLE + " SET " + PHONE_NUMBER + " = ? WHERE "
             + PHONE_ID + " = ?;";
-    private final TransactionManager transactionManager;
+    private final JdbcTemplate jdbcTemplate;
 
-    public PhoneDaoImpl(TransactionManager transactionManager) {
-        this.transactionManager = transactionManager;
+    public PhoneDaoImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public Long create(Phone phone) {
-        try (PreparedStatement createPhoneStatement = transactionManager.getTransactionalConnection()
-                .prepareStatement(CREATE, RETURN_GENERATED_KEYS)) {
-            createPhoneStatement.setLong(1, phone.getAccountId());
-            createPhoneStatement.setString(2, phone.getPhoneType().name());
-            createPhoneStatement.setString(3, phone.getNumber());
-            if (createPhoneStatement.executeUpdate() > 0) {
-                ResultSet generatedKeys = createPhoneStatement.getGeneratedKeys();
-                if (generatedKeys.next()) {
-                    phone.setId(generatedKeys.getLong(1));
-                }
-                return phone.getId();
-            } else {
-                throw new DaoException("Failed to create phone");
-            }
-        } catch (SQLException e) {
-            throw new DaoException("dao: create phone failed: " + e.getMessage());
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(CREATE, new String[]{PHONE_ID});
+            ps.setLong(1, phone.getAccountId());
+            ps.setString(2, phone.getPhoneType().name());
+            ps.setString(3, phone.getNumber());
+            return ps;
+        }, keyHolder);
+        if (!isNull(keyHolder.getKey())) {
+            phone.setId(keyHolder.getKey().longValue());
         }
+        return phone.getId();
     }
 
     @Override
     public List<Phone> getAll(Long accountId) {
-        try (Connection conn = getConnection();
-             PreparedStatement getPhoneStatement = conn.prepareStatement(GET, RETURN_GENERATED_KEYS)) {
-            List<Phone> phones = new ArrayList<>();
-            getPhoneStatement.setLong(1, accountId);
-            ResultSet phonesData = getPhoneStatement.executeQuery();
-            while (phonesData.next()) {
-                phones.add(
-                        new Phone(
-                                phonesData.getLong("id"),
-                                PhoneType.valueOf(phonesData.getString("phone_type")),
-                                phonesData.getString("phone_number"),
-                                phonesData.getLong("account_id")
-                        )
-                );
-            }
-            return phones;
-        } catch (SQLException e) {
-            throw new DaoException("dao: method get all phones failed: " + e.getMessage());
+        return jdbcTemplate.query(GET, new Object[]{accountId}, new PhoneRowMapper());
+    }
+
+    private static class PhoneRowMapper implements RowMapper<Phone> {
+        @Override
+        public Phone mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new Phone(
+                    rs.getLong("id"),
+                    PhoneType.valueOf(rs.getString("phone_type")),
+                    rs.getString("phone_number"),
+                    rs.getLong("account_id")
+            );
         }
     }
 
     @Override
     public boolean update(Long phoneId, String newPhoneNumber) {
-        try (PreparedStatement updateByIdStatement = transactionManager.getTransactionalConnection()
-                .prepareStatement(UPDATE, RETURN_GENERATED_KEYS)) {
-            updateByIdStatement.setString(1, newPhoneNumber);
-            updateByIdStatement.setLong(2, phoneId);
-            return updateByIdStatement.executeUpdate() > 0;
-        } catch (SQLException e) {
-            throw new DaoException("dao: update phone number by id method failed: ", e);
-        }
+        return jdbcTemplate.update(UPDATE, ps -> {
+            ps.setString(1, newPhoneNumber);
+            ps.setLong(2, phoneId);
+        }) > 0;
     }
 
 }

@@ -1,6 +1,5 @@
 package com.getjavajob.training.timashovy.socialnetwork.util;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager;
 import com.getjavajob.training.timashovy.socialnetwork.util.exceptions.DaoTestException;
 import org.mockito.MockedStatic;
 
@@ -22,7 +21,7 @@ public class ConnectionManagerTestUtils {
     private static final String h2DbUrl = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1";
     private static final String h2DbUserName = "admin";
     private static final String h2DbPassword = "admin";
-    private static MockedStatic<ConnectionManager> mocked;
+    private static MockedStatic<JdbcTemplateManager> mocked;
 
     /**
      * Class is not intended to have any instances.
@@ -35,8 +34,8 @@ public class ConnectionManagerTestUtils {
      * Mock Postgres connection within inner calls of methods working with connections
      */
     public static void mockConnectionManager() {
-        mocked = mockStatic(ConnectionManager.class);
-        mocked.when(ConnectionManager::getConnection).thenReturn(getH2Connection());
+        mocked = mockStatic(JdbcTemplateManager.class);
+        mocked.when(JdbcTemplateManager::getConnection).thenReturn(getH2Connection());
     }
 
     /**

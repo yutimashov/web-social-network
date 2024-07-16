@@ -5,14 +5,14 @@ import com.getjavajob.training.timashovy.socialnetwork.common.account.AccountRol
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.TransactionManager;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
-import java.sql.Connection;
+import javax.sql.DataSource;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +20,6 @@ import static com.getjavajob.training.timashovy.socialnetwork.common.account.Acc
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNTS_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.AccountTableFields.*;
 import static java.lang.String.valueOf;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
@@ -56,129 +55,97 @@ public class AccountDaoImpl implements BaseDao<Account> {
             + ACCOUNT_ICQ + "= ?, " + ACCOUNT_SKYPE + "= ?, " + ACCOUNT_ADDITIONAL_INFO + " = ?, " + ACCOUNT_ROLE_TYPE
             + " = ?, " + ACCOUNT_AVATAR + " = ? WHERE " + ACCOUNT_ID + " = ?;";
     private static final String DELETE_BY_ID = "DELETE FROM " + ACCOUNTS_TABLE + " WHERE " + ACCOUNT_ID + " = ?;";
-    private final PhoneDao phoneDao;
-    private final TransactionManager transactionManager;
 
-    public AccountDaoImpl(PhoneDao phoneDao, TransactionManager transactionManager) {
+    private JdbcTemplate jdbcTemplate;
+    private final PhoneDao phoneDao;
+
+    private final RowMapper<Account> accountMapper = (rs, rowNum) -> new Account.Builder()
+            .id(rs.getLong(ACCOUNT_ID))
+            .firstName(rs.getString(ACCOUNT_FIRST_NAME))
+            .lastName(rs.getString(ACCOUNT_LAST_NAME))
+            .email(rs.getString(ACCOUNT_EMAIL))
+            .birthDate(!isNull(rs.getDate(ACCOUNT_BIRTH_DATE)) ? rs.getDate(ACCOUNT_BIRTH_DATE).toLocalDate()
+                    : null)
+            .middleName(rs.getString(ACCOUNT_MIDDLE_NAME))
+            .personalAddress(rs.getString(ACCOUNT_PERSONAL_ADDRESS))
+            .workAddress(rs.getString(ACCOUNT_WORK_ADDRESS))
+            .icq(rs.getString(ACCOUNT_ICQ))
+            .skype(rs.getString(ACCOUNT_SKYPE))
+            .additionalInfo(rs.getString(ACCOUNT_ADDITIONAL_INFO))
+            .role(AccountRole.valueOf(rs.getString(ACCOUNT_ROLE_TYPE)))
+            .avatar(rs.getBinaryStream(ACCOUNT_AVATAR))
+            .build();
+
+    public AccountDaoImpl(PhoneDao phoneDao) {
         this.phoneDao = phoneDao;
-        this.transactionManager = transactionManager;
+    }
+
+    public void setDataSource(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @Override
     public Long create(Account account) {
-        try (PreparedStatement statement = transactionManager.getTransactionalConnection()
-                .prepareStatement(CREATE, RETURN_GENERATED_KEYS)) {
-            setAccountData(account, statement);
-            if (statement.executeUpdate() > 0) {
-                ResultSet generatedKeys = statement.getGeneratedKeys();
-                if (generatedKeys.next()) {
-                    account.setId(generatedKeys.getLong(1));
-                }
-            }
-            return account.getId();
-        } catch (SQLException e) {
-            throw new DaoException("dao: create account method failed: " + e.getMessage());
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(CREATE, RETURN_GENERATED_KEYS);
+            setAccountData(account, ps);
+            return ps;
+        }, keyHolder);
+        if (!isNull(keyHolder.getKey())) {
+            account.setId((long) keyHolder.getKey());
         }
+        return account.getId();
     }
 
-    private void setAccountData(Account account, PreparedStatement preparedStatement) throws SQLException {
-        preparedStatement.setString(1, account.getFirstName());
-        preparedStatement.setString(2, account.getLastName());
-        preparedStatement.setString(3, account.getMiddleName());
-        preparedStatement.setObject(4, account.getBirthDate());
-        preparedStatement.setString(5, account.getPersonalAddress());
-        preparedStatement.setString(6, account.getWorkAddress());
-        preparedStatement.setString(7, account.getEmail());
-        preparedStatement.setString(8, account.getIcq());
-        preparedStatement.setString(9, account.getSkype());
-        preparedStatement.setString(10, account.getAdditionalInfo());
-        if (isNull(account.getRole())) {
-            preparedStatement.setString(11, valueOf(REGULAR));
-        } else {
-            preparedStatement.setString(11, account.getRole().name());
-        }
-        preparedStatement.setBinaryStream(12, account.getAvatar());
-    }
-
-    @Override
-    public Optional<Account> getById(Long accountId) {
-        try (Connection connection = getConnection();
-             PreparedStatement getAccountByIdStatement = connection.prepareStatement(GET_BY_ID)) {
-            getAccountByIdStatement.setLong(1, accountId);
-            ResultSet accountData = getAccountByIdStatement.executeQuery();
-            if (accountData.next()) {
-                Account account = createAccountFromResultSet(accountData);
-                List<Phone> phones = phoneDao.getAll(accountId);
-                if (!phones.isEmpty()) {
-                    account.setPersonalPhoneNumber(phones.stream().filter(phone -> phone.getPhoneType() == PERSONAL)
-                            .collect(toList()));
-                    account.setWorkPhoneNumber(phones.stream().filter(phone -> phone.getPhoneType() == WORKING)
-                            .collect(toList()));
-                }
-                return of(account);
-            } else {
-                return empty();
-            }
-        } catch (SQLException e) {
-            throw new DaoException("dao: get account by accountId method failed: " + e.getMessage());
-        }
-    }
-
-    private Account createAccountFromResultSet(ResultSet resultSet) throws SQLException {
-        return new Account.Builder()
-                .id(resultSet.getLong(ACCOUNT_ID))
-                .firstName(resultSet.getString(ACCOUNT_FIRST_NAME))
-                .lastName(resultSet.getString(ACCOUNT_LAST_NAME))
-                .email(resultSet.getString(ACCOUNT_EMAIL))
-                .birthDate(resultSet.getDate(ACCOUNT_BIRTH_DATE) != null
-                        ? resultSet.getDate(ACCOUNT_BIRTH_DATE).toLocalDate() : null)
-                .middleName(resultSet.getString(ACCOUNT_MIDDLE_NAME))
-                .personalAddress(resultSet.getString(ACCOUNT_PERSONAL_ADDRESS))
-                .workAddress(resultSet.getString(ACCOUNT_WORK_ADDRESS))
-                .icq(resultSet.getString(ACCOUNT_ICQ))
-                .skype(resultSet.getString(ACCOUNT_SKYPE))
-                .additionalInfo(resultSet.getString(ACCOUNT_ADDITIONAL_INFO))
-                .role(AccountRole.valueOf(resultSet.getString(ACCOUNT_ROLE_TYPE)))
-                .avatar(resultSet.getBinaryStream(ACCOUNT_AVATAR))
-                .build();
-    }
-
-    @Override
-    public List<Account> getAll() {
-        try (Connection connection = getConnection();
-             PreparedStatement getAllAccountsStatement = connection.prepareStatement(GET_ALL)) {
-            List<Account> accounts = new ArrayList<>();
-            ResultSet accountsSet = getAllAccountsStatement.executeQuery();
-            while (accountsSet.next()) {
-                accounts.add(createAccountFromResultSet(accountsSet));
-            }
-            return accounts;
-        } catch (SQLException e) {
-            throw new DaoException("dao: get all accounts method failed: " + e.getMessage());
-        }
+    private void setAccountData(Account account, PreparedStatement ps) throws SQLException {
+        ps.setString(1, account.getFirstName());
+        ps.setString(2, account.getLastName());
+        ps.setString(3, account.getMiddleName());
+        ps.setObject(4, account.getBirthDate());
+        ps.setString(5, account.getPersonalAddress());
+        ps.setString(6, account.getWorkAddress());
+        ps.setString(7, account.getEmail());
+        ps.setString(8, account.getIcq());
+        ps.setString(9, account.getSkype());
+        ps.setString(10, account.getAdditionalInfo());
+        ps.setString(11, isNull(account.getRole()) ? valueOf(REGULAR) : account.getRole().name());
+        ps.setBinaryStream(12, account.getAvatar());
     }
 
     @Override
     public boolean updateById(Long id, Account account) {
-        try (PreparedStatement updateByIdStatement = transactionManager.getTransactionalConnection()
-                .prepareStatement(UPDATE_BY_ID, RETURN_GENERATED_KEYS)) {
-            setAccountData(account, updateByIdStatement);
-            updateByIdStatement.setLong(13, id);
-            return updateByIdStatement.executeUpdate() > 0;
-        } catch (SQLException e) {
-            throw new DaoException("dao: update account by id method failed: ", e);
-        }
+        return jdbcTemplate.update(UPDATE_BY_ID, ps -> {
+            setAccountData(account, ps);
+            ps.setLong(13, id);
+        }) > 0;
     }
 
     @Override
     public boolean deleteById(Long id) {
-        try (Connection connection = getConnection();
-             PreparedStatement deleteByIdStatement = connection.prepareStatement(DELETE_BY_ID)) {
-            deleteByIdStatement.setLong(1, id);
-            return deleteByIdStatement.executeUpdate() > 0;
-        } catch (SQLException e) {
-            throw new DaoException("dao: delete account by id method failed: " + e.getMessage());
+        return jdbcTemplate.update(DELETE_BY_ID, id) > 0;
+    }
+
+    @Override
+    public Optional<Account> getById(Long accountId) {
+        Account account = jdbcTemplate.queryForObject(GET_BY_ID, accountMapper, accountId);
+        if (!isNull(account)) {
+            List<Phone> phones = phoneDao.getAll(accountId);
+            if (!phones.isEmpty()) {
+                account.setPersonalPhoneNumber(phones.stream().filter(phone -> phone.getPhoneType() == PERSONAL)
+                        .collect(toList()));
+                account.setWorkPhoneNumber(phones.stream().filter(phone -> phone.getPhoneType() == WORKING)
+                        .collect(toList()));
+            }
+            return of(account);
+        } else {
+            return empty();
         }
+    }
+
+    @Override
+    public List<Account> getAll() {
+        return jdbcTemplate.query(GET_ALL, accountMapper);
     }
 
 }

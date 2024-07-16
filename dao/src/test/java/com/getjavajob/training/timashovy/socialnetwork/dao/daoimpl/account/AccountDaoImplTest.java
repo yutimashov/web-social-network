@@ -4,8 +4,8 @@ import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.TransactionManager;
 import org.junit.jupiter.api.*;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +27,8 @@ class AccountDaoImplTest {
     private static final String LOAD_DATA_FILEPATH = "scripts/account/load.sql";
     private static final String CLEAR_TABLES_FILEPATH = "scripts/account/clear.sql";
     private static final String DROP_DB_FILEPATH = "scripts/account/drop.sql";
-    private static final BaseDao<Account> ACCOUNT_DAO_INSTANCE = new AccountDaoImpl(
-            new PhoneDaoImpl(new TransactionManager()), new TransactionManager());
+    private static final BaseDao<Account> ACCOUNT_DAO_INSTANCE =
+            new ClassPathXmlApplicationContext("classpath:beans-dao.xml").getBean("accountDao", AccountDaoImpl.class);
 
     private static final Account TEST_ACCOUNT = new Account.Builder()
             .id(1L).firstName("").lastName("")

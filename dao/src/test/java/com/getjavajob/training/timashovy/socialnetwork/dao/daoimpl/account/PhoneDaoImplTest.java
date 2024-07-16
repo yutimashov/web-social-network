@@ -3,9 +3,9 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.TransactionManager;
 import com.getjavajob.training.timashovy.socialnetwork.util.ConnectionManagerTestUtils;
 import org.junit.jupiter.api.*;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ class PhoneDaoImplTest {
     private static final String LOAD_DATA_FILEPATH = "scripts/account/load.sql";
     private static final String CLEAR_TABLES_FILEPATH = "scripts/account/clear.sql";
     private static final String DROP_DB_FILEPATH = "scripts/account/drop.sql";
-    private static final PhoneDao PHONE_DAO = new PhoneDaoImpl(new TransactionManager());
+    private static final PhoneDao PHONE_DAO = new PhoneDaoImpl(new JdbcTemplate());
 
     @BeforeEach
     public void fillTestTablesWith2Records() {

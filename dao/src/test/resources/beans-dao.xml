@@ -4,22 +4,17 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
 		https://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <import resource="datasource-config.xml"/>
-
-    <bean id="accountDao"
-          class="com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AccountDaoImpl">
-        <constructor-arg ref="phoneDao"/>
-        <property name="dataSource" ref="dataSource"/>
-    </bean>
-
-    <bean id="passwordDao"
-          class="com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PasswordDaoImpl">
-        <property name="dataSource" ref="dataSource"/>
-    </bean>
+    <import resource="datasource-config.xml" />
 
     <bean id="phoneDao"
           class="com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PhoneDaoImpl">
         <constructor-arg ref="transactionManager"/>
+    </bean>
+
+    <bean id="accountDao"
+          class="com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AccountDaoImpl">
+        <constructor-arg ref="jdbcTemplate" />
+        <constructor-arg ref="phoneDao"/>
     </bean>
 
     <bean id="friendshipDao"
@@ -28,6 +23,11 @@
 
     <bean id="friendshipCheckerDao"
           class="com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship.FriendshipCheckerDaoImpl">
+    </bean>
+
+    <bean id="passwordDao"
+          class="com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PasswordDaoImpl">
+        <constructor-arg ref="transactionManager"/>
     </bean>
 
     <bean id="groupDao"
