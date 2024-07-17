@@ -128,7 +128,13 @@ public class AccountDaoImpl implements BaseDao<Account> {
 
     @Override
     public Optional<Account> getById(Long accountId) {
-        Account account = jdbcTemplate.queryForObject(GET_BY_ID, accountRowMapper, accountId);
+        Account account = jdbcTemplate.query(GET_BY_ID, rs -> {
+            if (rs.next()) {
+                return accountRowMapper.mapRow(rs, 1);
+            } else {
+                return null;  // Или Optional.empty() для обертки результата
+            }
+        }, accountId);
         if (!isNull(account)) {
             List<Phone> phones = phoneDao.getAll(accountId);
             if (!phones.isEmpty()) {

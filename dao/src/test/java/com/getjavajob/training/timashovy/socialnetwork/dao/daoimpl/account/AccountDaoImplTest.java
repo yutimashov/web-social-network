@@ -4,8 +4,14 @@ import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,20 +20,22 @@ import java.util.Optional;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.AccountRole.REGULAR;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
-import static com.getjavajob.training.timashovy.socialnetwork.util.ConnectionManagerTestUtils.clearConnectionManagerMocks;
-import static com.getjavajob.training.timashovy.socialnetwork.util.ConnectionManagerTestUtils.mockConnectionManager;
-import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static java.time.LocalDate.of;
 import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration("classpath:test-beans-dao.xml")
+@Sql(scripts = "classpath:scripts/account/create.sql", executionPhase = BEFORE_TEST_METHOD)
+@Sql(scripts = "classpath:scripts/account/load.sql", executionPhase = BEFORE_TEST_METHOD)
+@Sql(scripts = "classpath:scripts/account/clear.sql", executionPhase = AFTER_TEST_METHOD)
+@Sql(scripts = "classpath:scripts/account/drop.sql", executionPhase = AFTER_TEST_METHOD)
 class AccountDaoImplTest {
 
-    private static final String CREATE_TABLES_FILEPATH = "scripts/account/create.sql";
-    private static final String LOAD_DATA_FILEPATH = "scripts/account/load.sql";
-    private static final String CLEAR_TABLES_FILEPATH = "scripts/account/clear.sql";
-    private static final String DROP_DB_FILEPATH = "scripts/account/drop.sql";
-    private static final BaseDao<Account> ACCOUNT_DAO_INSTANCE = new AccountDaoImpl(new PhoneDaoImpl());
+    private static final BaseDao<Account> ACCOUNT_DAO_INSTANCE = new ClassPathXmlApplicationContext("test-beans-dao.xml")
+            .getBean("accountDao", AccountDaoImpl.class);
 
     private static final Account TEST_ACCOUNT = new Account.Builder()
             .id(1L).firstName("").lastName("")
@@ -84,40 +92,12 @@ class AccountDaoImplTest {
         TEST_ACCOUNT.setAdditionalInfo("test");
     }
 
-    @BeforeAll
-    public static void createTestTables() {
-        executeScript(CREATE_TABLES_FILEPATH);
-    }
-
-    @BeforeEach
-    void setTestConnection() {
-        mockConnectionManager();
-    }
-
-    @BeforeEach
-    public void fillTestTablesWith2Records() {
-        restoreTestAccountDefaultState();
-        executeScript(CLEAR_TABLES_FILEPATH);
-        executeScript(LOAD_DATA_FILEPATH);
-    }
-
-    @AfterEach
-    void closeTestConnection() {
-        clearConnectionManagerMocks();
-    }
-
-    @AfterAll
-    public static void dropDataBaseAfterTestExecution() {
-        executeScript(DROP_DB_FILEPATH);
-    }
-
     @Nested
     @DisplayName("Long create(Account account)")
     class TestCreateAccount {
 
         @Test
         void shouldReturn1LWhenAccountCreatedInEmptyTable() {
-            executeScript(CLEAR_TABLES_FILEPATH);
             assertEquals(1L, ACCOUNT_DAO_INSTANCE.create(TEST_ACCOUNT));
         }
 
@@ -159,8 +139,7 @@ class AccountDaoImplTest {
 
         @Test
         void shouldReturnEmptyOptionalWhenAccountNotExists() {
-            executeScript(CLEAR_TABLES_FILEPATH);
-            assertEquals(empty(), ACCOUNT_DAO_INSTANCE.getById(1L));
+            assertEquals(empty(), ACCOUNT_DAO_INSTANCE.getById(-1L));
         }
 
     }
@@ -170,8 +149,9 @@ class AccountDaoImplTest {
     class TestGetAll {
 
         @Test
+        @Sql(scripts = "classpath:scripts/account/clear.sql",
+                executionPhase = BEFORE_TEST_METHOD)
         void shouldReturnEmptyListWhenTableIsEmpty() {
-            executeScript(CLEAR_TABLES_FILEPATH);
             assertEquals(new ArrayList<Account>(), ACCOUNT_DAO_INSTANCE.getAll());
         }
 

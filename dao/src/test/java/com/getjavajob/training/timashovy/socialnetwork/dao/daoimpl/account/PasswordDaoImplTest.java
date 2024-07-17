@@ -3,33 +3,31 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Password;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PasswordDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
-import com.getjavajob.training.timashovy.socialnetwork.util.ConnectionManagerTestUtils;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(locations = {"classpath:test-beans-dao.xml"})
+@Sql(scripts = "classpath:scripts/account/create.sql", executionPhase = BEFORE_TEST_METHOD)
+@Sql(scripts = "classpath:scripts/account/load.sql", executionPhase = BEFORE_TEST_METHOD)
+@Sql(scripts = "classpath:scripts/account/clear.sql", executionPhase = AFTER_TEST_METHOD)
+@Sql(scripts = "classpath:scripts/account/drop.sql", executionPhase = AFTER_TEST_METHOD)
 class PasswordDaoImplTest {
 
-    private static final String CREATE_TABLES_FILEPATH = "scripts/account/create.sql";
-    private static final String LOAD_DATA_FILEPATH = "scripts/account/load.sql";
-    private static final String DROP_DB_FILEPATH = "scripts/account/drop.sql";
-    private static final PasswordDao PASSWORD_DAO = new PasswordDaoImpl();
+    private static final PasswordDao PASSWORD_DAO = new ClassPathXmlApplicationContext("test-beans-dao.xml")
+            .getBean("passwordDao", PasswordDaoImpl.class);
     private static final Password TEST_PASSWORD = new Password(1L, "test", "test");
-
-    @BeforeAll
-    public static void createTestTables() {
-        executeScript(CREATE_TABLES_FILEPATH);
-        executeScript(LOAD_DATA_FILEPATH);
-    }
-
-    @AfterAll
-    public static void dropDataBaseAfterTestExecution() {
-        executeScript(DROP_DB_FILEPATH);
-    }
 
     @Nested
     @DisplayName("Long create(Long accountId, Password password)")
