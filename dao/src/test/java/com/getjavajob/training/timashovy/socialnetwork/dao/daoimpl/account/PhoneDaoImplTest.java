@@ -23,7 +23,7 @@ class PhoneDaoImplTest {
     private static final String LOAD_DATA_FILEPATH = "scripts/account/load.sql";
     private static final String CLEAR_TABLES_FILEPATH = "scripts/account/clear.sql";
     private static final String DROP_DB_FILEPATH = "scripts/account/drop.sql";
-    private static final PhoneDao PHONE_DAO = new PhoneDaoImpl(new JdbcTemplate());
+    private static final PhoneDao PHONE_DAO = new PhoneDaoImpl();
 
     @BeforeEach
     public void fillTestTablesWith2Records() {

@@ -30,7 +30,7 @@ import static java.util.stream.Collectors.toList;
 
 /**
  * Singleton class responsible for working with {@link com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames#ACCOUNTS_TABLE accounts table}.
- * It provides safe multithreading approach for creating singleton object using synchronization mechanism.
+ * It provides functionality for working with data inside above-mentioned table.
  */
 public class AccountDaoImpl implements BaseDao<Account> {
 
@@ -59,7 +59,7 @@ public class AccountDaoImpl implements BaseDao<Account> {
     private JdbcTemplate jdbcTemplate;
     private final PhoneDao phoneDao;
 
-    private final RowMapper<Account> accountMapper = (rs, rowNum) -> new Account.Builder()
+    private final RowMapper<Account> accountRowMapper = (rs, rowNum) -> new Account.Builder()
             .id(rs.getLong(ACCOUNT_ID))
             .firstName(rs.getString(ACCOUNT_FIRST_NAME))
             .lastName(rs.getString(ACCOUNT_LAST_NAME))
@@ -128,7 +128,7 @@ public class AccountDaoImpl implements BaseDao<Account> {
 
     @Override
     public Optional<Account> getById(Long accountId) {
-        Account account = jdbcTemplate.queryForObject(GET_BY_ID, accountMapper, accountId);
+        Account account = jdbcTemplate.queryForObject(GET_BY_ID, accountRowMapper, accountId);
         if (!isNull(account)) {
             List<Phone> phones = phoneDao.getAll(accountId);
             if (!phones.isEmpty()) {
@@ -145,7 +145,7 @@ public class AccountDaoImpl implements BaseDao<Account> {
 
     @Override
     public List<Account> getAll() {
-        return jdbcTemplate.query(GET_ALL, accountMapper);
+        return jdbcTemplate.query(GET_ALL, accountRowMapper);
     }
 
 }

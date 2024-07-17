@@ -9,9 +9,7 @@ import org.springframework.jdbc.support.KeyHolder;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNTS_TABLE;
@@ -40,6 +38,9 @@ public class PasswordDaoImpl implements PasswordDao {
 
     private JdbcTemplate jdbcTemplate;
 
+    private final RowMapper<Password> passwordRowMapper = (rs, rowNum) -> new Password(rs.getLong(PASSWORD_ACCOUNT_ID),
+            rs.getString(PASSWORD_HASH), rs.getString(PASSWORD_SALT));
+
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
@@ -66,33 +67,14 @@ public class PasswordDaoImpl implements PasswordDao {
 
     @Override
     public Optional<Password> getById(Long accountId) {
-        Password password = jdbcTemplate.queryForObject(GET_BY_ACCOUNT_ID, new PasswordDaoImpl.PasswordRowMapper(), accountId);
-        if (!isNull(password)) {
-            return of(password);
-        } else {
-            return empty();
-        }
-    }
-
-    private static class PasswordRowMapper implements RowMapper<Password> {
-        @Override
-        public Password mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return createPasswordFromResultSet(rs);
-        }
-    }
-
-    private static Password createPasswordFromResultSet(ResultSet rs) throws SQLException {
-        return new Password(rs.getLong(PASSWORD_ACCOUNT_ID), rs.getString(PASSWORD_HASH), rs.getString(PASSWORD_SALT));
+        Password password = jdbcTemplate.queryForObject(GET_BY_ACCOUNT_ID, passwordRowMapper, accountId);
+        return !isNull(password) ? of(password) : empty();
     }
 
     @Override
     public Optional<Password> findByEmail(String email) {
-        Password password = jdbcTemplate.queryForObject(GET_BY_ACCOUNT_EMAIL, new PasswordDaoImpl.PasswordRowMapper(), email);
-        if (!isNull(password)) {
-            return of(password);
-        } else {
-            return empty();
-        }
+        Password password = jdbcTemplate.queryForObject(GET_BY_ACCOUNT_EMAIL, passwordRowMapper, email);
+        return !isNull(password) ? of(password) : empty();
     }
 
 }

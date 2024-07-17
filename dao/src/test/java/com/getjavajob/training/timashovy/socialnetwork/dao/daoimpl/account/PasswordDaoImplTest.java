@@ -8,7 +8,6 @@ import org.junit.jupiter.api.*;
 
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.util.ConnectionManagerTestUtils.clearConnectionManagerMocks;
 import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,19 +26,9 @@ class PasswordDaoImplTest {
         executeScript(LOAD_DATA_FILEPATH);
     }
 
-    @BeforeEach
-    void setTestConnection() {
-        ConnectionManagerTestUtils.mockConnectionManager();
-    }
-
     @AfterAll
     public static void dropDataBaseAfterTestExecution() {
         executeScript(DROP_DB_FILEPATH);
-    }
-
-    @AfterEach
-    void closeTestConnection() {
-        clearConnectionManagerMocks();
     }
 
     @Nested

@@ -2,20 +2,21 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.message.Message;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.MessageDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
-import java.sql.Connection;
+import javax.sql.DataSource;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.GROUP_MESSAGE_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.JdbcTemplateManager.getConnection;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.GroupMessageTableFields.*;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
+import static java.util.Objects.isNull;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
@@ -36,24 +37,33 @@ public class GroupMessageDaoImpl implements MessageDao {
             + GROUP_MESSAGE_GROUP_ID + ", " + GROUP_MESSAGE_MESSAGE_TEXT + ", " + GROUP_MESSAGE_MESSAGE_IMAGE + ", "
             + GROUP_MESSAGE_CREATION_DATE + " FROM " + GROUP_MESSAGE_TABLE + " WHERE " + GROUP_MESSAGE_GROUP_ID
             + " = ? ORDER BY " + GROUP_MESSAGE_CREATION_DATE + " DESC;";
+    private final RowMapper<Message> groupMessageRowMapper = (rs, rowNum) -> new Message.Builder()
+            .id(rs.getLong(GROUP_MESSAGE_ID))
+            .accountAuthorId(rs.getLong(GROUP_MESSAGE_ACCOUNT_AUTHOR_ID))
+            .creationDate(rs.getDate(GROUP_MESSAGE_CREATION_DATE).toLocalDate())
+            .destinationId(rs.getLong(GROUP_MESSAGE_GROUP_ID))
+            .text(rs.getString(GROUP_MESSAGE_MESSAGE_TEXT))
+            .photo(rs.getBinaryStream(GROUP_MESSAGE_MESSAGE_IMAGE))
+            .build();
+
+    private JdbcTemplate jdbcTemplate;
+
+    public void setDataSource(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    }
 
     @Override
     public Long create(Message message) {
-        try (Connection connection = getConnection();
-             PreparedStatement createMessageStatement = connection.prepareStatement(CREATE, RETURN_GENERATED_KEYS)) {
-            setMessageData(message, createMessageStatement);
-            if (createMessageStatement.executeUpdate() > 0) {
-                ResultSet generatedKeys = createMessageStatement.getGeneratedKeys();
-                if (generatedKeys.next()) {
-                    message.setId(generatedKeys.getLong(1));
-                }
-                return message.getId();
-            } else {
-                throw new DaoException("dao: create message method failed: no rows affected.");
-            }
-        } catch (SQLException e) {
-            throw new DaoException("dao: create message method failed: " + e.getMessage());
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(CREATE, RETURN_GENERATED_KEYS);
+            setMessageData(message, ps);
+            return ps;
+        }, keyHolder);
+        if (!isNull(keyHolder.getKey())) {
+            message.setId((long) keyHolder.getKey());
         }
+        return message.getId();
     }
 
     private void setMessageData(Message message, PreparedStatement preparedStatement) throws SQLException {
@@ -65,70 +75,25 @@ public class GroupMessageDaoImpl implements MessageDao {
 
     @Override
     public Optional<Message> getById(Long id) {
-        try (Connection connection = getConnection();
-             PreparedStatement getMessageByIdStatement = connection.prepareStatement(GET_BY_ID)) {
-            getMessageByIdStatement.setLong(1, id);
-            ResultSet messageData = getMessageByIdStatement.executeQuery();
-            if (messageData.next()) {
-                Message message = new Message.Builder()
-                        .id(messageData.getLong("id"))
-                        .accountAuthorId(messageData.getLong("account_author_id"))
-                        .creationDate(messageData.getDate("creation_date").toLocalDate())
-                        .destinationId(messageData.getLong("group_id"))
-                        .text(messageData.getString("message_text"))
-                        .photo(messageData.getBinaryStream("message_image"))
-                        .build();
-                return of(message);
-            } else {
-                return empty();
-            }
-        } catch (SQLException e) {
-            throw new DaoException("dao: get message by id method failed: " + e.getMessage());
-        }
+        Message message = jdbcTemplate.queryForObject(GET_BY_ID, groupMessageRowMapper, id);
+        return !isNull(message) ? of(message) : empty();
     }
 
     public List<Message> getAll(Long groupId) {
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL)) {
-            List<Message> messages = new ArrayList<>();
-            preparedStatement.setLong(1, groupId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                messages.add(new Message.Builder()
-                        .id(resultSet.getLong("id"))
-                        .accountAuthorId(resultSet.getLong("account_author_id"))
-                        .text(resultSet.getString("message_text"))
-                        .photo(resultSet.getBinaryStream("message_image"))
-                        .creationDate(resultSet.getDate("creation_date").toLocalDate())
-                        .build());
-            }
-            return messages;
-        } catch (SQLException e) {
-            throw new DaoException("dao: get all messages method failed: " + e.getMessage());
-        }
+        return jdbcTemplate.query(GET_ALL, groupMessageRowMapper, groupId);
     }
 
     @Override
     public boolean updateById(Long id, Message message) {
-        try (Connection connection = getConnection();
-             PreparedStatement updateByIdStatement = connection.prepareStatement(UPDATE_BY_ID)) {
-            updateByIdStatement.setString(1, message.getText());
-            updateByIdStatement.setLong(2, id);
-            return updateByIdStatement.executeUpdate() > 0;
-        } catch (SQLException e) {
-            throw new DaoException("dao: update message method failed: ", e);
-        }
+        return jdbcTemplate.update(UPDATE_BY_ID, ps -> {
+            ps.setString(1, message.getText());
+            ps.setLong(2, id);
+        }) > 0;
     }
 
     @Override
     public boolean deleteById(Long id) {
-        try (Connection connection = getConnection();
-             PreparedStatement deleteByIdStatement = connection.prepareStatement(DELETE_BY_ID)) {
-            deleteByIdStatement.setLong(1, id);
-            return deleteByIdStatement.executeUpdate() > 0;
-        } catch (SQLException e) {
-            throw new DaoException("dao: delete message by id method failed: " + e.getMessage());
-        }
+        return jdbcTemplate.update(DELETE_BY_ID, id) > 0;
     }
 
 }

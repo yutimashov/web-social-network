@@ -6,12 +6,12 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsn
  */
 public class PersonalWallMessagesTableFields {
 
-    public static final String ID = "id";
-    public static final String ACCOUNT_AUTHOR_ID = "account_author_id";
-    public static final String ACCOUNT_RECEIVER_ID = "account_receiver_id";
-    public static final String MESSAGE_TEXT = "message_text";
-    public static final String MESSAGE_IMAGE = "message_image";
-    public static final String CREATION_DATE = "creation_date";
+    public static final String PERSONAL_WALL_MESSAGE_ID = "id";
+    public static final String PERSONAL_WALL_MESSAGE_AUTHOR_ID = "account_author_id";
+    public static final String PERSONAL_WALL_MESSAGE_RECEIVER_ID = "account_receiver_id";
+    public static final String PERSONAL_WALL_MESSAGE_TEXT = "message_text";
+    public static final String PERSONAL_WALL_MESSAGE_IMAGE = "message_image";
+    public static final String PERSONAL_WALL_MESSAGE_CREATION_DATE = "creation_date";
 
     /**
      * Class is not intended to have any instances. No one should call constructor even within class itself.

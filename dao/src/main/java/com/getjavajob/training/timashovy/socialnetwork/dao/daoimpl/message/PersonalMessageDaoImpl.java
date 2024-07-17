@@ -2,20 +2,21 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.message.Message;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.MessageDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
-import java.sql.Connection;
+import javax.sql.DataSource;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.PERSONAL_MESSAGE_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.JdbcTemplateManager.getConnection;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.PersonalMessagesTableFields.*;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
+import static java.util.Objects.isNull;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
@@ -42,24 +43,33 @@ public class PersonalMessageDaoImpl implements MessageDao {
             + ", " + PERSONAL_MESSAGE_CREATION_DATE + ", " + PERSONAL_MESSAGE_TEXT + ", " + PERSONAL_MESSAGE_IMAGE
             + ", " + PERSONAL_MESSAGE_ACCOUNT_DESTINATION_ID + " FROM " + PERSONAL_MESSAGE_TABLE + " WHERE "
             + PERSONAL_MESSAGE_ID + " = ?;";
+    private final RowMapper<Message> personalMessageRowMapper = (rs, rowNum) -> new Message.Builder()
+            .id(rs.getLong(PERSONAL_MESSAGE_ID))
+            .accountAuthorId(rs.getLong(PERSONAL_MESSAGE_ACCOUNT_AUTHOR_ID))
+            .creationDate(rs.getDate(PERSONAL_MESSAGE_CREATION_DATE).toLocalDate())
+            .destinationId(rs.getLong(PERSONAL_MESSAGE_ACCOUNT_DESTINATION_ID))
+            .text(rs.getString(PERSONAL_MESSAGE_TEXT))
+            .photo(rs.getBinaryStream(PERSONAL_MESSAGE_IMAGE))
+            .build();
+
+    private JdbcTemplate jdbcTemplate;
+
+    public void setDataSource(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    }
 
     @Override
     public Long create(Message message) {
-        try (Connection connection = getConnection();
-             PreparedStatement createMessageStatement = connection.prepareStatement(CREATE, RETURN_GENERATED_KEYS)) {
-            setMessageData(message, createMessageStatement);
-            if (createMessageStatement.executeUpdate() > 0) {
-                ResultSet generatedKeys = createMessageStatement.getGeneratedKeys();
-                if (generatedKeys.next()) {
-                    message.setId(generatedKeys.getLong(1));
-                }
-                return message.getId();
-            } else {
-                throw new DaoException("dao: create message method failed: no rows affected.");
-            }
-        } catch (SQLException e) {
-            throw new DaoException("dao: create message method failed: " + e.getMessage());
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(CREATE, RETURN_GENERATED_KEYS);
+            setMessageData(message, ps);
+            return ps;
+        }, keyHolder);
+        if (!isNull(keyHolder.getKey())) {
+            message.setId((long) keyHolder.getKey());
         }
+        return message.getId();
     }
 
     private void setMessageData(Message message, PreparedStatement preparedStatement) throws SQLException {
@@ -71,26 +81,8 @@ public class PersonalMessageDaoImpl implements MessageDao {
 
     @Override
     public Optional<Message> getById(Long id) {
-        try (Connection connection = getConnection();
-             PreparedStatement getMessageByIdStatement = connection.prepareStatement(GET_BY_ID)) {
-            getMessageByIdStatement.setLong(1, id);
-            ResultSet messageData = getMessageByIdStatement.executeQuery();
-            if (messageData.next()) {
-                Message message = new Message.Builder()
-                        .id(messageData.getLong("id"))
-                        .accountAuthorId(messageData.getLong("account_author_id"))
-                        .creationDate(messageData.getDate("creation_date").toLocalDate())
-                        .destinationId(messageData.getLong("destination_id"))
-                        .text(messageData.getString("message_text"))
-                        .photo(messageData.getBinaryStream("message_image"))
-                        .build();
-                return of(message);
-            } else {
-                return empty();
-            }
-        } catch (SQLException e) {
-            throw new DaoException("dao: get message by id method failed: " + e.getMessage());
-        }
+        Message message = jdbcTemplate.queryForObject(GET_BY_ID, personalMessageRowMapper, id);
+        return !isNull(message) ? of(message) : empty();
     }
 
     @Override
@@ -109,46 +101,12 @@ public class PersonalMessageDaoImpl implements MessageDao {
     }
 
     public List<Long> getAllAccountsIds(Long accountId) {
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_ACCOUNT_IDS)) {
-            preparedStatement.setLong(1, accountId);
-            preparedStatement.setLong(2, accountId);
-            List<Long> ids = new ArrayList<>();
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                ids.add(resultSet.getLong("account_author_id"));
-            }
-            return ids;
-        } catch (SQLException e) {
-            throw new DaoException("dao: get all accounts ids method failed: " + e.getMessage());
-        }
+        return jdbcTemplate.queryForList(GET_ALL_ACCOUNT_IDS, Long.class, accountId);
     }
 
     public List<Message> getAllPersonalMessagesWithAccount(Long authorId, Long receiverId) {
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_PRIVATE_MESSAGES_WITH_ACCOUNT)) {
-            preparedStatement.setLong(1, authorId);
-            preparedStatement.setLong(2, receiverId);
-            preparedStatement.setLong(3, receiverId);
-            preparedStatement.setLong(4, authorId);
-            List<Message> messages = new ArrayList<>();
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                messages.add(
-                        new Message.Builder()
-                                .id(resultSet.getLong("id"))
-                                .accountAuthorId(resultSet.getLong("account_author_id"))
-                                .destinationId(resultSet.getLong("destination_id"))
-                                .creationDate(resultSet.getDate("creation_date").toLocalDate())
-                                .text(resultSet.getString("message_text"))
-                                .photo(resultSet.getBinaryStream("message_image"))
-                                .build()
-                );
-            }
-            return messages;
-        } catch (SQLException e) {
-            throw new DaoException("dao: get all accounts ids method failed: " + e.getMessage());
-        }
+        return jdbcTemplate.query(GET_ALL_PRIVATE_MESSAGES_WITH_ACCOUNT, personalMessageRowMapper, authorId,
+                receiverId);
     }
 
 }

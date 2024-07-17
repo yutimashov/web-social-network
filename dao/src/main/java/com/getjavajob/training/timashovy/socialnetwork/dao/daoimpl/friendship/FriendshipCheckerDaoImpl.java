@@ -1,18 +1,13 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipCheckerDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import javax.sql.DataSource;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.FRIENDSHIP_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.JdbcTemplateManager.getConnection;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.FriendshipTableFields.*;
+import static java.util.Objects.isNull;
 
 /**
  * Singleton class responsible for working with `account_data.friendship` table in DB.
@@ -25,22 +20,16 @@ public class FriendshipCheckerDaoImpl implements FriendshipCheckerDao {
     private static final String ARE_USERS_FRIENDS = "SELECT 1 FROM " + FRIENDSHIP_TABLE + " WHERE "
             + FRIENDSHIP_ACCOUNT_ID_1 + " = ? AND " + FRIENDSHIP_ACCOUNT_ID_2 + " = ? AND " + FRIENDSHIP_STATUS
             + " = TRUE;";
-    private final JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
-    public FriendshipCheckerDaoImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public void setDataSource(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @Override
     public boolean checkFriendshipRecordExistence(Long requesterId, Long accepterId) {
-        return Boolean.TRUE.equals(jdbcTemplate.query(FRIENDSHIP_RECORD_EXISTENCE,
-                new Object[]{getFirstId(requesterId, accepterId), getSecondId(requesterId, accepterId)}, (rs -> return rs.next());
-                new ResultSetExtractor<Boolean>() {
-                    @Override
-                    public Boolean extractData(ResultSet rs) throws SQLException {
-                        return rs.next();
-                    }
-                }));
+        return !isNull(jdbcTemplate.queryForObject(FRIENDSHIP_RECORD_EXISTENCE, Boolean.class,
+                getFirstId(requesterId, accepterId), getSecondId(requesterId, accepterId)));
     }
 
     private Long getFirstId(Long requesterId, Long accepterId) {
@@ -53,9 +42,8 @@ public class FriendshipCheckerDaoImpl implements FriendshipCheckerDao {
 
     @Override
     public boolean checkUsersAreFriends(Long requesterId, Long accepterId) {
-        return jdbcTemplate.query(ARE_USERS_FRIENDS,
-                new Object[]{getFirstId(requesterId, accepterId), getSecondId(requesterId, accepterId)},
-                ResultSet::next);
+        return !isNull(jdbcTemplate.queryForObject(ARE_USERS_FRIENDS, Boolean.class,
+                getFirstId(requesterId, accepterId), getSecondId(requesterId, accepterId)));
     }
 
 }

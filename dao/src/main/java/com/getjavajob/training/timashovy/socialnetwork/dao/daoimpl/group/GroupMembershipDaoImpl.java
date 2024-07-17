@@ -1,18 +1,14 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.GroupMembershipDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
+import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import javax.sql.DataSource;
 import java.util.List;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.GROUP_MEMBERS_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.JdbcTemplateManager.getConnection;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.GroupMembersFields.*;
+import static java.util.Objects.isNull;
 
 public class GroupMembershipDaoImpl implements GroupMembershipDao {
 
@@ -45,137 +41,60 @@ public class GroupMembershipDaoImpl implements GroupMembershipDao {
             + " WHERE " + GROUP_MEMBERS_GROUP_ID + " = ? " + "AND " + GROUP_MEMBERS_IS_MEMBER + " = TRUE AND "
             + GROUP_MEMBERS_IS_ADMIN + " = TRUE;";
 
+    private JdbcTemplate jdbcTemplate;
+
+    public void setDataSource(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    }
+
     @Override
     public void sendRequest(Long groupId, Long accountId) {
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(ADD_USER)) {
-            preparedStatement.setLong(1, accountId);
-            preparedStatement.setLong(2, groupId);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DaoException("dao: create group method failed: " + e.getMessage());
-        }
+        jdbcTemplate.update(ADD_USER, groupId, accountId);
     }
 
     @Override
     public void makeMember(Long groupId, Long accountId) {
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(MAKE_USER_GROUP_MEMBER)) {
-            preparedStatement.setLong(1, groupId);
-            preparedStatement.setLong(2, accountId);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DaoException("dao: make user group member method failed: " + e.getMessage());
-        }
+        jdbcTemplate.update(MAKE_USER_GROUP_MEMBER, groupId, accountId);
     }
 
     @Override
     public List<Long> getRequests(Long groupId) {
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(GET_GROUP_FOLLOWERS)) {
-            List<Long> groupFollowers = new ArrayList<>();
-            preparedStatement.setLong(1, groupId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                groupFollowers.add(resultSet.getLong(1));
-            }
-            return groupFollowers;
-        } catch (SQLException e) {
-            throw new DaoException("dao: get group followers method failed: " + e.getMessage());
-        }
+        return jdbcTemplate.queryForList(GET_GROUP_FOLLOWERS, Long.class, groupId);
     }
 
     @Override
     public void deleteMember(Long groupId, Long accountId) {
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_GROUP_MEMBER)) {
-            preparedStatement.setLong(1, groupId);
-            preparedStatement.setLong(2, accountId);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DaoException("dao: delete group by id method failed: ", e);
-        }
+        jdbcTemplate.update(DELETE_GROUP_MEMBER, groupId, accountId);
     }
 
     @Override
     public boolean isAdmin(Long groupId, Long accountId) {
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(CHECK_ACCOUNT_ADMIN)) {
-            preparedStatement.setLong(1, groupId);
-            preparedStatement.setLong(2, accountId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            return resultSet.next();
-        } catch (SQLException e) {
-            throw new DaoException("dao: check account is group admin method failed: ", e);
-        }
+        return !isNull(jdbcTemplate.queryForObject(CHECK_ACCOUNT_ADMIN, Boolean.class, groupId, accountId));
     }
 
     @Override
     public boolean isSubscriber(Long groupId, Long accountId) {
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(CHECK_ACCOUNT_SUBSCRIBER)) {
-            preparedStatement.setLong(1, groupId);
-            preparedStatement.setLong(2, accountId);
-            return preparedStatement.executeQuery().next();
-        } catch (SQLException e) {
-            throw new DaoException("dao: check account is group subscriber method failed: ", e);
-        }
+        return !isNull(jdbcTemplate.queryForObject(CHECK_ACCOUNT_SUBSCRIBER, Boolean.class, groupId, accountId));
     }
 
     @Override
     public boolean isMember(Long groupId, Long accountId) {
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(CHECK_ACCOUNT_MEMBER)) {
-            preparedStatement.setLong(1, groupId);
-            preparedStatement.setLong(2, accountId);
-            return preparedStatement.executeQuery().next();
-        } catch (SQLException e) {
-            throw new DaoException("dao: check account is group member method failed: ", e);
-        }
+        return !isNull(jdbcTemplate.queryForObject(CHECK_ACCOUNT_MEMBER, Boolean.class, groupId, accountId));
     }
 
     @Override
     public List<Long> getRegularMembers(Long groupId) {
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(GET_REGULAR_MEMBERS)) {
-            List<Long> groupMembers = new ArrayList<>();
-            preparedStatement.setLong(1, groupId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                groupMembers.add(resultSet.getLong(1));
-            }
-            return groupMembers;
-        } catch (SQLException e) {
-            throw new DaoException("dao: get group members method failed: " + e.getMessage());
-        }
+        return jdbcTemplate.queryForList(GET_REGULAR_MEMBERS, Long.class, groupId);
     }
 
     @Override
     public List<Long> getAdmins(Long groupId) {
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(GET_ADMINS)) {
-            List<Long> groupMembers = new ArrayList<>();
-            preparedStatement.setLong(1, groupId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                groupMembers.add(resultSet.getLong(1));
-            }
-            return groupMembers;
-        } catch (SQLException e) {
-            throw new DaoException("dao: get group admins method failed: " + e.getMessage());
-        }
+        return jdbcTemplate.queryForList(GET_ADMINS, Long.class, groupId);
     }
 
     @Override
     public void makeAdmin(Long groupId, Long accountId) {
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(MAKE_USER_GROUP_ADMIN)) {
-            preparedStatement.setLong(1, groupId);
-            preparedStatement.setLong(2, accountId);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DaoException("dao: make user group admin method failed: " + e.getMessage());
-        }
+        jdbcTemplate.update(MAKE_USER_GROUP_ADMIN, groupId, accountId);
     }
 
 }
