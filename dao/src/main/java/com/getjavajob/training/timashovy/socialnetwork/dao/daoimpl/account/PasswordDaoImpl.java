@@ -17,10 +17,6 @@ import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.T
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.AccountTableFields.ACCOUNT_EMAIL;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.AccountTableFields.ACCOUNT_ID;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.PasswordTableFields.*;
-import static java.sql.Statement.RETURN_GENERATED_KEYS;
-import static java.util.Objects.isNull;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 
 /**
  * Singleton class responsible for working with {@link com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames#ACCOUNTS_TABLE accounts table} table in DB.
@@ -49,14 +45,17 @@ public class PasswordDaoImpl implements PasswordDao {
     public Long create(Password password) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(CREATE, RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement(CREATE, new String[]{PASSWORD_ID});
             setPasswordData(password, ps);
             return ps;
         }, keyHolder);
-        if (!isNull(keyHolder.getKey())) {
-            password.setId((long) keyHolder.getKey());
+        Number generatedId = keyHolder.getKey();
+        if (generatedId != null) {
+            Long id = generatedId.longValue();
+            password.setId(id);
+            return id;
         }
-        return password.getId();
+        return null;
     }
 
     private void setPasswordData(Password password, PreparedStatement ps) throws SQLException {
@@ -67,14 +66,12 @@ public class PasswordDaoImpl implements PasswordDao {
 
     @Override
     public Optional<Password> getById(Long accountId) {
-        Password password = jdbcTemplate.queryForObject(GET_BY_ACCOUNT_ID, passwordRowMapper, accountId);
-        return !isNull(password) ? of(password) : empty();
+        return jdbcTemplate.query(GET_BY_ACCOUNT_ID, passwordRowMapper, accountId).stream().findFirst();
     }
 
     @Override
     public Optional<Password> findByEmail(String email) {
-        Password password = jdbcTemplate.queryForObject(GET_BY_ACCOUNT_EMAIL, passwordRowMapper, email);
-        return !isNull(password) ? of(password) : empty();
+        return jdbcTemplate.query(GET_BY_ACCOUNT_EMAIL, passwordRowMapper, email).stream().findFirst();
     }
 
 }

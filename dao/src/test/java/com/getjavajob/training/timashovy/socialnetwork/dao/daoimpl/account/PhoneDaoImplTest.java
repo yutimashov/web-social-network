@@ -5,6 +5,8 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.Ph
 import com.getjavajob.training.timashovy.socialnetwork.dao.util.exceptions.DaoException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -21,30 +23,40 @@ import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TE
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration("classpath:test-beans-dao.xml")
-@Sql(scripts = "classpath:scripts/account/create.sql", executionPhase = BEFORE_TEST_METHOD)
-@Sql(scripts = "classpath:scripts/account/load.sql", executionPhase = BEFORE_TEST_METHOD)
-@Sql(scripts = "classpath:scripts/account/clear.sql", executionPhase = AFTER_TEST_METHOD)
-@Sql(scripts = "classpath:scripts/account/drop.sql", executionPhase = AFTER_TEST_METHOD)
+@Sql(
+        scripts = {
+                "classpath:scripts/account/create.sql",
+                "classpath:scripts/account/load.sql"
+        },
+        executionPhase = BEFORE_TEST_METHOD
+)
+@Sql(
+        scripts = {
+                "classpath:scripts/account/clear.sql",
+                "classpath:scripts/account/drop.sql"
+        },
+        executionPhase = AFTER_TEST_METHOD
+)
 class PhoneDaoImplTest {
 
-    private static final PhoneDao PHONE_DAO = new PhoneDaoImpl();
+    @Autowired
+    private PhoneDao PHONE_DAO;
 
     @Nested
     @DisplayName("Long create(Phone phone)")
     class TestCreatePhone {
 
-//        @Test
-//        void shouldReturnPhoneIdWhenPhoneWasCreated() {
-//            assertEquals(3L, PHONE_DAO.create(new Phone(PERSONAL, "test", 1L)));
-//        }
+        @Test
+        void shouldReturnPhoneIdWhenPhoneWasCreated() {
+            assertEquals(3L, PHONE_DAO.create(new Phone(PERSONAL, "test", 1L)));
+        }
 
         @Test
         void shouldThrowExceptionWhenCreationFailed() {
-            Throwable exception = assertThrows(DaoException.class, () -> {
+            assertThrows(DataAccessException.class, () -> {
                 PHONE_DAO.create(new Phone(PERSONAL, "test", -1L));
                 throw new UnsupportedOperationException("Not supported");
             });
-            assertEquals(DaoException.class, exception.getClass());
         }
 
     }

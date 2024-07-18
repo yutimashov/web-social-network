@@ -1,7 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.common.account.AccountRole;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
@@ -17,12 +16,12 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.AccountRole.REGULAR;
+import static com.getjavajob.training.timashovy.socialnetwork.common.account.AccountRole.valueOf;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNTS_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.AccountTableFields.*;
 import static java.lang.String.valueOf;
-import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.util.Objects.isNull;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -55,24 +54,21 @@ public class AccountDaoImpl implements BaseDao<Account> {
             + ACCOUNT_ICQ + "= ?, " + ACCOUNT_SKYPE + "= ?, " + ACCOUNT_ADDITIONAL_INFO + " = ?, " + ACCOUNT_ROLE_TYPE
             + " = ?, " + ACCOUNT_AVATAR + " = ? WHERE " + ACCOUNT_ID + " = ?;";
     private static final String DELETE_BY_ID = "DELETE FROM " + ACCOUNTS_TABLE + " WHERE " + ACCOUNT_ID + " = ?;";
-
     private JdbcTemplate jdbcTemplate;
     private final PhoneDao phoneDao;
-
     private final RowMapper<Account> accountRowMapper = (rs, rowNum) -> new Account.Builder()
             .id(rs.getLong(ACCOUNT_ID))
             .firstName(rs.getString(ACCOUNT_FIRST_NAME))
             .lastName(rs.getString(ACCOUNT_LAST_NAME))
             .email(rs.getString(ACCOUNT_EMAIL))
-            .birthDate(!isNull(rs.getDate(ACCOUNT_BIRTH_DATE)) ? rs.getDate(ACCOUNT_BIRTH_DATE).toLocalDate()
-                    : null)
+            .birthDate(!isNull(rs.getDate(ACCOUNT_BIRTH_DATE)) ? rs.getDate(ACCOUNT_BIRTH_DATE).toLocalDate() : null)
             .middleName(rs.getString(ACCOUNT_MIDDLE_NAME))
             .personalAddress(rs.getString(ACCOUNT_PERSONAL_ADDRESS))
             .workAddress(rs.getString(ACCOUNT_WORK_ADDRESS))
             .icq(rs.getString(ACCOUNT_ICQ))
             .skype(rs.getString(ACCOUNT_SKYPE))
             .additionalInfo(rs.getString(ACCOUNT_ADDITIONAL_INFO))
-            .role(AccountRole.valueOf(rs.getString(ACCOUNT_ROLE_TYPE)))
+            .role(valueOf(rs.getString(ACCOUNT_ROLE_TYPE)))
             .avatar(rs.getBinaryStream(ACCOUNT_AVATAR))
             .build();
 
@@ -80,6 +76,9 @@ public class AccountDaoImpl implements BaseDao<Account> {
         this.phoneDao = phoneDao;
     }
 
+    /**
+     * @param dataSource specific DataSource, defining database to work with
+     */
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
@@ -87,15 +86,18 @@ public class AccountDaoImpl implements BaseDao<Account> {
     @Override
     public Long create(Account account) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(CREATE, RETURN_GENERATED_KEYS);
+        jdbcTemplate.update(conn -> {
+            PreparedStatement ps = conn.prepareStatement(CREATE, new String[]{ACCOUNT_ID});
             setAccountData(account, ps);
             return ps;
         }, keyHolder);
-        if (!isNull(keyHolder.getKey())) {
-            account.setId((long) keyHolder.getKey());
+        Number generatedId = keyHolder.getKey();
+        if (generatedId != null) {
+            Long id = generatedId.longValue();
+            account.setId(id);
+            return id;
         }
-        return account.getId();
+        return null;
     }
 
     private void setAccountData(Account account, PreparedStatement ps) throws SQLException {
@@ -128,13 +130,8 @@ public class AccountDaoImpl implements BaseDao<Account> {
 
     @Override
     public Optional<Account> getById(Long accountId) {
-        Account account = jdbcTemplate.query(GET_BY_ID, rs -> {
-            if (rs.next()) {
-                return accountRowMapper.mapRow(rs, 1);
-            } else {
-                return null;  // Или Optional.empty() для обертки результата
-            }
-        }, accountId);
+        Account account = jdbcTemplate.query(GET_BY_ID, rs -> rs.next() ? accountRowMapper.mapRow(rs, 1) : null,
+                accountId);
         if (!isNull(account)) {
             List<Phone> phones = phoneDao.getAll(accountId);
             if (!phones.isEmpty()) {

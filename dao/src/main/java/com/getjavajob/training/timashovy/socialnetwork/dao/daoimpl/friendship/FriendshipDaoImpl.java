@@ -49,10 +49,10 @@ public class FriendshipDaoImpl implements FriendshipDao {
      */
     @Override
     public boolean sendRequest(Long requesterId, Long accepterId) {
-        return jdbcTemplate.update(SEND_REQUEST, (Object) getFriendshipRequestParams(requesterId, accepterId)) > 0;
+        return jdbcTemplate.update(SEND_REQUEST, getFriendshipRequestParams(requesterId, accepterId)) > 0;
     }
 
-    private Long[] getFriendshipRequestParams(Long requesterId, Long accepterId) {
+    private Object[] getFriendshipRequestParams(Long requesterId, Long accepterId) {
         return requesterId < accepterId ? new Long[]{requesterId, accepterId, requesterId, accepterId}
                 : new Long[]{accepterId, requesterId, requesterId, accepterId};
     }
@@ -75,12 +75,12 @@ public class FriendshipDaoImpl implements FriendshipDao {
 
     @Override
     public List<Long> getIncomingRequests(Long accountId) {
-        return jdbcTemplate.queryForList(GET_INCOMING_REQUESTS, Long.class, accountId);
+        return jdbcTemplate.query(GET_INCOMING_REQUESTS, (rs, rowNum) -> rs.getLong(1), accountId);
     }
 
     @Override
     public List<Long> getOutgoingRequests(Long accountId) {
-        return jdbcTemplate.queryForList(GET_OUTGOING_REQUESTS, Long.class, accountId);
+        return jdbcTemplate.query(GET_OUTGOING_REQUESTS, (rs, rowNum) -> rs.getLong(1), accountId);
     }
 
     /**
@@ -92,10 +92,10 @@ public class FriendshipDaoImpl implements FriendshipDao {
      */
     @Override
     public boolean deleteFriend(Long accountId, Long deletingFriendId) {
-        return jdbcTemplate.update(DELETE_FRIEND, (Object) getDeletingFriendIds(accountId, deletingFriendId)) > 0;
+        return jdbcTemplate.update(DELETE_FRIEND, getDeletingFriendIds(accountId, deletingFriendId)) > 0;
     }
 
-    private Long[] getDeletingFriendIds(Long firstAccountId, Long secondAccountId) {
+    private Object[] getDeletingFriendIds(Long firstAccountId, Long secondAccountId) {
         return firstAccountId < secondAccountId ? new Long[]{firstAccountId, secondAccountId}
                 : new Long[]{secondAccountId, firstAccountId};
     }

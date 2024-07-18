@@ -15,10 +15,6 @@ import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.GROUPS_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.GroupTableFields.*;
-import static java.sql.Statement.RETURN_GENERATED_KEYS;
-import static java.util.Objects.isNull;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 
 public class GroupDaoImpl implements BaseDao<Group> {
 
@@ -51,14 +47,17 @@ public class GroupDaoImpl implements BaseDao<Group> {
     public Long create(Group group) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(CREATE, RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement(CREATE, new String[] { GROUP_ID });
             setGroupData(group, ps);
             return ps;
         }, keyHolder);
-        if (!isNull(keyHolder.getKey())) {
-            group.setId((long) keyHolder.getKey());
+        Number generatedId = keyHolder.getKey();
+        if (generatedId != null) {
+            Long id = generatedId.longValue();
+            group.setId(id);
+            return id;
         }
-        return group.getId();
+        return null;
     }
 
     private void setGroupData(Group group, PreparedStatement preparedStatement) throws SQLException {
@@ -70,8 +69,7 @@ public class GroupDaoImpl implements BaseDao<Group> {
 
     @Override
     public Optional<Group> getById(Long id) {
-        Group group = jdbcTemplate.queryForObject(GET_GROUP_BY_ID, groupRowMapper, id);
-        return !isNull(group) ? of(group) : empty();
+        return jdbcTemplate.query(GET_GROUP_BY_ID, groupRowMapper, id).stream().findFirst();
     }
 
     @Override

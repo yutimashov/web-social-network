@@ -1,13 +1,13 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipCheckerDao;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.FRIENDSHIP_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.FriendshipTableFields.*;
-import static java.util.Objects.isNull;
 
 /**
  * Singleton class responsible for working with `account_data.friendship` table in DB.
@@ -28,8 +28,13 @@ public class FriendshipCheckerDaoImpl implements FriendshipCheckerDao {
 
     @Override
     public boolean checkFriendshipRecordExistence(Long requesterId, Long accepterId) {
-        return !isNull(jdbcTemplate.queryForObject(FRIENDSHIP_RECORD_EXISTENCE, Boolean.class,
-                getFirstId(requesterId, accepterId), getSecondId(requesterId, accepterId)));
+        try {
+            Boolean isFriends = jdbcTemplate.queryForObject(FRIENDSHIP_RECORD_EXISTENCE, Boolean.class,
+                    getFirstId(requesterId, accepterId), getSecondId(requesterId, accepterId));
+            return isFriends != null && isFriends;
+        } catch (EmptyResultDataAccessException e) {
+            return false;
+        }
     }
 
     private Long getFirstId(Long requesterId, Long accepterId) {
@@ -42,8 +47,15 @@ public class FriendshipCheckerDaoImpl implements FriendshipCheckerDao {
 
     @Override
     public boolean checkUsersAreFriends(Long requesterId, Long accepterId) {
-        return !isNull(jdbcTemplate.queryForObject(ARE_USERS_FRIENDS, Boolean.class,
-                getFirstId(requesterId, accepterId), getSecondId(requesterId, accepterId)));
+        try {
+            Boolean isFriends = jdbcTemplate.queryForObject(
+                    ARE_USERS_FRIENDS, Boolean.class,
+                    getFirstId(requesterId, accepterId), getSecondId(requesterId, accepterId)
+            );
+            return isFriends != null && isFriends;
+        } catch (EmptyResultDataAccessException e) {
+            return false;
+        }
     }
 
 }

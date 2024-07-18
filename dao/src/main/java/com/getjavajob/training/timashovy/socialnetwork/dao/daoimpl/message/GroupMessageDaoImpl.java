@@ -15,10 +15,6 @@ import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.GROUP_MESSAGE_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.GroupMessageTableFields.*;
-import static java.sql.Statement.RETURN_GENERATED_KEYS;
-import static java.util.Objects.isNull;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 
 public class GroupMessageDaoImpl implements MessageDao {
 
@@ -55,15 +51,18 @@ public class GroupMessageDaoImpl implements MessageDao {
     @Override
     public Long create(Message message) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(CREATE, RETURN_GENERATED_KEYS);
+        jdbcTemplate.update(conn -> {
+            PreparedStatement ps = conn.prepareStatement(CREATE, new String[]{GROUP_MESSAGE_ID});
             setMessageData(message, ps);
             return ps;
         }, keyHolder);
-        if (!isNull(keyHolder.getKey())) {
-            message.setId((long) keyHolder.getKey());
+        Number generatedId = keyHolder.getKey();
+        if (generatedId != null) {
+            Long id = generatedId.longValue();
+            message.setId(id);
+            return id;
         }
-        return message.getId();
+        return null;
     }
 
     private void setMessageData(Message message, PreparedStatement preparedStatement) throws SQLException {
@@ -75,8 +74,7 @@ public class GroupMessageDaoImpl implements MessageDao {
 
     @Override
     public Optional<Message> getById(Long id) {
-        Message message = jdbcTemplate.queryForObject(GET_BY_ID, groupMessageRowMapper, id);
-        return !isNull(message) ? of(message) : empty();
+        return jdbcTemplate.query(GET_BY_ID, groupMessageRowMapper, id).stream().findFirst();
     }
 
     public List<Message> getAll(Long groupId) {

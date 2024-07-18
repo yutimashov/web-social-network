@@ -15,10 +15,6 @@ import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.PERSONAL_MESSAGE_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.PersonalMessagesTableFields.*;
-import static java.sql.Statement.RETURN_GENERATED_KEYS;
-import static java.util.Objects.isNull;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 
 public class PersonalMessageDaoImpl implements MessageDao {
 
@@ -29,7 +25,7 @@ public class PersonalMessageDaoImpl implements MessageDao {
             + " FROM " + PERSONAL_MESSAGE_TABLE + " WHERE " + PERSONAL_MESSAGE_ACCOUNT_DESTINATION_ID
             + " = ? UNION SELECT DISTINCT " + PERSONAL_MESSAGE_ACCOUNT_DESTINATION_ID + " FROM "
             + PERSONAL_MESSAGE_TABLE + " WHERE " + PERSONAL_MESSAGE_ACCOUNT_AUTHOR_ID + " = ?;";
-    private static final String GET_ALL_PRIVATE_MESSAGES_WITH_ACCOUNT = "SELECT " + PERSONAL_MESSAGE_ID + ", "
+    private static final String GET_ALL_MESSAGES_WITH_ACCOUNT = "SELECT " + PERSONAL_MESSAGE_ID + ", "
             + PERSONAL_MESSAGE_ACCOUNT_AUTHOR_ID + ", " + PERSONAL_MESSAGE_ACCOUNT_DESTINATION_ID + ", "
             + PERSONAL_MESSAGE_TEXT + ", " + PERSONAL_MESSAGE_IMAGE + ", " + PERSONAL_MESSAGE_CREATION_DATE + " FROM "
             + PERSONAL_MESSAGE_TABLE + " WHERE " + PERSONAL_MESSAGE_ACCOUNT_AUTHOR_ID + " = "
@@ -61,15 +57,23 @@ public class PersonalMessageDaoImpl implements MessageDao {
     @Override
     public Long create(Message message) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(CREATE, RETURN_GENERATED_KEYS);
-            setMessageData(message, ps);
-            return ps;
-        }, keyHolder);
-        if (!isNull(keyHolder.getKey())) {
-            message.setId((long) keyHolder.getKey());
+        int rowsUpdated = jdbcTemplate.update(
+                con -> {
+                    PreparedStatement ps = con.prepareStatement(CREATE, new String[]{PERSONAL_MESSAGE_ID});
+                    setMessageData(message, ps);
+                    return ps;
+                },
+                keyHolder
+        );
+        if (rowsUpdated > 0) {
+            Number generatedId = keyHolder.getKey();
+            if (generatedId != null) {
+                Long id = generatedId.longValue();
+                message.setId(id);
+                return id;
+            }
         }
-        return message.getId();
+        return null;
     }
 
     private void setMessageData(Message message, PreparedStatement preparedStatement) throws SQLException {
@@ -81,8 +85,7 @@ public class PersonalMessageDaoImpl implements MessageDao {
 
     @Override
     public Optional<Message> getById(Long id) {
-        Message message = jdbcTemplate.queryForObject(GET_BY_ID, personalMessageRowMapper, id);
-        return !isNull(message) ? of(message) : empty();
+        return jdbcTemplate.query(GET_BY_ID, personalMessageRowMapper, id).stream().findFirst();
     }
 
     @Override
@@ -101,12 +104,12 @@ public class PersonalMessageDaoImpl implements MessageDao {
     }
 
     public List<Long> getAllAccountsIds(Long accountId) {
-        return jdbcTemplate.queryForList(GET_ALL_ACCOUNT_IDS, Long.class, accountId);
+        return jdbcTemplate.queryForList(GET_ALL_ACCOUNT_IDS, Long.class, accountId, accountId);
     }
 
     public List<Message> getAllPersonalMessagesWithAccount(Long authorId, Long receiverId) {
-        return jdbcTemplate.query(GET_ALL_PRIVATE_MESSAGES_WITH_ACCOUNT, personalMessageRowMapper, authorId,
-                receiverId);
+        return jdbcTemplate.query(GET_ALL_MESSAGES_WITH_ACCOUNT, personalMessageRowMapper, authorId, receiverId,
+                receiverId, authorId);
     }
 
 }

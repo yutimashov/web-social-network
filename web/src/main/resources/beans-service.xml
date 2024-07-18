@@ -25,7 +25,6 @@
         <constructor-arg ref="phoneDao"/>
         <constructor-arg ref="passwordService"/>
         <constructor-arg ref="passwordDao"/>
-        <constructor-arg ref="transactionManager"/>
     </bean>
 
     <bean id="loginService"

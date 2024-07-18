@@ -3,6 +3,7 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipDao;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -22,7 +23,8 @@ import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TE
 @Sql(scripts = "classpath:scripts/friendship/drop.sql", executionPhase = AFTER_TEST_METHOD)
 class FriendshipDaoImplTest {
 
-    private static final FriendshipDao FRIENDSHIP_DAO = new FriendshipDaoImpl();
+    @Autowired
+    private FriendshipDao FRIENDSHIP_DAO;
 
     @Nested
     @DisplayName("sendFriendRequest(Long requesterId, Long accepterId)")

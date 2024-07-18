@@ -3,6 +3,7 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipCheckerDao;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -20,7 +21,8 @@ import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TE
 @Sql(scripts = "classpath:scripts/friendship/drop.sql", executionPhase = AFTER_TEST_METHOD)
 class FriendshipCheckerDaoImplTest {
 
-    private static final FriendshipCheckerDao FRIENDSHIP_CHECKER_DAO = new FriendshipCheckerDaoImpl();
+    @Autowired
+    private FriendshipCheckerDao FRIENDSHIP_CHECKER_DAO;
 
     @Nested
     @DisplayName("boolean checkFriendshipRecordExistence(Long requesterId, Long accepterId)")

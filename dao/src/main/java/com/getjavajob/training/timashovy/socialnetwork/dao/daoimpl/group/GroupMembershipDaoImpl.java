@@ -1,6 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.GroupMembershipDao;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
@@ -8,7 +9,6 @@ import java.util.List;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.GROUP_MEMBERS_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.GroupMembersFields.*;
-import static java.util.Objects.isNull;
 
 public class GroupMembershipDaoImpl implements GroupMembershipDao {
 
@@ -49,7 +49,7 @@ public class GroupMembershipDaoImpl implements GroupMembershipDao {
 
     @Override
     public void sendRequest(Long groupId, Long accountId) {
-        jdbcTemplate.update(ADD_USER, groupId, accountId);
+        jdbcTemplate.update(ADD_USER, accountId, groupId);
     }
 
     @Override
@@ -69,17 +69,33 @@ public class GroupMembershipDaoImpl implements GroupMembershipDao {
 
     @Override
     public boolean isAdmin(Long groupId, Long accountId) {
-        return !isNull(jdbcTemplate.queryForObject(CHECK_ACCOUNT_ADMIN, Boolean.class, groupId, accountId));
+        try {
+            Integer adminStatus = jdbcTemplate.queryForObject(CHECK_ACCOUNT_ADMIN, Integer.class, groupId, accountId);
+            return adminStatus != null && adminStatus > 0;
+        } catch (EmptyResultDataAccessException e) {
+            return false;
+        }
     }
 
     @Override
     public boolean isSubscriber(Long groupId, Long accountId) {
-        return !isNull(jdbcTemplate.queryForObject(CHECK_ACCOUNT_SUBSCRIBER, Boolean.class, groupId, accountId));
+        try {
+            Integer subscriberStatus = jdbcTemplate.queryForObject(CHECK_ACCOUNT_SUBSCRIBER, Integer.class, groupId,
+                    accountId);
+            return subscriberStatus != null && subscriberStatus > 0;
+        } catch (EmptyResultDataAccessException e) {
+            return false;
+        }
     }
 
     @Override
     public boolean isMember(Long groupId, Long accountId) {
-        return !isNull(jdbcTemplate.queryForObject(CHECK_ACCOUNT_MEMBER, Boolean.class, groupId, accountId));
+        try {
+            Integer memberStatus = jdbcTemplate.queryForObject(CHECK_ACCOUNT_MEMBER, Integer.class, groupId, accountId);
+            return memberStatus != null && memberStatus > 0;
+        } catch (EmptyResultDataAccessException e) {
+            return false;
+        }
     }
 
     @Override

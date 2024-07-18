@@ -14,8 +14,6 @@ import java.util.List;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.valueOf;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNT_PHONES_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.PhonesTableFields.*;
-import static java.sql.Statement.RETURN_GENERATED_KEYS;
-import static java.util.Objects.isNull;
 
 /**
  * Singleton class responsible for working with `account_data.phones` table in DB.
@@ -39,14 +37,17 @@ public class PhoneDaoImpl implements PhoneDao {
     public Long create(Phone phone) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(CREATE, RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement(CREATE, new String[]{PHONE_ID});
             setPhoneData(phone, ps);
             return ps;
         }, keyHolder);
-        if (!isNull(keyHolder.getKey())) {
-            phone.setId((long) keyHolder.getKey());
+        Number generatedId = keyHolder.getKey();
+        if (generatedId != null) {
+            Long id = generatedId.longValue();
+            phone.setId(id);
+            return id;
         }
-        return phone.getId();
+        return null;
     }
 
     private void setPhoneData(Phone phone, PreparedStatement ps) throws SQLException {

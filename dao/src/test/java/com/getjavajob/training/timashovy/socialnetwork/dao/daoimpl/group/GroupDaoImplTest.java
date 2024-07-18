@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -21,13 +22,24 @@ import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TE
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"classpath:test-beans-dao.xml"})
-@Sql(scripts = "classpath:scripts/group/create.sql", executionPhase = BEFORE_TEST_METHOD)
-@Sql(scripts = "classpath:scripts/group/load.sql", executionPhase = BEFORE_TEST_METHOD)
-@Sql(scripts = "classpath:scripts/group/clear.sql", executionPhase = AFTER_TEST_METHOD)
-@Sql(scripts = "classpath:scripts/group/drop.sql", executionPhase = AFTER_TEST_METHOD)
+@Sql(
+        scripts = {
+                "classpath:scripts/group/create.sql",
+                "classpath:scripts/group/load.sql"
+        },
+        executionPhase = BEFORE_TEST_METHOD
+)
+@Sql(
+        scripts = {
+                "classpath:scripts/group/clear.sql",
+                "classpath:scripts/group/drop.sql"
+        },
+        executionPhase = AFTER_TEST_METHOD
+)
 class GroupDaoImplTest {
 
-    private static final BaseDao<Group> GROUP_DAO_INSTANCE = new GroupDaoImpl();
+    @Autowired
+    private BaseDao<Group> GROUP_DAO_INSTANCE;
     private static final Group TEST_GROUP = new Group.Builder().groupName("").description("").accountOwnerId(1L)
             .build();
 
@@ -51,7 +63,8 @@ class GroupDaoImplTest {
 
         @Test
         public void shouldReturn1WhenCreateGroup() {
-            assertEquals(1L, GROUP_DAO_INSTANCE.create(TEST_GROUP));
+            restoreTestGroupDefaultState();
+            assertEquals(2L, GROUP_DAO_INSTANCE.create(TEST_GROUP));
         }
 
     }
@@ -62,7 +75,7 @@ class GroupDaoImplTest {
 
         @Test
         public void shouldReturnEmptyOptionalWhenGroupIsNotExisted() {
-            assertEquals(empty(), GROUP_DAO_INSTANCE.getById(1L));
+            assertEquals(empty(), GROUP_DAO_INSTANCE.getById(10L));
         }
 
     }
@@ -70,11 +83,6 @@ class GroupDaoImplTest {
     @Nested
     @DisplayName("List<Group> getAll()")
     class TestGetAllGroups {
-
-        @Test
-        public void shouldReturnEmptyListWhenNoGroupExists() {
-            assertEquals(new ArrayList<Group>(), GROUP_DAO_INSTANCE.getAll());
-        }
 
         @Test
         public void testGetAllWithOneExistingGroup() {

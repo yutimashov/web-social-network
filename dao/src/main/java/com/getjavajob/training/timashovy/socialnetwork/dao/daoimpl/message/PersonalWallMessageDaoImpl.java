@@ -15,10 +15,6 @@ import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.PERSONAL_WALL_MESSAGE_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.PersonalWallMessagesTableFields.*;
-import static java.sql.Statement.RETURN_GENERATED_KEYS;
-import static java.util.Objects.isNull;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 
 /**
  * Singleton class responsible for working with {@link com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames#PERSONAL_WALL_MESSAGE_TABLE personal wall messages table}.
@@ -26,15 +22,18 @@ import static java.util.Optional.of;
  */
 public class PersonalWallMessageDaoImpl implements MessageDao {
 
-    private static final String CREATE = "INSERT INTO " + PERSONAL_WALL_MESSAGE_TABLE + " (" + PERSONAL_WALL_MESSAGE_AUTHOR_ID + ","
-            + PERSONAL_WALL_MESSAGE_RECEIVER_ID + ", " + PERSONAL_WALL_MESSAGE_TEXT + ", " + PERSONAL_WALL_MESSAGE_IMAGE + ") VALUES (?, ?, ?, ?);";
-    private static final String GET_ALL = "SELECT " + PERSONAL_WALL_MESSAGE_ID + ", " + PERSONAL_WALL_MESSAGE_AUTHOR_ID + ", " + PERSONAL_WALL_MESSAGE_RECEIVER_ID
-            + ", " + PERSONAL_WALL_MESSAGE_TEXT + ", " + PERSONAL_WALL_MESSAGE_IMAGE + ", " + PERSONAL_WALL_MESSAGE_CREATION_DATE + " FROM "
-            + PERSONAL_WALL_MESSAGE_TABLE + " WHERE " + PERSONAL_WALL_MESSAGE_RECEIVER_ID + " = ? " + "ORDER BY " + PERSONAL_WALL_MESSAGE_CREATION_DATE
-            + " DESC;";
-    private static final String GET_BY_ID = "SELECT " + PERSONAL_WALL_MESSAGE_ID + ", " + PERSONAL_WALL_MESSAGE_AUTHOR_ID + ", " + PERSONAL_WALL_MESSAGE_CREATION_DATE + ", "
-            + PERSONAL_WALL_MESSAGE_TEXT + ", " + PERSONAL_WALL_MESSAGE_IMAGE + ", " + PERSONAL_WALL_MESSAGE_RECEIVER_ID + " FROM " + PERSONAL_WALL_MESSAGE_TABLE
-            + " WHERE " + PERSONAL_WALL_MESSAGE_ID + " = ?;";
+    private static final String CREATE = "INSERT INTO " + PERSONAL_WALL_MESSAGE_TABLE + " ("
+            + PERSONAL_WALL_MESSAGE_AUTHOR_ID + "," + PERSONAL_WALL_MESSAGE_RECEIVER_ID + ", "
+            + PERSONAL_WALL_MESSAGE_TEXT + ", " + PERSONAL_WALL_MESSAGE_IMAGE + ") VALUES (?, ?, ?, ?);";
+    private static final String GET_ALL = "SELECT " + PERSONAL_WALL_MESSAGE_ID + ", " + PERSONAL_WALL_MESSAGE_AUTHOR_ID
+            + ", " + PERSONAL_WALL_MESSAGE_RECEIVER_ID + ", " + PERSONAL_WALL_MESSAGE_TEXT + ", "
+            + PERSONAL_WALL_MESSAGE_IMAGE + ", " + PERSONAL_WALL_MESSAGE_CREATION_DATE + " FROM "
+            + PERSONAL_WALL_MESSAGE_TABLE + " WHERE " + PERSONAL_WALL_MESSAGE_RECEIVER_ID + " = ? " + "ORDER BY "
+            + PERSONAL_WALL_MESSAGE_CREATION_DATE + " DESC;";
+    private static final String GET_BY_ID = "SELECT " + PERSONAL_WALL_MESSAGE_ID + ", "
+            + PERSONAL_WALL_MESSAGE_AUTHOR_ID + ", " + PERSONAL_WALL_MESSAGE_CREATION_DATE + ", "
+            + PERSONAL_WALL_MESSAGE_TEXT + ", " + PERSONAL_WALL_MESSAGE_IMAGE + ", " + PERSONAL_WALL_MESSAGE_RECEIVER_ID
+            + " FROM " + PERSONAL_WALL_MESSAGE_TABLE + " WHERE " + PERSONAL_WALL_MESSAGE_ID + " = ?;";
     private JdbcTemplate jdbcTemplate;
 
     private final RowMapper<Message> personalWallMessageRowMapper = (rs, rowNumber) -> new Message.Builder()
@@ -53,15 +52,18 @@ public class PersonalWallMessageDaoImpl implements MessageDao {
     @Override
     public Long create(Message message) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(CREATE, RETURN_GENERATED_KEYS);
+        jdbcTemplate.update(conn -> {
+            PreparedStatement ps = conn.prepareStatement(CREATE, new String[]{PERSONAL_WALL_MESSAGE_ID});
             setMessageData(message, ps);
             return ps;
         }, keyHolder);
-        if (!isNull(keyHolder.getKey())) {
-            message.setId((long) keyHolder.getKey());
+        Number generatedId = keyHolder.getKey();
+        if (generatedId != null) {
+            Long id = generatedId.longValue();
+            message.setId(id);
+            return id;
         }
-        return message.getId();
+        return null;
     }
 
     private void setMessageData(Message message, PreparedStatement preparedStatement) throws SQLException {
@@ -73,8 +75,7 @@ public class PersonalWallMessageDaoImpl implements MessageDao {
 
     @Override
     public Optional<Message> getById(Long id) {
-        Message message = jdbcTemplate.queryForObject(GET_BY_ID, personalWallMessageRowMapper, id);
-        return !isNull(message) ? of(message) : empty();
+        return jdbcTemplate.query(GET_BY_ID, personalWallMessageRowMapper, id).stream().findFirst();
     }
 
     @Override

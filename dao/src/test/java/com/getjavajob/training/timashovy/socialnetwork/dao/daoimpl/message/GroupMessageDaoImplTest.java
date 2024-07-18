@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -13,6 +14,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.Optional;
 
 import static java.time.LocalDate.of;
+import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
@@ -25,7 +27,8 @@ import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TE
 @Sql(scripts = "classpath:scripts/message/drop.sql", executionPhase = AFTER_TEST_METHOD)
 class GroupMessageDaoImplTest {
 
-    private static final MessageDao MESSAGE_DAO = new GroupMessageDaoImpl();
+    @Autowired
+    private GroupMessageDaoImpl MESSAGE_DAO;
     private static final Message TEST_MESSAGE = new Message.Builder()
             .id(1L)
             .destinationId(1L)
@@ -51,7 +54,7 @@ class GroupMessageDaoImplTest {
 
         @Test
         void shouldReturnEmptyOptionalWhenMessageNotExists() {
-            assertEquals(Optional.empty(), MESSAGE_DAO.getById(1L));
+            assertEquals(empty(), MESSAGE_DAO.getById(-11L));
         }
 
         @Test
