@@ -33,8 +33,6 @@ class AccountServiceImplTest {
     private FriendshipDaoImpl friendshipDao;
     @Mock
     private FriendshipCheckerDaoImpl friendshipChecker;
-    @Mock
-    private PhoneDaoImpl phoneDao;
     @InjectMocks
     private AccountServiceImpl accountService;
     final Long validAccountId = 1L;
