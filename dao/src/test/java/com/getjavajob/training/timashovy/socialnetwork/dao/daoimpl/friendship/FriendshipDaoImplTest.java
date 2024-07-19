@@ -1,7 +1,9 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipDao;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -16,11 +18,21 @@ import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TES
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(locations = {"classpath:test-beans-dao.xml"})
-@Sql(scripts = "classpath:scripts/friendship/create.sql", executionPhase = BEFORE_TEST_METHOD)
-@Sql(scripts = "classpath:scripts/friendship/load.sql", executionPhase = BEFORE_TEST_METHOD)
-@Sql(scripts = "classpath:scripts/friendship/clear.sql", executionPhase = AFTER_TEST_METHOD)
-@Sql(scripts = "classpath:scripts/friendship/drop.sql", executionPhase = AFTER_TEST_METHOD)
+@ContextConfiguration("classpath:test-config.xml")
+@Sql(
+        scripts = {
+                "classpath:scripts/friendship/create.sql",
+                "classpath:scripts/friendship/load.sql"
+        },
+        executionPhase = BEFORE_TEST_METHOD
+)
+@Sql(
+        scripts = {
+                "classpath:scripts/friendship/clear.sql",
+                "classpath:scripts/friendship/drop.sql"
+        },
+        executionPhase = AFTER_TEST_METHOD
+)
 class FriendshipDaoImplTest {
 
     @Autowired

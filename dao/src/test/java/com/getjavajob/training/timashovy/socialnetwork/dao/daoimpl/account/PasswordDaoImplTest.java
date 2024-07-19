@@ -20,7 +20,7 @@ import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TES
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(locations = {"classpath:test-beans-dao.xml"})
+@ContextConfiguration("classpath:test-config.xml")
 @Sql(
         scripts = {
                 "classpath:scripts/account/create.sql",

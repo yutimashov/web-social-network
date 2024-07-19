@@ -1,7 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.message.Message;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.MessageDao;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -20,11 +19,21 @@ import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TES
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(locations = {"classpath:test-beans-dao.xml"})
-@Sql(scripts = "classpath:scripts/message/create.sql", executionPhase = BEFORE_TEST_METHOD)
-@Sql(scripts = "classpath:scripts/message/load.sql", executionPhase = BEFORE_TEST_METHOD)
-@Sql(scripts = "classpath:scripts/message/clear.sql", executionPhase = AFTER_TEST_METHOD)
-@Sql(scripts = "classpath:scripts/message/drop.sql", executionPhase = AFTER_TEST_METHOD)
+@ContextConfiguration("classpath:test-config.xml")
+@Sql(
+        scripts = {
+                "classpath:scripts/message/create.sql",
+                "classpath:scripts/message/load.sql"
+        },
+        executionPhase = BEFORE_TEST_METHOD
+)
+@Sql(
+        scripts = {
+                "classpath:scripts/message/clear.sql",
+                "classpath:scripts/message/drop.sql"
+        },
+        executionPhase = AFTER_TEST_METHOD
+)
 class GroupMessageDaoImplTest {
 
     @Autowired
