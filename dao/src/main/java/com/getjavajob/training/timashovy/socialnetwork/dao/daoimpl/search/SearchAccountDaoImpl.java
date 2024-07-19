@@ -2,6 +2,7 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.search;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.SearchDao;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -41,10 +42,9 @@ public class SearchAccountDaoImpl implements SearchDao<Account> {
     }
 
     public int findResultsAmount(String searchQuery) {
-        Integer result = jdbcTemplate.queryForObject(FIND_ACCOUNTS_AMOUNT, (rs, rowNum) ->
-                rs.next() ? rs.getInt(TOTAL_ACCOUNTS_AMOUNT_ALIAS) : -1, "%" + searchQuery + "%", "%" +
-                searchQuery + "%");
-        return !isNull(result) ? result : -1;
+        Integer total = jdbcTemplate.queryForObject(FIND_ACCOUNTS_AMOUNT, Integer.class, "%" + searchQuery + "%",
+                "%" + searchQuery + "%");
+        return (total != null) ? total : -1;
     }
 
 }
