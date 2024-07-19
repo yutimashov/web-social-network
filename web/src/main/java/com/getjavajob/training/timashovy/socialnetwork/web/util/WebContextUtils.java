@@ -7,7 +7,7 @@ import javax.servlet.ServletContext;
 
 import static org.springframework.web.context.support.WebApplicationContextUtils.getWebApplicationContext;
 
-public class WebContextUtils {
+public final class WebContextUtils {
 
     public static ApplicationContext getApplicationContext(ServletContext sc) {
         try {
