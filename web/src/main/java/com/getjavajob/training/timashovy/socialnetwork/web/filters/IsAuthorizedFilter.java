@@ -5,8 +5,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.getjavajob.training.timashovy.socialnetwork.web.util.ServletPaths.LOGIN_SERVLET_PATH;
-import static com.getjavajob.training.timashovy.socialnetwork.web.util.ServletPaths.REGISTRATION_SERVLET_PATH;
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.ServletPaths.*;
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.StatusTypes.AUTHORIZATION_ERROR;
 import static java.util.Objects.isNull;
 
 public class IsAuthorizedFilter implements Filter {
@@ -17,13 +17,23 @@ public class IsAuthorizedFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         String requestUri = req.getRequestURI();
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
-        if (LOGIN_SERVLET_PATH.equals(requestUri) || REGISTRATION_SERVLET_PATH.equals(requestUri)) {
+        if (isStaticResource(requestUri) || LOGIN_SERVLET_PATH.equals(requestUri)
+                || REGISTRATION_SERVLET_PATH.equals(requestUri)) {
             filterChain.doFilter(req, resp);
         } else if (isNull(req.getSession().getAttribute("account"))) {
-            resp.sendRedirect("/login?error=authorization");
+            resp.sendRedirect(LOGIN_SERVLET_PATH + AUTHORIZATION_ERROR);
         } else {
             filterChain.doFilter(req, resp);
         }
+    }
+
+    private boolean isStaticResource(String requestUri) {
+        for (String resource : STATIC_RESOURCES) {
+            if (requestUri.startsWith(resource)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
