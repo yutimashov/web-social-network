@@ -34,13 +34,14 @@
     <label for="icq">ICQ:
         <input type="text" name="icq" id="icq">
     </label><br>
-    <label for="personalPhoneNumber">Personal phone number (if there are several numbers - separate them with commas):
+    <label for="personalPhoneNumber">Personal phone number:
         <input type="tel" name="personalPhoneNumber" id="personalPhoneNumber">
     </label><br>
-    <label for="workPhoneNumber">Working phone number (if there are several numbers - separate them with commas):
+    <label for="workPhoneNumber">Working phone number:
         <input type="tel" name="workPhoneNumber" id="workPhoneNumber">
     </label><br>
     <button type="submit">Register</button>
 </form>
+<script src="${rootUrl}/static/js/index.js"></script>
 </body>
 </html>
