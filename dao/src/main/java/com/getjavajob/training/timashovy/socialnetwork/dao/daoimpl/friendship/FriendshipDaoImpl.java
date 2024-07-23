@@ -1,17 +1,12 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
+import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import javax.sql.DataSource;
 import java.util.List;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.FRIENDSHIP_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.FriendshipTableFields.*;
 
 /**
@@ -22,7 +17,7 @@ public class FriendshipDaoImpl implements FriendshipDao {
 
     private static final String ACCEPT_REQUEST = "UPDATE " + FRIENDSHIP_TABLE + " SET " + FRIENDSHIP_STATUS + " = "
             + "TRUE WHERE " + FRIENDSHIP_ACCEPTER_ID + " = ? AND " + FRIENDSHIP_REQUESTER_ID + " = ?;";
-    private static final String GET_FRIENDS = "SELECT " + FRIENDSHIP_ACCOUNT_ID_1 + " FROM " + FRIENDSHIP_TABLE
+    private static final String GET_FRIENDS_IDS = "SELECT " + FRIENDSHIP_ACCOUNT_ID_1 + " FROM " + FRIENDSHIP_TABLE
             + " WHERE " + FRIENDSHIP_ACCOUNT_ID_2 + " = ? AND " + FRIENDSHIP_STATUS + " = TRUE UNION SELECT "
             + FRIENDSHIP_ACCOUNT_ID_2 + " FROM " + FRIENDSHIP_TABLE + " WHERE " + FRIENDSHIP_ACCOUNT_ID_1 + " = ? AND "
             + FRIENDSHIP_STATUS + " = TRUE;";
@@ -36,6 +31,12 @@ public class FriendshipDaoImpl implements FriendshipDao {
     private static final String GET_OUTGOING_REQUESTS = "SELECT " + FRIENDSHIP_ACCEPTER_ID + " FROM "
             + FRIENDSHIP_TABLE + " WHERE " + FRIENDSHIP_STATUS + " = FALSE AND " + FRIENDSHIP_REQUESTER_ID + " = ?;";
 
+    private JdbcTemplate jdbcTemplate;
+
+    public void setDataSource(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    }
+
     /**
      * Add a new record to `friend_data.friendship` table
      * with default status of friendship (false)
@@ -48,35 +49,17 @@ public class FriendshipDaoImpl implements FriendshipDao {
      */
     @Override
     public boolean sendRequest(Long requesterId, Long accepterId) {
-        try (Connection connection = getConnection();
-             PreparedStatement friendshipRequest = connection.prepareStatement(SEND_REQUEST)) {
-            if (requesterId < accepterId) {
-                friendshipRequest.setLong(1, requesterId);
-                friendshipRequest.setLong(2, accepterId);
-                friendshipRequest.setLong(3, requesterId);
-                friendshipRequest.setLong(4, accepterId);
-            } else {
-                friendshipRequest.setLong(1, accepterId);
-                friendshipRequest.setLong(2, requesterId);
-                friendshipRequest.setLong(3, requesterId);
-                friendshipRequest.setLong(4, accepterId);
-            }
-            return friendshipRequest.executeUpdate() > 0;
-        } catch (SQLException e) {
-            throw new DaoException("dao: sendFriendshipRequest method failed: " + e.getMessage());
-        }
+        return jdbcTemplate.update(SEND_REQUEST, getFriendshipRequestParams(requesterId, accepterId)) > 0;
+    }
+
+    private Object[] getFriendshipRequestParams(Long requesterId, Long accepterId) {
+        return requesterId < accepterId ? new Long[]{requesterId, accepterId, requesterId, accepterId}
+                : new Long[]{accepterId, requesterId, requesterId, accepterId};
     }
 
     @Override
     public boolean acceptRequest(Long requesterId, Long accepterId) {
-        try (Connection connection = getConnection();
-             PreparedStatement acceptFriendRequest = connection.prepareStatement(ACCEPT_REQUEST)) {
-            acceptFriendRequest.setLong(1, accepterId);
-            acceptFriendRequest.setLong(2, requesterId);
-            return acceptFriendRequest.executeUpdate() > 0;
-        } catch (SQLException e) {
-            throw new DaoException("dao: acceptFriendRequest method failed: " + e.getMessage());
-        }
+        return jdbcTemplate.update(ACCEPT_REQUEST, accepterId, requesterId) > 0;
     }
 
     /**
@@ -87,49 +70,17 @@ public class FriendshipDaoImpl implements FriendshipDao {
      */
     @Override
     public List<Long> getFriendsIds(Long accountId) {
-        try (Connection connection = getConnection();
-             PreparedStatement getFriends = connection.prepareStatement(GET_FRIENDS)) {
-            List<Long> friends = new ArrayList<>();
-            getFriends.setLong(1, accountId);
-            getFriends.setLong(2, accountId);
-            ResultSet friendsResult = getFriends.executeQuery();
-            while (friendsResult.next()) {
-                friends.add(friendsResult.getLong(1));
-            }
-            return friends;
-        } catch (SQLException e) {
-            throw new DaoException("dao: getFriendsIds method failed: " + e.getMessage());
-        }
+        return jdbcTemplate.queryForList(GET_FRIENDS_IDS, Long.class, accountId, accountId);
     }
 
     @Override
     public List<Long> getIncomingRequests(Long accountId) {
-        try (Connection connection = getConnection();
-             PreparedStatement incomingFriendRequests = connection.prepareStatement(GET_INCOMING_REQUESTS)) {
-            return getRequests(accountId, incomingFriendRequests);
-        } catch (SQLException e) {
-            throw new DaoException("dao: getIncomingFriendRequests method failed: " + e.getMessage());
-        }
-    }
-
-    private List<Long> getRequests(Long accountId, PreparedStatement preparedStatement) throws SQLException {
-        List<Long> friendRequests = new ArrayList<>();
-        preparedStatement.setLong(1, accountId);
-        ResultSet friendRequestsResult = preparedStatement.executeQuery();
-        while (friendRequestsResult.next()) {
-            friendRequests.add(friendRequestsResult.getLong(1));
-        }
-        return friendRequests;
+        return jdbcTemplate.query(GET_INCOMING_REQUESTS, (rs, rowNum) -> rs.getLong(1), accountId);
     }
 
     @Override
     public List<Long> getOutgoingRequests(Long accountId) {
-        try (Connection connection = getConnection();
-             PreparedStatement outgoingFriendRequests = connection.prepareStatement(GET_OUTGOING_REQUESTS)) {
-            return getRequests(accountId, outgoingFriendRequests);
-        } catch (SQLException e) {
-            throw new DaoException("dao: getOutgoingFriendRequests method failed: " + e.getMessage());
-        }
+        return jdbcTemplate.query(GET_OUTGOING_REQUESTS, (rs, rowNum) -> rs.getLong(1), accountId);
     }
 
     /**
@@ -141,19 +92,12 @@ public class FriendshipDaoImpl implements FriendshipDao {
      */
     @Override
     public boolean deleteFriend(Long accountId, Long deletingFriendId) {
-        try (Connection connection = getConnection();
-             PreparedStatement deleteFriend = connection.prepareStatement(DELETE_FRIEND)) {
-            if (accountId < deletingFriendId) {
-                deleteFriend.setLong(1, accountId);
-                deleteFriend.setLong(2, deletingFriendId);
-            } else {
-                deleteFriend.setLong(1, deletingFriendId);
-                deleteFriend.setLong(2, accountId);
-            }
-            return deleteFriend.executeUpdate() > 0;
-        } catch (SQLException e) {
-            throw new DaoException("dao: delete friend method failed: " + e.getMessage());
-        }
+        return jdbcTemplate.update(DELETE_FRIEND, getDeletingFriendIds(accountId, deletingFriendId)) > 0;
+    }
+
+    private Object[] getDeletingFriendIds(Long firstAccountId, Long secondAccountId) {
+        return firstAccountId < secondAccountId ? new Long[]{firstAccountId, secondAccountId}
+                : new Long[]{secondAccountId, firstAccountId};
     }
 
 }

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <import resource="beans-dao.xml"/>
+
+    <bean id="passwordService"
+          class="com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.PasswordServiceImpl">
+        <constructor-arg ref="passwordDao"/>
+    </bean>
+
+    <bean id="phoneService"
+          class="com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.PhoneServiceImpl">
+        <constructor-arg ref="phoneDao"/>
+    </bean>
+
+    <bean id="accountService"
+          class="com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountServiceImpl">
+        <constructor-arg ref="accountDao"/>
+        <constructor-arg ref="friendshipDao"/>
+        <constructor-arg ref="friendshipCheckerDao"/>
+        <constructor-arg ref="phoneService"/>
+        <constructor-arg ref="phoneDao"/>
+        <constructor-arg ref="passwordService"/>
+        <constructor-arg ref="passwordDao"/>
+    </bean>
+
+    <bean id="loginService"
+          class="com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.LoginServiceImpl">
+        <constructor-arg ref="accountService"/>
+        <constructor-arg ref="passwordService"/>
+    </bean>
+
+    <bean id="adminService"
+          class="com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AdminServiceImpl">
+        <constructor-arg ref="accountService"/>
+    </bean>
+
+    <bean id="messageService"
+          class="com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.message.MessageServiceImpl">
+        <constructor-arg ref="groupMessageDao"/>
+        <constructor-arg ref="personalWallMessageDao"/>
+        <constructor-arg ref="personalMessageDao"/>
+        <constructor-arg ref="accountService"/>
+    </bean>
+
+    <bean id="groupService"
+          class="com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group.GroupServiceImpl">
+        <constructor-arg ref="groupDao"/>
+    </bean>
+
+    <bean id="groupMembershipService"
+          class="com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group.GroupMembershipServiceImpl">
+        <constructor-arg ref="accountService"/>
+        <constructor-arg ref="groupMembershipDao"/>
+    </bean>
+
+    <bean id="searchService"
+          class="com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.search.SearchServiceImpl">
+        <constructor-arg ref="searchAccountDao"/>
+        <constructor-arg ref="searchGroupDao"/>
+    </bean>
+
+</beans>

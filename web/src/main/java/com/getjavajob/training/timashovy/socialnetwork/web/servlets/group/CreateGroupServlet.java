@@ -4,7 +4,7 @@ import com.getjavajob.training.timashovy.socialnetwork.common.Group;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupMembershipService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupService;
-import com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonRegistry;
+import org.springframework.context.ApplicationContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,10 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.GROUP_MEMBERSHIP_SERVICE_SINGLETON;
-import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.GROUP_SERVICE_SINGLETON;
-import static com.getjavajob.training.timashovy.socialnetwork.web.listeners.SingletonsHolderListener.SERVICE_SINGLETON_REGISTRY_ATTR;
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.ServiceSingletonsNames.GROUP_MEMBERSHIP_SERVICE_BEAN;
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.ServiceSingletonsNames.GROUP_SERVICE_BEAN;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.WebContextUtils.getApplicationContext;
 
 public class CreateGroupServlet extends HttpServlet {
 
@@ -32,17 +32,15 @@ public class CreateGroupServlet extends HttpServlet {
 
     private void createGroup(HttpServletRequest req) throws ServletException, IOException {
         Long accountId = ((Account) req.getSession(false).getAttribute("account")).getId();
-        ServiceSingletonRegistry serviceSingletonRegistry = ((ServiceSingletonRegistry) getServletContext()
-                .getAttribute(SERVICE_SINGLETON_REGISTRY_ATTR));
-        GroupService groupService = serviceSingletonRegistry.getSingleton(GROUP_SERVICE_SINGLETON);
-        Long groupId = groupService.create(new Group.Builder()
+        ApplicationContext ctx = getApplicationContext(req.getServletContext());
+        Long groupId = ctx.getBean(GROUP_SERVICE_BEAN, GroupService.class).create(new Group.Builder()
                 .groupName(req.getParameter("name"))
                 .description(req.getParameter("description"))
                 .accountOwnerId(accountId)
                 .avatar(req.getPart("avatar").getInputStream())
                 .build());
-        GroupMembershipService groupMembershipService = serviceSingletonRegistry
-                .getSingleton(GROUP_MEMBERSHIP_SERVICE_SINGLETON);
+        GroupMembershipService groupMembershipService = ctx.getBean(GROUP_MEMBERSHIP_SERVICE_BEAN,
+                GroupMembershipService.class);
         groupMembershipService.sendRequest(groupId, accountId);
         groupMembershipService.makeMember(groupId, accountId);
         groupMembershipService.makeAdmin(groupId, accountId);

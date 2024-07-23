@@ -2,17 +2,13 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.search;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.Group;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.SearchDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import javax.sql.DataSource;
 import java.util.List;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.GROUPS_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.GroupTableFields.*;
 
 /**
@@ -25,42 +21,30 @@ public class SearchGroupDaoImpl implements SearchDao<Group> {
             + " ILIKE ? OFFSET ? LIMIT ?;";
     private static final String FIND_GROUPS_AMOUNT = "SELECT COUNT(*) AS " + TOTAL_GROUP_AMOUNT_ALIAS + " FROM "
             + GROUPS_TABLE + " WHERE " + GROUP_NAME + " ILIKE ?;";
+    private JdbcTemplate jdbcTemplate;
+
+    private final RowMapper<Group> groupRowMapper = (rs, rowNumber) -> new Group.Builder()
+            .id(rs.getLong(GROUP_ID))
+            .groupName(rs.getString(GROUP_NAME))
+            .description(rs.getString(GROUP_DESCRIPTION))
+            .accountOwnerId(rs.getLong(GROUP_OWNER_ID))
+            .avatar(rs.getBinaryStream(GROUP_AVATAR))
+            .build();
+
+    public void setDataSource(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    }
 
     @Override
     public List<Group> searchAccounts(String searchQuery, int currentPage, int recordsPerPage) {
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(FIND_GROUPS)) {
-            List<Group> groups = new ArrayList<>();
-            preparedStatement.setString(1, "%" + searchQuery + "%");
-            preparedStatement.setInt(2, currentPage * recordsPerPage - recordsPerPage);
-            preparedStatement.setInt(3, recordsPerPage);
-            ResultSet groupRequestsResult = preparedStatement.executeQuery();
-            while (groupRequestsResult.next()) {
-                groups.add(new Group.Builder().id(groupRequestsResult.getLong(GROUP_ID))
-                        .groupName(groupRequestsResult.getString(GROUP_NAME))
-                        .description(groupRequestsResult.getString(GROUP_DESCRIPTION))
-                        .accountOwnerId(groupRequestsResult.getLong(GROUP_OWNER_ID))
-                        .avatar(groupRequestsResult.getBinaryStream(GROUP_AVATAR)).build());
-            }
-            return groups;
-        } catch (SQLException e) {
-            throw new DaoException("dao: search method failed: " + e.getMessage());
-        }
+        return jdbcTemplate.query(FIND_GROUPS, groupRowMapper, "%" + searchQuery + "%",
+                currentPage * recordsPerPage - recordsPerPage, recordsPerPage);
     }
 
     @Override
     public int findResultsAmount(String searchQuery) {
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(FIND_GROUPS_AMOUNT)) {
-            preparedStatement.setString(1, "%" + searchQuery + "%");
-            ResultSet accountsAmount = preparedStatement.executeQuery();
-            if (accountsAmount.next()) {
-                return accountsAmount.getInt(TOTAL_GROUP_AMOUNT_ALIAS);
-            }
-            return -1;
-        } catch (SQLException e) {
-            throw new DaoException("dao: search method failed: " + e.getMessage());
-        }
+        Integer total = jdbcTemplate.queryForObject(FIND_GROUPS_AMOUNT, Integer.class, "%" + searchQuery + "%");
+        return (total != null) ? total : -1;
     }
 
 }

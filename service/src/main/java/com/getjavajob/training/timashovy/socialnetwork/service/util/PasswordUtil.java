@@ -1,7 +1,5 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.util;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
@@ -19,14 +17,15 @@ public final class PasswordUtil {
     public static String hashCredentialData(String password, String salt) {
         byte[] passwordBytes = password.getBytes();
         byte[] saltBytes = salt.getBytes();
+        MessageDigest messageDigest = null;
         try {
-            MessageDigest messageDigest = getInstance(HASH_ALGORITHM);
-            messageDigest.update(passwordBytes);
-            messageDigest.update(saltBytes);
-            return bytesToHex(messageDigest.digest());
+            messageDigest = getInstance(HASH_ALGORITHM);
         } catch (NoSuchAlgorithmException e) {
-            throw new DaoException("dao: generate hash for password method failed: " + e.getMessage());
+            throw new RuntimeException(e);
         }
+        messageDigest.update(passwordBytes);
+        messageDigest.update(saltBytes);
+        return bytesToHex(messageDigest.digest());
     }
 
     public static String generateSalt() {

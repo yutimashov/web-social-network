@@ -4,7 +4,7 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsn
  * Util class contains names of the fields of {@link com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames#GROUPS_TABLE groups table}.
  * Class is not intended to have any instances - private constructor with exception throwing implements this requirement.
  */
-public class GroupTableFields {
+public final class GroupTableFields {
 
     public static final String GROUP_ID = "id";
     public static final String GROUP_NAME = "group_name";
@@ -13,14 +13,5 @@ public class GroupTableFields {
     public static final String GROUP_REGISTRATION_DATE = "registration_date";
     public static final String GROUP_AVATAR = "avatar";
     public static final String TOTAL_GROUP_AMOUNT_ALIAS = "total";
-
-    /**
-     * Class is not intended to have any instances. No one should call constructor even within class itself.
-     *
-     * @throws AssertionError when someone tries to call constructor
-     */
-    private GroupTableFields() {
-        throw new AssertionError();
-    }
 
 }

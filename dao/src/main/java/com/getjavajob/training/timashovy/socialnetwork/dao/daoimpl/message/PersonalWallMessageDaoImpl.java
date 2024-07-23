@@ -2,22 +2,19 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.message.Message;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.MessageDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
-import java.sql.Connection;
+import javax.sql.DataSource;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.PERSONAL_WALL_MESSAGE_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.PersonalWallMessagesTableFields.*;
-import static java.sql.Statement.RETURN_GENERATED_KEYS;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 
 /**
  * Singleton class responsible for working with {@link com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames#PERSONAL_WALL_MESSAGE_TABLE personal wall messages table}.
@@ -25,33 +22,48 @@ import static java.util.Optional.of;
  */
 public class PersonalWallMessageDaoImpl implements MessageDao {
 
-    private static final String CREATE = "INSERT INTO " + PERSONAL_WALL_MESSAGE_TABLE + " (" + ACCOUNT_AUTHOR_ID + ","
-            + ACCOUNT_RECEIVER_ID + ", " + MESSAGE_TEXT + ", " + MESSAGE_IMAGE + ") VALUES (?, ?, ?, ?);";
-    private static final String GET_ALL = "SELECT " + ID + ", " + ACCOUNT_AUTHOR_ID + ", " + ACCOUNT_RECEIVER_ID
-            + ", " + MESSAGE_TEXT + ", " + MESSAGE_IMAGE + ", " + CREATION_DATE + " FROM "
-            + PERSONAL_WALL_MESSAGE_TABLE + " WHERE " + ACCOUNT_RECEIVER_ID + " = ? " + "ORDER BY " + CREATION_DATE
-            + " DESC;";
-    private static final String GET_BY_ID = "SELECT " + ID + ", " + ACCOUNT_AUTHOR_ID + ", " + CREATION_DATE + ", "
-            + MESSAGE_TEXT + ", " + MESSAGE_IMAGE + ", " + ACCOUNT_RECEIVER_ID + " FROM " + PERSONAL_WALL_MESSAGE_TABLE
-            + " WHERE " + ID + " = ?;";
+    private static final String CREATE = "INSERT INTO " + PERSONAL_WALL_MESSAGE_TABLE + " ("
+            + PERSONAL_WALL_MESSAGE_AUTHOR_ID + "," + PERSONAL_WALL_MESSAGE_RECEIVER_ID + ", "
+            + PERSONAL_WALL_MESSAGE_TEXT + ", " + PERSONAL_WALL_MESSAGE_IMAGE + ") VALUES (?, ?, ?, ?);";
+    private static final String GET_ALL = "SELECT " + PERSONAL_WALL_MESSAGE_ID + ", " + PERSONAL_WALL_MESSAGE_AUTHOR_ID
+            + ", " + PERSONAL_WALL_MESSAGE_RECEIVER_ID + ", " + PERSONAL_WALL_MESSAGE_TEXT + ", "
+            + PERSONAL_WALL_MESSAGE_IMAGE + ", " + PERSONAL_WALL_MESSAGE_CREATION_DATE + " FROM "
+            + PERSONAL_WALL_MESSAGE_TABLE + " WHERE " + PERSONAL_WALL_MESSAGE_RECEIVER_ID + " = ? " + "ORDER BY "
+            + PERSONAL_WALL_MESSAGE_CREATION_DATE + " DESC;";
+    private static final String GET_BY_ID = "SELECT " + PERSONAL_WALL_MESSAGE_ID + ", "
+            + PERSONAL_WALL_MESSAGE_AUTHOR_ID + ", " + PERSONAL_WALL_MESSAGE_CREATION_DATE + ", "
+            + PERSONAL_WALL_MESSAGE_TEXT + ", " + PERSONAL_WALL_MESSAGE_IMAGE + ", " + PERSONAL_WALL_MESSAGE_RECEIVER_ID
+            + " FROM " + PERSONAL_WALL_MESSAGE_TABLE + " WHERE " + PERSONAL_WALL_MESSAGE_ID + " = ?;";
+    private JdbcTemplate jdbcTemplate;
+
+    private final RowMapper<Message> personalWallMessageRowMapper = (rs, rowNumber) -> new Message.Builder()
+            .id(rs.getLong(PERSONAL_WALL_MESSAGE_ID))
+            .accountAuthorId(rs.getLong(PERSONAL_WALL_MESSAGE_AUTHOR_ID))
+            .creationDate(rs.getDate(PERSONAL_WALL_MESSAGE_CREATION_DATE).toLocalDate())
+            .destinationId(rs.getLong(PERSONAL_WALL_MESSAGE_RECEIVER_ID))
+            .text(rs.getString(PERSONAL_WALL_MESSAGE_TEXT))
+            .photo(rs.getBinaryStream(PERSONAL_WALL_MESSAGE_IMAGE))
+            .build();
+
+    public void setDataSource(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    }
 
     @Override
     public Long create(Message message) {
-        try (Connection connection = getConnection();
-             PreparedStatement createMessageStatement = connection.prepareStatement(CREATE, RETURN_GENERATED_KEYS)) {
-            setMessageData(message, createMessageStatement);
-            if (createMessageStatement.executeUpdate() > 0) {
-                ResultSet generatedKeys = createMessageStatement.getGeneratedKeys();
-                if (generatedKeys.next()) {
-                    message.setId(generatedKeys.getLong(1));
-                }
-                return message.getId();
-            } else {
-                throw new DaoException("dao: create message method failed: no rows affected.");
-            }
-        } catch (SQLException e) {
-            throw new DaoException("dao: create message method failed: " + e.getMessage());
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(conn -> {
+            PreparedStatement ps = conn.prepareStatement(CREATE, new String[]{PERSONAL_WALL_MESSAGE_ID});
+            setMessageData(message, ps);
+            return ps;
+        }, keyHolder);
+        Number generatedId = keyHolder.getKey();
+        if (generatedId != null) {
+            Long id = generatedId.longValue();
+            message.setId(id);
+            return id;
         }
+        return null;
     }
 
     private void setMessageData(Message message, PreparedStatement preparedStatement) throws SQLException {
@@ -63,48 +75,12 @@ public class PersonalWallMessageDaoImpl implements MessageDao {
 
     @Override
     public Optional<Message> getById(Long id) {
-        try (Connection connection = getConnection();
-             PreparedStatement getMessageByIdStatement = connection.prepareStatement(GET_BY_ID)) {
-            getMessageByIdStatement.setLong(1, id);
-            ResultSet messageData = getMessageByIdStatement.executeQuery();
-            if (messageData.next()) {
-                Message message = new Message.Builder()
-                        .id(messageData.getLong(ID))
-                        .accountAuthorId(messageData.getLong(ACCOUNT_AUTHOR_ID))
-                        .creationDate(messageData.getDate(CREATION_DATE).toLocalDate())
-                        .destinationId(messageData.getLong(ACCOUNT_RECEIVER_ID))
-                        .text(messageData.getString(MESSAGE_TEXT))
-                        .photo(messageData.getBinaryStream(MESSAGE_IMAGE))
-                        .build();
-                return of(message);
-            } else {
-                return empty();
-            }
-        } catch (SQLException e) {
-            throw new DaoException("dao: get message by id method failed: " + e.getMessage());
-        }
+        return jdbcTemplate.query(GET_BY_ID, personalWallMessageRowMapper, id).stream().findFirst();
     }
 
     @Override
     public List<Message> getAll(Long destinationId) {
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL)) {
-            List<Message> messages = new ArrayList<>();
-            preparedStatement.setLong(1, destinationId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                messages.add(new Message.Builder()
-                        .id(resultSet.getLong(ID))
-                        .accountAuthorId(resultSet.getLong(ACCOUNT_AUTHOR_ID))
-                        .text(resultSet.getString(MESSAGE_TEXT))
-                        .photo(resultSet.getBinaryStream(MESSAGE_IMAGE))
-                        .creationDate(resultSet.getDate(CREATION_DATE).toLocalDate())
-                        .build());
-            }
-            return messages;
-        } catch (SQLException e) {
-            throw new DaoException("dao: get all messages method failed: " + e.getMessage());
-        }
+        return jdbcTemplate.query(GET_ALL, personalWallMessageRowMapper, destinationId);
     }
 
     @Override

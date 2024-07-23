@@ -2,46 +2,43 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Password;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PasswordDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.TransactionManager;
-import com.getjavajob.training.timashovy.socialnetwork.util.ConnectionManagerTestUtils;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.util.ConnectionManagerTestUtils.clearConnectionManagerMocks;
-import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration("classpath:test-config.xml")
+@Sql(
+        scripts = {
+                "classpath:scripts/account/create.sql",
+                "classpath:scripts/account/load.sql"
+        },
+        executionPhase = BEFORE_TEST_METHOD
+)
+@Sql(
+        scripts = {
+                "classpath:scripts/account/clear.sql",
+                "classpath:scripts/account/drop.sql"
+        }, executionPhase = AFTER_TEST_METHOD
+)
 class PasswordDaoImplTest {
 
-    private static final String CREATE_TABLES_FILEPATH = "scripts/account/create.sql";
-    private static final String LOAD_DATA_FILEPATH = "scripts/account/load.sql";
-    private static final String DROP_DB_FILEPATH = "scripts/account/drop.sql";
-    private static final PasswordDao PASSWORD_DAO = new PasswordDaoImpl(new TransactionManager());
+    @Autowired
+    private PasswordDao PASSWORD_DAO;
     private static final Password TEST_PASSWORD = new Password(1L, "test", "test");
-
-    @BeforeAll
-    public static void createTestTables() {
-        executeScript(CREATE_TABLES_FILEPATH);
-        executeScript(LOAD_DATA_FILEPATH);
-    }
-
-    @BeforeEach
-    void setTestConnection() {
-        ConnectionManagerTestUtils.mockConnectionManager();
-    }
-
-    @AfterAll
-    public static void dropDataBaseAfterTestExecution() {
-        executeScript(DROP_DB_FILEPATH);
-    }
-
-    @AfterEach
-    void closeTestConnection() {
-        clearConnectionManagerMocks();
-    }
 
     @Nested
     @DisplayName("Long create(Long accountId, Password password)")
@@ -54,12 +51,10 @@ class PasswordDaoImplTest {
 
         @Test
         void shouldThrowExceptionWhenAccountIdDoesNotExist() {
-            Long nonExistingAccountId = -1L;
-            Throwable exception = assertThrows(DaoException.class, () -> {
-                PASSWORD_DAO.create(new Password(nonExistingAccountId, "test", "test"));
+            assertThrows(DataAccessException.class, () -> {
+                PASSWORD_DAO.create(new Password(-1L, "test", "test"));
                 throw new UnsupportedOperationException("Not supported");
             });
-            assertEquals(DaoException.class, exception.getClass());
         }
 
     }
@@ -96,7 +91,7 @@ class PasswordDaoImplTest {
 
         @Test
         void shouldReturnEmptyOptionalWhenAccountEmailDoesNotExist() {
-            String nonExistingEmail = "not@exist.com";
+            String nonExistingEmail = "non@exist.com";
             assertEquals(empty(), PASSWORD_DAO.findByEmail(nonExistingEmail));
         }
 

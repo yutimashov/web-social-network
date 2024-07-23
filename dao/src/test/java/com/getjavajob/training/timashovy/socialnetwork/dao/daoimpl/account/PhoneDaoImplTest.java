@@ -2,68 +2,60 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.TransactionManager;
-import com.getjavajob.training.timashovy.socialnetwork.util.ConnectionManagerTestUtils;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
-import static com.getjavajob.training.timashovy.socialnetwork.util.ConnectionManagerTestUtils.clearConnectionManagerMocks;
-import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration("classpath:test-config.xml")
+@Sql(
+        scripts = {
+                "classpath:scripts/account/create.sql",
+                "classpath:scripts/account/load.sql"
+        },
+        executionPhase = BEFORE_TEST_METHOD
+)
+@Sql(
+        scripts = {
+                "classpath:scripts/account/clear.sql",
+                "classpath:scripts/account/drop.sql"
+        },
+        executionPhase = AFTER_TEST_METHOD
+)
 class PhoneDaoImplTest {
 
-    private static final String CREATE_TABLES_FILEPATH = "scripts/account/create.sql";
-    private static final String LOAD_DATA_FILEPATH = "scripts/account/load.sql";
-    private static final String CLEAR_TABLES_FILEPATH = "scripts/account/clear.sql";
-    private static final String DROP_DB_FILEPATH = "scripts/account/drop.sql";
-    private static final PhoneDao PHONE_DAO = new PhoneDaoImpl(new TransactionManager());
-
-    @BeforeEach
-    public void fillTestTablesWith2Records() {
-        ConnectionManagerTestUtils.mockConnectionManager();
-        executeScript(CLEAR_TABLES_FILEPATH);
-        executeScript(LOAD_DATA_FILEPATH);
-    }
-
-    @BeforeAll
-    public static void createTestTables() {
-        executeScript(CREATE_TABLES_FILEPATH);
-        executeScript(LOAD_DATA_FILEPATH);
-    }
-
-    @AfterEach
-    void closeTestConnection() {
-        clearConnectionManagerMocks();
-    }
-
-    @AfterAll
-    public static void dropDataBaseAfterTestExecution() {
-        executeScript(DROP_DB_FILEPATH);
-    }
+    @Autowired
+    private PhoneDao PHONE_DAO;
 
     @Nested
     @DisplayName("Long create(Phone phone)")
     class TestCreatePhone {
 
-//        @Test
-//        void shouldReturnPhoneIdWhenPhoneWasCreated() {
-//            assertEquals(3L, PHONE_DAO.create(new Phone(PERSONAL, "test", 1L)));
-//        }
+        @Test
+        void shouldReturnPhoneIdWhenPhoneWasCreated() {
+            assertEquals(3L, PHONE_DAO.create(new Phone(PERSONAL, "test", 1L)));
+        }
 
         @Test
         void shouldThrowExceptionWhenCreationFailed() {
-            Throwable exception = assertThrows(DaoException.class, () -> {
+            assertThrows(DataAccessException.class, () -> {
                 PHONE_DAO.create(new Phone(PERSONAL, "test", -1L));
                 throw new UnsupportedOperationException("Not supported");
             });
-            assertEquals(DaoException.class, exception.getClass());
         }
 
     }

@@ -13,6 +13,18 @@
         <res-auth>Container</res-auth>
     </resource-ref>
 
+    <!-- listeners -->
+
+    <!-- Spring Web Context initializer -->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener
+        </listener-class>
+    </listener>
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:beans.xml</param-value>
+    </context-param>
+
     <!-- auth servlets -->
     <servlet>
         <servlet-name>Login</servlet-name>
@@ -471,12 +483,6 @@
         <filter-name>Set Encoding Filter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-
-    <!-- listeners -->
-    <listener>
-        <listener-class>com.getjavajob.training.timashovy.socialnetwork.web.listeners.SingletonsHolderListener
-        </listener-class>
-    </listener>
 
     <!-- error pages -->
     <error-page>

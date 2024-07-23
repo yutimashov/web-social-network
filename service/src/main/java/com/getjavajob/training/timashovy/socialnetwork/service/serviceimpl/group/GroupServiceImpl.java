@@ -7,8 +7,6 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupS
 import java.util.List;
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
-
 public class GroupServiceImpl implements GroupService {
 
     private final BaseDao<Group> groupDaoInstance;

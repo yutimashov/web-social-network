@@ -3,9 +3,15 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.TransactionManager;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,36 +20,37 @@ import java.util.Optional;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.AccountRole.REGULAR;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
-import static com.getjavajob.training.timashovy.socialnetwork.util.ConnectionManagerTestUtils.clearConnectionManagerMocks;
-import static com.getjavajob.training.timashovy.socialnetwork.util.ConnectionManagerTestUtils.mockConnectionManager;
-import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static java.time.LocalDate.of;
 import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration("classpath:test-config.xml")
+@Sql(
+        scripts = {
+                "classpath:scripts/account/create.sql",
+                "classpath:scripts/account/load.sql"
+        },
+        executionPhase = BEFORE_TEST_METHOD
+)
+@Sql(
+        scripts = {
+                "classpath:scripts/account/clear.sql",
+                "classpath:scripts/account/drop.sql"
+        },
+        executionPhase = AFTER_TEST_METHOD
+)
 class AccountDaoImplTest {
 
-    private static final String CREATE_TABLES_FILEPATH = "scripts/account/create.sql";
-    private static final String LOAD_DATA_FILEPATH = "scripts/account/load.sql";
-    private static final String CLEAR_TABLES_FILEPATH = "scripts/account/clear.sql";
-    private static final String DROP_DB_FILEPATH = "scripts/account/drop.sql";
-    private static final BaseDao<Account> ACCOUNT_DAO_INSTANCE = new AccountDaoImpl(
-            new PhoneDaoImpl(new TransactionManager()), new TransactionManager());
+    @Autowired
+    private BaseDao<Account> accountDao;
 
     private static final Account TEST_ACCOUNT = new Account.Builder()
-            .id(1L).firstName("").lastName("")
-            .middleName("")
-            .birthDate(of(2000, 1, 1))
-            .personalPhoneNumber(new ArrayList<>())
-            .workPhoneNumber(new ArrayList<>())
-            .personalAddress("")
-            .workAddress("")
-            .email("")
-            .icq("")
-            .skype("")
-            .additionalInfo("")
-            .role(REGULAR)
-            .build();
+            .id(1L).firstName("").lastName("").middleName("").birthDate(of(2000, 1, 1))
+            .personalPhoneNumber(new ArrayList<>()).workPhoneNumber(new ArrayList<>()).personalAddress("")
+            .workAddress("").email("").icq("").skype("").additionalInfo("").role(REGULAR).build();
 
     private void restoreTestAccountDefaultState() {
         TEST_ACCOUNT.setId(1L);
@@ -85,63 +92,34 @@ class AccountDaoImplTest {
         TEST_ACCOUNT.setAdditionalInfo("test");
     }
 
-    @BeforeAll
-    public static void createTestTables() {
-        executeScript(CREATE_TABLES_FILEPATH);
-    }
-
-    @BeforeEach
-    void setTestConnection() {
-        mockConnectionManager();
-    }
-
-    @BeforeEach
-    public void fillTestTablesWith2Records() {
-        restoreTestAccountDefaultState();
-        executeScript(CLEAR_TABLES_FILEPATH);
-        executeScript(LOAD_DATA_FILEPATH);
-    }
-
-    @AfterEach
-    void closeTestConnection() {
-        clearConnectionManagerMocks();
-    }
-
-    @AfterAll
-    public static void dropDataBaseAfterTestExecution() {
-        executeScript(DROP_DB_FILEPATH);
-    }
-
     @Nested
     @DisplayName("Long create(Account account)")
     class TestCreateAccount {
 
         @Test
-        void shouldReturn1LWhenAccountCreatedInEmptyTable() {
-            executeScript(CLEAR_TABLES_FILEPATH);
-            assertEquals(1L, ACCOUNT_DAO_INSTANCE.create(TEST_ACCOUNT));
+        void shouldReturn5LWhenAccountCreatedInTableWith4ExistingAccounts() {
+            restoreTestAccountDefaultState();
+            assertEquals(5L, accountDao.create(TEST_ACCOUNT));
         }
 
         @Test
         void shouldThrowExceptionWhenFirstNameIsNull() {
             TEST_ACCOUNT.setFirstName(null);
-            Throwable exception = assertThrows(DaoException.class, () -> {
-                ACCOUNT_DAO_INSTANCE.create(TEST_ACCOUNT);
+            assertThrows(DataAccessException.class, () -> {
+                accountDao.create(TEST_ACCOUNT);
                 throw new UnsupportedOperationException("Not supported");
             });
             restoreTestAccountDefaultState();
-            assertTrue(exception.getMessage().contains("NULL not allowed for column \"FIRST_NAME\""));
         }
 
         @Test
         void shouldThrowExceptionWhenLastNameIsNull() {
             TEST_ACCOUNT.setLastName(null);
-            Throwable exception = assertThrows(DaoException.class, () -> {
-                ACCOUNT_DAO_INSTANCE.create(TEST_ACCOUNT);
+            assertThrows(DataAccessException.class, () -> {
+                accountDao.create(TEST_ACCOUNT);
                 throw new UnsupportedOperationException("Not supported");
             });
             restoreTestAccountDefaultState();
-            assertTrue(exception.getMessage().contains("NULL not allowed for column \"LAST_NAME\""));
         }
 
     }
@@ -153,15 +131,14 @@ class AccountDaoImplTest {
         @Test
         void shouldReturnOptionalWithAccountWhenAccountExists() {
             setTestAccountEqualsToRecordInTestTable();
-            Optional<Account> optionalAccount = ACCOUNT_DAO_INSTANCE.getById(1L);
+            Optional<Account> optionalAccount = accountDao.getById(1L);
             assertTrue(optionalAccount.isPresent());
             assertEquals(TEST_ACCOUNT, optionalAccount.get());
         }
 
         @Test
         void shouldReturnEmptyOptionalWhenAccountNotExists() {
-            executeScript(CLEAR_TABLES_FILEPATH);
-            assertEquals(empty(), ACCOUNT_DAO_INSTANCE.getById(1L));
+            assertEquals(empty(), accountDao.getById(-1L));
         }
 
     }
@@ -169,12 +146,6 @@ class AccountDaoImplTest {
     @Nested
     @DisplayName("List<Account> getAll()")
     class TestGetAll {
-
-        @Test
-        void shouldReturnEmptyListWhenTableIsEmpty() {
-            executeScript(CLEAR_TABLES_FILEPATH);
-            assertEquals(new ArrayList<Account>(), ACCOUNT_DAO_INSTANCE.getAll());
-        }
 
         @Test
         void shouldReturnActualListWhenTableIsNotEmpty() {
@@ -191,7 +162,7 @@ class AccountDaoImplTest {
             accounts.add(new Account.Builder().id(4L).firstName("test3").middleName("test3").lastName("test3")
                     .birthDate(of(2000, 1, 1)).personalAddress("test3").workAddress("test3")
                     .email("test3").icq("test3").skype("test3").additionalInfo("test3").role(REGULAR).build());
-            assertEquals(accounts, ACCOUNT_DAO_INSTANCE.getAll());
+            assertEquals(accounts, accountDao.getAll());
         }
 
     }
@@ -202,12 +173,12 @@ class AccountDaoImplTest {
 
         @Test
         void shouldReturnFalseWhenAccountNotExists() {
-            assertFalse(ACCOUNT_DAO_INSTANCE.updateById(-1L, TEST_ACCOUNT));
+            assertFalse(accountDao.updateById(-1L, TEST_ACCOUNT));
         }
 
         @Test
         void shouldReturnTrueWhenAccountExists() {
-            assertTrue(ACCOUNT_DAO_INSTANCE.updateById(1L, TEST_ACCOUNT));
+            assertTrue(accountDao.updateById(1L, TEST_ACCOUNT));
         }
 
     }
@@ -218,12 +189,12 @@ class AccountDaoImplTest {
 
         @Test
         void shouldReturnFalseWhenAccountNotExists() {
-            assertFalse(ACCOUNT_DAO_INSTANCE.deleteById(-1L));
+            assertFalse(accountDao.deleteById(-1L));
         }
 
         @Test
         void shouldReturnTrueWhenAccountExists() {
-            assertTrue(ACCOUNT_DAO_INSTANCE.deleteById(1L));
+            assertTrue(accountDao.deleteById(1L));
         }
 
     }

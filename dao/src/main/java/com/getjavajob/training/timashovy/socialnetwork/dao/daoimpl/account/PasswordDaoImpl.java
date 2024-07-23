@@ -2,24 +2,21 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Password;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PasswordDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.DaoException;
-import com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.TransactionManager;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
-import java.sql.Connection;
+import javax.sql.DataSource;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNTS_TABLE;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNT_PASSWORDS_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.dbconnection.ConnectionManager.getConnection;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.AccountTableFields.ACCOUNT_EMAIL;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.AccountTableFields.ACCOUNT_ID;
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.PasswordTableFields.*;
-import static java.sql.Statement.RETURN_GENERATED_KEYS;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 
 /**
  * Singleton class responsible for working with {@link com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames#ACCOUNTS_TABLE accounts table} table in DB.
@@ -34,64 +31,47 @@ public class PasswordDaoImpl implements PasswordDao {
     private static final String GET_BY_ACCOUNT_EMAIL = "SELECT " + PASSWORD_ACCOUNT_ID + ", " + PASSWORD_HASH + ", "
             + PASSWORD_SALT + " FROM " + ACCOUNT_PASSWORDS_TABLE + " pass JOIN " + ACCOUNTS_TABLE + " acc ON acc."
             + ACCOUNT_ID + " = pass." + PASSWORD_ACCOUNT_ID + " WHERE acc." + ACCOUNT_EMAIL + " = ?;";
-    private final TransactionManager transactionManager;
 
-    public PasswordDaoImpl(TransactionManager transactionManager) {
-        this.transactionManager = transactionManager;
+    private JdbcTemplate jdbcTemplate;
+
+    private final RowMapper<Password> passwordRowMapper = (rs, rowNum) -> new Password(rs.getLong(PASSWORD_ACCOUNT_ID),
+            rs.getString(PASSWORD_HASH), rs.getString(PASSWORD_SALT));
+
+    public void setDataSource(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @Override
     public Long create(Password password) {
-        try (PreparedStatement statement = transactionManager.getTransactionalConnection()
-                .prepareStatement(CREATE, RETURN_GENERATED_KEYS)) {
-            statement.setLong(1, password.getAccountId());
-            statement.setString(2, password.getPassword());
-            statement.setString(3, password.getSalt());
-            if (statement.executeUpdate() > 0) {
-                ResultSet generatedKeys = statement.getGeneratedKeys();
-                if (generatedKeys.next()) {
-                    password.setId(generatedKeys.getLong(1));
-                }
-                return password.getId();
-            } else {
-                throw new DaoException("dao: create password method failed: no rows affected.");
-            }
-        } catch (SQLException e) {
-            throw new DaoException("dao: create password method failed: " + e.getMessage());
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(CREATE, new String[]{PASSWORD_ID});
+            setPasswordData(password, ps);
+            return ps;
+        }, keyHolder);
+        Number generatedId = keyHolder.getKey();
+        if (generatedId != null) {
+            Long id = generatedId.longValue();
+            password.setId(id);
+            return id;
         }
+        return null;
+    }
+
+    private void setPasswordData(Password password, PreparedStatement ps) throws SQLException {
+        ps.setLong(1, password.getAccountId());
+        ps.setString(2, password.getPassword());
+        ps.setString(3, password.getSalt());
     }
 
     @Override
     public Optional<Password> getById(Long accountId) {
-        try (Connection conn = getConnection();
-             PreparedStatement preparedStatement = conn.prepareStatement(GET_BY_ACCOUNT_ID)) {
-            preparedStatement.setLong(1, accountId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                return of(new Password(accountId, resultSet.getString("hash_password"), resultSet.getString("salt")));
-            } else {
-                return empty();
-            }
-        } catch (SQLException e) {
-            throw new DaoException("dao: get password by account id method failed: " + e.getMessage());
-        }
+        return jdbcTemplate.query(GET_BY_ACCOUNT_ID, passwordRowMapper, accountId).stream().findFirst();
     }
 
     @Override
     public Optional<Password> findByEmail(String email) {
-        try (Connection conn = getConnection();
-             PreparedStatement preparedStatement = conn.prepareStatement(GET_BY_ACCOUNT_EMAIL)) {
-            preparedStatement.setString(1, email);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                return of(new Password(resultSet.getLong("account_id"), resultSet.getString("hash_password"),
-                        resultSet.getString("salt")));
-            } else {
-                return empty();
-            }
-        } catch (SQLException e) {
-            throw new DaoException("dao: get password by email method failed: " + e.getMessage());
-        }
+        return jdbcTemplate.query(GET_BY_ACCOUNT_EMAIL, passwordRowMapper, email).stream().findFirst();
     }
 
 }

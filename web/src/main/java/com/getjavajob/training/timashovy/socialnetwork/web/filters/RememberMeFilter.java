@@ -2,7 +2,6 @@ package com.getjavajob.training.timashovy.socialnetwork.web.filters;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.LoginService;
-import com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonRegistry;
 
 import javax.servlet.*;
 import javax.servlet.http.Cookie;
@@ -11,8 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.service.util.singletonsregistry.ServiceSingletonsNames.LOGIN_SERVICE_SINGLETON;
-import static com.getjavajob.training.timashovy.socialnetwork.web.listeners.SingletonsHolderListener.SERVICE_SINGLETON_REGISTRY_ATTR;
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.ServiceSingletonsNames.LOGIN_SERVICE_BEAN;
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.WebContextUtils.getApplicationContext;
 import static java.util.Objects.isNull;
 
 public class RememberMeFilter implements Filter {
@@ -26,9 +25,8 @@ public class RememberMeFilter implements Filter {
         Cookie emailCookie = findCookieByName(cookies, "login");
         Cookie passwordCookie = findCookieByName(cookies, "password");
         if (!isNull(emailCookie) && !isNull(passwordCookie)) {
-            ServiceSingletonRegistry serviceSingletonRegistry = ((ServiceSingletonRegistry) req.getServletContext()
-                    .getAttribute(SERVICE_SINGLETON_REGISTRY_ATTR));
-            LoginService loginService = serviceSingletonRegistry.getSingleton(LOGIN_SERVICE_SINGLETON);
+            LoginService loginService = getApplicationContext(req.getServletContext()).getBean(LOGIN_SERVICE_BEAN,
+                    LoginService.class);
             Optional<Account> loggedInAccount = loginService.getLoggedInAccount(emailCookie.getValue(),
                     passwordCookie.getValue());
             if (isNull(req.getSession(false)) && loggedInAccount.isPresent()) {

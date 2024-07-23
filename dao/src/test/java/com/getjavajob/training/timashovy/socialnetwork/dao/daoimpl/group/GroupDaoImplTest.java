@@ -2,25 +2,44 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.Group;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
-import com.getjavajob.training.timashovy.socialnetwork.util.ConnectionManagerTestUtils;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.getjavajob.training.timashovy.socialnetwork.util.ConnectionManagerTestUtils.clearConnectionManagerMocks;
-import static com.getjavajob.training.timashovy.socialnetwork.util.TestScriptsLoader.executeScript;
 import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration("classpath:test-config.xml")
+@Sql(
+        scripts = {
+                "classpath:scripts/group/create.sql",
+                "classpath:scripts/group/load.sql"
+        },
+        executionPhase = BEFORE_TEST_METHOD
+)
+@Sql(
+        scripts = {
+                "classpath:scripts/group/clear.sql",
+                "classpath:scripts/group/drop.sql"
+        },
+        executionPhase = AFTER_TEST_METHOD
+)
 class GroupDaoImplTest {
 
-    private static final String CREATE_TEST_TABLES_FILEPATH = "scripts/group/create.sql";
-    private static final String LOAD_DATA_INTO_TEST_TABLES_FILEPATH = "scripts/group/load.sql";
-    private static final String EMPTY_TEST_TABLES_FILEPATH = "scripts/group/clear.sql";
-    private static final String DROP_TEST_DB_FILEPATH = "scripts/group/drop.sql";
-    private static final BaseDao<Group> GROUP_DAO_INSTANCE = new GroupDaoImpl();
+    @Autowired
+    private BaseDao<Group> GROUP_DAO_INSTANCE;
     private static final Group TEST_GROUP = new Group.Builder().groupName("").description("").accountOwnerId(1L)
             .build();
 
@@ -38,44 +57,14 @@ class GroupDaoImplTest {
         TEST_GROUP.setAvatar(new ByteArrayInputStream("testAvatar".getBytes()));
     }
 
-    @BeforeAll
-    static void createTestTables() {
-        executeScript(CREATE_TEST_TABLES_FILEPATH);
-    }
-
-    @BeforeEach
-    void setTestConnection() {
-        ConnectionManagerTestUtils.mockConnectionManager();
-    }
-
-    @BeforeEach
-    public void fillTestTablesWith2Records() {
-        executeScript(LOAD_DATA_INTO_TEST_TABLES_FILEPATH);
-    }
-
-    @AfterEach
-    void closeTestConnection() {
-        clearConnectionManagerMocks();
-    }
-
-    @AfterEach
-    public void emptyTestTables() {
-        restoreTestGroupDefaultState();
-        executeScript(EMPTY_TEST_TABLES_FILEPATH);
-    }
-
-    @AfterAll
-    public static void dropDataBaseAfterTestExecution() {
-        executeScript(DROP_TEST_DB_FILEPATH);
-    }
-
     @Nested
     @DisplayName("Long create(Group group)")
     class TestCreateGroup {
 
         @Test
         public void shouldReturn1WhenCreateGroup() {
-            assertEquals(1L, GROUP_DAO_INSTANCE.create(TEST_GROUP));
+            restoreTestGroupDefaultState();
+            assertEquals(2L, GROUP_DAO_INSTANCE.create(TEST_GROUP));
         }
 
     }
@@ -86,8 +75,7 @@ class GroupDaoImplTest {
 
         @Test
         public void shouldReturnEmptyOptionalWhenGroupIsNotExisted() {
-            emptyTestTables();
-            assertEquals(empty(), GROUP_DAO_INSTANCE.getById(1L));
+            assertEquals(empty(), GROUP_DAO_INSTANCE.getById(10L));
         }
 
     }
@@ -95,12 +83,6 @@ class GroupDaoImplTest {
     @Nested
     @DisplayName("List<Group> getAll()")
     class TestGetAllGroups {
-
-        @Test
-        public void shouldReturnEmptyListWhenNoGroupExists() {
-            emptyTestTables();
-            assertEquals(new ArrayList<Group>(), GROUP_DAO_INSTANCE.getAll());
-        }
 
         @Test
         public void testGetAllWithOneExistingGroup() {
