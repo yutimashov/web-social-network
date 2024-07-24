@@ -4,6 +4,7 @@
 <html>
 <head>
     <title>Registration</title>
+    <link rel="stylesheet" href="${rootUrl}/css/styles.css">
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
@@ -34,14 +35,18 @@
     <label for="icq">ICQ:
         <input type="text" name="icq" id="icq">
     </label><br>
-    <label for="personalPhoneNumber">Personal phone number:
-        <input type="tel" name="personalPhoneNumber" id="personalPhoneNumber">
+    <h3>Personal phone number</h3>
+    <a href="#" class="add">&plus;</a>
+    <label for="personalPhoneNumber">
+        <div class="inp-group">
+            <input type="tel" name="personalPhoneNumber" id="personalPhoneNumber">
+        </div>
     </label><br>
     <label for="workPhoneNumber">Working phone number:
         <input type="tel" name="workPhoneNumber" id="workPhoneNumber">
     </label><br>
     <button type="submit">Register</button>
 </form>
-<script src="${rootUrl}/static/js/index.js"></script>
+<script src="${rootUrl}/js/index.js"></script>
 </body>
 </html>
