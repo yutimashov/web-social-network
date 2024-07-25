@@ -17,7 +17,7 @@ public class IsAuthorizedFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         String requestUri = req.getRequestURI();
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
-        if (isStaticResource(requestUri) || LOGIN_SERVLET_PATH.equals(requestUri)
+        if (requestUri.startsWith(STATIC_RESOURCES) || LOGIN_SERVLET_PATH.equals(requestUri)
                 || REGISTRATION_SERVLET_PATH.equals(requestUri)) {
             filterChain.doFilter(req, resp);
         } else if (isNull(req.getSession().getAttribute("account"))) {
@@ -25,15 +25,6 @@ public class IsAuthorizedFilter implements Filter {
         } else {
             filterChain.doFilter(req, resp);
         }
-    }
-
-    private boolean isStaticResource(String requestUri) {
-        for (String resource : STATIC_RESOURCES) {
-            if (requestUri.startsWith(resource)) {
-                return true;
-            }
-        }
-        return false;
     }
 
 }
