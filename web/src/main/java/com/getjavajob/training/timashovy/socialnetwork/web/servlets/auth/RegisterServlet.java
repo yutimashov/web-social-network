@@ -42,7 +42,7 @@ public class RegisterServlet extends HttpServlet {
                                 .build()
                 )
                 .password(req.getParameter("password"))
-                .personalPhoneNumber(req.getParameter("personalPhoneNumber"))
+                .personalPhoneNumber(req.getParameter("allPersonalPhoneNumbers"))
                 .workPhoneNumber(req.getParameter("workPhoneNumber"))
                 .build()
         );

@@ -12,6 +12,8 @@
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <h4>New account registration</h4>
 <form action="${rootUrl}/register" method="POST" enctype="multipart/form-data">
+    <input type="hidden" id="allPersonalPhoneNumbers" name="allPersonalPhoneNumbers">
+    <input type="hidden" id="allWorkingPhoneNumbers" name="allWorkingPhoneNumbers">
     <div class="mb-3">
         <div class="row g-2 align-items-center">
             <div class="col-auto">
@@ -77,15 +79,19 @@
                 <input type="text" name="icq" id="icq" class="form-control form-control-sm">
             </div>
         </div>
-        <div class="row g-3 align-items-center">
+        <div class="row g-2 align-items-center">
             <div class="col-auto">
                 <label for="personalPhoneNumber" class="form-label">Personal phone number:</label>
             </div>
             <div class="col-auto">
-                <input type="tel" name="personalPhoneNumber" id="personalPhoneNumber" class="form-control">
-            </div>
-            <div class="col-auto">
-                <div id="addPersonalPhone" class="form-text">Add more personal phone numbers
+                <div class="input-group mb-3">
+                    <input type="tel" class="form-control" name="personalPhoneNumber" id="personalPhoneNumber"
+                           aria-describedby="phoneNumberAdder">
+                    <div class="input-group-append">
+                        <button class="btn btn-success btn-sm" id="addPersonalPhoneNumberBtn" type="button">Add</button>
+                    </div>
+                </div>
+                <div id="phoneNumberAdder" class="form-text">Add more personal phone numbers
                     <button type="button" class="btn btn-primary btn-sm add-personal-phone">&plus;</button>
                 </div>
             </div>
