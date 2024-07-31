@@ -6,7 +6,7 @@
     <title>Registration</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="${rootUrl}/static/css/styles.css">
+    <link rel="stylesheet" href="${rootUrl}/static/css/auth-form.css">
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
@@ -85,32 +85,34 @@
             </div>
             <div class="col-auto">
                 <div class="input-group mb-3">
-                    <input type="tel" class="form-control" name="personalPhoneNumber" id="personalPhoneNumber"
-                           aria-describedby="phoneNumberAdder">
+                    <input type="tel" class="form-control" name="personalPhoneNumber" id="personalPhoneNumber">
                     <div class="input-group-append">
-                        <button class="btn btn-success btn-sm" id="addPersonalPhoneNumberBtn" type="button">Add</button>
+                        <button class="btn btn-success" id="addPhoneNumberBtn" type="button">Add</button>
                     </div>
-                </div>
-                <div id="phoneNumberAdder" class="form-text">Add more personal phone numbers
-                    <button type="button" class="btn btn-primary btn-sm add-personal-phone">&plus;</button>
                 </div>
             </div>
         </div>
+        <div class="form-text" id="personal-phone-numbers-generated-inputs">Add more personal phone numbers
+            <button type="button" class="btn btn-primary btn-sm addPhoneBtn">&plus;</button>
+        </div>
         <div class="personal-phone-group"></div>
-        <div class="row g-3 align-items-center">
+        <div class="row g-2 align-items-center">
             <div class="col-auto">
                 <label for="workPhoneNumber" class="form-label">Working phone number:</label>
             </div>
             <div class="col-auto">
-                <input type="tel" name="workPhoneNumber" id="workPhoneNumber" class="form-control">
-            </div>
-            <div class="col-auto">
-                <div class="form-text">Add more working phone numbers
-                    <button type="button" class="btn btn-primary btn-sm add-work-phone">&plus;</button>
+                <div class="input-group mb-3">
+                    <input type="tel" class="form-control" name="workPhoneNumber" id="workPhoneNumber">
+                    <div class="input-group-append">
+                        <button class="btn btn-success" id="addWorkingNumberBtn" type="button">Add</button>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="work-phone-group"></div>
+        <div class="form-text" id="working-phone-numbers-generated-inputs">Add more working phone numbers
+            <button type="button" class="btn btn-primary btn-sm addPhoneBtn">&plus;</button>
+        </div>
+        <div class="working-phone-group"></div>
         <button type="submit">Register</button>
     </div>
 </form>
