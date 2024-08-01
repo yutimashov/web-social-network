@@ -84,16 +84,16 @@
                 <label for="personalPhoneNumber" class="form-label">Personal phone number:</label>
             </div>
             <div class="col-auto">
-                <div class="input-group mb-3">
+                <div class="input-group mb-3" id="personalPhoneInputGroup">
                     <input type="tel" class="form-control" name="personalPhoneNumber" id="personalPhoneNumber">
                     <div class="input-group-append">
-                        <button class="btn btn-success" id="addPhoneNumberBtn" type="button">Add</button>
+                        <button class="btn btn-success" id="addPersonalNumberBtn" type="button">Add</button>
                     </div>
                 </div>
             </div>
         </div>
         <div class="form-text" id="personal-phone-numbers-generated-inputs">Add more personal phone numbers
-            <button type="button" class="btn btn-primary btn-sm addPhoneBtn">&plus;</button>
+            <button type="button" class="btn btn-primary btn-sm" id="addPersonalNumber">&plus;</button>
         </div>
         <div class="personal-phone-group"></div>
         <div class="row g-2 align-items-center">
@@ -101,7 +101,7 @@
                 <label for="workPhoneNumber" class="form-label">Working phone number:</label>
             </div>
             <div class="col-auto">
-                <div class="input-group mb-3">
+                <div class="input-group mb-3" id="workPhoneInputGroup">
                     <input type="tel" class="form-control" name="workPhoneNumber" id="workPhoneNumber">
                     <div class="input-group-append">
                         <button class="btn btn-success" id="addWorkingNumberBtn" type="button">Add</button>
@@ -110,7 +110,7 @@
             </div>
         </div>
         <div class="form-text" id="working-phone-numbers-generated-inputs">Add more working phone numbers
-            <button type="button" class="btn btn-primary btn-sm addPhoneBtn">&plus;</button>
+            <button type="button" class="btn btn-primary btn-sm" id="addWorkingNumber">&plus;</button>
         </div>
         <div class="working-phone-group"></div>
         <button type="submit">Register</button>
