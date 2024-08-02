@@ -39,14 +39,6 @@ public class PhoneServiceImpl implements PhoneService {
         return phones;
     }
 
-    private Phone preparePersonalPhones(Long accountId, String phonesValue) {
-        return new Phone(PERSONAL, phonesValue, accountId);
-    }
-
-    private Phone prepareWorkingPhones(Long accountId, String phonesValue) {
-        return new Phone(WORKING, phonesValue, accountId);
-    }
-
     @Override
     public List<Phone> getPersonalPhoneNumbers(Long accountId) {
         return phoneDao.getAll(accountId).stream().filter(phone -> phone.getPhoneType() == PERSONAL).collect(toList());

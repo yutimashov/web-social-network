@@ -11,9 +11,9 @@
 <body>
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <h4>New account registration</h4>
-<form action="${rootUrl}/register" method="POST" enctype="multipart/form-data">
-    <input type="hidden" id="allPersonalPhoneNumbers" name="allPersonalPhoneNumbers">
-    <input type="hidden" id="allWorkingPhoneNumbers" name="allWorkingPhoneNumbers">
+<form action="${rootUrl}/register" method="POST" enctype="multipart/form-data" id="registerForm">
+    <input type="hidden" id="personalPhones" name="personalPhones">
+    <input type="hidden" id="workingPhones" name="workingPhones">
     <div class="mb-3">
         <div class="row g-2 align-items-center">
             <div class="col-auto">
@@ -81,38 +81,38 @@
         </div>
         <div class="row g-2 align-items-center">
             <div class="col-auto">
-                <label for="personalPhoneNumber" class="form-label">Personal phone number:</label>
+                <label for="personalPhoneNumberInput" class="form-label">Personal phone number:</label>
             </div>
             <div class="col-auto">
                 <div class="input-group mb-3" id="personalPhoneInputGroup">
-                    <input type="tel" class="form-control" name="personalPhoneNumber" id="personalPhoneNumber">
+                    <input type="tel" class="form-control" name="personalPhoneNumber" id="personalPhoneNumberInput">
                     <div class="input-group-append">
-                        <button class="btn btn-success" id="addPersonalNumberBtn" type="button">Add</button>
+                        <button class="btn btn-success" id="validatePersonalNumberBtn" type="button">Add</button>
                     </div>
                 </div>
             </div>
         </div>
         <div class="form-text" id="personal-phone-numbers-generated-inputs">Add more personal phone numbers
-            <button type="button" class="btn btn-primary btn-sm" id="addPersonalNumber">&plus;</button>
+            <button type="button" class="btn btn-primary btn-sm" id="addPersonalNumberBtn">&plus;</button>
         </div>
-        <div class="personal-phone-group"></div>
+        <div class="personal-phone-container"></div>
         <div class="row g-2 align-items-center">
             <div class="col-auto">
-                <label for="workPhoneNumber" class="form-label">Working phone number:</label>
+                <label for="workingPhoneNumberInput" class="form-label">Working phone number:</label>
             </div>
             <div class="col-auto">
                 <div class="input-group mb-3" id="workPhoneInputGroup">
-                    <input type="tel" class="form-control" name="workPhoneNumber" id="workPhoneNumber">
+                    <input type="tel" class="form-control" name="workPhoneNumber" id="workingPhoneNumberInput">
                     <div class="input-group-append">
-                        <button class="btn btn-success" id="addWorkingNumberBtn" type="button">Add</button>
+                        <button class="btn btn-success" id="validateWorkingNumberBtn" type="button">Add</button>
                     </div>
                 </div>
             </div>
         </div>
         <div class="form-text" id="working-phone-numbers-generated-inputs">Add more working phone numbers
-            <button type="button" class="btn btn-primary btn-sm" id="addWorkingNumber">&plus;</button>
+            <button type="button" class="btn btn-primary btn-sm" id="addWorkingNumberBtn">&plus;</button>
         </div>
-        <div class="working-phone-group"></div>
+        <div class="working-phone-container"></div>
         <button type="submit">Register</button>
     </div>
 </form>
