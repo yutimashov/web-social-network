@@ -39,15 +39,23 @@ const validateEditPhoneNumber = (phoneNumberInput) => {
     }
     phoneNumberInput.parentElement.appendChild(message);
 };
+const deletePhoneButtons = document.getElementsByClassName('delete-phone-btn');
+const deletingPhonesIds = [];
+Array.from(deletePhoneButtons).forEach(function (e) {
+    e.addEventListener('click', (event) => {
+        event.target.parentElement.remove();
+        const inputElement = e.parentNode.querySelector('input[type="tel"]');
+        const phoneId = inputElement.getAttribute('data-personal-phone-id')
+            || inputElement.getAttribute('data-working-phone-id');
+        deletingPhonesIds.push(phoneId);
+    });
+});
 document.getElementById('editAccountForm').addEventListener('submit', (event) => {
     event.preventDefault();
     document.getElementById('personalPhoneValue').value = personalPhones.join(',');
     document.getElementById('personalPhoneId').value = personalPhonesIds.join(',');
     document.getElementById('workingPhoneValue').value = workingPhones.join(',');
     document.getElementById('workingPhoneId').value = workingPhonesIds.join(',');
+    document.getElementById('deletingPhonesIds').value = deletingPhonesIds.join(',');
     document.getElementById('editAccountForm').submit();
-});
-const deletePhoneButtons = document.getElementsByClassName('delete-phone-btn');
-Array.from(deletePhoneButtons).forEach(function (e) {
-    e.addEventListener('click', (event) => event.target.parentElement.remove());
 });

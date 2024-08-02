@@ -27,6 +27,7 @@ public class PhoneDaoImpl implements PhoneDao {
             + ", " + ACCOUNT_ID + " FROM " + ACCOUNT_PHONES_TABLE + " WHERE " + ACCOUNT_ID + " = ?;";
     private static final String UPDATE = "UPDATE " + ACCOUNT_PHONES_TABLE + " SET " + PHONE_NUMBER + " = ? WHERE "
             + PHONE_ID + " = ?;";
+    private static final String DELETE_BY_ID = "DELETE FROM " + ACCOUNT_PHONES_TABLE + " WHERE " + PHONE_ID + " = ?";
     private JdbcTemplate jdbcTemplate;
 
     public void setDataSource(DataSource dataSource) {
@@ -72,6 +73,11 @@ public class PhoneDaoImpl implements PhoneDao {
             ps.setString(1, newPhoneNumber);
             ps.setLong(2, phoneId);
         }) > 0;
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        jdbcTemplate.update(DELETE_BY_ID, id);
     }
 
 }

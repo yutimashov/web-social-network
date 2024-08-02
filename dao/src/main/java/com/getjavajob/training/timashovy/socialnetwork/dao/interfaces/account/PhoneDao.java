@@ -12,4 +12,6 @@ public interface PhoneDao {
 
     List<Phone> getAll(Long accountId);
 
+    void deleteById(Long id);
+
 }

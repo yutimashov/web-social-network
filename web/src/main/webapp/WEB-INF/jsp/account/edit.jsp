@@ -13,6 +13,7 @@
 <hr>
 <form action="${pageContext.request.contextPath}/account/edit?id=${requestScope.account.id}" method="POST"
       enctype="multipart/form-data" id="editAccountForm">
+    <input type="hidden" id="deletingPhonesIds" name="deletingPhonesIds">
     <label for="avatar">Current avatar:<br>
         <c:if test="${requestScope.avatarInputStream != null}">
             <img src="${rootUrl}/avatar?id=${requestScope.account.id}" alt="Profile avatar"

@@ -106,6 +106,14 @@ public class EditAccountServlet extends HttpServlet {
                 }
             }
         }
+        if (!isNull(req.getParameter("deletingPhonesIds"))) {
+            String[] deletingPhonesIds = req.getParameter("deletingPhonesIds").split(",");
+            PhoneService phoneService = getApplicationContext(req.getServletContext()).getBean(PHONE_SERVICE_BEAN,
+                    PhoneService.class);
+            for (String deletingPhonesId : deletingPhonesIds) {
+                phoneService.deleteById(valueOf(deletingPhonesId));
+            }
+        }
         return updatedPhones;
     }
 
