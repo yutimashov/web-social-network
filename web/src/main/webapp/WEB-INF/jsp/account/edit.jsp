@@ -49,6 +49,7 @@
             <span>&nbsp;&nbsp;Current:&nbsp;&nbsp;${phone.number}&nbsp;&nbsp;
                 New:&nbsp;&nbsp;<input type="tel" name="personalPhoneValue" placeholder="Enter new phone number" data-personal-phone-id="${phone.id}">
                 <button class="btn btn-success btn-sm validate-phone-btn" type="button">Change</button>
+                <button type="button" class="btn-close delete-phone-btn btn-sm" aria-label="Close"></button>
             </span><br>
         </c:forEach>
         <br>
@@ -61,6 +62,7 @@
             <span>&nbsp;&nbsp;Current:&nbsp;&nbsp;${phone.number}&nbsp;&nbsp;
                 New:&nbsp;&nbsp;<input type="tel" name="workingPhoneValue" placeholder="Enter new phone number" data-working-phone-id="${phone.id}">
                 <button class="btn btn-success btn-sm validate-phone-btn" type="button">Change</button>
+                <button type="button" class="btn-close delete-phone-btn btn-sm" aria-label="Close"></button>
             </span><br>
         </c:forEach>
     </label>
