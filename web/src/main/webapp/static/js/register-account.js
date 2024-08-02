@@ -76,8 +76,6 @@ document.getElementById('validateWorkingNumberBtn').addEventListener('click', ()
 document.getElementById('registerForm').addEventListener('submit', (event) => {
     event.preventDefault();
     document.getElementById('personalPhones').value = personalPhones.join(',');
-    alert(personalPhones);
     document.getElementById('workingPhones').value = workingPhones.join(',');
-    alert(workingPhones);
     document.getElementById('registerForm').submit();
 });

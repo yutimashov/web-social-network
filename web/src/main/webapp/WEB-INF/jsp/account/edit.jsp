@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="rootUrl" value="${pageContext.request.contextPath}"/>
 <html>
 <head>
     <title>Edit account</title>
@@ -11,10 +12,10 @@
 <h2>Edit account: ${requestScope.account.firstName} ${requestScope.account.lastName}</h2>
 <hr>
 <form action="${pageContext.request.contextPath}/account/edit?id=${requestScope.account.id}" method="POST"
-      enctype="multipart/form-data">
+      enctype="multipart/form-data" id="editAccountForm">
     <label for="avatar">Current avatar:<br>
         <c:if test="${requestScope.avatarInputStream != null}">
-            <img src="${pageContext.request.contextPath}/avatar?id=${requestScope.account.id}" alt="Profile avatar"
+            <img src="${rootUrl}/avatar?id=${requestScope.account.id}" alt="Profile avatar"
                  width="250px" height="250px">
         </c:if>
         <br>
@@ -41,24 +42,26 @@
         New: <input type="date" name="birthDate" id="birthDate">
     </label>
     <hr>
-    <label for="personalPhoneValue">Personal phones<br>
+    <label>Personal phones<br>
+        <input type="hidden" id="personalPhoneValue" name="personalPhoneValue">
+        <input type="hidden" id="personalPhoneId" name="personalPhoneId">
         <c:forEach items="${requestScope.personalPhones}" var="phone">
-        <span>&nbsp;&nbsp;Current:&nbsp;&nbsp;${phone.number}&nbsp;&nbsp;
-            <input type="hidden" name="personalPhoneId" value="${phone.id}">
-            New:&nbsp;&nbsp;<input type="text" name="personalPhoneValue" id="personalPhoneValue"
-                                   placeholder="Enter new phone number">
-        </span><br>
+            <span>&nbsp;&nbsp;Current:&nbsp;&nbsp;${phone.number}&nbsp;&nbsp;
+                New:&nbsp;&nbsp;<input type="tel" name="personalPhoneValue" placeholder="Enter new phone number" data-personal-phone-id="${phone.id}">
+                <button class="btn btn-success btn-sm validate-phone-btn" type="button">Change</button>
+            </span><br>
         </c:forEach>
         <br>
     </label>
     <hr>
-    <label for="workingPhoneValue">Working phones<br>
+    <label>Working phones<br>
+        <input type="hidden" id="workingPhoneValue" name="workingPhoneValue">
+        <input type="hidden" id="workingPhoneId" name="workingPhoneId">
         <c:forEach items="${requestScope.workingPhones}" var="phone">
-        <span>&nbsp;&nbsp;Current:&nbsp;&nbsp;${phone.number}&nbsp;&nbsp;
-            <input type="hidden" name="workingPhoneId" value="${phone.id}">
-            New:&nbsp;&nbsp;<input type="text" name="workingPhoneValue" id="workingPhoneValue"
-                                   placeholder="Enter new phone number">
-        </span><br>
+            <span>&nbsp;&nbsp;Current:&nbsp;&nbsp;${phone.number}&nbsp;&nbsp;
+                New:&nbsp;&nbsp;<input type="tel" name="workingPhoneValue" placeholder="Enter new phone number" data-working-phone-id="${phone.id}">
+                <button class="btn btn-success btn-sm validate-phone-btn" type="button">Change</button>
+            </span><br>
         </c:forEach>
     </label>
     <hr>
@@ -81,10 +84,12 @@
         New: <input type="password" id="password" name="password">
     </label>
     <hr>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editAccountModal">Apply changes
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editAccountModal">
+        Apply changes
     </button>
     <!-- Modal -->
-    <div class="modal fade" id="editAccountModal" tabindex="-1" aria-labelledby="editAccountModalLabel" aria-hidden="true">
+    <div class="modal fade" id="editAccountModal" tabindex="-1" aria-labelledby="editAccountModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -105,5 +110,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
+<script src="${rootUrl}/static/js/edit-account.js"></script>
 </body>
 </html>

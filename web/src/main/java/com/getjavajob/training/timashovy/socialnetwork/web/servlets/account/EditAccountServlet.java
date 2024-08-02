@@ -96,9 +96,10 @@ public class EditAccountServlet extends HttpServlet {
     private List<Phone> getUpdatedPhones(HttpServletRequest req, String phoneTypeParam, PhoneType phoneType) {
         List<Phone> updatedPhones = new ArrayList<>();
         Long accountId = valueOf(req.getParameter("id"));
-        String[] phonesIds = req.getParameterValues(phoneTypeParam + "PhoneId");
-        String[] phoneValues = req.getParameterValues(phoneTypeParam + "PhoneValue");
-        if (!isNull(phonesIds) && !isNull(phoneValues)) {
+        if (!isNull(req.getParameter(phoneTypeParam + "PhoneId"))
+                && !isNull(req.getParameter(phoneTypeParam + "PhoneValue"))) {
+            String[] phonesIds = req.getParameter(phoneTypeParam + "PhoneId").split(",");
+            String[] phoneValues = req.getParameter(phoneTypeParam + "PhoneValue").split(",");
             for (int i = 0; i < phonesIds.length; i++) {
                 if (!isNull(phonesIds[i]) && !phonesIds[i].isEmpty() && !phoneValues[i].isEmpty()) {
                     updatedPhones.add(new Phone(valueOf(phonesIds[i]), phoneType, phoneValues[i], accountId));
