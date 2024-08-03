@@ -1,6 +1,6 @@
 const changePhoneButtons = document.getElementsByClassName('validate-phone-btn');
 Array.from(changePhoneButtons).forEach(function (e) {
-    e.addEventListener('click', () => validateEditPhoneNumber(e.parentNode.querySelector('input[type="tel"]')));
+    e.addEventListener('click', () => validateEditPhoneNumber(e.parentNode.parentNode.querySelector('input[type="tel"]')));
 });
 const setAttributes = (el, attrs) => {
     for (const key in attrs) {
@@ -37,7 +37,7 @@ const validateEditPhoneNumber = (phoneNumberInput) => {
         });
         message.appendChild(closeAlertBtn);
     }
-    phoneNumberInput.parentElement.appendChild(message);
+    phoneNumberInput.parentElement.parentElement.appendChild(message);
 };
 const deletePhoneButtons = document.getElementsByClassName('delete-phone-btn');
 const deletingPhonesIds = [];

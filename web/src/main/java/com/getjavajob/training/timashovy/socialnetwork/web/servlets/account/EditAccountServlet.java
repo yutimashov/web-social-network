@@ -18,9 +18,9 @@ import java.util.List;
 
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.ServiceSingletonsNames.ACCOUNT_SERVICE_BEAN;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.ServiceSingletonsNames.PHONE_SERVICE_BEAN;
-import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.WebContextUtils.getApplicationContext;
 import static java.lang.Long.valueOf;
 import static java.time.LocalDate.parse;
@@ -97,7 +97,9 @@ public class EditAccountServlet extends HttpServlet {
         List<Phone> updatedPhones = new ArrayList<>();
         Long accountId = valueOf(req.getParameter("id"));
         if (!isNull(req.getParameter(phoneTypeParam + "PhoneId"))
-                && !isNull(req.getParameter(phoneTypeParam + "PhoneValue"))) {
+                && !req.getParameter(phoneTypeParam + "PhoneId").isEmpty()
+                && !isNull(req.getParameter(phoneTypeParam + "PhoneValue"))
+                && !req.getParameter(phoneTypeParam + "PhoneValue").isEmpty()) {
             String[] phonesIds = req.getParameter(phoneTypeParam + "PhoneId").split(",");
             String[] phoneValues = req.getParameter(phoneTypeParam + "PhoneValue").split(",");
             for (int i = 0; i < phonesIds.length; i++) {
@@ -107,11 +109,14 @@ public class EditAccountServlet extends HttpServlet {
             }
         }
         if (!isNull(req.getParameter("deletingPhonesIds"))) {
-            String[] deletingPhonesIds = req.getParameter("deletingPhonesIds").split(",");
-            PhoneService phoneService = getApplicationContext(req.getServletContext()).getBean(PHONE_SERVICE_BEAN,
-                    PhoneService.class);
-            for (String deletingPhonesId : deletingPhonesIds) {
-                phoneService.deleteById(valueOf(deletingPhonesId));
+            if (!isNull(req.getParameter("deletingPhonesIds"))
+                    && !req.getParameter("deletingPhonesIds").isEmpty()) {
+                String[] deletingPhonesIds = req.getParameter("deletingPhonesIds").split(",");
+                PhoneService phoneService = getApplicationContext(req.getServletContext()).getBean(PHONE_SERVICE_BEAN,
+                        PhoneService.class);
+                for (String deletingPhonesId : deletingPhonesIds) {
+                    phoneService.deleteById(valueOf(deletingPhonesId));
+                }
             }
         }
         return updatedPhones;
