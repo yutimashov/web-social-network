@@ -16,13 +16,17 @@
             <div class="card mb-4 mb-xl-0">
                 <div class="card-header">${requestScope.account.firstName} ${requestScope.account.lastName}</div>
                 <div class="card-body text-center">
-                    <c:if test="${requestScope.avatarInputStream != null}">
+                    <c:if test="${not empty requestScope.avatarInputStream}">
                         <img src="${rootUrl}/avatar?id=${requestScope.account.id}" alt="Profile avatar"
                              width="250px" height="250px">
                     </c:if>
+                    <c:if test="${empty requestScope.avatarInputStream}">
+                        <img src="${rootUrl}/static/img/img-coming-soon-placeholder.png" alt="Profile avatar">
+                    </c:if>
                     <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
                     <label for="avatar" class="form-label">Upload new avatar</label>
-                    <input form="editAccountForm" class="form-control form-control-lg" name="avatar" id="avatar" type="file" />
+                    <input form="editAccountForm" class="form-control form-control-lg" name="avatar" id="avatar"
+                           type="file"/>
                 </div>
             </div>
         </div>
