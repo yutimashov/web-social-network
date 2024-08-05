@@ -6,115 +6,190 @@
 <html>
 <head>
     <title>Account page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
-<div>
-    <h4>Friends</h4>
-    <a href="${rootUrl}/friends?id=${pageAccountId}">Friends list</a><br>
-    <c:if test="${sessionAccountId eq pageAccountId}">
-        <a href="${rootUrl}/friends/requests">Friend requests</a><br>
-    </c:if>
-    <c:if test="${sessionAccountId ne pageAccountId and empty(requestScope.alreadySentFriendRequest)}">
-        <a href="${rootUrl}/friends/send-request?id=${pageAccountId}">
-            <button>Send friend request</button>
-        </a>
-    </c:if>
-    <hr>
-</div>
-<c:if test="${sessionAccountId eq pageAccountId}">
-    <div>
-        <h4>Messages</h4>
-        <a href="${rootUrl}/account/messages?id=${pageAccountId}">My messages</a><br>
-        <hr>
-    </div>
-    <div>
-        <h4>Groups</h4>
-        <a href="${rootUrl}/group/create">
-            <button>Create group</button>
-        </a>
-        <hr>
-    </div>
-</c:if>
-<c:if test="${sessionAccountId ne pageAccountId}">
-    <div>
-        <h4>Messages</h4>
-        <a href="${rootUrl}account/messages/dialog?id=${pageAccountId}">Send message</a>
-        <hr>
-    </div>
-</c:if>
-<div>
-    <c:if test="${not empty requestScope.account.avatar}">
-        <img src="${rootUrl}/avatar?id=${pageAccountId}" alt="Profile avatar" width="100px" height="100px">
-    </c:if><br>
-    <c:if test="${empty requestScope.account.avatar}">
-        <img src="${rootUrl}/static/img/img-coming-soon-placeholder.png" alt="Profile avatar">
-    </c:if><br>
-    <span>First name: ${requestScope.account.firstName}</span><br>
-    <span>Last name: ${requestScope.account.lastName}</span><br>
-    <span>Middle name: ${requestScope.account.middleName}</span><br>
-    <span>Birthdate: ${requestScope.account.birthDate}</span><br>
-    <span>Personal phones:</span>
-    <c:forEach var="phone" items="${requestScope.account.personalPhoneNumber}">
-        &nbsp;&nbsp;<span>${phone.number}</span><br>
-    </c:forEach>
-    <br>
-    <span>Working phones:</span>
-    <c:forEach var="phone" items="${requestScope.account.workPhoneNumber}">
-        &nbsp;&nbsp;<span>${phone.number}</span><br>
-    </c:forEach>
-    <br>
-    <span>Personal address: ${requestScope.account.personalAddress}</span><br>
-    <span>Email: ${requestScope.account.email}</span><br>
-    <span>ICQ: ${requestScope.account.icq}</span><br>
-    <span>Skype: ${requestScope.account.skype}</span><br>
-    <span>Other information: ${requestScope.account.additionalInfo}</span><br>
-    <c:if test="${sessionAccountId eq param.id or sessionScope.account.role eq 'ADMIN'}">
-        <a href="${rootUrl}/account/edit?id=${pageAccountId}">
-            <button>Edit account</button>
-        </a>&nbsp;&nbsp;
-        <a href="${rootUrl}/account/delete?id=${pageAccountId}">
-            <button>Delete account</button>
-        </a>&nbsp;&nbsp;
-    </c:if>
-    <c:if test="${sessionScope.account.role eq 'ADMIN' and requestScope.account.role eq 'REGULAR'}">
-        <a href="${rootUrl}/make-admin?id=${pageAccountId}">
-            <button>Make admin</button>
-        </a><br>
-    </c:if>
-</div>
-<c:if test="${sessionAccountId eq pageAccountId}">
-    <div>
-        <form action="${rootUrl}/account-wall/message/create" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="accountReceiverId" value="${pageAccountId}">
-            <label for="text">New post:</label><br>
-            <textarea id="text" name="text" rows="10" cols="40" placeholder="Enter post message"></textarea>
-            <br><br>
-            <label for="photo">Add post photo (optional):<br><input type="file" id="photo" name="photo"></label>
-            <br><br>
-            <button type="submit">Create post</button>
-        </form>
-        <hr>
-    </div>
-</c:if>
-<c:if test="${requestScope.wallPosts ne null}">
-    <div>
-        <c:forEach items="${requestScope.wallPosts}" var="post">
-            <hr>
-            <span>Created: ${post.creationDate}</span><br>
-            <p>Author:
-                <a href="${rootUrl}/account?id=${post.accountAuthorId}">
-                        ${requestScope.accountService.getById(post.accountAuthorId).get().firstName}
-                        ${requestScope.accountService.getById(post.accountAuthorId).get().lastName}
-                </a>
-            </p>
-            <p>${post.text}</p>
-            <c:if test="${post.photo ne null}">
-                <img src="${rootUrl}/account-wall/image?id=${post.id}" alt="Message photo" width="150px" height="150px">
+<div class="container-xl mt-4">
+    <div class="row">
+        <!-- Account info -->
+        <div class="col-xl-4">
+            <div class="card mb-4 mb-xl-0">
+                <!-- Account picture -->
+                <div class="card-body text-center">
+                    <c:if test="${not empty requestScope.account.avatar}">
+                        <img src="${rootUrl}/avatar?id=${pageAccountId}" alt="Profile avatar" width="100px"
+                             height="100px">
+                    </c:if>
+                    <c:if test="${empty requestScope.account.avatar}">
+                        <img src="${rootUrl}/static/img/img-coming-soon-placeholder.png" alt="Profile avatar">
+                    </c:if>
+                </div>
+                <!-- Account data -->
+                <div class="card mb-1">
+                    <div class="card-header">${requestScope.account.firstName} ${requestScope.account.lastName}</div>
+                    <c:if test="${sessionAccountId ne pageAccountId and empty(requestScope.alreadySentFriendRequest)}">
+                        <a href="${rootUrl}/friends/send-request?id=${pageAccountId}" role="button"
+                           class="btn btn-primary bg-danger">Send friend request</a>
+                    </c:if>
+                    <c:if test="${sessionAccountId ne pageAccountId}">
+                        <a href="${rootUrl}account/messages/dialog?id=${pageAccountId}" role="button"
+                           class="btn btn-primary bg-danger">Send message</a>
+                    </c:if>
+                    <div class="card-body">
+                        <div>
+                            <!-- Birthdate -->
+                            <c:if test="${not empty requestScope.account.birthDate}">
+                                <div class="mb-2">
+                                    <p><i class="fa-solid fa-cake-candles"></i>&nbsp;${requestScope.account.birthDate}
+                                    </p>
+                                </div>
+                            </c:if>
+                            <!-- Personal address -->
+                            <c:if test="${not empty requestScope.account.personalAddress}">
+                                <div class="mb-2">
+                                    <p><i class="fa-solid fa-house"></i>&nbsp;${requestScope.account.personalAddress}
+                                    </p>
+                                </div>
+                            </c:if>
+                            <!-- Email -->
+                            <c:if test="${not empty requestScope.account.email}">
+                                <div class="mb-2">
+                                    <p><i class="fa-solid fa-envelope"></i>&nbsp;${requestScope.account.email}</p>
+                                </div>
+                            </c:if>
+                            <!-- ICQ -->
+                            <c:if test="${not empty requestScope.account.icq}">
+                                <div class="mb-2">
+                                    <p>ICQ: ${requestScope.account.icq}</p>
+                                </div>
+                            </c:if>
+                            <!-- Skype -->
+                            <c:if test="${not empty requestScope.account.skype}">
+                                <div class="mb-2">
+                                    <p><i class="fa-brands fa-skype"></i>&nbsp;${requestScope.account.skype}</p>
+                                </div>
+                            </c:if>
+                            <!-- Additional info -->
+                            <c:if test="${not empty requestScope.account.additionalInfo}">
+                                <div class="mb-2">
+                                    <p>
+                                        <i class="fa-solid fa-circle-info"></i>&nbsp;${requestScope.account.additionalInfo}
+                                    </p>
+                                </div>
+                            </c:if>
+                        </div>
+                        <!-- Phones -->
+                        <div class="row gx-3">
+                            <!-- Personal phones -->
+                            <div class="col-md-6">
+                                <p>Personal phones:</p>
+                                <c:forEach var="phone" items="${requestScope.account.personalPhoneNumber}">
+                                    <p><i class="fa-solid fa-phone"></i>&nbsp;&nbsp;${phone.number}</p>
+                                </c:forEach>
+                            </div>
+                            <!-- Working phones -->
+                            <div class="col-md-6">
+                                <p>Working phones:</p>
+                                <c:forEach var="phone" items="${requestScope.account.workPhoneNumber}">
+                                    <p><i class="fa-solid fa-phone"></i>&nbsp;&nbsp;${phone.number}</p>
+                                </c:forEach>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Account's friends -->
+                <div class="card mb-1">
+                    <div class="card-header">Friends</div>
+                    <div class="card-body row gx-3">
+                        <div class="col-md-6">
+                            <a class="link-underline-dark" href="${rootUrl}/friends?id=${pageAccountId}"><i
+                                    class="fa-solid fa-user-group"></i>&nbsp;Friends</a>
+                        </div>
+                        <div class="col-md-6">
+                            <c:if test="${sessionAccountId eq pageAccountId}">
+                                <a class="link-underline-dark" href="${rootUrl}/friends/requests"><i
+                                        class="fa-solid fa-bell"></i>&nbsp;Requests</a><br>
+                            </c:if>
+                        </div>
+                    </div>
+                </div>
+                <!-- Account's messages -->
+                <c:if test="${sessionAccountId eq pageAccountId}">
+                    <div class="card mb-1">
+                        <div class="card-header">Messages</div>
+                        <div class="card-body row gx-3">
+                            <a href="${rootUrl}/account/messages?id=${pageAccountId}"><i
+                                    class="fa-solid fa-envelope"></i>&nbsp;My messages</a>
+                        </div>
+                    </div>
+                    <div class="card mb-1">
+                        <div class="card-header">Groups</div>
+                        <a href="${rootUrl}/group/create" class="btn btn-warning w-50"
+                           role="button">Create group</a>
+                    </div>
+                </c:if>
+                <!-- Account management buttons -->
+                <div class="mb-2">
+                    <c:if test="${sessionAccountId eq param.id or sessionScope.account.role eq 'ADMIN'}">
+                        <hr class="hr"/>
+                        <a href="${rootUrl}/account/edit?id=${pageAccountId}" class="btn btn-warning"
+                           role="button">Edit account</a>&nbsp;&nbsp;
+                        <a href="${rootUrl}/account/delete?id=${pageAccountId}" class="btn btn-danger"
+                           role="button">Delete account</a>
+                    </c:if>
+                    <c:if test="${sessionScope.account.role eq 'ADMIN' and requestScope.account.role eq 'REGULAR'}">
+                        <a href="${rootUrl}/make-admin?id=${pageAccountId}">
+                            <button>Make admin</button>
+                        </a><br>
+                    </c:if>
+                </div>
+            </div>
+        </div>
+        <!-- Account Wall -->
+        <div class="col-xl-8">
+            <c:if test="${sessionAccountId eq pageAccountId}">
+                <div>
+                    <form action="${rootUrl}/account-wall/message/create" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="accountReceiverId" value="${pageAccountId}">
+                        <div class="mb-3">
+                            <label for="text" class="form-label">New post:</label>
+                            <textarea class="form-control" id="text" name="text" rows="3"
+                                      placeholder="Enter post message"></textarea>
+                            <label for="photo" class="form-label">Add image (optional):</label>
+                            <input class="form-control form-control-sm" name="photo" id="photo" type="file"/>
+                        </div>
+                        <button type="submit" class="btn btn-warning">Create post</button>
+                    </form>
+                    <hr class="hr">
+                </div>
             </c:if>
-            <hr>
-        </c:forEach>
+            <c:if test="${requestScope.wallPosts ne null}">
+                <div>
+                    <c:forEach items="${requestScope.wallPosts}" var="post">
+                        <hr>
+                        <span>Created: ${post.creationDate}</span><br>
+                        <p>Author:
+                            <a href="${rootUrl}/account?id=${post.accountAuthorId}">
+                                    ${requestScope.accountService.getById(post.accountAuthorId).get().firstName}
+                                    ${requestScope.accountService.getById(post.accountAuthorId).get().lastName}
+                            </a>
+                        </p>
+                        <p>${post.text}</p>
+                        <c:if test="${post.photo ne null}">
+                            <img src="${rootUrl}/account-wall/image?id=${post.id}" alt="Message photo" width="150px"
+                                 height="150px">
+                        </c:if>
+                        <hr>
+                    </c:forEach>
+                </div>
+            </c:if>
+        </div>
     </div>
-</c:if>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
 </body>
 </html>
