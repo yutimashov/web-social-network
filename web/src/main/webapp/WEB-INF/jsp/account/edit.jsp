@@ -25,7 +25,7 @@
                     </c:if>
                     <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
                     <label for="avatar" class="form-label">Upload new avatar</label>
-                    <input form="editAccountForm" class="form-control form-control-lg" name="avatar" id="avatar"
+                    <input form="editAccountForm" class="form-control form-control-sm" name="avatar" id="avatar"
                            type="file"/>
                 </div>
             </div>
@@ -152,7 +152,7 @@
                             </div>
                         </div>
                         <!-- Save changes button-->
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        <button type="button" class="btn btn-dark" data-bs-toggle="modal"
                                 data-bs-target="#editAccountModal">Save changes
                         </button>
                         <!-- Modal -->
@@ -172,7 +172,7 @@
                                         <button type="button" class="btn btn-secondary"
                                                 data-bs-dismiss="modal">Dismiss
                                         </button>
-                                        <button type="submit" class="btn btn-primary">Apply</button>
+                                        <button type="submit" class="btn btn-dark">Apply</button>
                                     </div>
                                 </div>
                             </div>
