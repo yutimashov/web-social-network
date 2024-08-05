@@ -12,24 +12,25 @@
 <div class="container-xl mt-4">
     <p>There are ${requestScope.accounts.size()} accounts</p>
     <c:forEach items="${requestScope.accounts}" var="account">
-        <div class="nearby-user">
-            <div class="row">
-                <div class="col-md-2 col-sm-2">
-                    <c:if test="${not empty account.avatar}">
-                        <img src="${rootUrl}/avatar?id=${account.id}" alt="user" class="profile-photo-lg" width="100px"
-                             height="100px">
-                    </c:if>
-                    <c:if test="${empty account.avatar}">
-                        <img src="${rootUrl}/static/img/img-coming-soon-placeholder.png" alt="user"
-                             class="profile-photo-lg" width="100px" height="100px">
-                    </c:if>
-                </div>
-                <div class="col-md-10 col-sm-10">
-                    <h5><a href="${rootUrl}/account?id=${account.id}">${account.firstName} ${account.lastName}</a></h5>
-                </div>
+        <div class="row">
+            <div class="col-md-2 col-sm-2">
+                <c:if test="${not empty account.avatar}">
+                    <img src="${rootUrl}/avatar?id=${account.id}" alt="user" class="profile-photo-lg" width="100px"
+                         height="100px">
+                </c:if>
+                <c:if test="${empty account.avatar}">
+                    <img src="${rootUrl}/static/img/img-coming-soon-placeholder.png" alt="user"
+                         class="profile-photo-lg" width="100px" height="100px">
+                </c:if>
+            </div>
+            <div class="col-md-10 col-sm-10">
+                <h5><a href="${rootUrl}/account?id=${account.id}">${account.firstName} ${account.lastName}</a></h5>
             </div>
         </div>
     </c:forEach>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
 </body>
 </html>
