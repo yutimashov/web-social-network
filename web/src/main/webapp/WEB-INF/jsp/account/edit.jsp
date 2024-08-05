@@ -38,25 +38,28 @@
                         <!-- Form Row-->
                         <div class="row gx-3 mb-3">
                             <!-- Form Group (first name)-->
-                            <div class="col-md-3">
+                            <div class="col-md-6">
                                 <label class="small mb-1" for="name">First name</label>
                                 <input class="form-control" id="name" name="name" type="text"
                                        placeholder="Enter your first name" value="${requestScope.account.firstName}">
                             </div>
                             <!-- Form Group (last name)-->
-                            <div class="col-md-3">
+                            <div class="col-md-6">
                                 <label class="small mb-1" for="lastName">Last name</label>
                                 <input class="form-control" id="lastName" name="lastName" type="text"
                                        placeholder="Enter your last name" value="${requestScope.account.lastName}">
                             </div>
+                        </div>
+                        <!-- Form Row -->
+                        <div class="row gx-3 mb-3">
                             <!-- Form Group (middle name)-->
-                            <div class="col-md-3">
+                            <div class="col-md-6">
                                 <label class="small mb-1" for="middleName">Last name</label>
                                 <input class="form-control" id="middleName" name="middleName" type="text"
                                        placeholder="Enter your middle name" value="${requestScope.account.middleName}">
                             </div>
                             <!-- Form Group (birthdate)-->
-                            <div class="col-md-3">
+                            <div class="col-md-6">
                                 <label class="small mb-1" for="birthDate">Birthdate</label>
                                 <input class="form-control" id="birthDate" name="birthDate" type="date"
                                        placeholder="Enter your birthdate" value="${requestScope.account.birthDate}">
