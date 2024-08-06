@@ -105,6 +105,12 @@
                             <!-- Form Group (phone number)-->
                             <div class="col-md-6">
                                 <label class="small mb-1">Personal phone numbers</label>
+                                <div class="form-text" id="personal-phone-numbers-generated-inputs">Add more personal
+                                    phone numbers
+                                    <button type="button" class="btn btn-outline-warning btn-sm"
+                                            id="addPersonalNumberBtn">&plus;
+                                    </button>
+                                </div>
                                 <input type="hidden" id="personalPhoneValue" name="personalPhoneValue">
                                 <input type="hidden" id="personalPhoneId" name="personalPhoneId">
                                 <c:forEach items="${requestScope.personalPhones}" var="phone">
@@ -152,7 +158,7 @@
                             </div>
                         </div>
                         <!-- Save changes button-->
-                        <button type="button" class="btn btn-dark" data-bs-toggle="modal"
+                        <button type="button" class="btn btn-warning" data-bs-toggle="modal"
                                 data-bs-target="#editAccountModal">Save changes
                         </button>
                         <!-- Modal -->
