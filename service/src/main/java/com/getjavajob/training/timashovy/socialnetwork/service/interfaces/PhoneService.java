@@ -18,4 +18,6 @@ public interface PhoneService {
 
     boolean update(Long phoneId, String newPhoneNumber);
 
+    Long create(Phone phone);
+
 }

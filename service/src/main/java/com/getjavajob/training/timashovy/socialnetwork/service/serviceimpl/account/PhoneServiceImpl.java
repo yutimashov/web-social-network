@@ -55,6 +55,11 @@ public class PhoneServiceImpl implements PhoneService {
     }
 
     @Override
+    public Long create(Phone phone) {
+        return phoneDao.create(phone);
+    }
+
+    @Override
     public void deleteById(Long phoneId) {
         phoneDao.deleteById(phoneId);
     }

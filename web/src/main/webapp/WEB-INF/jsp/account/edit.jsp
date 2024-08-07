@@ -102,6 +102,8 @@
                         <!-- Form Row phones -->
                         <div class="row gx-3 mb-3">
                             <input type="hidden" id="deletingPhonesIds" name="deletingPhonesIds">
+                            <input type="hidden" id="personalCreatedPhones" name="personalCreatedPhones">
+                            <input type="hidden" id="workingCreatedPhones" name="workingCreatedPhones">
                             <!-- Form Group (phone number)-->
                             <div class="col-md-6" id="personalPhones">
                                 <label class="small mb-1">Personal phone numbers</label>

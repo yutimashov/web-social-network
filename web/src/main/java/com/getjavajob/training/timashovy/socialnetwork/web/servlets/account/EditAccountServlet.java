@@ -119,6 +119,19 @@ public class EditAccountServlet extends HttpServlet {
                 }
             }
         }
+        if (!isNull(req.getParameter(phoneTypeParam + "CreatedPhones"))
+                && !req.getParameter(phoneTypeParam + "CreatedPhones").isEmpty()) {
+            String[] createdPhones = req.getParameter(phoneTypeParam + "CreatedPhones").split(",");
+            PhoneService phoneService = getApplicationContext(req.getServletContext()).getBean(PHONE_SERVICE_BEAN,
+                    PhoneService.class);
+            for (String createdPhone : createdPhones) {
+                if (phoneTypeParam.equals("personal")) {
+                    phoneService.create(new Phone(PERSONAL, createdPhone, accountId));
+                } else {
+                    phoneService.create(new Phone(WORKING, createdPhone, accountId));
+                }
+            }
+        }
         return updatedPhones;
     }
 

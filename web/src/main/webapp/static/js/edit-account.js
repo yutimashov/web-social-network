@@ -1,17 +1,41 @@
-// validate phone number
-Array.from(document.getElementsByClassName('change-phone-btn')).forEach(function (e) {
-    e.addEventListener('click',
-        () => {
-            const phoneInput = e.parentElement.parentElement.querySelector('.phone-input');
-            const isValidPhoneNumber = validatePhoneNumber(phoneInput.value);
-            if (isValidPhoneNumber) {
-                showValidationSuccessMsg(phoneInput);
+// delegated events
+document.body.addEventListener('click', function (event) {
+    // update phone
+    if (event.target.classList.contains('change-phone-btn')) {
+        const phoneInput = event.target.parentElement.parentElement.querySelector('.phone-input');
+        const isValidPhoneNumber = validatePhoneNumber(phoneInput.value);
+        if (isValidPhoneNumber) {
+            showValidationSuccessMsg(phoneInput);
+            if (phoneInput.getAttribute('data-personal-phone-id')
+                || phoneInput.getAttribute('data-working-phone-id')) {
                 updatePhone(phoneInput);
             } else {
-                showValidationFailMsg(phoneInput);
+                addPhone(phoneInput);
             }
-        })
+        } else {
+            showValidationFailMsg(phoneInput);
+        }
+    }
+    // delete phone
+    if (event.target.classList.contains('delete-phone-btn')) {
+        event.target.parentElement.parentElement.remove();
+        const inputElement = event.target.parentElement.parentElement.querySelector('.phone-input');
+        const phoneId = inputElement.getAttribute('data-personal-phone-id')
+            || inputElement.getAttribute('data-working-phone-id');
+        if (phoneId != null) {
+            deletingPhonesIds.push(phoneId);
+        }
+    }
+    // add phone
+    if (event.target.classList.contains('add-phone-btn')) {
+        addPhoneGroup(event.target.getAttribute('data-add-phone-type'));
+    }
 });
+
+// delete phone
+const deletingPhonesIds = [];
+
+// update phone number
 const validatePhoneNumber = (phoneValue) => {
     const phoneNumberPattern = /^\+375(25|29|33|44|17)\d{7,8}$/;
     return phoneNumberPattern.test(phoneValue.replace(/\s/g, ''));
@@ -64,13 +88,12 @@ const updatePhone = (phoneInput) => {
 };
 
 // add phone
-const createPhoneGroup = (phoneType) => {
+const addPhoneGroup = (phoneType) => {
     const phoneGroup = document.createElement('div');
     setAttributes(phoneGroup, {'class': 'row gx-2 mb-3'});
-
     const inputContainer = document.createElement('div');
     setAttributes(inputContainer, {'class': 'col-md-8'});
-
+    phoneGroup.appendChild(inputContainer);
     const phoneInput = document.createElement('input');
     setAttributes(phoneInput, {
         'class': 'form-control phone-input',
@@ -79,60 +102,38 @@ const createPhoneGroup = (phoneType) => {
         'placeholder': 'Enter phone number',
         'data-phone-type': phoneType
     });
-
+    inputContainer.appendChild(phoneInput);
     const changeBtnContainer = document.createElement('div');
     setAttributes(changeBtnContainer, {'class': 'col-md-2'});
-
+    phoneGroup.appendChild(changeBtnContainer);
     const changeBtn = document.createElement('button');
     setAttributes(changeBtn, {
         'class': 'btn btn-success btn-sm change-phone-btn',
         'type': 'button'
     });
     changeBtn.innerText = 'Change';
-    changeBtn.addEventListener('click', () => validateEditPhoneNumber(phoneInput));
-
+    changeBtnContainer.appendChild(changeBtn);
     const closeBtnContainer = document.createElement('div');
     setAttributes(closeBtnContainer, {'class': 'col-md-2'});
-
+    phoneGroup.appendChild(closeBtnContainer);
     const closeBtn = document.createElement('button');
     setAttributes(closeBtn, {
         'class': 'btn-close delete-phone-btn btn-sm',
         'type': 'button',
         'aria-label': 'Close'
     });
-
-    phoneGroup.appendChild(inputContainer);
-    inputContainer.appendChild(phoneInput);
-    phoneGroup.appendChild(changeBtnContainer);
-    changeBtnContainer.appendChild(changeBtn);
-    phoneGroup.appendChild(closeBtnContainer);
     closeBtnContainer.appendChild(closeBtn);
-
     document.getElementById(`${phoneType}Phones`).appendChild(phoneGroup);
-    closeBtn.addEventListener('click', (event) => event.target.parentElement.parentElement.remove());
 };
-const addPhoneButtons = document.getElementsByClassName('add-phone-btn');
-Array.from(addPhoneButtons).forEach(function (e) {
-    e.addEventListener('click',
-        () => createPhoneGroup(e.getAttribute('data-add-phone-type'))
-    );
-});
-
-// delete phone
-const deletePhoneButtons = document.getElementsByClassName('delete-phone-btn');
-const deletingPhonesIds = [];
-Array.from(deletePhoneButtons).forEach(function (e) {
-    e.addEventListener('click', (event) => {
-        event.target.parentElement.parentElement.remove();
-        const inputElement = e.parentNode.querySelector('input[type="tel"]');
-        const phoneId = inputElement.getAttribute('data-personal-phone-id')
-            || inputElement.getAttribute('data-working-phone-id');
-        if (phoneId != null) {
-            deletingPhonesIds.push(phoneId);
-        }
-    });
-});
-
+const personalCreatedPhones = [];
+const workingCreatedPhones = [];
+const addPhone = (phoneInput) => {
+    if (phoneInput.getAttribute('name').startsWith('personal')) {
+        personalCreatedPhones.push(phoneInput.value);
+    } else {
+        workingCreatedPhones.push(phoneInput.value);
+    }
+};
 // prepare data before submitting form
 document.getElementById('editAccountForm').addEventListener('submit', (event) => {
     event.preventDefault();
@@ -141,6 +142,8 @@ document.getElementById('editAccountForm').addEventListener('submit', (event) =>
     document.getElementById('workingPhoneValue').value = workingPhones.join(',');
     document.getElementById('workingPhoneId').value = workingPhonesIds.join(',');
     document.getElementById('deletingPhonesIds').value = deletingPhonesIds.join(',');
+    document.getElementById('personalCreatedPhones').value = personalCreatedPhones.join(',');
+    document.getElementById('workingCreatedPhones').value = workingCreatedPhones.join(',');
     document.getElementById('editAccountForm').submit();
 });
 
