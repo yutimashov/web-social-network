@@ -39,7 +39,7 @@
                           method="POST"
                           enctype="multipart/form-data" id="editAccountForm">
                         <!-- Form Group (username)-->
-                        <!-- Form Row-->
+                        <!-- Form Row first name and last name -->
                         <div class="row gx-3 mb-3">
                             <!-- Form Group (first name)-->
                             <div class="col-md-6">
@@ -69,7 +69,7 @@
                                        placeholder="Enter your birthdate" value="${requestScope.account.birthDate}">
                             </div>
                         </div>
-                        <!-- Form Row -->
+                        <!-- Form Row skype and icq -->
                         <div class="row gx-3 mb-3">
                             <!-- Form Group (skype)-->
                             <div class="col-md-6">
@@ -84,7 +84,7 @@
                                        placeholder="Enter your ICQ name" value="${requestScope.account.icq}">
                             </div>
                         </div>
-                        <!-- Form Row -->
+                        <!-- Form Row email and password -->
                         <div class="row gx-3 mb-3">
                             <!-- Form Group (email)-->
                             <div class="col-md-6">
@@ -99,16 +99,17 @@
                                        placeholder="Enter new password">
                             </div>
                         </div>
-                        <!-- Form Row-->
+                        <!-- Form Row phones -->
                         <div class="row gx-3 mb-3">
                             <input type="hidden" id="deletingPhonesIds" name="deletingPhonesIds">
                             <!-- Form Group (phone number)-->
-                            <div class="col-md-6">
+                            <div class="col-md-6" id="personalPhones">
                                 <label class="small mb-1">Personal phone numbers</label>
-                                <div class="form-text" id="personal-phone-numbers-generated-inputs">Add more personal
-                                    phone numbers
-                                    <button type="button" class="btn btn-outline-warning btn-sm"
-                                            id="addPersonalNumberBtn">&plus;
+                                <div class="form-text" id="personal-phone-numbers-generated-inputs">Add personal
+                                    phone
+                                    <button type="button" class="btn btn-warning btn-sm add-phone-btn"
+                                            data-add-phone-type="personal">
+                                        &plus;
                                     </button>
                                 </div>
                                 <input type="hidden" id="personalPhoneValue" name="personalPhoneValue">
@@ -116,12 +117,12 @@
                                 <c:forEach items="${requestScope.personalPhones}" var="phone">
                                     <div class="row gx-2 mb-3">
                                         <div class="col-md-8">
-                                            <input class="form-control" type="tel" name="personalPhoneValue"
+                                            <input class="form-control phone-input" type="tel" name="personalPhoneValue"
                                                    placeholder="Enter new phone number"
                                                    data-personal-phone-id="${phone.id}" value="${phone.number}">
                                         </div>
                                         <div class="col-md-2">
-                                            <button class="btn btn-success btn-sm validate-phone-btn" type="button">
+                                            <button class="btn btn-success btn-sm change-phone-btn" type="button">
                                                 Change
                                             </button>
                                         </div>
@@ -133,19 +134,26 @@
                                 </c:forEach>
                             </div>
                             <!-- Form Group (working phones)-->
-                            <div class="col-md-6">
+                            <div class="col-md-6" id="workingPhones">
                                 <label class="small mb-1">Working phone numbers</label>
+                                <div class="form-text" id="personal-phone-numbers-generated-inputs">Add working
+                                    phone
+                                    <button type="button" class="btn btn-warning btn-sm add-phone-btn"
+                                            data-add-phone-type="working">
+                                        &plus;
+                                    </button>
+                                </div>
                                 <input type="hidden" id="workingPhoneValue" name="workingPhoneValue">
                                 <input type="hidden" id="workingPhoneId" name="workingPhoneId">
                                 <c:forEach items="${requestScope.workingPhones}" var="phone">
                                     <div class="row gx-2 mb-3">
                                         <div class="col-md-8">
-                                            <input class="form-control" type="tel" name="workingPhoneValue"
+                                            <input class="form-control phone-input" type="tel" name="workingPhoneValue"
                                                    placeholder="Enter new phone number"
                                                    data-working-phone-id="${phone.id}" value="${phone.number}">
                                         </div>
                                         <div class="col-md-2">
-                                            <button class="btn btn-success btn-sm validate-phone-btn"
+                                            <button class="btn btn-success btn-sm change-phone-btn"
                                                     type="button">Change
                                             </button>
                                         </div>
