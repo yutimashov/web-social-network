@@ -50,6 +50,11 @@ public class PhoneServiceImpl implements PhoneService {
     }
 
     @Override
+    public boolean update(Long phoneId, String newPhoneNumber) {
+        return phoneDao.update(phoneId, newPhoneNumber);
+    }
+
+    @Override
     public void deleteById(Long phoneId) {
         phoneDao.deleteById(phoneId);
     }

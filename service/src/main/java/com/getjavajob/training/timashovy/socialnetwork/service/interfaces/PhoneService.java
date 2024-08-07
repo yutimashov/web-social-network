@@ -16,4 +16,6 @@ public interface PhoneService {
 
     void deleteById(Long phoneId);
 
+    boolean update(Long phoneId, String newPhoneNumber);
+
 }
