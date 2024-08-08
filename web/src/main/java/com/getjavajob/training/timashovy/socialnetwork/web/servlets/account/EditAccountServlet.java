@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
-import com.getjavajob.training.timashovy.socialnetwork.common.util.AccountUpdatingData;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneService;
 import org.springframework.context.ApplicationContext;
@@ -58,34 +57,30 @@ public class EditAccountServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         Long accountId = valueOf(req.getParameter("id"));
-        System.out.println(req.getParameter("phoneData"));
         addPhones(req, accountId);
         updatePhones(req);
         deletePhones(req);
         getApplicationContext(req.getServletContext()).getBean(ACCOUNT_SERVICE_BEAN, AccountService.class)
-                .update(accountId, updateAccountData(req));
+                .update(accountId, getUpdatedAccountData(req));
         resp.sendRedirect("/account?id=" + accountId);
     }
 
-    private AccountUpdatingData updateAccountData(HttpServletRequest req) throws ServletException, IOException {
-        return new AccountUpdatingData.Builder()
-                .account(new Account.Builder()
-                        .id(valueOf(req.getParameter("id")))
-                        .avatar(req.getPart(AVATAR_PARAMETER_NAME) != null
-                                && req.getPart(AVATAR_PARAMETER_NAME).getSize() > 0
-                                ? req.getPart(AVATAR_PARAMETER_NAME).getInputStream() : null)
-                        .firstName(req.getParameter(FIRST_NAME_PARAMETER_NAME))
-                        .lastName(req.getParameter(LAST_NAME_PARAMETER_NAME))
-                        .middleName(req.getParameter(MIDDLE_NAME_PARAMETER_NAME))
-                        .birthDate(!isNull(req.getParameter(BIRTHDATE_PARAMETER_NAME))
-                                && !req.getParameter(BIRTHDATE_PARAMETER_NAME).isEmpty()
-                                ? parse(req.getParameter(BIRTHDATE_PARAMETER_NAME))
-                                : null)
-                        .skype(req.getParameter(SKYPE_PARAMETER_NAME))
-                        .icq(req.getParameter(ICQ_PARAMETER_NAME))
-                        .email(req.getParameter(EMAIL_PARAMETER_NAME))
-                        .build())
-                .password(req.getParameter(PASSWORD_PARAMETER_NAME))
+    private Account getUpdatedAccountData(HttpServletRequest req) throws ServletException, IOException {
+        return new Account.Builder()
+                .id(valueOf(req.getParameter("id")))
+                .avatar(req.getPart(AVATAR_PARAMETER_NAME) != null
+                        && req.getPart(AVATAR_PARAMETER_NAME).getSize() > 0
+                        ? req.getPart(AVATAR_PARAMETER_NAME).getInputStream() : null)
+                .firstName(req.getParameter(FIRST_NAME_PARAMETER_NAME))
+                .lastName(req.getParameter(LAST_NAME_PARAMETER_NAME))
+                .middleName(req.getParameter(MIDDLE_NAME_PARAMETER_NAME))
+                .birthDate(!isNull(req.getParameter(BIRTHDATE_PARAMETER_NAME))
+                        && !req.getParameter(BIRTHDATE_PARAMETER_NAME).isEmpty()
+                        ? parse(req.getParameter(BIRTHDATE_PARAMETER_NAME))
+                        : null)
+                .skype(req.getParameter(SKYPE_PARAMETER_NAME))
+                .icq(req.getParameter(ICQ_PARAMETER_NAME))
+                .email(req.getParameter(EMAIL_PARAMETER_NAME))
                 .build();
     }
 

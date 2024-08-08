@@ -3,7 +3,6 @@ package com.getjavajob.training.timashovy.socialnetwork.service.interfaces;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.AccountRole;
 import com.getjavajob.training.timashovy.socialnetwork.common.util.AccountRegistrationData;
-import com.getjavajob.training.timashovy.socialnetwork.common.util.AccountUpdatingData;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +15,7 @@ public interface AccountService {
 
     void create(AccountRegistrationData accountRegisterData);
 
-    void update(Long accountId, AccountUpdatingData accountUpdatingData);
+    void update(Long accountId, Account updatedAccount);
 
     boolean delete(Long accountId);
 
