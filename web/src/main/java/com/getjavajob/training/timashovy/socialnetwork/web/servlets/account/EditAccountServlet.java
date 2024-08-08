@@ -1,8 +1,10 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.servlets.account;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
-import com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType;
 import com.getjavajob.training.timashovy.socialnetwork.common.util.AccountUpdatingData;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneService;
@@ -13,8 +15,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
@@ -36,6 +36,7 @@ public class EditAccountServlet extends HttpServlet {
     private static final String ICQ_PARAMETER_NAME = "icq";
     private static final String EMAIL_PARAMETER_NAME = "email";
     private static final String PASSWORD_PARAMETER_NAME = "password";
+    private static final String AVATAR_PARAMETER_NAME = "avatar";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -45,7 +46,7 @@ public class EditAccountServlet extends HttpServlet {
         if (accountService.getById(accountId).isPresent()) {
             req.setAttribute("account", accountService.getById(accountId).get());
             req.setAttribute("avatarInputStream", accountService.getById(accountId).get().getAvatar());
-            PhoneService phoneService = (PhoneService) ctx.getBean(PHONE_SERVICE_BEAN);
+            PhoneService phoneService = ctx.getBean(PHONE_SERVICE_BEAN, PhoneService.class);
             req.setAttribute("personalPhones", phoneService.getPersonalPhoneNumbers(accountId));
             req.setAttribute("workingPhones", phoneService.getWorkPhoneNumbers(accountId));
             req.getRequestDispatcher(getJspPagePath("/account/edit")).forward(req, resp);
@@ -57,6 +58,10 @@ public class EditAccountServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         Long accountId = valueOf(req.getParameter("id"));
+        System.out.println(req.getParameter("phoneData"));
+        addPhones(req, accountId);
+        updatePhones(req);
+        deletePhones(req);
         getApplicationContext(req.getServletContext()).getBean(ACCOUNT_SERVICE_BEAN, AccountService.class)
                 .update(accountId, updateAccountData(req));
         resp.sendRedirect("/account?id=" + accountId);
@@ -66,8 +71,9 @@ public class EditAccountServlet extends HttpServlet {
         return new AccountUpdatingData.Builder()
                 .account(new Account.Builder()
                         .id(valueOf(req.getParameter("id")))
-                        .avatar(req.getPart("avatar") != null && req.getPart("avatar").getSize() > 0
-                                ? req.getPart("avatar").getInputStream() : null)
+                        .avatar(req.getPart(AVATAR_PARAMETER_NAME) != null
+                                && req.getPart(AVATAR_PARAMETER_NAME).getSize() > 0
+                                ? req.getPart(AVATAR_PARAMETER_NAME).getInputStream() : null)
                         .firstName(req.getParameter(FIRST_NAME_PARAMETER_NAME))
                         .lastName(req.getParameter(LAST_NAME_PARAMETER_NAME))
                         .middleName(req.getParameter(MIDDLE_NAME_PARAMETER_NAME))
@@ -78,61 +84,55 @@ public class EditAccountServlet extends HttpServlet {
                         .skype(req.getParameter(SKYPE_PARAMETER_NAME))
                         .icq(req.getParameter(ICQ_PARAMETER_NAME))
                         .email(req.getParameter(EMAIL_PARAMETER_NAME))
-                        .personalPhoneNumber(getUpdatedPhones(req, "personal", PERSONAL))
-                        .workPhoneNumber(getUpdatedPhones(req, "working", WORKING))
                         .build())
                 .password(req.getParameter(PASSWORD_PARAMETER_NAME))
                 .build();
     }
 
-    /**
-     * Get updated phone numbers.
-     * From servlet page we get array of phonesIds and array of new phoneValues.
-     * There will be match between id and phoneValue. If there was no update, value will be empty.
-     *
-     * @param req request from servlet page
-     * @return list of updated phones with new values or empty list if there were no updates
-     */
-    private List<Phone> getUpdatedPhones(HttpServletRequest req, String phoneTypeParam, PhoneType phoneType) {
-        List<Phone> updatedPhones = new ArrayList<>();
-        Long accountId = valueOf(req.getParameter("id"));
-        if (!isNull(req.getParameter(phoneTypeParam + "PhoneId"))
-                && !req.getParameter(phoneTypeParam + "PhoneId").isEmpty()
-                && !isNull(req.getParameter(phoneTypeParam + "PhoneValue"))
-                && !req.getParameter(phoneTypeParam + "PhoneValue").isEmpty()) {
-            String[] phonesIds = req.getParameter(phoneTypeParam + "PhoneId").split(",");
-            String[] phoneValues = req.getParameter(phoneTypeParam + "PhoneValue").split(",");
-            for (int i = 0; i < phonesIds.length; i++) {
-                if (!isNull(phonesIds[i]) && !phonesIds[i].isEmpty() && !phoneValues[i].isEmpty()) {
-                    updatedPhones.add(new Phone(valueOf(phonesIds[i]), phoneType, phoneValues[i], accountId));
-                }
-            }
+    private void deletePhones(HttpServletRequest req) {
+        JsonNode rootNode = getRootNode(req);
+        JsonNode deletedNode = rootNode.get("deletedPhonesIds");
+        PhoneService phoneService = getApplicationContext(req.getServletContext()).getBean(PHONE_SERVICE_BEAN,
+                PhoneService.class);
+        for (int i = 0; i < deletedNode.size(); i++) {
+            phoneService.deleteById(deletedNode.get(i).asLong());
         }
-        if (!isNull(req.getParameter("deletingPhonesIds"))) {
-            if (!isNull(req.getParameter("deletingPhonesIds"))
-                    && !req.getParameter("deletingPhonesIds").isEmpty()) {
-                String[] deletingPhonesIds = req.getParameter("deletingPhonesIds").split(",");
-                PhoneService phoneService = getApplicationContext(req.getServletContext()).getBean(PHONE_SERVICE_BEAN,
-                        PhoneService.class);
-                for (String deletingPhonesId : deletingPhonesIds) {
-                    phoneService.deleteById(valueOf(deletingPhonesId));
-                }
-            }
+    }
+
+    private void updatePhones(HttpServletRequest req) {
+        JsonNode rootNode = getRootNode(req);
+        JsonNode updatedNode = rootNode.get("updated");
+        PhoneService phoneService = getApplicationContext(req.getServletContext()).getBean(PHONE_SERVICE_BEAN,
+                PhoneService.class);
+        for (JsonNode phoneNode : updatedNode) {
+            phoneService.update(phoneNode.get("id").asLong(), phoneNode.get("number").asText());
         }
-        if (!isNull(req.getParameter(phoneTypeParam + "CreatedPhones"))
-                && !req.getParameter(phoneTypeParam + "CreatedPhones").isEmpty()) {
-            String[] createdPhones = req.getParameter(phoneTypeParam + "CreatedPhones").split(",");
-            PhoneService phoneService = getApplicationContext(req.getServletContext()).getBean(PHONE_SERVICE_BEAN,
-                    PhoneService.class);
-            for (String createdPhone : createdPhones) {
-                if (phoneTypeParam.equals("personal")) {
-                    phoneService.create(new Phone(PERSONAL, createdPhone, accountId));
-                } else {
-                    phoneService.create(new Phone(WORKING, createdPhone, accountId));
-                }
-            }
+    }
+
+    private void addPhones(HttpServletRequest req, Long accountId) {
+        JsonNode rootNode = getRootNode(req);
+        JsonNode addedNode = rootNode.get("added");
+        JsonNode personalAddedNode = addedNode.get("personal");
+        JsonNode workingAddedNode = addedNode.get("working");
+        PhoneService phoneService = getApplicationContext(req.getServletContext()).getBean(PHONE_SERVICE_BEAN,
+                PhoneService.class);
+        for (JsonNode phoneNode : personalAddedNode) {
+            phoneService.create(new Phone(PERSONAL, phoneNode.get("number").asText(), accountId));
         }
-        return updatedPhones;
+        for (JsonNode phoneNode : workingAddedNode) {
+            phoneService.create(new Phone(WORKING, phoneNode.get("number").asText(), accountId));
+        }
+    }
+
+    private JsonNode getRootNode(HttpServletRequest req) {
+        String phonesJSON = req.getParameter("phoneData");
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode rootNode = null;
+        try {
+            return objectMapper.readTree(phonesJSON);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

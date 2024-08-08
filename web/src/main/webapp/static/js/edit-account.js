@@ -1,3 +1,11 @@
+const phones = {
+    "updated": [],
+    "added": {
+        "personal": [],
+        "working": []
+    },
+    "deletedPhonesIds": []
+};
 // delegated events
 document.body.addEventListener('click', function (event) {
     // update phone
@@ -23,7 +31,7 @@ document.body.addEventListener('click', function (event) {
         const phoneId = inputElement.getAttribute('data-personal-phone-id')
             || inputElement.getAttribute('data-working-phone-id');
         if (phoneId != null) {
-            deletingPhonesIds.push(phoneId);
+            phones.deletedPhonesIds.push(phoneId);
         }
     }
     // add phone
@@ -31,10 +39,6 @@ document.body.addEventListener('click', function (event) {
         addPhoneGroup(event.target.getAttribute('data-add-phone-type'));
     }
 });
-
-// delete phone
-const deletingPhonesIds = [];
-
 // update phone number
 const validatePhoneNumber = (phoneValue) => {
     const phoneNumberPattern = /^\+375(25|29|33|44|17)\d{7,8}$/;
@@ -72,19 +76,13 @@ const addCloseButtonToMsg = (message) => {
     });
     message.appendChild(closeBtn);
 };
-const personalPhones = [];
-const personalPhonesIds = [];
-const workingPhones = [];
-const workingPhonesIds = [];
 const updatePhone = (phoneInput) => {
-    const phoneValue = phoneInput.value;
-    if (phoneInput.getAttribute('name').startsWith('personal')) {
-        personalPhones.push(phoneValue);
-        personalPhonesIds.push(phoneInput.getAttribute('data-personal-phone-id'));
-    } else {
-        workingPhones.push(phoneValue);
-        workingPhonesIds.push(phoneInput.getAttribute('data-working-phone-id'));
-    }
+    phones.updated.push({
+        'id': phoneInput.getAttribute('name').startsWith('personal')
+            ? phoneInput.getAttribute('data-personal-phone-id')
+            : phoneInput.getAttribute('data-working-phone-id'),
+        'number': phoneInput.value
+    });
 };
 
 // add phone
@@ -125,25 +123,19 @@ const addPhoneGroup = (phoneType) => {
     closeBtnContainer.appendChild(closeBtn);
     document.getElementById(`${phoneType}Phones`).appendChild(phoneGroup);
 };
-const personalCreatedPhones = [];
-const workingCreatedPhones = [];
 const addPhone = (phoneInput) => {
-    if (phoneInput.getAttribute('name').startsWith('personal')) {
-        personalCreatedPhones.push(phoneInput.value);
-    } else {
-        workingCreatedPhones.push(phoneInput.value);
-    }
+    phoneInput.getAttribute('name').startsWith('personal')
+        ? phones.added.personal.push({
+            'number': phoneInput.value
+        })
+        : phones.added.working.push({
+            'number': phoneInput.value
+        });
 };
 // prepare data before submitting form
 document.getElementById('editAccountForm').addEventListener('submit', (event) => {
     event.preventDefault();
-    document.getElementById('personalPhoneValue').value = personalPhones.join(',');
-    document.getElementById('personalPhoneId').value = personalPhonesIds.join(',');
-    document.getElementById('workingPhoneValue').value = workingPhones.join(',');
-    document.getElementById('workingPhoneId').value = workingPhonesIds.join(',');
-    document.getElementById('deletingPhonesIds').value = deletingPhonesIds.join(',');
-    document.getElementById('personalCreatedPhones').value = personalCreatedPhones.join(',');
-    document.getElementById('workingCreatedPhones').value = workingCreatedPhones.join(',');
+    document.getElementById('phoneData').value = JSON.stringify(phones);
     document.getElementById('editAccountForm').submit();
 });
 

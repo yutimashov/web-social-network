@@ -101,9 +101,7 @@
                         </div>
                         <!-- Form Row phones -->
                         <div class="row gx-3 mb-3">
-                            <input type="hidden" id="deletingPhonesIds" name="deletingPhonesIds">
-                            <input type="hidden" id="personalCreatedPhones" name="personalCreatedPhones">
-                            <input type="hidden" id="workingCreatedPhones" name="workingCreatedPhones">
+                            <input type="hidden" id="phoneData" name="phoneData">
                             <!-- Form Group (phone number)-->
                             <div class="col-md-6" id="personalPhones">
                                 <label class="small mb-1">Personal phone numbers</label>
@@ -114,8 +112,6 @@
                                         &plus;
                                     </button>
                                 </div>
-                                <input type="hidden" id="personalPhoneValue" name="personalPhoneValue">
-                                <input type="hidden" id="personalPhoneId" name="personalPhoneId">
                                 <c:forEach items="${requestScope.personalPhones}" var="phone">
                                     <div class="row gx-2 mb-3">
                                         <div class="col-md-8">
@@ -145,8 +141,6 @@
                                         &plus;
                                     </button>
                                 </div>
-                                <input type="hidden" id="workingPhoneValue" name="workingPhoneValue">
-                                <input type="hidden" id="workingPhoneId" name="workingPhoneId">
                                 <c:forEach items="${requestScope.workingPhones}" var="phone">
                                     <div class="row gx-2 mb-3">
                                         <div class="col-md-8">
