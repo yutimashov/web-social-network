@@ -103,11 +103,11 @@
                 <div class="card mb-1">
                     <div class="card-header">Friends</div>
                     <div class="card-body row gx-3">
-                        <div class="col-md-6">
+                        <div>
                             <a class="link-underline-dark" href="${rootUrl}/friends?id=${pageAccountId}"><i
                                     class="fa-solid fa-user-group"></i>&nbsp;Friends</a>
                         </div>
-                        <div class="col-md-6">
+                        <div>
                             <c:if test="${sessionAccountId eq pageAccountId}">
                                 <a class="link-underline-dark" href="${rootUrl}/friends/requests"><i
                                         class="fa-solid fa-bell"></i>&nbsp;Requests</a><br>
@@ -126,8 +126,10 @@
                     </div>
                     <div class="card mb-1">
                         <div class="card-header">Groups</div>
-                        <a href="${rootUrl}/group/create" class="btn btn-warning w-50"
-                           role="button">Create group</a>
+                        <div class="card-body row gx-3">
+                            <a href="${rootUrl}/group/create"><i
+                                    class="fa-solid fa-people-group"></i>&nbsp;Create group</a>
+                        </div>
                     </div>
                 </c:if>
                 <!-- Account management buttons -->
