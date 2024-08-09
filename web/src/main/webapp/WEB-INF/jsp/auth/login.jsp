@@ -18,14 +18,34 @@
                         <form action="${pageContext.request.contextPath}/login" method="POST">
                             <div class="mb-3">
                                 <c:choose>
-                                    <c:when test="${param.error eq 'auth_data'}"><span
-                                            style="color:red">Incorrect email or password</span></c:when>
-                                    <c:when test="${param.error eq 'authorization'}"><span
-                                            style="color:red">You are not authorized!</span></c:when>
-                                    <c:when test="${param.error eq 'reg'}"><span
-                                            style="color:red">Account has not been registered!</span></c:when>
-                                    <c:when test="${param.reg eq 'success'}"><span
-                                            style="color:cadetblue">Account has been registered!</span></c:when>
+                                    <c:when test="${param.error eq 'auth_data'}">
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            Incorrect email or password!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                    </c:when>
+                                    <c:when test="${param.error eq 'authorization'}">
+                                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                            You are not authorized!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                    </c:when>
+                                    <c:when test="${param.error eq 'reg'}">
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            Account has not been registered!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                    </c:when>
+                                    <c:when test="${param.reg eq 'success'}">
+                                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                            Account has been registered!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                    </c:when>
                                 </c:choose>
                             </div>
                             <div class="row gy-2 overflow-hidden">
