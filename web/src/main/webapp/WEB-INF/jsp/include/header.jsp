@@ -7,7 +7,7 @@
 <c:if test="${not empty account}">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-xl container-fluid">
-            <a class="navbar-brand" href="#">Navbar</a>
+            <a class="navbar-brand" href="${rootUrl}/account?id=${account.id}">My page</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
