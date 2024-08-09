@@ -19,8 +19,8 @@
                 <!-- Account picture -->
                 <div class="card-body text-center">
                     <c:if test="${not empty requestScope.account.avatar}">
-                        <img src="${rootUrl}/avatar?id=${pageAccountId}" alt="Profile avatar" width="100px"
-                             height="100px">
+                        <img src="${rootUrl}/avatar?id=${pageAccountId}" alt="Profile avatar" width="250px"
+                             height="250px">
                     </c:if>
                     <c:if test="${empty requestScope.account.avatar}">
                         <img src="${rootUrl}/static/img/img-coming-soon-placeholder.png" alt="Profile avatar">

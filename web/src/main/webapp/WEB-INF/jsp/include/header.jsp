@@ -3,6 +3,7 @@
 <c:set var="rootUrl" value="${pageContext.request.contextPath}"/>
 <c:set var="account" value="${sessionScope.account}"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/style.css">
 <c:if test="${not empty account}">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-xl container-fluid">
@@ -41,9 +42,10 @@
                 </ul>
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0 profile-menu">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        <a class="nav-link dropdown-toggle bsb-dropdown-toggle-caret-disable" href="#" role="button"
                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-user"></i>
+                            <img src="${rootUrl}/avatar?id=${account.id}" width="50" height="50" class="rounded-circle"
+                                 alt="${account.firstName} ${account.lastName}">
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                             <li><a class="dropdown-item" href="${rootUrl}/account?id=${account.id}">
