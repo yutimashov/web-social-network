@@ -34,7 +34,6 @@
                                         <input type="email" id="email" name="email" class="form-control"
                                                placeholder="name@example.com" required>
                                         <label for="email" class="form-label">Email</label>
-
                                     </div>
                                 </div>
                                 <div class="col-12">
