@@ -34,7 +34,6 @@ public class EditAccountServlet extends HttpServlet {
     private static final String SKYPE_PARAMETER_NAME = "skype";
     private static final String ICQ_PARAMETER_NAME = "icq";
     private static final String EMAIL_PARAMETER_NAME = "email";
-    private static final String PASSWORD_PARAMETER_NAME = "password";
     private static final String AVATAR_PARAMETER_NAME = "avatar";
 
     @Override
@@ -57,11 +56,11 @@ public class EditAccountServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         Long accountId = valueOf(req.getParameter("id"));
+        getApplicationContext(req.getServletContext()).getBean(ACCOUNT_SERVICE_BEAN, AccountService.class)
+                .update(accountId, getUpdatedAccountData(req));
         addPhones(req, accountId);
         updatePhones(req);
         deletePhones(req);
-        getApplicationContext(req.getServletContext()).getBean(ACCOUNT_SERVICE_BEAN, AccountService.class)
-                .update(accountId, getUpdatedAccountData(req));
         resp.sendRedirect("/account?id=" + accountId);
     }
 
@@ -122,7 +121,6 @@ public class EditAccountServlet extends HttpServlet {
     private JsonNode getRootNode(HttpServletRequest req) {
         String phonesJSON = req.getParameter("phoneData");
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode rootNode = null;
         try {
             return objectMapper.readTree(phonesJSON);
         } catch (JsonProcessingException e) {
