@@ -109,7 +109,7 @@ const addPhoneGroup = (phoneType) => {
         'class': 'btn btn-success btn-sm change-phone-btn',
         'type': 'button'
     });
-    changeBtn.innerText = 'Change';
+    changeBtn.innerText = 'Add';
     changeBtnContainer.appendChild(changeBtn);
     const closeBtnContainer = document.createElement('div');
     setAttributes(closeBtnContainer, {'class': 'col-md-2'});

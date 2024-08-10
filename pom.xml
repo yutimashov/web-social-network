@@ -23,9 +23,9 @@
         <postgresql.version>42.7.2</postgresql.version>
         <junit-jupiter-engine.version>5.9.2</junit-jupiter-engine.version>
         <h2database.version>2.2.224</h2database.version>
-        <mockito-core.version>4.8.1</mockito-core.version>
-        <mockito-junit-jupiter.version>4.8.1</mockito-junit-jupiter.version>
-        <mockito-inline.version>5.2.0</mockito-inline.version>
+        <mockito-core.version>3.12.4</mockito-core.version>
+        <mockito-junit-jupiter.version>3.12.4</mockito-junit-jupiter.version>
+        <mockito-inline.version>3.12.4</mockito-inline.version>
         <javaxservlet-api.version>4.0.1</javaxservlet-api.version>
         <jstl.version>1.2</jstl.version>
         <spring.version>5.3.37</spring.version>
