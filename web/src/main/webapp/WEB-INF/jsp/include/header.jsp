@@ -44,8 +44,18 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle bsb-dropdown-toggle-caret-disable" href="#" role="button"
                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="${rootUrl}/avatar?id=${account.id}" width="50" height="50" class="rounded-circle"
-                                 alt="${account.firstName} ${account.lastName}">
+                            <c:choose>
+                                <c:when test="${not empty requestScope.account.avatar}">
+                                    <img src="${rootUrl}/avatar?id=${account.id}" width="50" height="50"
+                                         class="rounded-circle"
+                                         alt="${account.firstName} ${account.lastName}">
+                                </c:when>
+                                <c:otherwise>
+                                    <img src="${rootUrl}/static/img/img-coming-soon-placeholder.png" width="50"
+                                         height="50" class="rounded-circle"
+                                         alt="${account.firstName} ${account.lastName}">
+                                </c:otherwise>
+                            </c:choose>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                             <li><a class="dropdown-item" href="${rootUrl}/account?id=${account.id}">

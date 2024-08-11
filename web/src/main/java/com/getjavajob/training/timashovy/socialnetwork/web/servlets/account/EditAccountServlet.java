@@ -25,6 +25,7 @@ import static java.lang.Long.valueOf;
 import static java.time.LocalDate.parse;
 import static java.util.Objects.isNull;
 
+//TODO: add exception. Add server error to front
 public class EditAccountServlet extends HttpServlet {
 
     private static final String FIRST_NAME_PARAMETER_NAME = "name";
@@ -106,15 +107,15 @@ public class EditAccountServlet extends HttpServlet {
     private void addPhones(HttpServletRequest req, Long accountId) {
         JsonNode rootNode = getRootNode(req);
         JsonNode addedNode = rootNode.get("added");
-        JsonNode personalAddedNode = addedNode.get("personal");
-        JsonNode workingAddedNode = addedNode.get("working");
         PhoneService phoneService = getApplicationContext(req.getServletContext()).getBean(PHONE_SERVICE_BEAN,
                 PhoneService.class);
+        JsonNode personalAddedNode = addedNode.get("personal");
+        JsonNode workingAddedNode = addedNode.get("working");
         for (JsonNode phoneNode : personalAddedNode) {
-            phoneService.create(new Phone(PERSONAL, phoneNode.get("number").asText(), accountId));
+            phoneService.create(new Phone(PERSONAL, phoneNode.asText(), accountId));
         }
         for (JsonNode phoneNode : workingAddedNode) {
-            phoneService.create(new Phone(WORKING, phoneNode.get("number").asText(), accountId));
+            phoneService.create(new Phone(WORKING, phoneNode.asText(), accountId));
         }
     }
 

@@ -57,15 +57,19 @@ public class AccountServiceImpl implements AccountService {
     public void create(AccountRegistrationData accountRegisterData) {
         Long accountId = accountDao.create(accountRegisterData.getAccount());
         passwordDao.create(passwordService.create(accountId, accountRegisterData.getPassword()));
-        List<Phone> personalPhones = phoneService.createPersonalPhones(accountId,
-                accountRegisterData.getPersonalPhoneNumbers());
-        for (Phone personalPhone : personalPhones) {
-            phoneDao.create(personalPhone);
+        if (!accountRegisterData.getPersonalPhoneNumbers().isEmpty()) {
+            List<Phone> personalPhones = phoneService.createPersonalPhones(accountId,
+                    accountRegisterData.getPersonalPhoneNumbers());
+            for (Phone personalPhone : personalPhones) {
+                phoneDao.create(personalPhone);
+            }
         }
-        List<Phone> workingPhones = phoneService.createWorkingPhones(accountId,
-                accountRegisterData.getWorkingPhoneNumbers());
-        for (Phone workingPhone : workingPhones) {
-            phoneDao.create(workingPhone);
+        if (!accountRegisterData.getWorkingPhoneNumbers().isEmpty()) {
+            List<Phone> workingPhones = phoneService.createWorkingPhones(accountId,
+                    accountRegisterData.getWorkingPhoneNumbers());
+            for (Phone workingPhone : workingPhones) {
+                phoneDao.create(workingPhone);
+            }
         }
     }
 

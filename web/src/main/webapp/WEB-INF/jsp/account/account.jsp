@@ -18,13 +18,15 @@
             <div class="card mb-4 mb-xl-0">
                 <!-- Account picture -->
                 <div class="card-body text-center">
-                    <c:if test="${not empty requestScope.account.avatar}">
-                        <img src="${rootUrl}/avatar?id=${pageAccountId}" alt="Profile avatar" width="250px"
-                             height="250px">
-                    </c:if>
-                    <c:if test="${empty requestScope.account.avatar}">
-                        <img src="${rootUrl}/static/img/img-coming-soon-placeholder.png" alt="Profile avatar">
-                    </c:if>
+                    <c:choose>
+                        <c:when test="${not empty requestScope.account.avatar}">
+                            <img src="${rootUrl}/avatar?id=${pageAccountId}" alt="Profile avatar" width="250px"
+                                 height="250px">
+                        </c:when>
+                        <c:otherwise>
+                            <img src="${rootUrl}/static/img/img-coming-soon-placeholder.png" alt="Profile avatar">
+                        </c:otherwise>
+                    </c:choose>
                 </div>
                 <!-- Account data -->
                 <div class="card mb-1">
@@ -83,19 +85,23 @@
                         <!-- Phones -->
                         <div class="row gx-3">
                             <!-- Personal phones -->
-                            <div class="col-md-6">
-                                <p>Personal phones:</p>
-                                <c:forEach var="phone" items="${requestScope.account.personalPhoneNumber}">
-                                    <p><i class="fa-solid fa-phone"></i>&nbsp;&nbsp;${phone.number}</p>
-                                </c:forEach>
-                            </div>
+                            <c:if test="${not empty requestScope.account.personalPhoneNumber}">
+                                <div class="col-md-6">
+                                    <p>Personal phones:</p>
+                                    <c:forEach var="phone" items="${requestScope.account.personalPhoneNumber}">
+                                        <p><i class="fa-solid fa-phone"></i>&nbsp;&nbsp;${phone.number}</p>
+                                    </c:forEach>
+                                </div>
+                            </c:if>
                             <!-- Working phones -->
-                            <div class="col-md-6">
-                                <p>Working phones:</p>
-                                <c:forEach var="phone" items="${requestScope.account.workPhoneNumber}">
-                                    <p><i class="fa-solid fa-phone"></i>&nbsp;&nbsp;${phone.number}</p>
-                                </c:forEach>
-                            </div>
+                            <c:if test="${not empty requestScope.account.workPhoneNumber}">
+                                <div class="col-md-6">
+                                    <p>Working phones:</p>
+                                    <c:forEach var="phone" items="${requestScope.account.workPhoneNumber}">
+                                        <p><i class="fa-solid fa-phone"></i>&nbsp;&nbsp;${phone.number}</p>
+                                    </c:forEach>
+                                </div>
+                            </c:if>
                         </div>
                     </div>
                 </div>

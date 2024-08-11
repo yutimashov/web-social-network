@@ -10,6 +10,7 @@ const phones = {
 document.body.addEventListener('click', function (event) {
     // update phone
     if (event.target.classList.contains('change-phone-btn')) {
+        event.target.innerText = 'Change';
         const phoneInput = event.target.parentElement.parentElement.querySelector('.phone-input');
         const isValidPhoneNumber = validatePhoneNumber(phoneInput.value);
         if (isValidPhoneNumber) {
@@ -17,6 +18,19 @@ document.body.addEventListener('click', function (event) {
             if (phoneInput.getAttribute('data-personal-phone-id')
                 || phoneInput.getAttribute('data-working-phone-id')) {
                 updatePhone(phoneInput);
+                const isGeneratedDynamically = phoneInput.hasAttribute('data-generated-phone-id');
+                if (isGeneratedDynamically) {
+                    const generatedPhoneId = phoneInput.getAttribute('data-generated-phone-id');
+                    if (phoneInput.getAttribute('data-phone-type') === 'personal') {
+                        phones.added.personal = phones.added.personal.filter(
+                            obj => obj.generatedId !== generatedPhoneId
+                        );
+                    } else {
+                        phones.added.working = phones.added.working.filter(
+                            obj => obj.generatedId !== generatedPhoneId
+                        );
+                    }
+                }
             } else {
                 addPhone(phoneInput);
             }
@@ -77,6 +91,7 @@ const addCloseButtonToMsg = (message) => {
     message.appendChild(closeBtn);
 };
 const updatePhone = (phoneInput) => {
+
     phones.updated.push({
         'id': phoneInput.getAttribute('name').startsWith('personal')
             ? phoneInput.getAttribute('data-personal-phone-id')
@@ -86,6 +101,7 @@ const updatePhone = (phoneInput) => {
 };
 
 // add phone
+let generatedPhoneId = 0;
 const addPhoneGroup = (phoneType) => {
     const phoneGroup = document.createElement('div');
     setAttributes(phoneGroup, {'class': 'row gx-2 mb-3'});
@@ -98,7 +114,8 @@ const addPhoneGroup = (phoneType) => {
         'type': 'tel',
         'name': phoneType === 'personal' ? 'personalPhoneValue' : 'workingPhoneValue',
         'placeholder': 'Enter phone number',
-        'data-phone-type': phoneType
+        'data-phone-type': phoneType,
+        'data-generated-phone-id': `${generatedPhoneId++}`
     });
     inputContainer.appendChild(phoneInput);
     const changeBtnContainer = document.createElement('div');
@@ -123,14 +140,17 @@ const addPhoneGroup = (phoneType) => {
     closeBtnContainer.appendChild(closeBtn);
     document.getElementById(`${phoneType}Phones`).appendChild(phoneGroup);
 };
+
 const addPhone = (phoneInput) => {
-    phoneInput.getAttribute('name').startsWith('personal')
-        ? phones.added.personal.push({
-            'number': phoneInput.value
-        })
-        : phones.added.working.push({
-            'number': phoneInput.value
+    const isPersonal = phoneInput.getAttribute('name').startsWith('personal');
+    const list = isPersonal ? phones.added.personal : phones.added.working;
+    const phoneNumber = phoneInput.value;
+    if (!list.includes(phoneNumber)) {
+        list.push({
+            'generatedId': phoneInput.getAttribute('data-generated-phone-id'),
+            'number': phoneNumber
         });
+    }
 };
 // prepare data before submitting form
 document.getElementById('editAccountForm').addEventListener('submit', (event) => {
