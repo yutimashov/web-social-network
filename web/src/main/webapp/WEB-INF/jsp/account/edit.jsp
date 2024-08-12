@@ -116,6 +116,7 @@
                                     <div class="row gx-2 mb-3">
                                         <div class="col-md-8">
                                             <input class="form-control phone-input" type="tel" name="personalPhoneValue"
+                                                   data-phone-type="personal"
                                                    placeholder="Enter new phone number"
                                                    data-personal-phone-id="${phone.id}" value="${phone.number}">
                                         </div>
@@ -145,6 +146,7 @@
                                     <div class="row gx-2 mb-3">
                                         <div class="col-md-8">
                                             <input class="form-control phone-input" type="tel" name="workingPhoneValue"
+                                                   data-phone-type="working"
                                                    placeholder="Enter new phone number"
                                                    data-working-phone-id="${phone.id}" value="${phone.number}">
                                         </div>

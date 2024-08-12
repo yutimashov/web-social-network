@@ -112,10 +112,10 @@ public class EditAccountServlet extends HttpServlet {
         JsonNode personalAddedNode = addedNode.get("personal");
         JsonNode workingAddedNode = addedNode.get("working");
         for (JsonNode phoneNode : personalAddedNode) {
-            phoneService.create(new Phone(PERSONAL, phoneNode.asText(), accountId));
+            phoneService.create(new Phone(PERSONAL, phoneNode.get("number").asText(), accountId));
         }
         for (JsonNode phoneNode : workingAddedNode) {
-            phoneService.create(new Phone(WORKING, phoneNode.asText(), accountId));
+            phoneService.create(new Phone(WORKING, phoneNode.get("number").asText(), accountId));
         }
     }
 
