@@ -10,7 +10,8 @@ const phones = {
 document.body.addEventListener('click', (e) => {
     const btn = e.target;
     if (btn.classList.contains('change-phone-btn')) {
-        handlePhoneChange(btn, btn.parentElement.parentElement.querySelector('.phone-input').getAttribute('data-original-value'));
+        const phoneInput = btn.parentElement.parentElement.querySelector('.phone-input');
+        handlePhoneChange(btn, phoneInput.getAttribute('data-original-value'));
     }
     if (btn.classList.contains('delete-phone-btn')) {
         handlePhoneDeletion(btn);
@@ -33,7 +34,7 @@ document.body.addEventListener('focusin', (e) => {
 const handlePhoneChange = (button, oldPhoneValue) => {
     button.innerText = 'Change';
     const phoneInput = button.parentElement.parentElement.querySelector('.phone-input');
-    if (phoneInput.value === oldPhoneValue || !lastFocusedInput) {
+    if (!lastFocusedInput || phoneInput.value === oldPhoneValue || lastFocusedInput.value !== phoneInput.value) {
         showNotChangedPhoneMsg(phoneInput);
         return;
     }
@@ -59,6 +60,9 @@ const updatePhone = (phoneInput) => {
     const phoneType = phoneInput.getAttribute('name').startsWith('personal');
     const phoneId = phoneType ? phoneInput.getAttribute('data-personal-phone-id')
         : phoneInput.getAttribute('data-working-phone-id');
+    if (phoneInput.getAttribute('data-original-value')) {
+        phoneInput.setAttribute('data-original-value', phoneInput.value);
+    }
     phones.updated.push({
         id: phoneId,
         number: phoneInput.value
@@ -180,6 +184,9 @@ const addPhone = (phoneInput) => {
         });
     } else {
         list[list.findIndex(phone => phone.generatedId === generatedId)].number = phoneNumber;
+    }
+    if (phoneInput.getAttribute('data-original-value')) {
+        phoneInput.setAttribute('data-original-value', phoneInput.value);
     }
 };
 // prepare data before submitting form
