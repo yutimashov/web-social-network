@@ -6,6 +6,17 @@ const phones = {
     },
     "deletedPhonesIds": []
 };
+// monitor already existing phones on page dynamically
+const existedPhones = [];
+const updateExistedPhones = () => {
+    existedPhones.length = 0;
+    const phoneInputs = document.querySelectorAll('.phone-input');
+    phoneInputs.forEach(input => {
+        existedPhones.push(input.value);
+    });
+};
+// Initial population on page load
+window.addEventListener('load', updateExistedPhones);
 // defining delegated events
 document.body.addEventListener('click', (e) => {
     const btn = e.target;
@@ -38,12 +49,18 @@ const handlePhoneChange = (button, oldPhoneValue) => {
         showNotChangedPhoneMsg(phoneInput);
         return;
     }
-    if (validatePhoneNumber(phoneInput.value)) {
-        showValidationSuccessMsg(phoneInput);
+    if (validatePhoneNumber(phoneInput.value) && !checkExistance(phoneInput.value)) {
         processPhoneUpdate(phoneInput);
+        updateExistedPhones();
+        showValidationSuccessMsg(phoneInput);
+    } else if (checkExistance(phoneInput.value)) {
+        showAlreadyExistingPhoneFailMsg(phoneInput);
     } else {
         showValidationFailMsg(phoneInput);
     }
+};
+const checkExistance = (phoneValue) => {
+    return existedPhones.includes(phoneValue);
 };
 const processPhoneUpdate = (phoneInput) => {
     const isPersonal = phoneInput.getAttribute('data-phone-type') === 'personal';
@@ -101,6 +118,9 @@ const showValidationFailMsg = (phoneInput) => {
 };
 const showNotChangedPhoneMsg = (phoneInput) => {
     showMessage(phoneInput, 'You have not changed number!', 'alert-info');
+};
+const showAlreadyExistingPhoneFailMsg = (phoneInput) => {
+    showMessage(phoneInput, 'This number have already been added!', 'alert-info');
 };
 const showMessage = (phoneInput, text, alertClass) => {
     const msg = document.createElement('div');
