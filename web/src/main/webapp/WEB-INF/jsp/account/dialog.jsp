@@ -1,74 +1,89 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="rootUrl" value="${pageContext.request.contextPath}"/>
 <html>
 <head>
     <title>Dialog</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
-<div>
-    <div>
-        <p>Messages with:
-            <a href="${pageContext.request.contextPath}/account?id=${account.id}">
-                <img src="${pageContext.request.contextPath}/avatar?id=${requestScope.account.id}" alt="Profile avatar"
-                     width="100px" height="100px">
-                ${requestScope.account.firstName} ${requestScope.account.lastName}
-            </a>
-        </p>
-        <hr>
-    </div>
-    <div>
-        <form action="${pageContext.request.contextPath}/account/messages/create" method="POST"
-              enctype="multipart/form-data">
-            <input type="hidden" name="accountReceiverId" value="${param.id}">
-            <label for="text">New message:</label><br>
-            <textarea id="text" name="text" rows="10" cols="40"
-                      placeholder="Enter post message"></textarea>
-            <br><br>
-            <label for="photo">Add message photo (optional):<br>
-                <input type="file" id="photo" name="photo">
-            </label>
-            <br><br>
-            <button type="submit">Send message</button>
-        </form>
-        <hr>
-    </div>
-    <div>
-        <c:forEach items="${requestScope.messages}" var="message">
-            <c:set var="senderId" value="${message.accountAuthorId}"/>
-            <c:set var="destinationId" value="${message.destinationId}"/>
-            <hr>
-            <span>Created: ${message.creationDate}</span><br>
-            <span>From:
-                <a href="${rootUrl}/account?id=${senderId}">
-                    <img src="${pageContext.request.contextPath}/avatar?id=${senderId}"
-                         alt="Profile avatar"
-                         width="50px" height="50px">
-                        ${requestScope.accountService.getById(senderId).get().firstName}
-                        ${requestScope.accountService.getById(senderId).get().lastName}
-                </a>
-            </span><br>
-            <span>To:
-                    <a href="${rootUrl}/account?id=${destinationId}">
-                        <img src="${pageContext.request.contextPath}/avatar?id=${destinationId}"
-                             alt="Profile avatar"
-                             width="50px" height="50px">
-                        ${requestScope.accountService.getById(destinationId).get().firstName}
-                        ${requestScope.accountService.getById(destinationId).get().lastName}
-                </a>
-            </span><br>
-            <span>Message:</span><br>
-            <span>${message.text}</span>
-            <c:if test="${message.photo ne null}">
-                <div>
-                    <img src="${pageContext.request.contextPath}/personal-message/image?id=${message.id}"
-                         alt="Message photo"
-                         width="150px" height="150px">
+<section>
+    <div class="container py-5">
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-10 col-lg-10 col-xl-10">
+                <div class="card" id="chat1" style="border-radius: 15px;">
+                    <div class="card-body">
+                        <c:forEach items="${requestScope.messages}" var="message">
+                            <c:set var="senderId" value="${message.accountAuthorId}"/>
+                            <c:set var="destinationId" value="${message.destinationId}"/>
+                            <c:choose>
+                                <%-- sender is session account -> outcoming message --%>
+                                <c:when test="${senderId == sessionScope.account.id}">
+                                    <div class="d-flex flex-row justify-content-end mb-4">
+                                        <a href="${rootUrl}/account?id=${senderId}">
+                                            <img src="${rootUrl}/avatar?id=${senderId}" alt="Profile avatar"
+                                                 style="width: 45px; border-radius: 50%;">
+                                        </a>
+                                        <div class="p-3 ms-3"
+                                             style="border-radius: 15px; background-color: rgba(57, 192, 237,.2);">
+                                            <p class="small mb-0">${message.text}</p>
+                                            <c:if test="${message.photo ne null}">
+                                                <div>
+                                                    <img src="${rootUrl}/personal-message/image?id=${message.id}"
+                                                         alt="Message photo"
+                                                         width="150px" height="150px">
+                                                </div>
+                                            </c:if>
+                                        </div>
+                                        <span>Created: ${message.creationDate}</span>
+                                    </div>
+                                </c:when>
+                                <%-- incoming message --%>
+                                <c:otherwise>
+                                    <div class="d-flex flex-row justify-content-start mb-4">
+                                        <div class="p-3 me-3 border bg-body-tertiary" style="border-radius: 15px;">
+                                            <p class="small mb-0">${message.text}</p>
+                                            <c:if test="${message.photo ne null}">
+                                                <div>
+                                                    <img src="${rootUrl}/personal-message/image?id=${message.id}"
+                                                         alt="Message photo"
+                                                         width="150px" height="150px">
+                                                </div>
+                                            </c:if>
+                                        </div>
+                                        <a href="${rootUrl}/account?id=${destinationId}">
+                                            <img src="${rootUrl}/avatar?id=${destinationId}" alt="Profile avatar"
+                                                 style="width: 45px; border-radius: 50%;">
+                                        </a>
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:forEach>
+                        <div>
+                            <form action="${pageContext.request.contextPath}/account/messages/create" method="POST"
+                                  enctype="multipart/form-data">
+                                <input type="hidden" name="accountReceiverId" value="${param.id}">
+                                <textarea class="form-control bg-body-tertiary" id="text" name="text"
+                                          rows="4"></textarea>
+                                <label class="form-label" for="text"></label>
+                                <input class="my-2" type="file" id="photo" name="photo">
+                                <label for="photo"></label>
+                                <div>
+                                    <button type="submit" class="btn btn-primary">Send message</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-            </c:if>
-            <hr>
-        </c:forEach>
+            </div>
+        </div>
     </div>
-</div>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
 </body>
 </html>

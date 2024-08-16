@@ -56,8 +56,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-floating mb-3">
-                                            <input type="text" name="middleName" id="middleName" class="form-control"
-                                                   required>
+                                            <input type="text" name="middleName" id="middleName" class="form-control">
                                             <label for="middleName" class="form-label">Middle name</label>
                                         </div>
                                     </div>
@@ -65,13 +64,13 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-floating mb-3">
-                                            <input type="text" name="skype" id="skype" class="form-control" required>
+                                            <input type="text" name="skype" id="skype" class="form-control">
                                             <label for="skype" class="form-label">Skype</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-floating mb-3">
-                                            <input type="text" name="icq" id="icq" class="form-control" required>
+                                            <input type="text" name="icq" id="icq" class="form-control">
                                             <label for="icq" class="form-label">ICQ</label>
                                         </div>
                                     </div>

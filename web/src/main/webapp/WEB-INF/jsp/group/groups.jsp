@@ -10,7 +10,6 @@
 <body>
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <div class="container-xl mt-4">
-    <p>There are ${requestScope.groups.size()} groups</p>
     <c:forEach items="${requestScope.groups}" var="group">
         <div class="row">
             <div class="col-md-2 col-sm-2">
@@ -25,7 +24,7 @@
             </div>
             <div class="col-md-10 col-sm-10">
                 <h5><a href="${pageContext.request.contextPath}/group?id=${group.id}">${group.groupName}</a></h5>
-                <span>&nbsp;&nbsp;${group.description}&nbsp;&nbsp;</span>
+                <p>${group.description}</p>
             </div>
         </div>
     </c:forEach>

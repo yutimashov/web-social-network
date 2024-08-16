@@ -45,7 +45,7 @@
                         <a class="nav-link dropdown-toggle bsb-dropdown-toggle-caret-disable" href="#" role="button"
                            data-bs-toggle="dropdown" aria-expanded="false">
                             <c:choose>
-                                <c:when test="${not empty requestScope.account.avatar}">
+                                <c:when test="${not empty sessionScope.account.avatar}">
                                     <img src="${rootUrl}/avatar?id=${account.id}" width="50" height="50"
                                          class="rounded-circle"
                                          alt="${account.firstName} ${account.lastName}">
