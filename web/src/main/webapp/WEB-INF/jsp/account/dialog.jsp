@@ -21,7 +21,7 @@
                             <c:set var="destinationId" value="${message.destinationId}"/>
                             <c:choose>
                                 <%-- sender is session account -> outcoming message --%>
-                                <c:when test="${senderId == sessionScope.account.id}">
+                                <c:when test="${senderId eq sessionScope.account.id}">
                                     <div class="d-flex flex-row justify-content-end mb-4">
                                         <a href="${rootUrl}/account?id=${senderId}">
                                             <img src="${rootUrl}/avatar?id=${senderId}" alt="Profile avatar"
@@ -38,7 +38,6 @@
                                                 </div>
                                             </c:if>
                                         </div>
-                                        <span>Created: ${message.creationDate}</span>
                                     </div>
                                 </c:when>
                                 <%-- incoming message --%>
@@ -54,8 +53,8 @@
                                                 </div>
                                             </c:if>
                                         </div>
-                                        <a href="${rootUrl}/account?id=${destinationId}">
-                                            <img src="${rootUrl}/avatar?id=${destinationId}" alt="Profile avatar"
+                                        <a href="${rootUrl}/account?id=${senderId}">
+                                            <img src="${rootUrl}/avatar?id=${senderId}" alt="Profile avatar"
                                                  style="width: 45px; border-radius: 50%;">
                                         </a>
                                     </div>
@@ -69,10 +68,12 @@
                                 <textarea class="form-control bg-body-tertiary" id="text" name="text"
                                           rows="4"></textarea>
                                 <label class="form-label" for="text"></label>
-                                <input class="my-2" type="file" id="photo" name="photo">
-                                <label for="photo"></label>
-                                <div>
-                                    <button type="submit" class="btn btn-primary">Send message</button>
+                                <input class="my-2" type="file" id="photo" name="photo" style="display:none;">
+                                <div class="d-flex flex-row-reverse mb-2">
+                                    <label for="photo" class="input-file-upload">Add photo</label>
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-success btn-lg">Send message</button>
                                 </div>
                             </form>
                         </div>
