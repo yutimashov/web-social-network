@@ -106,7 +106,7 @@ const handlePhoneDeletion = (button) => {
 };
 // validate phone number
 const validatePhoneNumber = (phoneValue) => {
-    const phoneNumberPattern = /^\+375(25|29|33|44|17)\d{7,8}$/;
+    const phoneNumberPattern = /^\+375(25|29|33|44|17)[1-9]\d{6,7}$/;
     return phoneNumberPattern.test(phoneValue.replace(/\s/g, ''));
 };
 const showValidationSuccessMsg = (phoneInput) => {
