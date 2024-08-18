@@ -25,7 +25,6 @@ import static java.lang.Long.valueOf;
 import static java.time.LocalDate.parse;
 import static java.util.Objects.isNull;
 
-//TODO: add exception. Add server error to front
 public class EditAccountServlet extends HttpServlet {
 
     private static final String FIRST_NAME_PARAMETER_NAME = "name";

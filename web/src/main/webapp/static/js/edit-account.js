@@ -8,8 +8,6 @@ const phones = {
 };
 // monitor already existing phones on page dynamically
 const existedPhones = [];
-// Initial population on page load
-window.addEventListener('load', updateExistedPhones);
 const updateExistedPhones = () => {
     existedPhones.length = 0;
     const phoneInputs = document.querySelectorAll('.phone-input');
@@ -17,6 +15,7 @@ const updateExistedPhones = () => {
         existedPhones.push(input.value);
     });
 };
+window.addEventListener('load', updateExistedPhones);
 // defining delegated events
 document.body.addEventListener('click', (e) => {
     const btn = e.target;
