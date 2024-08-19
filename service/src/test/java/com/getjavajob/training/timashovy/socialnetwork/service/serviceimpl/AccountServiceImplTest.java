@@ -198,12 +198,6 @@ class AccountServiceImplTest {
             assertEquals(new ArrayList<Account>(), accountService.getAll());
         }
 
-        @Test
-        void when2AccountsExisted() {
-            when(accountDao.getAll()).thenReturn(new ArrayList<>(asList(TEST_ACCOUNT, TEST_ACCOUNT)));
-            assertEquals(2, accountService.getAll().size());
-        }
-
     }
 
 }

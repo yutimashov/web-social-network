@@ -4,7 +4,6 @@ import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.AccountRole;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.common.util.AccountRegistrationData;
-import com.getjavajob.training.timashovy.socialnetwork.common.util.AccountUpdatingData;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PasswordDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
@@ -58,60 +57,53 @@ public class AccountServiceImpl implements AccountService {
     public void create(AccountRegistrationData accountRegisterData) {
         Long accountId = accountDao.create(accountRegisterData.getAccount());
         passwordDao.create(passwordService.create(accountId, accountRegisterData.getPassword()));
-        List<Phone> personalPhones = phoneService.createPersonalPhones(accountId,
-                accountRegisterData.getPersonalPhoneNumbers());
-        for (Phone personalPhone : personalPhones) {
-            phoneDao.create(personalPhone);
+        if (!accountRegisterData.getPersonalPhoneNumbers().isEmpty()) {
+            List<Phone> personalPhones = phoneService.createPersonalPhones(accountId,
+                    accountRegisterData.getPersonalPhoneNumbers());
+            for (Phone personalPhone : personalPhones) {
+                phoneDao.create(personalPhone);
+            }
         }
-        List<Phone> workingPhones = phoneService.createWorkingPhones(accountId,
-                accountRegisterData.getWorkingPhoneNumbers());
-        for (Phone workingPhone : workingPhones) {
-            phoneDao.create(workingPhone);
+        if (!accountRegisterData.getWorkingPhoneNumbers().isEmpty()) {
+            List<Phone> workingPhones = phoneService.createWorkingPhones(accountId,
+                    accountRegisterData.getWorkingPhoneNumbers());
+            for (Phone workingPhone : workingPhones) {
+                phoneDao.create(workingPhone);
+            }
         }
     }
 
     @Override
-    public void update(Long accountId, AccountUpdatingData accountUpdatingData) {
-        Account updatedAccountData = accountUpdatingData.getAccount();
+    public void update(Long accountId, Account updatedAccount) {
         Account newAccount = accountDao.getById(accountId).isPresent() ? accountDao.getById(accountId).get() : null;
         if (newAccount == null) {
             throw new ServiceException("updating non-existing account");
         }
-        if (updatedAccountData.getAvatar() != null) {
-            newAccount.setAvatar(updatedAccountData.getAvatar());
+        if (updatedAccount.getAvatar() != null) {
+            newAccount.setAvatar(updatedAccount.getAvatar());
         }
-        if (updatedAccountData.getFirstName() != null && !updatedAccountData.getFirstName().isEmpty()) {
-            newAccount.setFirstName(updatedAccountData.getFirstName());
+        if (updatedAccount.getFirstName() != null && !updatedAccount.getFirstName().isEmpty()) {
+            newAccount.setFirstName(updatedAccount.getFirstName());
         }
-        if (updatedAccountData.getLastName() != null && !updatedAccountData.getLastName().isEmpty()) {
-            newAccount.setLastName(updatedAccountData.getLastName());
+        if (updatedAccount.getLastName() != null && !updatedAccount.getLastName().isEmpty()) {
+            newAccount.setLastName(updatedAccount.getLastName());
         }
-        if (updatedAccountData.getMiddleName() != null && !updatedAccountData.getMiddleName().isEmpty()) {
-            newAccount.setMiddleName(updatedAccountData.getMiddleName());
+        if (updatedAccount.getMiddleName() != null && !updatedAccount.getMiddleName().isEmpty()) {
+            newAccount.setMiddleName(updatedAccount.getMiddleName());
         }
-        if (updatedAccountData.getBirthDate() != null) {
-            newAccount.setBirthDate(updatedAccountData.getBirthDate());
+        if (updatedAccount.getBirthDate() != null) {
+            newAccount.setBirthDate(updatedAccount.getBirthDate());
         }
-        if (updatedAccountData.getSkype() != null && !updatedAccountData.getSkype().isEmpty()) {
-            newAccount.setSkype(updatedAccountData.getSkype());
+        if (updatedAccount.getSkype() != null && !updatedAccount.getSkype().isEmpty()) {
+            newAccount.setSkype(updatedAccount.getSkype());
         }
-        if (updatedAccountData.getIcq() != null && !updatedAccountData.getIcq().isEmpty()) {
-            newAccount.setIcq(updatedAccountData.getIcq());
+        if (updatedAccount.getIcq() != null && !updatedAccount.getIcq().isEmpty()) {
+            newAccount.setIcq(updatedAccount.getIcq());
         }
-        if (updatedAccountData.getEmail() != null && !updatedAccountData.getEmail().isEmpty()) {
-            newAccount.setEmail(updatedAccountData.getEmail());
+        if (updatedAccount.getEmail() != null && !updatedAccount.getEmail().isEmpty()) {
+            newAccount.setEmail(updatedAccount.getEmail());
         }
         accountDao.updateById(accountId, newAccount);
-        if (updatedAccountData.getPersonalPhoneNumber() != null) {
-            for (Phone phone : updatedAccountData.getPersonalPhoneNumber()) {
-                phoneDao.update(phone.getId(), phone.getNumber());
-            }
-        }
-        if (updatedAccountData.getWorkPhoneNumber() != null) {
-            for (Phone phone : updatedAccountData.getWorkPhoneNumber()) {
-                phoneDao.update(phone.getId(), phone.getNumber());
-            }
-        }
     }
 
     /**

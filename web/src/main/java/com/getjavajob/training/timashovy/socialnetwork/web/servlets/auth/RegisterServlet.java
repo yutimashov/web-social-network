@@ -42,8 +42,8 @@ public class RegisterServlet extends HttpServlet {
                                 .build()
                 )
                 .password(req.getParameter("password"))
-                .personalPhoneNumber(req.getParameter("personalPhoneNumber"))
-                .workPhoneNumber(req.getParameter("workPhoneNumber"))
+                .personalPhoneNumber(req.getParameter("personalPhones"))
+                .workPhoneNumber(req.getParameter("workingPhones"))
                 .build()
         );
         resp.sendRedirect(LOGIN_SERVLET_PATH + REG_SUCCESS);

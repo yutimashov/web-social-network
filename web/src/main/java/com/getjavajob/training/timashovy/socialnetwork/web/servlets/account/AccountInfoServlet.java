@@ -17,8 +17,6 @@ import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspPagePa
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.WebContextUtils.getApplicationContext;
 import static java.lang.Long.valueOf;
 
-;
-
 public class AccountInfoServlet extends HttpServlet {
 
     @Override
