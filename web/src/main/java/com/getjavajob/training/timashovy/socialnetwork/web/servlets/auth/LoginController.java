@@ -3,30 +3,30 @@ package com.getjavajob.training.timashovy.socialnetwork.web.servlets.auth;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.LoginService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.StatusTypes.AUTH_DATA_ERROR;
-import static java.util.Objects.isNull;
 import static java.util.concurrent.TimeUnit.HOURS;
 
 @Controller
-public class Auth {
+public class LoginController {
 
+    private final LoginService loginService;
+    private final PasswordService passwordService;
     private final int rememberMeCookieLifetime = (int) HOURS.toSeconds(1);
-    @Autowired
-    private LoginService loginServiceBean;
-    @Autowired
-    private PasswordService passwordService;
+
+    public LoginController(LoginService loginService, PasswordService passwordService) {
+        this.loginService = loginService;
+        this.passwordService = passwordService;
+    }
 
     @GetMapping("/login")
     public String loginPage() {
@@ -34,17 +34,17 @@ public class Auth {
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam("email") String email, @RequestParam("password") String password,
-                        @RequestParam("rememberMe") Optional<String> rememberMe,
-                        HttpSession session, HttpServletResponse resp) {
-        Optional<Account> loggedInAccount = loginServiceBean.getLoggedInAccount(email, password);
+    public String login(@RequestParam String email, @RequestParam String password,
+                        @RequestParam Optional<String> rememberMe, HttpSession session,
+                        HttpServletResponse resp) {
+        Optional<Account> loggedInAccount = loginService.getLoggedInAccount(email, password);
         if (loggedInAccount.isPresent()) {
             Account account = loggedInAccount.get();
             session.setAttribute("account", account);
-            if (!isNull(rememberMe)) {
+            if (rememberMe.isPresent()) {
                 createRememberMeCookies(account, resp);
             }
-            return "redirect:/login?id=" + account.getId();
+            return "redirect:/account?id=" + account.getId();
         } else {
             return "redirect:/login" + AUTH_DATA_ERROR;
         }
@@ -61,17 +61,6 @@ public class Auth {
         Cookie cookie = new Cookie(cookieName, cookieValue);
         cookie.setMaxAge(rememberMeCookieLifetime);
         resp.addCookie(cookie);
-    }
-
-    @GetMapping("/logout")
-    public String logoutPage(HttpSession session, HttpServletRequest req, HttpServletResponse resp) {
-        session.invalidate();
-        for (Cookie cookie : req.getCookies()) {
-            int EXPIRATION_COOKIE_TIME = 0;
-            cookie.setMaxAge(EXPIRATION_COOKIE_TIME);
-            resp.addCookie(cookie);
-        }
-        return "redirect:/login";
     }
 
 }
