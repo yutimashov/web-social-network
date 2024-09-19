@@ -69,16 +69,6 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>Account</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.AccountInfoServlet
-        </servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Account</servlet-name>
-        <url-pattern>/account</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>Edit Account</servlet-name>
         <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.EditAccountServlet
         </servlet-class>
