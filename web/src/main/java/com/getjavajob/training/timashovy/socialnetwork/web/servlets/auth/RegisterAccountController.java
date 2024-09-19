@@ -17,7 +17,7 @@ import static com.getjavajob.training.timashovy.socialnetwork.web.util.ServletPa
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.StatusTypes.REG_SUCCESS;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.WebContextUtils.getApplicationContext;
 
-public class RegisterServlet extends HttpServlet {
+public class RegisterAccountController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

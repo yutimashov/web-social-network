@@ -44,7 +44,7 @@
     <!-- auth servlets -->
     <servlet>
         <servlet-name>Registration</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.auth.RegisterServlet
+        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.auth.RegisterAccountController
         </servlet-class>
         <multipart-config>
             <max-file-size>10485760</max-file-size>
