@@ -5,10 +5,7 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.LoginS
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -18,6 +15,7 @@ import static com.getjavajob.training.timashovy.socialnetwork.web.util.StatusTyp
 import static java.util.concurrent.TimeUnit.HOURS;
 
 @SessionAttributes("account")
+@RequestMapping("/login")
 @Controller
 public class LoginController {
 
@@ -30,12 +28,12 @@ public class LoginController {
         this.passwordService = passwordService;
     }
 
-    @GetMapping("/login")
+    @GetMapping
     public String loginPage() {
         return "auth/login";
     }
 
-    @PostMapping("/login")
+    @PostMapping
     public String login(@RequestParam String email, @RequestParam String password,
                         @RequestParam Optional<String> rememberMe, Model model,
                         HttpServletResponse resp) {
