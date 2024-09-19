@@ -20,7 +20,7 @@
                 <div class="card-body text-center">
                     <c:choose>
                         <c:when test="${not empty requestScope.account.avatar}">
-                            <img src="${rootUrl}/avatar?id=${pageAccountId}" alt="Profile avatar" width="250px"
+                            <img src="${rootUrl}/account/avatar?id=${pageAccountId}" alt="Profile avatar" width="250px"
                                  height="250px">
                         </c:when>
                         <c:otherwise>

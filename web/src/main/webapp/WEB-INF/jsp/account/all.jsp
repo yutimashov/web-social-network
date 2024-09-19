@@ -14,7 +14,7 @@
         <div class="row">
             <div class="col-md-1 col-sm-2">
                 <c:if test="${not empty account.avatar}">
-                    <img src="${rootUrl}/avatar?id=${account.id}" alt="user" class="profile-photo-lg" width="50px"
+                    <img src="${rootUrl}/account/avatar?id=${account.id}" alt="user" class="profile-photo-lg" width="50px"
                          height="50px">
                 </c:if>
                 <c:if test="${empty account.avatar}">
