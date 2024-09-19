@@ -114,16 +114,6 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>Delete Account</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.admin.DeleteAccountServlet
-        </servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Delete Account</servlet-name>
-        <url-pattern>/account/delete</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>All Accounts</servlet-name>
         <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.account.ShowAccountsListServlet
         </servlet-class>
