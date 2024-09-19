@@ -13,12 +13,12 @@ import java.util.List;
 
 @RequestMapping("/search")
 @Controller
-public class SearchServlet {
+public class SearchController {
 
     private static final int RESULTS_PER_PAGE = 5;
     private final SearchService searchService;
 
-    public SearchServlet(SearchService searchService) {
+    public SearchController(SearchService searchService) {
         this.searchService = searchService;
     }
 
