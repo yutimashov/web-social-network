@@ -8,15 +8,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
-import javax.servlet.http.HttpServlet;
-
 @Controller
 @RequestMapping("/group/send-request")
-public class SendGroupRequestServlet extends HttpServlet {
+public class SendGroupRequestController {
 
     private final GroupMembershipService groupMembershipService;
 
-    public SendGroupRequestServlet(GroupMembershipService groupMembershipService) {
+    public SendGroupRequestController(GroupMembershipService groupMembershipService) {
         this.groupMembershipService = groupMembershipService;
     }
 
