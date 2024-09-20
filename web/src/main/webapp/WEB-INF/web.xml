@@ -128,16 +128,6 @@
         <url-pattern>/friends/send-request</url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>Delete Friend</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.friendship.DeleteFriendServlet
-        </servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Delete Friend</servlet-name>
-        <url-pattern>/friends/delete</url-pattern>
-    </servlet-mapping>
-
     <!-- group servlets -->
     <servlet>
         <servlet-name>Create Group</servlet-name>
