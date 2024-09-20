@@ -166,16 +166,6 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>All Groups</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.ListAllGroupsServlet
-        </servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>All Groups</servlet-name>
-        <url-pattern>/group/all</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>Send Group Request</servlet-name>
         <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.SendGroupRequestServlet
         </servlet-class>
