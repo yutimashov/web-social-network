@@ -176,16 +176,6 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>Group Requests</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.GroupRequestsServlet
-        </servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Group Requests</servlet-name>
-        <url-pattern>/group/requests</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>Make admin</servlet-name>
         <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.MakeGroupAdminServlet
         </servlet-class>
