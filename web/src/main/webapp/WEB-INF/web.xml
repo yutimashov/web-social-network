@@ -219,17 +219,6 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>Dialog</servlet-name>
-        <servlet-class>
-            com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.personal.ShowDialogServlet
-        </servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Dialog</servlet-name>
-        <url-pattern>/account/messages/dialog</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>Send personal message</servlet-name>
         <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.personal.SendMessageServlet
         </servlet-class>
