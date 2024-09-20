@@ -1,25 +1,26 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.servlets.group;
 
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupMembershipService;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+@Controller
+@RequestMapping({"/group/decline-request", "/group/delete-member"})
+public class DeleteGroupMemberServlet {
 
-import static com.getjavajob.training.timashovy.socialnetwork.web.util.ServiceSingletonsNames.GROUP_MEMBERSHIP_SERVICE_BEAN;
-import static com.getjavajob.training.timashovy.socialnetwork.web.util.WebContextUtils.getApplicationContext;
-import static java.lang.Long.valueOf;
+    private final GroupMembershipService groupMembershipService;
 
-public class DeleteGroupMemberServlet extends HttpServlet {
+    public DeleteGroupMemberServlet(GroupMembershipService groupMembershipService) {
+        this.groupMembershipService = groupMembershipService;
+    }
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long groupId = valueOf(req.getParameter("groupId"));
-        getApplicationContext(req.getServletContext()).getBean(GROUP_MEMBERSHIP_SERVICE_BEAN,
-                GroupMembershipService.class).deleteMember(groupId, valueOf(req.getParameter("accountId")));
-        resp.sendRedirect("/group?id=" + groupId);
+    @GetMapping
+    protected String deleteGroupMember(@RequestParam("groupId") long groupId,
+                                       @RequestParam("accountId") long accountId) {
+        groupMembershipService.deleteMember(groupId, accountId);
+        return "redirect:/group?id=" + groupId;
     }
 
 }

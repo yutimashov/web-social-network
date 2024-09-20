@@ -216,17 +216,6 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>Delete Group Member</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.DeleteGroupMemberServlet
-        </servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Delete Group Member</servlet-name>
-        <url-pattern>/group/decline-request</url-pattern>
-        <url-pattern>/group/delete-member</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>Make admin</servlet-name>
         <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.MakeGroupAdminServlet
         </servlet-class>
