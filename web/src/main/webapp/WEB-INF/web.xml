@@ -198,16 +198,6 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>Show group message image</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.group.ShowImageServlet
-        </servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Show group message image</servlet-name>
-        <url-pattern>/group-message/image</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>Show account wall message image</servlet-name>
         <servlet-class>
             com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.wall.ShowMessageServlet
@@ -252,17 +242,6 @@
     <servlet-mapping>
         <servlet-name>Send personal message</servlet-name>
         <url-pattern>/account/messages/create</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>Show personal message image</servlet-name>
-        <servlet-class>
-            com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.personal.ShowImagesServlet
-        </servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Show personal message image</servlet-name>
-        <url-pattern>/personal-message/image</url-pattern>
     </servlet-mapping>
 
     <!-- session config -->
