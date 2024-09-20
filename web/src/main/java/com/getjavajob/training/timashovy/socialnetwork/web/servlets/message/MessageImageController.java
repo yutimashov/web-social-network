@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.group;
+package com.getjavajob.training.timashovy.socialnetwork.web.servlets.message;
 
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
 import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.message.MessageServiceImpl;
