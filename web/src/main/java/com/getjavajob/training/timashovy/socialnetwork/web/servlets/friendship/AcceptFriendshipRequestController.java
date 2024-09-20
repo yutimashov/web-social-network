@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 
 @Controller
 @RequestMapping("/friends/accept-request")
-public class AcceptRequestController {
+public class AcceptFriendshipRequestController {
 
     private final AccountService accountService;
 
-    public AcceptRequestController(AccountService accountService) {
+    public AcceptFriendshipRequestController(AccountService accountService) {
         this.accountService = accountService;
     }
 
