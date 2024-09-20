@@ -40,4 +40,13 @@ public class CreateMessageController {
         return "redirect:/account?id=" + accountReceiverId;
     }
 
+    @PostMapping("/account/messages/create")
+    public String createPersonalMessage(@ModelAttribute MessageDto messageDto,
+                                        @RequestParam("accountReceiverId") long accountReceiverId,
+                                        @SessionAttribute("account") Account account) throws IOException {
+        messageService.createPersonalMessage(new MessageMapper().toMessage(messageDto, account.getId(),
+                accountReceiverId));
+        return "redirect:/account/messages/dialog?id=" + accountReceiverId;
+    }
+
 }

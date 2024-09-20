@@ -74,23 +74,6 @@
         <url-pattern>/account/edit</url-pattern>
     </servlet-mapping>
 
-    <!-- message servlets -->
-
-    <servlet>
-        <servlet-name>Send personal message</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.personal.SendMessageServlet
-        </servlet-class>
-        <multipart-config>
-            <max-file-size>10485760</max-file-size>
-            <max-request-size>10485760</max-request-size>
-            <file-size-threshold>5242880</file-size-threshold>
-        </multipart-config>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Send personal message</servlet-name>
-        <url-pattern>/account/messages/create</url-pattern>
-    </servlet-mapping>
-
     <!-- session config -->
     <session-config>
         <session-timeout>10</session-timeout>
