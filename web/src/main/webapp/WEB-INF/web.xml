@@ -138,17 +138,6 @@
         <url-pattern>/friends/delete</url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>Accept Friend Request</servlet-name>
-        <servlet-class>
-            com.getjavajob.training.timashovy.socialnetwork.web.servlets.friendship.AcceptRequestController
-        </servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Accept Friend Request</servlet-name>
-        <url-pattern>/friends/accept-request</url-pattern>
-    </servlet-mapping>
-
     <!-- group servlets -->
     <servlet>
         <servlet-name>Create Group</servlet-name>
