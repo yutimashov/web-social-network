@@ -15,11 +15,11 @@
             <div class="col-md-2 col-sm-2">
                 <c:choose>
                     <c:when test="${not empty group.avatar}">
-                        <img src="${rootUrl}/group/avatar?id=${group.id}" alt="user" class="profile-photo-lg" width="100px"
-                             height="100px">
+                        <img src="${rootUrl}/group/avatar?id=${group.id}" alt="user" class="profile-photo-lg"
+                             width="100px" height="100px">
                     </c:when>
                     <c:otherwise>
-                        <img src="${rootUrl}/static/img/img-coming-soon-placeholder.png" alt="user"
+                        <img src="${rootUrl}/static/img/img-coming-soon-placeholder.png" alt="group"
                              class="profile-photo-lg" width="100px" height="100px">
                     </c:otherwise>
                 </c:choose>
