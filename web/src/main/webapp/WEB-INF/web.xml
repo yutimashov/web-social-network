@@ -77,17 +77,6 @@
     <!-- friends servlets -->
 
     <servlet>
-        <servlet-name>Incoming Friend Requests</servlet-name>
-        <servlet-class>
-            com.getjavajob.training.timashovy.socialnetwork.web.servlets.friendship.IncomingFriendRequestsServlet
-        </servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Incoming Friend Requests</servlet-name>
-        <url-pattern>/friends/requests/incoming</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>Outgoing Friend Requests</servlet-name>
         <servlet-class>
             com.getjavajob.training.timashovy.socialnetwork.web.servlets.friendship.OutgoingFriendRequestServlet
