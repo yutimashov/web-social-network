@@ -165,16 +165,6 @@
         <url-pattern>/group/create</url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>Send Group Request</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.SendGroupRequestServlet
-        </servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Send Group Request</servlet-name>
-        <url-pattern>/group/send-request</url-pattern>
-    </servlet-mapping>
-
     <!-- message servlets -->
     <servlet>
         <servlet-name>Create group message</servlet-name>

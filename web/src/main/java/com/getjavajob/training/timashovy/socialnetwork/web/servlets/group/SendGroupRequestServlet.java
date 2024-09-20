@@ -2,26 +2,29 @@ package com.getjavajob.training.timashovy.socialnetwork.web.servlets.group;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupMembershipService;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
-import static com.getjavajob.training.timashovy.socialnetwork.web.util.ServiceSingletonsNames.GROUP_MEMBERSHIP_SERVICE_BEAN;
-import static com.getjavajob.training.timashovy.socialnetwork.web.util.WebContextUtils.getApplicationContext;
-import static java.lang.Long.valueOf;
-
+@Controller
+@RequestMapping("/group/send-request")
 public class SendGroupRequestServlet extends HttpServlet {
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long accountId = ((Account) req.getSession(false).getAttribute("account")).getId();
-        GroupMembershipService groupMembershipService = getApplicationContext(req.getServletContext())
-                .getBean(GROUP_MEMBERSHIP_SERVICE_BEAN, GroupMembershipService.class);
-        groupMembershipService.sendRequest(valueOf(req.getParameter("id")), accountId);
-        resp.sendRedirect("/account?id=" + accountId);
+    private final GroupMembershipService groupMembershipService;
+
+    public SendGroupRequestServlet(GroupMembershipService groupMembershipService) {
+        this.groupMembershipService = groupMembershipService;
+    }
+
+    @GetMapping
+    public String doGet(@RequestParam("id") long id, @SessionAttribute("account") Account account) {
+        Long accountId = account.getId();
+        groupMembershipService.sendRequest(id, accountId);
+        return "redirect:/account?id=" + accountId;
     }
 
 }
