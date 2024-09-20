@@ -1,6 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.group;
 
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
+import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.message.MessageServiceImpl;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.http.HttpHeaders;
@@ -21,9 +22,11 @@ import static org.springframework.http.ResponseEntity.status;
 public class MessageImageController extends HttpServlet {
 
     private final MessageService messageService;
+    private final MessageServiceImpl messageServiceImpl;
 
-    public MessageImageController(MessageService messageService) {
+    public MessageImageController(MessageService messageService, MessageServiceImpl messageServiceImpl) {
         this.messageService = messageService;
+        this.messageServiceImpl = messageServiceImpl;
     }
 
     @GetMapping("/group-message/image")
@@ -40,6 +43,17 @@ public class MessageImageController extends HttpServlet {
     @GetMapping("/personal-message/image")
     public ResponseEntity<InputStreamSource> getPersonalMessageImage(@RequestParam("id") long id) {
         InputStream inputStreamImage = messageService.getPersonalMessageById(id).getPhoto();
+        if (inputStreamImage != null) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(IMAGE_JPEG);
+            return new ResponseEntity<>(new InputStreamResource(inputStreamImage), headers, OK);
+        }
+        return status(NOT_FOUND).build();
+    }
+
+    @GetMapping("/account-wall/image")
+    public ResponseEntity<InputStreamSource> getAccountWallImage(@RequestParam("id") long id) {
+        InputStream inputStreamImage = messageServiceImpl.getAccountWallMessageById(id).getPhoto();
         if (inputStreamImage != null) {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(IMAGE_JPEG);
