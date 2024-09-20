@@ -33,6 +33,7 @@
 </c:if>
 <c:if test="${requestScope.isMember eq true}">
     <c:if test="${requestScope.isAdmin eq true}">
+        <%-- group message --%>
         <div>
             <form action="${rootUrl}/group/message/create" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="groupId" value="${requestScope.group.id}">

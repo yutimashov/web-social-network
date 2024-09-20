@@ -155,7 +155,7 @@
                 </div>
             </div>
         </div>
-        <!-- Account Wall -->
+        <!-- account wall message -->
         <div class="col-xl-8">
             <c:if test="${sessionAccountId eq pageAccountId}">
                 <div>

@@ -13,7 +13,7 @@
     <c:forEach items="${requestScope.accounts}" var="account">
         <c:choose>
             <c:when test="${not empty account.avatar}">
-                <a href="${rootUrl}/account?id=${account.id}"><img src="${rootUrl}/avatar?id=${account.id}"
+                <a href="${rootUrl}/account?id=${account.id}"><img src="${rootUrl}/account/avatar?id=${account.id}"
                                                                    alt="Profile avatar" width="150px"
                                                                    height="150px"></a>
             </c:when>

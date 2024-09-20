@@ -61,6 +61,7 @@
                                 </c:otherwise>
                             </c:choose>
                         </c:forEach>
+                        <%-- personal message --%>
                         <div>
                             <form action="${pageContext.request.contextPath}/account/messages/create" method="POST"
                                   enctype="multipart/form-data">

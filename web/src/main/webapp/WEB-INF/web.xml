@@ -75,20 +75,6 @@
     </servlet-mapping>
 
     <!-- message servlets -->
-    <servlet>
-        <servlet-name>Create group message</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.group.CreateMessageServlet
-        </servlet-class>
-        <multipart-config>
-            <max-file-size>10485760</max-file-size>
-            <max-request-size>20971520</max-request-size>
-            <file-size-threshold>5242880</file-size-threshold>
-        </multipart-config>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Create group message</servlet-name>
-        <url-pattern>/group/message/create</url-pattern>
-    </servlet-mapping>
 
     <servlet>
         <servlet-name>Create personal wall message</servlet-name>
