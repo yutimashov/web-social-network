@@ -186,16 +186,6 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>Group members</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.GroupMembersServlet
-        </servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Group members</servlet-name>
-        <url-pattern>/group/members</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>Group Requests</servlet-name>
         <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.GroupRequestsServlet
         </servlet-class>
