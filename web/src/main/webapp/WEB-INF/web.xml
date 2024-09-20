@@ -216,16 +216,6 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>Accept Account Group Request</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.AcceptGroupRequestServlet
-        </servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Accept Account Group Request</servlet-name>
-        <url-pattern>/group/accept-request</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>Delete Group Member</servlet-name>
         <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.DeleteGroupMemberServlet
         </servlet-class>
