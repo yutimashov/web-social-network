@@ -141,7 +141,7 @@
     <servlet>
         <servlet-name>Accept Friend Request</servlet-name>
         <servlet-class>
-            com.getjavajob.training.timashovy.socialnetwork.web.servlets.friendship.AcceptFriendshipRequestServlet
+            com.getjavajob.training.timashovy.socialnetwork.web.servlets.friendship.AcceptRequestController
         </servlet-class>
     </servlet>
     <servlet-mapping>
