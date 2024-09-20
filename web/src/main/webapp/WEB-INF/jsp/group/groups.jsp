@@ -13,14 +13,16 @@
     <c:forEach items="${requestScope.groups}" var="group">
         <div class="row">
             <div class="col-md-2 col-sm-2">
-                <c:if test="${not empty group.avatar}">
-                    <img src="${rootUrl}/group/avatar?id=${group.id}" alt="user" class="profile-photo-lg" width="100px"
-                         height="100px">
-                </c:if>
-                <c:if test="${empty group.avatar}">
-                    <img src="${rootUrl}/static/img/img-coming-soon-placeholder.png" alt="user"
-                         class="profile-photo-lg" width="100px" height="100px">
-                </c:if>
+                <c:choose>
+                    <c:when test="${not empty group.avatar}">
+                        <img src="${rootUrl}/group/avatar?id=${group.id}" alt="user" class="profile-photo-lg" width="100px"
+                             height="100px">
+                    </c:when>
+                    <c:otherwise>
+                        <img src="${rootUrl}/static/img/img-coming-soon-placeholder.png" alt="user"
+                             class="profile-photo-lg" width="100px" height="100px">
+                    </c:otherwise>
+                </c:choose>
             </div>
             <div class="col-md-10 col-sm-10">
                 <h5><a href="${pageContext.request.contextPath}/group?id=${group.id}">${group.groupName}</a></h5>
