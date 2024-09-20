@@ -196,16 +196,6 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>Group Avatar</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.GroupAvatarServlet
-        </servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Group Avatar</servlet-name>
-        <url-pattern>/group-avatar</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>Group members</servlet-name>
         <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.group.GroupMembersServlet
         </servlet-class>

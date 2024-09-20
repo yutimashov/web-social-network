@@ -10,7 +10,7 @@
 <h2>${requestScope.group.groupName}</h2>
 <p>${requestScope.group.description}</p>
 <c:if test="${not empty requestScope.avatarInputStream}">
-    <img src="${rootUrl}/group-avatar?id=${requestScope.group.id}" alt="Group avatar" width="250px" height="250px">
+    <img src="${rootUrl}/group/avatar?id=${requestScope.group.id}" alt="Group avatar" width="250px" height="250px">
 </c:if>
 <c:if test="${empty requestScope.avatarInputStream}">
     <img src="${rootUrl}/static/img/img-coming-soon-placeholder.png" alt="Group avatar placeholder">

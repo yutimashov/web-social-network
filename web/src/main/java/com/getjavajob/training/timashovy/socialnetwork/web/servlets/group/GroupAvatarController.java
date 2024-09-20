@@ -22,11 +22,11 @@ import static org.springframework.http.ResponseEntity.status;
 
 @Controller
 @RequestMapping("/group/avatar")
-public class GroupAvatarServlet extends HttpServlet {
+public class GroupAvatarController extends HttpServlet {
 
     private final GroupService groupService;
 
-    public GroupAvatarServlet(GroupService groupService) {
+    public GroupAvatarController(GroupService groupService) {
         this.groupService = groupService;
     }
 
