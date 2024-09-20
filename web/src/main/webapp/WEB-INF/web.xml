@@ -209,16 +209,6 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>All messages</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.personal.ShowMessagesServlet
-        </servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>All messages</servlet-name>
-        <url-pattern>/account/messages</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>Send personal message</servlet-name>
         <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.message.personal.SendMessageServlet
         </servlet-class>
