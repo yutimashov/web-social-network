@@ -75,15 +75,6 @@
     </servlet-mapping>
 
     <!-- friends servlets -->
-    <servlet>
-        <servlet-name>Friends</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.friendship.FriendsListServlet
-        </servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Friends</servlet-name>
-        <url-pattern>/friends</url-pattern>
-    </servlet-mapping>
 
     <servlet>
         <servlet-name>Incoming Friend Requests</servlet-name>
