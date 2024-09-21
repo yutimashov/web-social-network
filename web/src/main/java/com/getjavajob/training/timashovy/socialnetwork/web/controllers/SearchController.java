@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.web.controllers.search;
+package com.getjavajob.training.timashovy.socialnetwork.web.controllers;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.Group;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
