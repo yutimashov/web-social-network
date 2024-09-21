@@ -79,6 +79,7 @@ public class MessageServiceImpl implements MessageService {
         return accountWallMessageDao.getAll(destinationId);
     }
 
+    @Override
     public List<Account> getAllAccountsWithPersonalMessages(Long accountId) {
         List<Long> personalMessageAccountsIds = personalMessageDao.getAllAccountsIds(accountId);
         List<Account> accounts = new ArrayList<>();
@@ -90,6 +91,7 @@ public class MessageServiceImpl implements MessageService {
         return accounts;
     }
 
+    @Override
     public List<Message> getAllPersonalMessagesWithAccount(Long authorId, Long receiverId) {
         return personalMessageDao.getAllPersonalMessagesWithAccount(authorId, receiverId);
     }

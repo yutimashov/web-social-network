@@ -1,5 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.interfaces;
 
+import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.common.message.Message;
 
 import java.util.List;
@@ -23,5 +24,9 @@ public interface MessageService {
     List<Message> getAllGroupMessages(Long groupId);
 
     List<Message> getAllAccountWallMessages(Long destinationId);
+
+    List<Account> getAllAccountsWithPersonalMessages(Long accountId);
+
+    List<Message> getAllPersonalMessagesWithAccount(Long authorId, Long receiverId);
 
 }
