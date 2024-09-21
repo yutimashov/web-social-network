@@ -12,7 +12,8 @@ public class GroupMapper {
                 .groupName(groupDto.getGroupName())
                 .description(groupDto.getDescription())
                 .accountOwnerId(accountId)
-                .avatar(groupDto.getAvatar() != null ? groupDto.getAvatar().getInputStream() : null)
+                .avatar(groupDto.getAvatar() != null && groupDto.getAvatar().getSize() > 0
+                        ? groupDto.getAvatar().getInputStream() : null)
                 .build();
     }
 

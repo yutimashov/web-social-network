@@ -12,7 +12,8 @@ public class MessageMapper {
                 .accountAuthorId(accountAuthorId)
                 .destinationId(destinationId)
                 .text(messageDto.getText())
-                .photo(messageDto.getPhoto() != null ? messageDto.getPhoto().getInputStream() : null)
+                .photo(messageDto.getPhoto() != null && messageDto.getPhoto().getSize() > 0
+                        ? messageDto.getPhoto().getInputStream() : null)
                 .build();
     }
 

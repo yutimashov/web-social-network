@@ -15,7 +15,8 @@ public class AccountMapper {
                 .email(accountDto.getEmail())
                 .icq(accountDto.getIcq())
                 .skype(accountDto.getSkype())
-                .avatar(accountDto.getAvatar() != null ? accountDto.getAvatar().getInputStream() : null)
+                .avatar(accountDto.getAvatar() != null && accountDto.getAvatar().getSize() > 0
+                        ? accountDto.getAvatar().getInputStream() : null)
                 .build();
     }
 
