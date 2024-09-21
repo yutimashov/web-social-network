@@ -1,52 +1,42 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.servlets.auth;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.common.util.AccountRegistrationData;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
+import com.getjavajob.training.timashovy.socialnetwork.web.dto.AccountDto;
+import com.getjavajob.training.timashovy.socialnetwork.web.mappers.AccountMapper;
+import com.getjavajob.training.timashovy.socialnetwork.web.mappers.AccountRegistrationDataMapper;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.getjavajob.training.timashovy.socialnetwork.web.util.ServiceSingletonsNames.ACCOUNT_SERVICE_BEAN;
-import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspDestinationPath.getJspPagePath;
-import static com.getjavajob.training.timashovy.socialnetwork.web.util.JspPagePaths.REGISTER;
-import static com.getjavajob.training.timashovy.socialnetwork.web.util.ServletPaths.LOGIN_SERVLET_PATH;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.StatusTypes.REG_SUCCESS;
-import static com.getjavajob.training.timashovy.socialnetwork.web.util.WebContextUtils.getApplicationContext;
 
-public class RegisterAccountController extends HttpServlet {
+@Controller
+@RequestMapping("/register")
+public class RegisterAccountController {
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher(getJspPagePath(REGISTER)).forward(req, resp);
+    private final AccountService accountService;
+
+    public RegisterAccountController(AccountService accountService) {
+        this.accountService = accountService;
     }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        AccountService accountService = getApplicationContext(req.getServletContext()).getBean(ACCOUNT_SERVICE_BEAN,
-                AccountService.class);
-        accountService.create(new AccountRegistrationData.Builder()
-                .account(
-                        new Account.Builder()
-                                .avatar(req.getPart("avatar") != null && req.getPart("avatar").getSize() > 0
-                                        ? req.getPart("avatar").getInputStream() : null)
-                                .firstName(req.getParameter("name"))
-                                .lastName(req.getParameter("lastName"))
-                                .middleName(req.getParameter("middleName"))
-                                .email(req.getParameter("email"))
-                                .skype(req.getParameter("skype"))
-                                .icq(req.getParameter("icq"))
-                                .build()
+    @GetMapping
+    protected String getRegisterPage() {
+        return "auth/register";
+    }
+
+    @PostMapping
+    protected String processAccountRegistration(@ModelAttribute AccountDto accountDto,
+                                                @RequestParam("password") String password,
+                                                @RequestParam("personalPhones") String personalPhones,
+                                                @RequestParam("workingPhones") String workingPhones) throws IOException {
+        accountService.create(
+                new AccountRegistrationDataMapper().toAccountRegistrationData(
+                        new AccountMapper().toAccount(accountDto), password, personalPhones, workingPhones
                 )
-                .password(req.getParameter("password"))
-                .personalPhoneNumber(req.getParameter("personalPhones"))
-                .workPhoneNumber(req.getParameter("workingPhones"))
-                .build()
         );
-        resp.sendRedirect(LOGIN_SERVLET_PATH + REG_SUCCESS);
+        return "redirect:/login" + REG_SUCCESS;
     }
 
 }

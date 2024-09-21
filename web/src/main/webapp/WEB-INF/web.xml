@@ -41,22 +41,6 @@
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 
-    <!-- auth servlets -->
-    <servlet>
-        <servlet-name>Registration</servlet-name>
-        <servlet-class>com.getjavajob.training.timashovy.socialnetwork.web.servlets.auth.RegisterAccountController
-        </servlet-class>
-        <multipart-config>
-            <max-file-size>10485760</max-file-size>
-            <max-request-size>10485760</max-request-size>
-            <file-size-threshold>5242880</file-size-threshold>
-        </multipart-config>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Registration</servlet-name>
-        <url-pattern>/register</url-pattern>
-    </servlet-mapping>
-
     <!-- account servlets -->
 
     <servlet>
