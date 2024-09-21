@@ -2,6 +2,8 @@ package com.getjavajob.training.timashovy.socialnetwork.web.dto;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+
 public class AccountDto {
 
     private String firstName;
@@ -11,6 +13,7 @@ public class AccountDto {
     private String icq;
     private String skype;
     private MultipartFile avatar;
+    private String birthDate;
 
     public AccountDto() {
     }
@@ -65,6 +68,14 @@ public class AccountDto {
 
     public MultipartFile getAvatar() {
         return avatar;
+    }
+
+    public String getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(String birthDate) {
+        this.birthDate = birthDate;
     }
 
     public void setAvatar(MultipartFile avatar) {
