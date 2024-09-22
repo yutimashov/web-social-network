@@ -82,7 +82,7 @@ public class AuthController {
     public String processAccountRegistration(@ModelAttribute AccountDto accountDto,
                                              @RequestParam("password") String password,
                                              @RequestParam("personalPhones") String personalPhones,
-                                             @RequestParam("workingPhones") String workingPhones) throws IOException {
+                                             @RequestParam("workingPhones") String workingPhones) {
         accountService.create(
                 new AccountRegistrationDataMapper().toAccountRegistrationData(
                         new AccountMapper().toAccount(accountDto), password, personalPhones, workingPhones
