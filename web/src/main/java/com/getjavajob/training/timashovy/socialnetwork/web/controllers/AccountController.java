@@ -73,7 +73,7 @@ public class AccountController {
         return "redirect:/account?id=" + id;
     }
 
-        @GetMapping("/edit")
+    @GetMapping("/edit")
     public String editAccount(Model model, @RequestParam("id") long accountId) {
         if (accountService.getById(accountId).isPresent()) {
             model.addAttribute("account", accountService.getById(accountId).get());

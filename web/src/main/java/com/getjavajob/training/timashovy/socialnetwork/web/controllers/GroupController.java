@@ -33,7 +33,7 @@ public class GroupController extends HttpServlet {
 
     @GetMapping
     public String group(@RequestParam("id") long id, @SessionAttribute("account") Account account,
-                           Model model) {
+                        Model model) {
         if (groupService.getById(id).isPresent()) {
             model.addAttribute("group", groupService.getById(id).get());
             model.addAttribute("avatarInputStream", groupService.getById(id).get().getAvatar());

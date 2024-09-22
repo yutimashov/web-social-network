@@ -21,7 +21,7 @@ public class FriendshipController {
 
     @GetMapping("/accept-request")
     public String acceptRequest(@SessionAttribute("account") Account account,
-                                   @RequestParam("id") long requesterAccountId) {
+                                @RequestParam("id") long requesterAccountId) {
         Long accepterAccountId = account.getId();
         accountService.addFriend(requesterAccountId, accepterAccountId);
         return "redirect:/friends?id=" + accepterAccountId;
