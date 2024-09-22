@@ -13,7 +13,8 @@
     <c:choose>
         <c:when test="${requestScope.friends.size() == 0}">
             <div class="alert alert-primary" role="alert">
-                You have no friends yet. You can <a href="${rootUrl}/accounts" class="alert-link">send request</a> to any user.
+                You have no friends yet. You can <a href="${rootUrl}/account/all" class="alert-link">send request</a> to
+                any user.
             </div>
         </c:when>
         <c:otherwise>
