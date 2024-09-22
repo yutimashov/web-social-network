@@ -8,7 +8,7 @@
        http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-    <context:component-scan base-package="com.getjavajob.training.timashovy.socialnetwork.web"/>
+    <context:component-scan base-package="com.getjavajob.training.timashovy.socialnetwork.web.controllers"/>
     <mvc:annotation-driven/>
 
     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
