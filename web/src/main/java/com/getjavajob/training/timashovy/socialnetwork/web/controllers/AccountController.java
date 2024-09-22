@@ -1,10 +1,11 @@
-package com.getjavajob.training.timashovy.socialnetwork.web.controllers.account;
+package com.getjavajob.training.timashovy.socialnetwork.web.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
+import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneService;
 import com.getjavajob.training.timashovy.socialnetwork.web.dto.AccountDto;
 import com.getjavajob.training.timashovy.socialnetwork.web.mappers.AccountMapper;
@@ -19,19 +20,37 @@ import static com.getjavajob.training.timashovy.socialnetwork.common.account.Pho
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
 
 @Controller
-@RequestMapping("/account/edit")
-public class EditAccountController {
+@RequestMapping("/account")
+public class AccountController {
 
     private final AccountService accountService;
+    private final MessageService messageService;
     private final PhoneService phoneService;
 
-    public EditAccountController(AccountService accountService, PhoneService phoneService) {
+    public AccountController(AccountService accountService, MessageService messageService, PhoneService phoneService) {
         this.accountService = accountService;
+        this.messageService = messageService;
         this.phoneService = phoneService;
     }
 
     @GetMapping
-    public String getEditAccountPage(Model model, @RequestParam("id") long accountId) {
+    public String account(@RequestParam("id") long accountId, Model model) {
+        if (accountService.getById(accountId).isPresent()) {
+            model.addAttribute("account", accountService.getById(accountId).get());
+            model.addAttribute("wallPosts", messageService.getAllAccountWallMessages(accountId));
+            model.addAttribute("accountService", accountService);
+        }
+        return "account/account";
+    }
+
+    @GetMapping("/all")
+    public String allAccounts(Model model) {
+        model.addAttribute("accounts", accountService.getAll());
+        return "account/all";
+    }
+
+    @GetMapping("/edit")
+    public String editAccount(Model model, @RequestParam("id") long accountId) {
         if (accountService.getById(accountId).isPresent()) {
             model.addAttribute("account", accountService.getById(accountId).get());
             model.addAttribute("avatarInputStream", accountService.getById(accountId).get().getAvatar());
@@ -43,9 +62,9 @@ public class EditAccountController {
         }
     }
 
-    @PostMapping
-    public String doPost(@ModelAttribute AccountDto accountDto, @RequestParam("id") Long accountId,
-                         HttpServletRequest req) throws IOException {
+    @PostMapping("/edit")
+    public String processAccountEditing(@ModelAttribute AccountDto accountDto, @RequestParam("id") Long accountId,
+                                        HttpServletRequest req) throws IOException {
         accountService.update(accountId, new AccountMapper().toAccount(accountDto));
         addPhones(req, accountId);
         updatePhones(req);
