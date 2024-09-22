@@ -17,8 +17,6 @@ import java.io.IOException;
 
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
-import static com.getjavajob.training.timashovy.socialnetwork.web.util.ServiceSingletonsNames.PHONE_SERVICE_BEAN;
-import static com.getjavajob.training.timashovy.socialnetwork.web.util.WebContextUtils.getApplicationContext;
 
 @Controller
 @RequestMapping("/account/edit")
@@ -58,8 +56,6 @@ public class EditAccountController {
     private void deletePhones(HttpServletRequest req) {
         JsonNode rootNode = getRootNode(req);
         JsonNode deletedNode = rootNode.get("deletedPhonesIds");
-        PhoneService phoneService = getApplicationContext(req.getServletContext()).getBean(PHONE_SERVICE_BEAN,
-                PhoneService.class);
         for (int i = 0; i < deletedNode.size(); i++) {
             phoneService.deleteById(deletedNode.get(i).asLong());
         }
@@ -68,8 +64,6 @@ public class EditAccountController {
     private void updatePhones(HttpServletRequest req) {
         JsonNode rootNode = getRootNode(req);
         JsonNode updatedNode = rootNode.get("updated");
-        PhoneService phoneService = getApplicationContext(req.getServletContext()).getBean(PHONE_SERVICE_BEAN,
-                PhoneService.class);
         for (JsonNode phoneNode : updatedNode) {
             phoneService.update(phoneNode.get("id").asLong(), phoneNode.get("number").asText());
         }
@@ -78,8 +72,6 @@ public class EditAccountController {
     private void addPhones(HttpServletRequest req, Long accountId) {
         JsonNode rootNode = getRootNode(req);
         JsonNode addedNode = rootNode.get("added");
-        PhoneService phoneService = getApplicationContext(req.getServletContext()).getBean(PHONE_SERVICE_BEAN,
-                PhoneService.class);
         JsonNode personalAddedNode = addedNode.get("personal");
         JsonNode workingAddedNode = addedNode.get("working");
         for (JsonNode phoneNode : personalAddedNode) {
