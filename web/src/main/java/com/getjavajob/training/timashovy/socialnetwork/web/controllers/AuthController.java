@@ -1,12 +1,12 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.controllers;
 
 import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.common.util.AccountRegistrationData;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.LoginService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
 import com.getjavajob.training.timashovy.socialnetwork.web.dto.AccountDto;
 import com.getjavajob.training.timashovy.socialnetwork.web.mappers.AccountMapper;
-import com.getjavajob.training.timashovy.socialnetwork.web.mappers.AccountRegistrationDataMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +15,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.StatusTypes.AUTH_DATA_ERROR;
@@ -83,10 +82,12 @@ public class AuthController {
                                              @RequestParam("password") String password,
                                              @RequestParam("personalPhones") String personalPhones,
                                              @RequestParam("workingPhones") String workingPhones) {
-        accountService.create(
-                new AccountRegistrationDataMapper().toAccountRegistrationData(
-                        new AccountMapper().toAccount(accountDto), password, personalPhones, workingPhones
-                )
+        accountService.create(new AccountRegistrationData.Builder()
+                .account(new AccountMapper().toAccount(accountDto))
+                .password(password)
+                .personalPhoneNumber(personalPhones)
+                .workPhoneNumber(workingPhones)
+                .build()
         );
         return "redirect:/login" + REG_SUCCESS;
     }
