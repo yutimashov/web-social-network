@@ -148,7 +148,7 @@
                            role="button">Delete account</a>
                     </c:if>
                     <c:if test="${sessionScope.account.role eq 'ADMIN' and requestScope.account.role eq 'REGULAR'}">
-                        <a href="${rootUrl}/make-admin?id=${pageAccountId}">
+                        <a href="${rootUrl}/account/make-admin?id=${pageAccountId}">
                             <button>Make admin</button>
                         </a><br>
                     </c:if>
