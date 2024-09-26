@@ -4,30 +4,31 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.Search
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
-@RequestMapping("/search")
 @Controller
 public class SearchController {
 
     private static final int RESULTS_PER_PAGE = 5;
+    private static final String ACCOUNT_SEARCH_TYPE = "account";
     private final SearchService searchService;
 
     public SearchController(SearchService searchService) {
         this.searchService = searchService;
     }
 
-    @GetMapping
-    protected String doGet(@RequestParam("searchQuery") String searchQuery,
-                           @RequestParam("currentPage") int currentPage,
-                           @RequestParam("searchType") String searchType,
-                           Model model) {
+    @GetMapping("/search")
+    public String doGet(@RequestParam("searchQuery") String searchQuery,
+                        @RequestParam(name = "currentPage", required = false) int currentPage,
+                        @RequestParam("searchType") String searchType,
+                        Model model) {
         model.addAttribute("searchQuery", searchQuery);
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("searchType", searchType);
         int numberOfPages = 0;
-        if ("account".equals(searchType)) {
+        if (ACCOUNT_SEARCH_TYPE.equals(searchType)) {
             numberOfPages = handleAccountSearch(searchQuery, currentPage, model);
         } else if ("group".equals(searchType)) {
             numberOfPages = handleGroupSearch(searchQuery, currentPage, model);
@@ -49,6 +50,20 @@ public class SearchController {
 
     private int calculateNumberOfPages(int totalResults) {
         return (int) Math.ceil((double) totalResults / RESULTS_PER_PAGE);
+    }
+
+    @GetMapping("/search_ajax")
+    @ResponseBody
+    public ModelAndView search(@RequestParam("searchQuery") String searchQuery,
+                               @RequestParam("searchType") String searchType,
+                               ModelAndView modelAndView) {
+        modelAndView.setViewName("search/ajaxFragment");
+        if (ACCOUNT_SEARCH_TYPE.equals(searchType)) {
+            modelAndView.addObject("accounts", searchService.findAccounts(searchQuery, 0, 5));
+        } else if ("group".equals(searchType)) {
+            modelAndView.addObject("groups", searchService.findGroups(searchQuery, 0, 5));
+        }
+        return modelAndView;
     }
 
 }

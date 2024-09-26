@@ -11,7 +11,6 @@
 <body>
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <div class="container-xl mt-4">
-    <p>Search results for query: <em>${requestScope.searchQuery}</em></p>
     <c:forEach var="account" items="${requestScope.accounts}">
         <div class="row">
             <div class="col-md-2 col-sm-2">
