@@ -38,9 +38,9 @@
                                 <label for="searchQuery" class="text-light">
                                     <input type="text" id="searchQuery" name="searchQuery"
                                            data-toggle="dropdown" placeholder="Search" aria-label="Search">
+                                        <%-- dynamic search tips  --%>
+                                    <div class="dropdown-menu dropdown-menu-right ml-4" id="dropdown-container"></div>
                                 </label>
-                                <div class="dropdown-menu dropdown-menu-right ml-4"
-                                     id="dropdown-container"></div>
                                 <button type="submit" id="search-button" class="btn-sm btn-outline-secondary">Find
                                 </button>
                             </form>

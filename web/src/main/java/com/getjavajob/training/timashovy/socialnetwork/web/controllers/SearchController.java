@@ -59,9 +59,9 @@ public class SearchController {
                                ModelAndView modelAndView) {
         modelAndView.setViewName("search/ajaxFragment");
         if (ACCOUNT_SEARCH_TYPE.equals(searchType)) {
-            modelAndView.addObject("accounts", searchService.findAccounts(searchQuery, 0, 5));
+            modelAndView.addObject("accounts", searchService.findAccounts(searchQuery, 1, 10));
         } else if ("group".equals(searchType)) {
-            modelAndView.addObject("groups", searchService.findGroups(searchQuery, 0, 5));
+            modelAndView.addObject("groups", searchService.findGroups(searchQuery, 1, 10));
         }
         return modelAndView;
     }
