@@ -16,6 +16,7 @@
                 <div class="card border border-light-subtle rounded-3 shadow-sm">
                     <div class="card-body p-3 p-md-4 p-xl-5">
                         <h2 class="fs-6 fw-normal text-center text-secondary mb-4">Sign up</h2>
+                        <%-- Registration form --%>
                         <form action="${rootUrl}/register" method="POST" enctype="multipart/form-data"
                               id="registerForm">
                             <input type="hidden" id="personalPhones" name="personalPhones">
@@ -41,8 +42,9 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-floating mb-3">
-                                            <input type="text" name="name" id="name" class="form-control" required>
-                                            <label for="name" class="form-label">First name<span
+                                            <input type="text" name="firstName" id="firstName" class="form-control"
+                                                   required>
+                                            <label for="firstName" class="form-label">First name<span
                                                     style="color:red;">*</span></label>
                                         </div>
                                     </div>

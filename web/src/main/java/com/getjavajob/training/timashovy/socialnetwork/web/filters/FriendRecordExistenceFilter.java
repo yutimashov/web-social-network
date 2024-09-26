@@ -7,7 +7,6 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-import static com.getjavajob.training.timashovy.socialnetwork.web.util.ServiceSingletonsNames.ACCOUNT_SERVICE_BEAN;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.WebContextUtils.getApplicationContext;
 import static java.lang.Long.valueOf;
 
@@ -17,7 +16,7 @@ public class FriendRecordExistenceFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
-        AccountService accountService = getApplicationContext(req.getServletContext()).getBean(ACCOUNT_SERVICE_BEAN,
+        AccountService accountService = getApplicationContext(req.getServletContext()).getBean("accountService",
                 AccountService.class);
         if (accountService.checkFriendshipRecordExistence(((Account) req.getSession(false)
                 .getAttribute("account")).getId(), valueOf(req.getParameter("id")))) {

@@ -17,7 +17,7 @@
                 <div class="card-header">${requestScope.account.firstName} ${requestScope.account.lastName}</div>
                 <div class="card-body text-center">
                     <c:if test="${not empty requestScope.avatarInputStream}">
-                        <img src="${rootUrl}/avatar?id=${requestScope.account.id}" alt="Profile avatar"
+                        <img src="${rootUrl}/account/avatar?id=${requestScope.account.id}" alt="Account avatar"
                              width="250px" height="250px">
                     </c:if>
                     <c:if test="${empty requestScope.avatarInputStream}">
@@ -43,8 +43,8 @@
                         <div class="row gx-3 mb-3">
                             <!-- Form Group (first name)-->
                             <div class="col-md-6">
-                                <label class="small mb-1" for="name">First name</label>
-                                <input class="form-control" id="name" name="name" type="text"
+                                <label class="small mb-1" for="firstName">First name</label>
+                                <input class="form-control" id="firstName" name="firstName" type="text"
                                        placeholder="Enter your first name" value="${requestScope.account.firstName}">
                             </div>
                             <!-- Form Group (last name)-->

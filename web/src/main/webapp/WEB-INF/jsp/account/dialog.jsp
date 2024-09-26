@@ -24,7 +24,7 @@
                                 <c:when test="${senderId eq sessionScope.account.id}">
                                     <div class="d-flex flex-row justify-content-end mb-4">
                                         <a href="${rootUrl}/account?id=${senderId}">
-                                            <img src="${rootUrl}/avatar?id=${senderId}" alt="Profile avatar"
+                                            <img src="${rootUrl}/account/avatar?id=${senderId}" alt="Profile avatar"
                                                  style="width: 45px; border-radius: 50%;">
                                         </a>
                                         <div class="p-3 ms-3"
@@ -54,13 +54,14 @@
                                             </c:if>
                                         </div>
                                         <a href="${rootUrl}/account?id=${senderId}">
-                                            <img src="${rootUrl}/avatar?id=${senderId}" alt="Profile avatar"
+                                            <img src="${rootUrl}/account/avatar?id=${senderId}" alt="Profile avatar"
                                                  style="width: 45px; border-radius: 50%;">
                                         </a>
                                     </div>
                                 </c:otherwise>
                             </c:choose>
                         </c:forEach>
+                        <%-- personal message --%>
                         <div>
                             <form action="${pageContext.request.contextPath}/account/messages/create" method="POST"
                                   enctype="multipart/form-data">

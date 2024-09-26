@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.web.util.ServiceSingletonsNames.LOGIN_SERVICE_BEAN;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.WebContextUtils.getApplicationContext;
 import static java.util.Objects.isNull;
 
@@ -25,7 +24,7 @@ public class RememberMeFilter implements Filter {
         Cookie emailCookie = findCookieByName(cookies, "login");
         Cookie passwordCookie = findCookieByName(cookies, "password");
         if (!isNull(emailCookie) && !isNull(passwordCookie)) {
-            LoginService loginService = getApplicationContext(req.getServletContext()).getBean(LOGIN_SERVICE_BEAN,
+            LoginService loginService = getApplicationContext(req.getServletContext()).getBean("loginService",
                     LoginService.class);
             Optional<Account> loggedInAccount = loginService.getLoggedInAccount(emailCookie.getValue(),
                     passwordCookie.getValue());
