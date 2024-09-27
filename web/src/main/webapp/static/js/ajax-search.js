@@ -35,3 +35,11 @@ function dropDown() {
         xhr.send();
     }
 }
+
+document.addEventListener('click', function(e) {
+    const dropdownContainer = document.getElementById('dropdown-container');
+    const isClickInside = dropdownContainer.contains(e.target);
+    if (!isClickInside) {
+        dropdownContainer.classList.remove('show');
+    }
+});
