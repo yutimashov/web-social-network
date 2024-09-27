@@ -106,4 +106,7 @@ a:hover {
 .scrollable-menu {
     max-height: 200px;
     overflow-y: auto;
+    width: 230px;
+    max-width: 250px;
+    min-width: 200px;
 }
