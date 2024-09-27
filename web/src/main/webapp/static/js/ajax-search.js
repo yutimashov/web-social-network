@@ -8,75 +8,20 @@ document.getElementById('searchQuery').addEventListener('input', loadSearchTips)
 function loadSearchTips() {
     const searchQuery = document.getElementById('searchQuery').value;
     const searchType = document.getElementById('searchType').value;
-
     if (searchQuery.length > 0) {
-        const xhr = new XMLHttpRequest();
-        xhr.open("GET",
-            `/search_ajax?searchQuery=${encodeURIComponent(searchQuery)}&searchType=${encodeURIComponent(searchType)}&currentPage=${searchPortion}`,
-            true);
-        xhr.timeout = 6000;
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                allResultsLoaded = false;
-                const searchResult = xhr.responseText;
-                if (searchResult.trim() === '') {
-                    dropdownContainer.classList.remove('show');
-                } else {
-                    searchPortion++;
-                    dropdownContainer.classList.add('show');
-                    dropdownContainer.innerHTML = searchResult;
-                    itemsPerRequest = document.querySelectorAll('.dropdown-item').length;
-                }
-            } else {
-                console.log("ERROR : ", xhr.statusText);
-            }
-        };
-        xhr.ontimeout = function () {
-            console.log("ERROR: Request timed out");
-        };
-        xhr.onerror = function () {
-            console.log("ERROR: Network error");
-        };
-        xhr.send();
+        makeRequest(searchQuery, searchType, searchPortion, handleSearchTipsResponse);
     }
 }
 
-// hide tips when click is outside tips block
-document.addEventListener('click', function (e) {
-    const isClickInside = dropdownContainer.contains(e.target);
-    if (!isClickInside) {
-        dropdownContainer.classList.remove('show');
-        searchPortion = 1;
-    }
-});
-
-// dynamic loading search results
-dropdownContainer.addEventListener('scroll', () => {
-    if (!allResultsLoaded && dropdownContainer.clientHeight + dropdownContainer.scrollTop >= dropdownContainer.scrollHeight) {
-        appendSearchResultsDynamically();
-    }
-})
-
-function appendSearchResultsDynamically() {
-    const searchQuery = document.getElementById('searchQuery').value;
-    const searchType = document.getElementById('searchType').value;
-
+function makeRequest(searchQuery, searchType, currentPage, callback) {
     const xhr = new XMLHttpRequest();
-    xhr.open("GET",
-        `/search_ajax?searchQuery=${encodeURIComponent(searchQuery)}&searchType=${encodeURIComponent(searchType)}&currentPage=${searchPortion}`,
-        true);
+    xhr.open("GET", `/search_ajax?searchQuery=${encodeURIComponent(searchQuery)}&searchType=${encodeURIComponent(searchType)}&currentPage=${currentPage}`, true);
     xhr.timeout = 6000;
     xhr.onload = function () {
         if (xhr.status === 200) {
-            const searchResult = xhr.responseText;
-            dropdownContainer.insertAdjacentHTML("beforeend", searchResult);
-            searchPortion++;
-            // if latest query returned less than elements contained in 1 portion - it was the last query
-            if (document.querySelectorAll('.dropdown-item').length % itemsPerRequest !== 0) {
-                allResultsLoaded = true;
-            }
+            callback(xhr.responseText);
         } else {
-            console.log("ERROR : ", xhr.statusText);
+            console.log("ERROR:", xhr.statusText);
         }
     };
     xhr.ontimeout = function () {
@@ -86,4 +31,46 @@ function appendSearchResultsDynamically() {
         console.log("ERROR: Network error");
     };
     xhr.send();
+}
+
+function handleSearchTipsResponse(responseText) {
+    allResultsLoaded = false;
+    if (responseText.trim() === '') {
+        dropdownContainer.classList.remove('show');
+    } else {
+        searchPortion++;
+        dropdownContainer.classList.add('show');
+        dropdownContainer.innerHTML = responseText;
+        itemsPerRequest = document.querySelectorAll('.dropdown-item').length;
+    }
+}
+
+// Hide tips when click is outside tips block
+document.addEventListener('click', function (e) {
+    if (!dropdownContainer.contains(e.target)) {
+        dropdownContainer.classList.remove('show');
+        searchPortion = 1;
+    }
+});
+
+// Dynamic loading search results
+dropdownContainer.addEventListener('scroll', () => {
+    if (!allResultsLoaded && dropdownContainer.clientHeight + dropdownContainer.scrollTop >= dropdownContainer.scrollHeight) {
+        appendSearchResultsDynamically();
+    }
+});
+
+function appendSearchResultsDynamically() {
+    const searchQuery = document.getElementById('searchQuery').value;
+    const searchType = document.getElementById('searchType').value;
+    makeRequest(searchQuery, searchType, searchPortion, handleAppendSearchResultsResponse);
+}
+
+function handleAppendSearchResultsResponse(responseText) {
+    dropdownContainer.insertAdjacentHTML("beforeend", responseText);
+    searchPortion++;
+    // check if the latest request was the last needed
+    if (document.querySelectorAll('.dropdown-item').length % itemsPerRequest !== 0) {
+        allResultsLoaded = true;
+    }
 }
