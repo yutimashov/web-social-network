@@ -13,12 +13,15 @@ function dropDown() {
                 const data = xhr.responseText;
                 const dropdownContainer = document.getElementById("dropdown-container");
                 const dropdownToggle = document.querySelector('.dropdown-toggle');
-                if (dropdownToggle) {
+                if (data.trim() === "") {
+                    dropdownToggle.classList.remove('show');
+                    dropdownContainer.classList.remove('show');
+                    dropdownContainer.innerHTML = '';
+                } else {
                     dropdownToggle.classList.add('show');
                     dropdownContainer.classList.add('show');
+                    dropdownContainer.innerHTML = data;
                 }
-                dropdownContainer.innerHTML = '';
-                dropdownContainer.innerHTML = data;
             } else {
                 console.log("ERROR : ", xhr.statusText);
             }

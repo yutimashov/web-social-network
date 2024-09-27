@@ -101,3 +101,9 @@ a:hover {
 #chat1 .form-outline .form-control~.form-label {
     color: #bfbfbf;
 }
+
+/* search tips */
+.scrollable-menu {
+    max-height: 200px;
+    overflow-y: auto;
+}

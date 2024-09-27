@@ -13,6 +13,7 @@ public class SearchController {
 
     private static final int RESULTS_PER_PAGE = 5;
     private static final String ACCOUNT_SEARCH_TYPE = "account";
+    private static final String GROUP_SEARCH_TYPE = "group";
     private final SearchService searchService;
 
     public SearchController(SearchService searchService) {
@@ -60,7 +61,7 @@ public class SearchController {
         modelAndView.setViewName("search/ajaxFragment");
         if (ACCOUNT_SEARCH_TYPE.equals(searchType)) {
             modelAndView.addObject("accounts", searchService.findAccounts(searchQuery, 1, 10));
-        } else if ("group".equals(searchType)) {
+        } else if (GROUP_SEARCH_TYPE.equals(searchType)) {
             modelAndView.addObject("groups", searchService.findGroups(searchQuery, 1, 10));
         }
         return modelAndView;
