@@ -104,6 +104,11 @@ a:hover {
     color: #bfbfbf;
 }
 
+/* SEARCH PAGE */
+a.current-search-link {
+    background-color: #e9ecef;
+}
+
 /* search tips */
 .scrollable-menu {
     max-height: 200px;
@@ -111,4 +116,10 @@ a:hover {
     width: 230px;
     max-width: 250px;
     min-width: 200px;
+}
+
+/* disabled link */
+a.disabled {
+    pointer-events: none;
+    cursor: default;
 }
