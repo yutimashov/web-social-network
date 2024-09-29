@@ -13,7 +13,8 @@
     <c:choose>
         <c:when test="${requestScope.friends.size() == 0}">
             <div class="alert alert-primary" role="alert">
-                You have no friends yet. You can <a href="${rootUrl}/accounts" class="alert-link">send request</a> to any user.
+                You have no friends yet. You can <a href="${rootUrl}/account/all" class="alert-link">send request</a> to
+                any user.
             </div>
         </c:when>
         <c:otherwise>
@@ -22,7 +23,7 @@
                     <div class="col-md-2 col-sm-2">
                         <c:if test="${not empty friend.avatar}">
                             <a href="${pageContext.request.contextPath}/account?id=${friend.id}">
-                                <img src="${rootUrl}/avatar?id=${friend.id}" alt="user" class="profile-photo-lg"
+                                <img src="${rootUrl}/account/avatar?id=${friend.id}" alt="user" class="profile-photo-lg"
                                      width="100px"
                                      height="100px">
                             </a>

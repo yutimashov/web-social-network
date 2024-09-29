@@ -46,6 +46,13 @@
                                                     aria-label="Close"></button>
                                         </div>
                                     </c:when>
+                                    <c:when test="${param.delete_account eq 'success'}">
+                                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                            Account has been deleted!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                    </c:when>
                                 </c:choose>
                             </div>
                             <div class="row gy-2 overflow-hidden">

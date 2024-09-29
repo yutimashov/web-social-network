@@ -46,7 +46,7 @@
                            data-bs-toggle="dropdown" aria-expanded="false">
                             <c:choose>
                                 <c:when test="${not empty sessionScope.account.avatar}">
-                                    <img src="${rootUrl}/avatar?id=${account.id}" width="50" height="50"
+                                    <img src="${rootUrl}/account/avatar?id=${account.id}" width="50" height="50"
                                          class="rounded-circle"
                                          alt="${account.firstName} ${account.lastName}">
                                 </c:when>

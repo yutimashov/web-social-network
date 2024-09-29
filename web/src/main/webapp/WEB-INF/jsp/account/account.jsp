@@ -20,7 +20,7 @@
                 <div class="card-body text-center">
                     <c:choose>
                         <c:when test="${not empty requestScope.account.avatar}">
-                            <img src="${rootUrl}/avatar?id=${pageAccountId}" alt="Profile avatar" width="250px"
+                            <img src="${rootUrl}/account/avatar?id=${pageAccountId}" alt="Profile avatar" width="250px"
                                  height="250px">
                         </c:when>
                         <c:otherwise>
@@ -148,14 +148,14 @@
                            role="button">Delete account</a>
                     </c:if>
                     <c:if test="${sessionScope.account.role eq 'ADMIN' and requestScope.account.role eq 'REGULAR'}">
-                        <a href="${rootUrl}/make-admin?id=${pageAccountId}">
+                        <a href="${rootUrl}/account/make-admin?id=${pageAccountId}">
                             <button>Make admin</button>
                         </a><br>
                     </c:if>
                 </div>
             </div>
         </div>
-        <!-- Account Wall -->
+        <!-- account wall message -->
         <div class="col-xl-8">
             <c:if test="${sessionAccountId eq pageAccountId}">
                 <div>
