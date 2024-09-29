@@ -45,17 +45,10 @@ function handleSearchTipsResponse(responseText) {
     }
 }
 
-// Hide tips when click is outside tips block
-document.addEventListener('click', function (e) {
-    if (!dropdownContainer.contains(e.target)) {
-        dropdownContainer.classList.remove('show');
-        searchPortion = 1;
-    }
-});
-
 // Dynamic loading search results
 dropdownContainer.addEventListener('scroll', () => {
-    if (!allResultsLoaded && dropdownContainer.clientHeight + dropdownContainer.scrollTop >= dropdownContainer.scrollHeight) {
+    if (!allResultsLoaded
+        && dropdownContainer.clientHeight + dropdownContainer.scrollTop >= dropdownContainer.scrollHeight) {
         appendSearchResultsDynamically();
     }
 });
@@ -74,3 +67,11 @@ function handleAppendSearchResultsResponse(responseText) {
         allResultsLoaded = true;
     }
 }
+
+// Hide tips when click is outside tips block
+document.addEventListener('click', function (e) {
+    if (!dropdownContainer.contains(e.target)) {
+        dropdownContainer.classList.remove('show');
+        searchPortion = 1;
+    }
+});
