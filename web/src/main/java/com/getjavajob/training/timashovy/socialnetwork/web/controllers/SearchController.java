@@ -5,7 +5,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -23,7 +22,7 @@ public class SearchController {
 
     @GetMapping("/search")
     public String doGet(@RequestParam("searchQuery") String searchQuery,
-                        @RequestParam(name = "currentPage", required = false) int currentPage,
+                        @RequestParam("currentPage") int currentPage,
                         @RequestParam("searchType") String searchType,
                         Model model) {
         model.addAttribute("searchQuery", searchQuery);
@@ -57,7 +56,7 @@ public class SearchController {
     @GetMapping("/search_ajax")
     public ModelAndView search(@RequestParam("searchQuery") String searchQuery,
                                @RequestParam("searchType") String searchType,
-                               @RequestParam(name = "currentPage", required = false) int currentPage,
+                               @RequestParam("currentPage") int currentPage,
                                ModelAndView modelAndView) {
         modelAndView.setViewName("search/ajaxFragment");
         if (ACCOUNT_SEARCH_TYPE.equals(searchType)) {
