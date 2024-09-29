@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class SearchController {
 
     private static final int RESULTS_PER_PAGE = 5;
+    private static final int TIPS_PER_AJAX_REQUEST = 10;
     private static final String ACCOUNT_SEARCH_TYPE = "account";
     private static final String GROUP_SEARCH_TYPE = "group";
     private final SearchService searchService;
@@ -54,16 +55,17 @@ public class SearchController {
     }
 
     @GetMapping("/search_ajax")
-    @ResponseBody
     public ModelAndView search(@RequestParam("searchQuery") String searchQuery,
                                @RequestParam("searchType") String searchType,
                                @RequestParam(name = "currentPage", required = false) int currentPage,
                                ModelAndView modelAndView) {
         modelAndView.setViewName("search/ajaxFragment");
         if (ACCOUNT_SEARCH_TYPE.equals(searchType)) {
-            modelAndView.addObject("accounts", searchService.findAccounts(searchQuery, currentPage, 10));
+            modelAndView.addObject("accounts", searchService.findAccounts(searchQuery, currentPage,
+                    TIPS_PER_AJAX_REQUEST));
         } else if (GROUP_SEARCH_TYPE.equals(searchType)) {
-            modelAndView.addObject("groups", searchService.findGroups(searchQuery, currentPage, 10));
+            modelAndView.addObject("groups", searchService.findGroups(searchQuery, currentPage,
+                    TIPS_PER_AJAX_REQUEST));
         }
         return modelAndView;
     }
