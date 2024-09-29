@@ -1,22 +1,23 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="rootUrl" value="${pageContext.request.contextPath}"/>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 <html>
 <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <title>Search result</title>
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <div class="container-xl mt-4">
-    <p>Search results for query: <em>${requestScope.searchQuery}</em></p>
     <c:forEach var="account" items="${requestScope.accounts}">
         <div class="row">
             <div class="col-md-2 col-sm-2">
                 <c:if test="${not empty account.avatar}">
-                    <img src="${rootUrl}/account/avatar?id=${account.id}" alt="user" class="profile-photo-lg" width="100px"
+                    <img src="${rootUrl}/account/avatar?id=${account.id}" alt="user" class="profile-photo-lg"
+                         width="100px"
                          height="100px">
                 </c:if>
                 <c:if test="${empty account.avatar}">
@@ -60,8 +61,8 @@
                             <c:forEach begin="1" end="${requestScope.numberOfPages}" var="i">
                                 <c:choose>
                                     <c:when test="${requestScope.currentPage eq i}">
-                                        <li class="page-item"><a class="page-link" href="">${i}
-                                            <span>(current)</span></a></li>
+                                        <li class="page-item"><a class="page-link disabled current-search-link"
+                                                                 href="#">${i}</a></li>
                                     </c:when>
                                     <c:otherwise>
                                         <li class="page-item">
