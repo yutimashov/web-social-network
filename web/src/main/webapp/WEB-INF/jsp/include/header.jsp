@@ -2,6 +2,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="rootUrl" value="${pageContext.request.contextPath}"/>
 <c:set var="account" value="${sessionScope.account}"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/style.css">
 <c:if test="${not empty account}">
@@ -25,6 +27,7 @@
                 <ul class="navbar-nav mb-2 mb-lg-0 profile-menu">
                     <li class="nav-item align-middle">
                         <div style="display:inline;">
+                                <%---------------- Search form -----------------------%>
                             <form action="${rootUrl}/search" style="margin:0;">
                                 <input type="hidden" name="currentPage" value="1">
                                 <label for="searchType" class="text-light">Search for:</label>
@@ -33,9 +36,14 @@
                                     <option value="group">Group</option>
                                 </select>
                                 <label for="searchQuery" class="text-light">
-                                    <input type="text" id="searchQuery" name="searchQuery">
+                                    <input type="text" id="searchQuery" name="searchQuery"
+                                           data-toggle="dropdown" placeholder="Search" aria-label="Search">
+                                        <%-- dynamic search tips  --%>
+                                    <div class="dropdown-menu dropdown-menu-right ml-4 scrollable-menu"
+                                         id="dropdown-container"></div>
                                 </label>
-                                <button type="submit" class="btn-sm btn-outline-secondary">Find</button>
+                                <button type="submit" id="search-button" class="btn-sm btn-outline-secondary">Find
+                                </button>
                             </form>
                         </div>
                     </li>

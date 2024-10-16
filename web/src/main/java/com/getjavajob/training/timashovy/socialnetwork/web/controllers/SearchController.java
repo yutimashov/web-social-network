@@ -1,43 +1,38 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.controllers;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.Group;
-import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.SearchService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
-import java.util.List;
-
-@RequestMapping("/search")
 @Controller
 public class SearchController {
 
     private static final int RESULTS_PER_PAGE = 5;
+    private static final int TIPS_PER_AJAX_REQUEST = 10;
+    private static final String ACCOUNT_SEARCH_TYPE = "account";
+    private static final String GROUP_SEARCH_TYPE = "group";
     private final SearchService searchService;
 
     public SearchController(SearchService searchService) {
         this.searchService = searchService;
     }
 
-    @GetMapping
-    protected String doGet(@RequestParam("searchQuery") String searchQuery,
-                           @RequestParam("currentPage") int currentPage,
-                           @RequestParam("searchType") String searchType,
-                           Model model) {
+    @GetMapping("/search")
+    public String doGet(@RequestParam("searchQuery") String searchQuery,
+                        @RequestParam("currentPage") int currentPage,
+                        @RequestParam("searchType") String searchType,
+                        Model model) {
         model.addAttribute("searchQuery", searchQuery);
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("searchType", searchType);
         int numberOfPages = 0;
-        if ("account".equals(searchType)) {
+        if (ACCOUNT_SEARCH_TYPE.equals(searchType)) {
             numberOfPages = handleAccountSearch(searchQuery, currentPage, model);
         } else if ("group".equals(searchType)) {
             numberOfPages = handleGroupSearch(searchQuery, currentPage, model);
-        }
-        if (numberOfPages % RESULTS_PER_PAGE > 0) {
-            numberOfPages++;
         }
         model.addAttribute("numberOfPages", numberOfPages);
         model.addAttribute("recordsPerPage", RESULTS_PER_PAGE);
@@ -45,17 +40,33 @@ public class SearchController {
     }
 
     private int handleAccountSearch(String searchQuery, int currentPage, Model model) {
-        List<Account> accounts = searchService.findAccounts(searchQuery, currentPage, RESULTS_PER_PAGE);
-        model.addAttribute("accounts", accounts);
-        int totalResults = searchService.findAccountResultsAmount(searchQuery);
-        return (int) Math.ceil((double) totalResults / RESULTS_PER_PAGE);
+        model.addAttribute("accounts", searchService.findAccounts(searchQuery, currentPage, RESULTS_PER_PAGE));
+        return calculateNumberOfPages(searchService.findAccountResultsAmount(searchQuery));
     }
 
     private int handleGroupSearch(String searchQuery, int currentPage, Model model) {
-        List<Group> groups = searchService.findGroups(searchQuery, currentPage, RESULTS_PER_PAGE);
-        model.addAttribute("groups", groups);
-        int totalResults = searchService.findGroupResultsAmount(searchQuery);
+        model.addAttribute("groups", searchService.findGroups(searchQuery, currentPage, RESULTS_PER_PAGE));
+        return calculateNumberOfPages(searchService.findGroupResultsAmount(searchQuery));
+    }
+
+    private int calculateNumberOfPages(int totalResults) {
         return (int) Math.ceil((double) totalResults / RESULTS_PER_PAGE);
+    }
+
+    @GetMapping("/search_ajax")
+    public ModelAndView search(@RequestParam("searchQuery") String searchQuery,
+                               @RequestParam("searchType") String searchType,
+                               @RequestParam("currentPage") int currentPage,
+                               ModelAndView modelAndView) {
+        modelAndView.setViewName("search/ajaxFragment");
+        if (ACCOUNT_SEARCH_TYPE.equals(searchType)) {
+            modelAndView.addObject("accounts", searchService.findAccounts(searchQuery, currentPage,
+                    TIPS_PER_AJAX_REQUEST));
+        } else if (GROUP_SEARCH_TYPE.equals(searchType)) {
+            modelAndView.addObject("groups", searchService.findGroups(searchQuery, currentPage,
+                    TIPS_PER_AJAX_REQUEST));
+        }
+        return modelAndView;
     }
 
 }
