@@ -12,6 +12,10 @@
     <artifactId>web</artifactId>
     <packaging>war</packaging>
 
+    <properties>
+        <log4j2.version>2.24.1</log4j2.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -60,6 +64,22 @@
         <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
+        </dependency>
+        <!-- logging -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>${log4j2.version}</version>
         </dependency>
     </dependencies>
 
