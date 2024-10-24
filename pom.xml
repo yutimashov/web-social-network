@@ -30,7 +30,7 @@
         <jstl.version>1.2</jstl.version>
         <spring.version>5.3.37</spring.version>
         <commons-fileupload.version>1.5</commons-fileupload.version>
-        <hibernate-entitymanager.version>5.6.15.Final</hibernate-entitymanager.version>
+        <hibernate-core.version>5.3.36.Final</hibernate-core.version>
         <!-- plugins versions -->
         <maven-clean-plugin.version>3.3.2</maven-clean-plugin.version>
         <maven-compiler-plugin.version>3.12.1</maven-compiler-plugin.version>
@@ -126,8 +126,8 @@
             </dependency>
             <dependency>
                 <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-entitymanager</artifactId>
-                <version>${hibernate-entitymanager.version}</version>
+                <artifactId>hibernate-core</artifactId>
+                <version>${hibernate-core.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
