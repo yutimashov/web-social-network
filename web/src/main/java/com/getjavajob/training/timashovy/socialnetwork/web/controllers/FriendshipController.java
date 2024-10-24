@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.controllers;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

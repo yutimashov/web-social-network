@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.search;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.Group;
+import com.getjavajob.training.timashovy.socialnetwork.domain.Group;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.SearchDao;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

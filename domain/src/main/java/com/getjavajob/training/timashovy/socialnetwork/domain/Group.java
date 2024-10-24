@@ -1,6 +1,6 @@
-package com.getjavajob.training.timashovy.socialnetwork.common;
+package com.getjavajob.training.timashovy.socialnetwork.domain;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.util.InputStreamUtils;
+import com.getjavajob.training.timashovy.socialnetwork.domain.util.InputStreamUtils;
 
 import java.io.InputStream;
 import java.util.Objects;

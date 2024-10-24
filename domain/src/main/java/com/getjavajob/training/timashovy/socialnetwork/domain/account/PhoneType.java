@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.common.account;
+package com.getjavajob.training.timashovy.socialnetwork.domain.account;
 
 /**
  * Types of phones that Account can have in application.

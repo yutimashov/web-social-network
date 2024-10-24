@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.dto;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.message.MessageType;
+import com.getjavajob.training.timashovy.socialnetwork.domain.message.MessageType;
 import org.springframework.web.multipart.MultipartFile;
 
 public class MessageDto {

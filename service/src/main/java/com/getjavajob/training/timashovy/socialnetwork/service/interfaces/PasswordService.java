@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.interfaces;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.account.Password;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Password;
 
 import java.util.Optional;
 

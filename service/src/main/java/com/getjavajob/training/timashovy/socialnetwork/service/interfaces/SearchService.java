@@ -1,7 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.interfaces;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.Group;
-import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.Group;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 
 import java.util.List;
 

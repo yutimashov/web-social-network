@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.mappers;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.web.dto.AccountDto;
 import com.getjavajob.training.timashovy.socialnetwork.web.util.exceptions.WebException;
 

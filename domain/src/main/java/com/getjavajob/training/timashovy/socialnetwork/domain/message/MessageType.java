@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.common.message;
+package com.getjavajob.training.timashovy.socialnetwork.domain.message;
 
 /**
  * Types of Message that can exist in the application.

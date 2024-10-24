@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.message.Message;
+import com.getjavajob.training.timashovy.socialnetwork.domain.message.Message;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.MessageDao;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

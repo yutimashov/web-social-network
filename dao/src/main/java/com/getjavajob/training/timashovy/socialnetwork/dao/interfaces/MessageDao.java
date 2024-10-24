@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.message.Message;
+import com.getjavajob.training.timashovy.socialnetwork.domain.message.Message;
 
 import java.util.List;
 import java.util.Optional;

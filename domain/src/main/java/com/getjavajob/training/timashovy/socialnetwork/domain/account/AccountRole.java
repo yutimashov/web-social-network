@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.common.account;
+package com.getjavajob.training.timashovy.socialnetwork.domain.account;
 
 /**
  * Roles that can be assigned to account within application.

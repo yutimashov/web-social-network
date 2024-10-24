@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.common.util;
+package com.getjavajob.training.timashovy.socialnetwork.domain.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

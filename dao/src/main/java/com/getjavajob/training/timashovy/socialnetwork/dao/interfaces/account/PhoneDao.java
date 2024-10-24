@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Phone;
 
 import java.util.List;
 

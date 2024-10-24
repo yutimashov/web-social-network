@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.Group;
+import com.getjavajob.training.timashovy.socialnetwork.domain.Group;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

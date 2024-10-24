@@ -1,7 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.message;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.common.message.Message;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.message.Message;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.PersonalMessageDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.MessageDao;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;

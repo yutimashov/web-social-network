@@ -1,6 +1,6 @@
-package com.getjavajob.training.timashovy.socialnetwork.common.util;
+package com.getjavajob.training.timashovy.socialnetwork.domain.util;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 
 public class AccountRegistrationData {
 

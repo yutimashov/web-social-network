@@ -1,6 +1,6 @@
-package com.getjavajob.training.timashovy.socialnetwork.common;
+package com.getjavajob.training.timashovy.socialnetwork.domain;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 
 import java.util.Objects;
 

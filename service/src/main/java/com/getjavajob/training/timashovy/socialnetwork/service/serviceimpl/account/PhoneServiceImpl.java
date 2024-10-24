@@ -1,14 +1,14 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneService;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
-import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
+import static com.getjavajob.training.timashovy.socialnetwork.domain.account.PhoneType.PERSONAL;
+import static com.getjavajob.training.timashovy.socialnetwork.domain.account.PhoneType.WORKING;
 import static java.util.stream.Collectors.toList;
 
 public class PhoneServiceImpl implements PhoneService {

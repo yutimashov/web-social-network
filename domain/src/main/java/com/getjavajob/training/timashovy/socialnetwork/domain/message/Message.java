@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.common.message;
+package com.getjavajob.training.timashovy.socialnetwork.domain.message;
 
 import java.io.InputStream;
 import java.time.LocalDate;

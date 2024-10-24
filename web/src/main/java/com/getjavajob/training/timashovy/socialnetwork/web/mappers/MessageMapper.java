@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.mappers;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.message.Message;
+import com.getjavajob.training.timashovy.socialnetwork.domain.message.Message;
 import com.getjavajob.training.timashovy.socialnetwork.web.dto.MessageDto;
 
 import java.io.IOException;
