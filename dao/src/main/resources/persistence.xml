@@ -4,13 +4,13 @@
              version="2.2">
 
     <persistence-unit name="social-network">
+        <description>persistence unit for the whole social-network project</description>
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <jta-data-source>java:comp/env/jdbc/socialNetwork</jta-data-source>
-
-        <class>com.getjavajob.training.timashovy.socialnetwork.domain.Group</class>
-
-        <exclude-unlisted-classes>true</exclude-unlisted-classes>
-
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL95Dialect"/>
+            <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.use_sql_comments" value="true"/>
         </properties>

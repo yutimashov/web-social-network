@@ -1,9 +1,9 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 
-import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.domain.account.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Phone;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -15,12 +15,12 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNTS_TABLE;
+import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.AccountTableFields.*;
 import static com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole.REGULAR;
 import static com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole.valueOf;
 import static com.getjavajob.training.timashovy.socialnetwork.domain.account.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.domain.account.PhoneType.WORKING;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNTS_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.AccountTableFields.*;
 import static java.lang.String.valueOf;
 import static java.util.Objects.isNull;
 import static java.util.Optional.empty;
