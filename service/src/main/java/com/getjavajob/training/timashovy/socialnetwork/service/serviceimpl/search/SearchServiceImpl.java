@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.search;
 
-import com.getjavajob.training.timashovy.socialnetwork.domain.Group;
+import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.SearchDao;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.SearchService;

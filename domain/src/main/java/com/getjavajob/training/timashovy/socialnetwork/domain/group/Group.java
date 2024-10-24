@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.domain;
+package com.getjavajob.training.timashovy.socialnetwork.domain.group;
 
 import com.getjavajob.training.timashovy.socialnetwork.domain.util.InputStreamUtils;
 
