@@ -1,11 +1,15 @@
 package com.getjavajob.training.timashovy.socialnetwork.domain.account;
 
-import java.io.InputStream;
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 import static java.util.Objects.hash;
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.EnumType.STRING;
+import static javax.persistence.GenerationType.IDENTITY;
 
 /**
  * Model of Account entity in application.
@@ -14,23 +18,61 @@ import static java.util.Objects.hash;
  * @author Yuriy Timashov
  * @since 10.01.2024
  */
+@Table(name = "accounts")
+@Entity
 public class Account {
 
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
+
+    @Column(name = "first_name")
     private String firstName;
+
+    @Column(name = "last_name")
     private String lastName;
+
+    @Column(name = "middle_name")
     private String middleName;
+
+    @Column(name = "birth_date")
     private LocalDate birthDate;
-    private List<Phone> personalPhoneNumber;
-    private List<Phone> workPhoneNumber;
+
+    @OneToMany(mappedBy = "account", cascade = ALL, orphanRemoval = true)
+    private List<Phone> phones;
+
+    @Column(name = "personal_address")
     private String personalAddress;
+
+    @Column(name = "work_address")
     private String workAddress;
+
     private String email;
     private String icq;
     private String skype;
+
+    @Column(name = "additional_info")
     private String additionalInfo;
+
+    @Column(name = "role_type")
+    @Enumerated(STRING)
     private AccountRole role;
-    private InputStream avatar;
+
+    @Lob
+    private byte[] avatar;
+
+    protected Account() {
+    }
+
+    public void addPhone(Phone phone) {
+        phones.add(phone);
+        phone.setAccount(this);
+    }
+
+    public void removePhone(Phone phone) {
+        phones.remove(phone);
+        phone.setAccount(null);
+    }
 
     private Account(Builder builder) {
         id = builder.id;
@@ -38,8 +80,7 @@ public class Account {
         lastName = builder.lastName;
         middleName = builder.middleName;
         birthDate = builder.birthDate;
-        personalPhoneNumber = builder.personalPhoneNumber;
-        workPhoneNumber = builder.workPhoneNumber;
+        phones = builder.phones;
         personalAddress = builder.personalAddress;
         workAddress = builder.workAddress;
         email = builder.email;
@@ -57,8 +98,7 @@ public class Account {
         private String lastName;
         private String middleName;
         private LocalDate birthDate;
-        private List<Phone> personalPhoneNumber;
-        private List<Phone> workPhoneNumber;
+        private List<Phone> phones;
         private String personalAddress;
         private String workAddress;
         private String email;
@@ -66,7 +106,7 @@ public class Account {
         private String skype;
         private String additionalInfo;
         private AccountRole role;
-        private InputStream avatar;
+        private byte[] avatar;
 
         public Builder() {
         }
@@ -77,8 +117,7 @@ public class Account {
             this.lastName = account.getLastName();
             this.middleName = account.getMiddleName();
             this.birthDate = account.getBirthDate();
-            this.personalPhoneNumber = account.getPersonalPhoneNumber();
-            this.workPhoneNumber = account.getWorkPhoneNumber();
+            this.phones = account.getPhones();
             this.workAddress = account.getWorkAddress();
             this.personalAddress = account.getPersonalAddress();
             this.email = account.getEmail();
@@ -109,8 +148,8 @@ public class Account {
             return this;
         }
 
-        public Builder personalPhoneNumber(List<Phone> personalPhoneNumber) {
-            this.personalPhoneNumber = personalPhoneNumber;
+        public Builder phones(List<Phone> phones) {
+            this.phones = phones;
             return this;
         }
 
@@ -121,11 +160,6 @@ public class Account {
 
         public Builder middleName(String middleName) {
             this.middleName = middleName;
-            return this;
-        }
-
-        public Builder workPhoneNumber(List<Phone> workPhoneNumber) {
-            this.workPhoneNumber = workPhoneNumber;
             return this;
         }
 
@@ -159,7 +193,7 @@ public class Account {
             return this;
         }
 
-        public Builder avatar(InputStream avatar) {
+        public Builder avatar(byte[] avatar) {
             this.avatar = avatar;
             return this;
         }
@@ -210,20 +244,12 @@ public class Account {
         this.birthDate = birthDate;
     }
 
-    public List<Phone> getPersonalPhoneNumber() {
-        return personalPhoneNumber;
+    public List<Phone> getPhones() {
+        return phones;
     }
 
-    public void setPersonalPhoneNumber(List<Phone> personalPhoneNumber) {
-        this.personalPhoneNumber = personalPhoneNumber;
-    }
-
-    public List<Phone> getWorkPhoneNumber() {
-        return workPhoneNumber;
-    }
-
-    public void setWorkPhoneNumber(List<Phone> workPhoneNumber) {
-        this.workPhoneNumber = workPhoneNumber;
+    public void setPhones(List<Phone> phones) {
+        this.phones = phones;
     }
 
     public String getPersonalAddress() {
@@ -282,11 +308,11 @@ public class Account {
         this.role = role;
     }
 
-    public InputStream getAvatar() {
+    public byte[] getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(InputStream avatar) {
+    public void setAvatar(byte[] avatar) {
         this.avatar = avatar;
     }
 
@@ -301,27 +327,26 @@ public class Account {
         Account account = (Account) o;
         return Objects.equals(id, account.id) && Objects.equals(firstName, account.firstName)
                 && Objects.equals(lastName, account.lastName) && Objects.equals(middleName, account.middleName)
-                && Objects.equals(birthDate, account.birthDate) && Objects.equals(personalPhoneNumber,
-                account.personalPhoneNumber) && Objects.equals(workPhoneNumber, account.workPhoneNumber)
-                && Objects.equals(personalAddress, account.personalAddress) && Objects.equals(workAddress,
-                account.workAddress) && Objects.equals(email, account.email) && Objects.equals(icq, account.icq)
-                && Objects.equals(skype, account.skype) && Objects.equals(additionalInfo, account.additionalInfo)
-                && Objects.equals(role, account.role) && Objects.equals(avatar, account.avatar);
+                && Objects.equals(birthDate, account.birthDate) && Objects.equals(phones, account.phones)
+                && Objects.equals(personalAddress, account.personalAddress)
+                && Objects.equals(workAddress, account.workAddress) && Objects.equals(email, account.email)
+                && Objects.equals(icq, account.icq) && Objects.equals(skype, account.skype)
+                && Objects.equals(additionalInfo, account.additionalInfo) && Objects.equals(role, account.role)
+                && Arrays.equals(avatar, account.avatar);
     }
 
     @Override
     public int hashCode() {
-        return hash(id, firstName, lastName, middleName, birthDate, personalPhoneNumber, workPhoneNumber,
-                personalAddress, workAddress, email, icq, skype, additionalInfo, role, avatar);
+        return hash(id, firstName, lastName, middleName, birthDate, phones, personalAddress, workAddress, email, icq,
+                skype, additionalInfo, role, Arrays.hashCode(avatar));
     }
 
     @Override
     public String toString() {
         return "Account {id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", middleName="
-                + middleName + ", birthDate=" + birthDate + ", personalPhoneNumber="
-                + personalPhoneNumber + ", workPhoneNumber=" + workPhoneNumber + ", personalAddress=" + personalAddress
-                + ", workAddress=" + workAddress + ", email=" + email + ", icq=" + icq + ", skype=" + skype
-                + ", additionalInfo=" + additionalInfo + ", role= " + role + " }";
+                + middleName + ", birthDate=" + birthDate + ", phones=" + phones + ", personalAddress="
+                + personalAddress + ", workAddress=" + workAddress + ", email=" + email + ", icq=" + icq + ", skype="
+                + skype + ", additionalInfo=" + additionalInfo + ", role= " + role + " }";
     }
 
 }
