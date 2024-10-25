@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 import static javax.persistence.EnumType.STRING;
+import static javax.persistence.FetchType.LAZY;
 
 @Table(name = "account_phones")
 @Entity
@@ -20,7 +21,7 @@ public class Phone {
     @Column(name = "phone_number")
     private String number;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "account_id")
     private Account account;
 
