@@ -1,22 +1,40 @@
 package com.getjavajob.training.timashovy.socialnetwork.domain.account;
 
+import javax.persistence.*;
 import java.util.Objects;
 
+import static javax.persistence.EnumType.STRING;
+
+@Table(name = "account_phones")
+@Entity
 public class Phone {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private PhoneType phoneType;
-    private String number;
-    private Long accountId;
 
-    public Phone(PhoneType phoneType, String number, Long accountId) {
-        this.phoneType = phoneType;
-        this.number = number;
-        this.accountId = accountId;
+    @Column(name = "phone_type")
+    @Enumerated(STRING)
+    private PhoneType phoneType;
+
+    @Column(name = "phone_number")
+    private String number;
+
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    private Account account;
+
+    protected Phone() {
     }
 
-    public Phone(Long id, PhoneType type, String number, Long accountId) {
-        this(type, number, accountId);
+    public Phone(PhoneType phoneType, String number, Account account) {
+        this.phoneType = phoneType;
+        this.number = number;
+        this.account = account;
+    }
+
+    public Phone(Long id, PhoneType type, String number, Account account) {
+        this(type, number, account);
         this.id = id;
     }
 
@@ -28,12 +46,12 @@ public class Phone {
         this.id = id;
     }
 
-    public Long getAccountId() {
-        return accountId;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setAccountId(Long accountId) {
-        this.accountId = accountId;
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     public PhoneType getPhoneType() {
@@ -54,7 +72,7 @@ public class Phone {
 
     @Override
     public String toString() {
-        return "Phone{id=" + id + ", phoneType=" + phoneType + ", number=" + number + ", accountId=" + accountId + "}";
+        return "Phone{id=" + id + ", phoneType=" + phoneType + ", number=" + number + ", accountId=" + account + "}";
     }
 
     @Override
@@ -63,12 +81,12 @@ public class Phone {
         if (o == null || getClass() != o.getClass()) return false;
         Phone phone = (Phone) o;
         return Objects.equals(id, phone.id) && Objects.equals(phoneType, phone.phoneType)
-                && Objects.equals(number, phone.number) && Objects.equals(accountId, phone.accountId);
+                && Objects.equals(number, phone.number) && Objects.equals(account, phone.account);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, phoneType, number, accountId);
+        return Objects.hash(id, phoneType, number, account);
     }
 
 }
