@@ -1,37 +1,43 @@
 package com.getjavajob.training.timashovy.socialnetwork.domain.message;
 
+import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.time.LocalDate;
+
+import static javax.persistence.FetchType.LAZY;
 
 @Table(name = "group_messages")
 @Entity
 public class GroupMessage extends Message {
 
     @Column(name = "group_id")
-    private Long groupId;
+    @ManyToOne(fetch = LAZY)
+    private Group group;
 
     protected GroupMessage() {
     }
 
     private GroupMessage(Builder builder) {
         super(builder.id, builder.accountAuthorId, builder.text, builder.photo, builder.creationDate);
-        this.groupId = builder.groupId;
+        this.group = builder.group;
     }
 
-    public Long getGroupId() {
-        return groupId;
+    public Group getGroup() {
+        return group;
     }
 
-    public void setDestinationId(Long groupId) {
-        this.groupId = groupId;
+    public void setGroup(Group group) {
+        this.group = group;
     }
 
     public static class Builder {
         private Long id;
         private Long accountAuthorId;
-        private Long groupId;
+        private Group group;
         private String text;
         private byte[] photo;
         private LocalDate creationDate;
@@ -46,8 +52,8 @@ public class GroupMessage extends Message {
             return this;
         }
 
-        public Builder groupId(Long groupId) {
-            this.groupId = groupId;
+        public Builder groupId(Group group) {
+            this.group = group;
             return this;
         }
 

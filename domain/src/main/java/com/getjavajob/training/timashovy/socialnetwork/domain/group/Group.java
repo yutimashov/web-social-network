@@ -1,10 +1,14 @@
 package com.getjavajob.training.timashovy.socialnetwork.domain.group;
 
+import com.getjavajob.training.timashovy.socialnetwork.domain.message.GroupMessage;
+
 import javax.persistence.*;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 import static java.util.Objects.hash;
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.GenerationType.IDENTITY;
 
 /**
@@ -31,6 +35,19 @@ public class Group {
 
     @Column(name = "owner_id")
     private Long accountOwnerId;
+
+    @OneToMany(mappedBy = "group", cascade = ALL, orphanRemoval = true)
+    private List<GroupMessage> messages;
+
+    public void addMessage(GroupMessage message) {
+        messages.add(message);
+        message.setGroup(this);
+    }
+
+    public void removeMessage(GroupMessage message) {
+        messages.remove(message);
+        message.setGroup(null);
+    }
 
     @Lob
     private byte[] avatar;
