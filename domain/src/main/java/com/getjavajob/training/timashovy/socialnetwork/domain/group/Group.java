@@ -1,11 +1,11 @@
 package com.getjavajob.training.timashovy.socialnetwork.domain.group;
 
-import com.getjavajob.training.timashovy.socialnetwork.domain.util.InputStreamUtils;
-
-import java.io.InputStream;
+import javax.persistence.*;
+import java.util.Arrays;
 import java.util.Objects;
 
 import static java.util.Objects.hash;
+import static javax.persistence.GenerationType.IDENTITY;
 
 /**
  * Model of Group entity in application.
@@ -15,13 +15,28 @@ import static java.util.Objects.hash;
  * @author Yuriy Timashov
  * @since 10.01.2024
  */
+@Entity
+@Table(name = "groups")
 public class Group {
 
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
+
+    @Column(name = "group_name")
     private String groupName;
+
+    @Column(name = "description")
     private String description;
+
+    @Column(name = "owner_id")
     private Long accountOwnerId;
-    private InputStream avatar;
+
+    @Lob
+    private byte[] avatar;
+
+    protected Group() {
+    }
 
     private Group(Builder builder) {
         id = builder.id;
@@ -37,7 +52,7 @@ public class Group {
         private String groupName;
         private String description;
         private Long accountOwnerId;
-        private InputStream avatar;
+        private byte[] avatar;
 
         public Builder() {
         }
@@ -70,7 +85,7 @@ public class Group {
             return this;
         }
 
-        public Builder avatar(InputStream avatar) {
+        public Builder avatar(byte[] avatar) {
             this.avatar = avatar;
             return this;
         }
@@ -113,11 +128,11 @@ public class Group {
         this.accountOwnerId = accountOwnerId;
     }
 
-    public InputStream getAvatar() {
+    public byte[] getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(InputStream avatar) {
+    public void setAvatar(byte[] avatar) {
         this.avatar = avatar;
     }
 
@@ -132,18 +147,18 @@ public class Group {
         Group group = (Group) o;
         return Objects.equals(id, group.id) && Objects.equals(groupName, group.groupName)
                 && Objects.equals(description, group.description) && Objects.equals(accountOwnerId,
-                group.accountOwnerId) && InputStreamUtils.isEqual(avatar, group.avatar);
+                group.accountOwnerId) && Arrays.equals(avatar, group.avatar);
     }
 
     @Override
     public int hashCode() {
-        return hash(id, groupName, description, accountOwnerId, avatar);
+        return hash(id, groupName, description, accountOwnerId, Arrays.hashCode(avatar));
     }
 
     @Override
     public String toString() {
         return "Group {id=" + id + ", groupName=" + groupName + ", description=" + description + ", ownerId="
-                + accountOwnerId + ", avatar=" + avatar + "}";
+                + accountOwnerId + ", avatar=" + Arrays.toString(avatar) + "}";
     }
 
 }
