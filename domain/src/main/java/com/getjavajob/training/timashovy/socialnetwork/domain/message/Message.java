@@ -1,86 +1,43 @@
 package com.getjavajob.training.timashovy.socialnetwork.domain.message;
 
-import java.io.InputStream;
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Objects;
 
-public class Message {
+import static javax.persistence.GenerationType.IDENTITY;
+import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
 
+@Entity
+@Inheritance(strategy = TABLE_PER_CLASS)
+public abstract class Message {
+
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
+
+    @Column(name = "account_author_id")
     private Long accountAuthorId;
-    private MessageType messageType;
-    private Long destinationId;
+
+    @Column(name = "message_text")
     private String text;
-    private InputStream photo;
+
+    @Lob
+    @Column(name = "message_image")
+    private byte[] photo;
+
+    @Column(name = "creation_date")
     private LocalDate creationDate;
 
-    private Message(Builder builder) {
-        id = builder.id;
-        accountAuthorId = builder.accountAuthorId;
-        messageType = builder.messageType;
-        destinationId = builder.destinationId;
-        text = builder.text;
-        photo = builder.photo;
-        creationDate = builder.creationDate;
+    protected Message() {
     }
 
-    public static final class Builder {
-        private Long id;
-        private Long accountAuthorId;
-        private MessageType messageType;
-        private Long destinationId;
-        private String text;
-        private InputStream photo;
-        private LocalDate creationDate;
-
-        public Builder() {
-        }
-
-        public Builder(Message message) {
-            this.id = message.id;
-            this.accountAuthorId = message.accountAuthorId;
-            this.messageType = message.messageType;
-        }
-
-        public Builder id(Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder accountAuthorId(Long accountAuthorId) {
-            this.accountAuthorId = accountAuthorId;
-            return this;
-        }
-
-        public Builder messageType(MessageType messageType) {
-            this.messageType = messageType;
-            return this;
-        }
-
-        public Builder destinationId(Long destinationId) {
-            this.destinationId = destinationId;
-            return this;
-        }
-
-        public Builder text(String text) {
-            this.text = text;
-            return this;
-        }
-
-        public Builder photo(InputStream photo) {
-            this.photo = photo;
-            return this;
-        }
-
-        public Builder creationDate(LocalDate creationDate) {
-            this.creationDate = creationDate;
-            return this;
-        }
-
-        public Message build() {
-            return new Message(this);
-        }
-
+    protected Message(Long id, Long accountAuthorId, String text, byte[] photo, LocalDate creationDate) {
+        this.id = id;
+        this.accountAuthorId = accountAuthorId;
+        this.text = text;
+        this.photo = photo;
+        this.creationDate = creationDate;
     }
 
     public Long getId() {
@@ -99,22 +56,6 @@ public class Message {
         this.accountAuthorId = accountAuthorId;
     }
 
-    public MessageType getMessageType() {
-        return messageType;
-    }
-
-    public void setMessageType(MessageType messageType) {
-        this.messageType = messageType;
-    }
-
-    public Long getDestinationId() {
-        return destinationId;
-    }
-
-    public void setDestinationId(Long destinationId) {
-        this.destinationId = destinationId;
-    }
-
     public String getText() {
         return text;
     }
@@ -123,11 +64,11 @@ public class Message {
         this.text = text;
     }
 
-    public InputStream getPhoto() {
+    public byte[] getPhoto() {
         return photo;
     }
 
-    public void setPhoto(InputStream photo) {
+    public void setPhoto(byte[] photo) {
         this.photo = photo;
     }
 
@@ -145,21 +86,19 @@ public class Message {
         if (o == null || getClass() != o.getClass()) return false;
         Message message = (Message) o;
         return Objects.equals(id, message.id) && Objects.equals(accountAuthorId, message.accountAuthorId)
-                && messageType == message.messageType && Objects.equals(destinationId, message.destinationId)
-                && Objects.equals(text, message.text) && Objects.equals(photo, message.photo)
+                && Objects.equals(text, message.text) && Arrays.equals(photo, message.photo)
                 && Objects.equals(creationDate, message.creationDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, accountAuthorId, messageType, destinationId, text, photo, creationDate);
+        return Objects.hash(id, accountAuthorId, text, Arrays.hashCode(photo), creationDate);
     }
 
     @Override
     public String toString() {
-        return "Message{id=" + id + ", accountAuthorId=" + accountAuthorId + ", messageType=" + messageType
-                + ", destinationId=" + destinationId + ", text=" + text + ", photo=" + photo + ", creationDate="
-                + creationDate + "}";
+        return "Message{id=" + id + ", accountAuthorId=" + accountAuthorId + ", text=" + text + ", photo="
+                + Arrays.toString(photo) + ", creationDate=" + creationDate + "}";
     }
 
 }
