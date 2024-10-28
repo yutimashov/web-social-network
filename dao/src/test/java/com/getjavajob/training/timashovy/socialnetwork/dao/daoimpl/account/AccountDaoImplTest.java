@@ -1,7 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.domain.account.Phone;
+import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole.REGULAR;
-import static com.getjavajob.training.timashovy.socialnetwork.domain.account.PhoneType.PERSONAL;
-import static com.getjavajob.training.timashovy.socialnetwork.domain.account.PhoneType.WORKING;
+import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.PERSONAL;
+import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.WORKING;
 import static java.time.LocalDate.of;
 import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.*;

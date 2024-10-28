@@ -1,4 +1,6 @@
-package com.getjavajob.training.timashovy.socialnetwork.domain.account;
+package com.getjavajob.training.timashovy.socialnetwork.domain.password;
+
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 
 import javax.persistence.*;
 import java.util.Objects;

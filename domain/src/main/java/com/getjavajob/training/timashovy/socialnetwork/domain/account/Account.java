@@ -1,5 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.domain.account;
 
+import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Arrays;

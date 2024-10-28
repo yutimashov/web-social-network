@@ -2,7 +2,7 @@ package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.acco
 
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole;
-import com.getjavajob.training.timashovy.socialnetwork.domain.account.Phone;
+import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.domain.util.AccountRegistrationData;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PasswordDao;
@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.domain.account.PhoneType.PERSONAL;
-import static com.getjavajob.training.timashovy.socialnetwork.domain.account.PhoneType.WORKING;
+import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.PERSONAL;
+import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.WORKING;
 import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toList;
 

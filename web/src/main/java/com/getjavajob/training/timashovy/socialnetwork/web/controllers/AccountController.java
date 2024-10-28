@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.domain.account.Phone;
+import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AdminService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
@@ -19,8 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Objects;
 
-import static com.getjavajob.training.timashovy.socialnetwork.domain.account.PhoneType.PERSONAL;
-import static com.getjavajob.training.timashovy.socialnetwork.domain.account.PhoneType.WORKING;
+import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.PERSONAL;
+import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.WORKING;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.StatusTypes.DELETE_ACCOUNT_SUCCESS;
 
 @Controller
