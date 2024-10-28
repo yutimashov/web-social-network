@@ -1,9 +1,8 @@
 package com.getjavajob.training.timashovy.socialnetwork.domain.account;
 
 /**
- * Roles that can be assigned to account within application.
- * Each role has its own rights.
- * ADMIN can edit or delete any account within application.
+ * Roles that can be assigned to {@link com.getjavajob.training.timashovy.socialnetwork.domain.account.Account account object}.
+ * Each role has its own specific rights.
  */
 public enum AccountRole {
 
