@@ -5,7 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.LocalDate;
 
-@Table(name = "personal_wall_messages")
+@Table(name = "personal_wall_messages", schema = "message_data")
 @Entity
 public class PersonalWallMessage extends Message {
 

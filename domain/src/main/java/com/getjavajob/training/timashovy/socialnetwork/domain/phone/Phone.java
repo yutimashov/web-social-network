@@ -8,7 +8,7 @@ import java.util.Objects;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.LAZY;
 
-@Table(name = "account_phones")
+@Table(name = "account_phones", schema = "account_data")
 @Entity
 public class Phone {
 

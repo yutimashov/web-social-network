@@ -20,7 +20,7 @@ import static javax.persistence.GenerationType.IDENTITY;
  * @since 10.01.2024
  */
 @Entity
-@Table(name = "groups")
+@Table(name = "groups", schema = "group_data")
 public class Group {
 
     @Id

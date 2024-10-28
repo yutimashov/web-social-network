@@ -12,7 +12,7 @@ import static javax.persistence.FetchType.LAZY;
  * It also provides basic functionality to work with password.
  */
 @Entity
-@Table(name = "account_passwords")
+@Table(name = "account_passwords", schema = "account_data")
 public class Password {
 
     @Id

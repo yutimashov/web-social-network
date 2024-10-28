@@ -19,6 +19,7 @@ import java.util.Objects;
  */
 @Entity
 @IdClass(Friendship.FriendshipId.class)
+@Table(schema = "friend_data")
 public class Friendship {
 
     @Id

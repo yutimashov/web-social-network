@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 import static javax.persistence.FetchType.LAZY;
 
-@Table(name = "group_messages")
+@Table(name = "group_messages", schema = "message_data")
 @Entity
 public class GroupMessage extends Message {
 
