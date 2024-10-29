@@ -44,16 +44,16 @@ class GroupDaoImplTest {
             .build();
 
     private void restoreTestGroupDefaultState() {
-        TEST_GROUP.setGroupName("");
+        TEST_GROUP.setName("");
         TEST_GROUP.setDescription("");
-        TEST_GROUP.setAccountOwnerId(1L);
+        TEST_GROUP.setAccountOwner(1L);
     }
 
     private void setTestGroupEqualsToRecordInTestTable() {
         TEST_GROUP.setId(1L);
-        TEST_GROUP.setGroupName("test");
+        TEST_GROUP.setName("test");
         TEST_GROUP.setDescription("test");
-        TEST_GROUP.setAccountOwnerId(1L);
+        TEST_GROUP.setAccountOwner(1L);
         TEST_GROUP.setAvatar(new ByteArrayInputStream("testAvatar".getBytes()));
     }
 

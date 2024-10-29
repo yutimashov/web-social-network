@@ -2,8 +2,8 @@ package com.getjavajob.training.timashovy.socialnetwork.domain.message;
 
 import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.time.LocalDate;
@@ -14,8 +14,8 @@ import static javax.persistence.FetchType.LAZY;
 @Entity
 public class GroupMessage extends Message {
 
-    @Column(name = "group_id")
     @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "group_id")
     private Group group;
 
     protected GroupMessage() {

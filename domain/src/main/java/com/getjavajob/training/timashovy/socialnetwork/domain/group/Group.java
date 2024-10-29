@@ -1,15 +1,18 @@
 package com.getjavajob.training.timashovy.socialnetwork.domain.group;
 
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.GroupMessage;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 import static java.util.Objects.hash;
 import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.GenerationType.IDENTITY;
+import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.GenerationType.SEQUENCE;
 
 /**
  * Model of Group entity in application.
@@ -24,20 +27,21 @@ import static javax.persistence.GenerationType.IDENTITY;
 public class Group {
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = SEQUENCE)
     private Long id;
 
     @Column(name = "group_name")
-    private String groupName;
+    private String name;
 
     @Column(name = "description")
     private String description;
 
-    @Column(name = "owner_id")
-    private Long accountOwnerId;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "owner_id")
+    private Account accountOwner;
 
     @OneToMany(mappedBy = "group", cascade = ALL, orphanRemoval = true)
-    private List<GroupMessage> messages;
+    private List<GroupMessage> messages = new ArrayList<>();
 
     public void addMessage(GroupMessage message) {
         messages.add(message);
@@ -57,10 +61,11 @@ public class Group {
 
     private Group(Builder builder) {
         id = builder.id;
-        groupName = builder.groupName;
+        name = builder.groupName;
         description = builder.description;
-        accountOwnerId = builder.accountOwnerId;
+        accountOwner = builder.accountOwner;
         avatar = builder.avatar;
+        messages = builder.messages;
     }
 
     public static final class Builder {
@@ -68,17 +73,18 @@ public class Group {
         private Long id;
         private String groupName;
         private String description;
-        private Long accountOwnerId;
+        private Account accountOwner;
         private byte[] avatar;
+        private List<GroupMessage> messages;
 
         public Builder() {
         }
 
         public Builder(Group group) {
             this.id = group.getId();
-            this.groupName = group.getGroupName();
+            this.groupName = group.getName();
             this.description = group.getDescription();
-            this.accountOwnerId = group.getAccountOwnerId();
+            this.accountOwner = group.getAccountOwner();
             this.avatar = group.getAvatar();
         }
 
@@ -97,13 +103,18 @@ public class Group {
             return this;
         }
 
-        public Builder accountOwnerId(Long accountOwnerId) {
-            this.accountOwnerId = accountOwnerId;
+        public Builder accountOwnerId(Account accountOwner) {
+            this.accountOwner = accountOwner;
             return this;
         }
 
         public Builder avatar(byte[] avatar) {
             this.avatar = avatar;
+            return this;
+        }
+
+        public Builder messages(List<GroupMessage> messages) {
+            this.messages = messages;
             return this;
         }
 
@@ -121,12 +132,12 @@ public class Group {
         this.id = id;
     }
 
-    public String getGroupName() {
-        return groupName;
+    public String getName() {
+        return name;
     }
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
+    public void setName(String groupName) {
+        this.name = groupName;
     }
 
     public String getDescription() {
@@ -137,12 +148,12 @@ public class Group {
         this.description = description;
     }
 
-    public Long getAccountOwnerId() {
-        return accountOwnerId;
+    public Account getAccountOwner() {
+        return accountOwner;
     }
 
-    public void setAccountOwnerId(Long accountOwnerId) {
-        this.accountOwnerId = accountOwnerId;
+    public void setAccountOwner(Account accountOwner) {
+        this.accountOwner = accountOwner;
     }
 
     public byte[] getAvatar() {
@@ -151,6 +162,14 @@ public class Group {
 
     public void setAvatar(byte[] avatar) {
         this.avatar = avatar;
+    }
+
+    public List<GroupMessage> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<GroupMessage> messages) {
+        this.messages = messages;
     }
 
     @Override
@@ -162,20 +181,20 @@ public class Group {
             return false;
         }
         Group group = (Group) o;
-        return Objects.equals(id, group.id) && Objects.equals(groupName, group.groupName)
-                && Objects.equals(description, group.description) && Objects.equals(accountOwnerId,
-                group.accountOwnerId) && Arrays.equals(avatar, group.avatar);
+        return Objects.equals(id, group.id) && Objects.equals(name, group.name)
+                && Objects.equals(description, group.description) && Objects.equals(accountOwner, group.accountOwner)
+                && Arrays.equals(avatar, group.avatar) && Objects.equals(messages, group.messages);
     }
 
     @Override
     public int hashCode() {
-        return hash(id, groupName, description, accountOwnerId, Arrays.hashCode(avatar));
+        return hash(id, name, description, accountOwner, Arrays.hashCode(avatar), messages);
     }
 
     @Override
     public String toString() {
-        return "Group {id=" + id + ", groupName=" + groupName + ", description=" + description + ", ownerId="
-                + accountOwnerId + ", avatar=" + Arrays.toString(avatar) + "}";
+        return "Group {id=" + id + ", groupName=" + name + ", description=" + description + ", accountOwner="
+                + accountOwner + ", avatar=" + Arrays.toString(avatar) + ", messages= " + messages + "}";
     }
 
 }

@@ -61,9 +61,9 @@ public class GroupDaoImpl implements BaseDao<Group> {
     }
 
     private void setGroupData(Group group, PreparedStatement preparedStatement) throws SQLException {
-        preparedStatement.setString(1, group.getGroupName());
+        preparedStatement.setString(1, group.getName());
         preparedStatement.setString(2, group.getDescription());
-        preparedStatement.setLong(3, group.getAccountOwnerId());
+        preparedStatement.setLong(3, group.getAccountOwner());
         preparedStatement.setBinaryStream(4, group.getAvatar());
     }
 
