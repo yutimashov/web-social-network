@@ -23,24 +23,47 @@ import java.util.Objects;
 public class Friendship {
 
     @Id
+    @Column(name = "id_1")
+    private Long firstFriendAccountId;
+
+    @Id
+    @Column(name = "id_2")
+    private Long secondFriendAccountId;
+
     @ManyToOne
     @JoinColumn(name = "requester_id")
     private Account requester;
 
-    @Id
     @ManyToOne
     @JoinColumn(name = "accepter_id")
     private Account receiver;
 
+    @Column(name = "status")
     private boolean friendshipStatus;
 
-    public Friendship() {
+    protected Friendship() {
     }
 
     public Friendship(Account requester, Account receiver, boolean friendshipStatus) {
         this.requester = requester;
         this.receiver = receiver;
         this.friendshipStatus = friendshipStatus;
+    }
+
+    public Long getFirstFriendAccountId() {
+        return firstFriendAccountId;
+    }
+
+    public void setFirstFriendAccountId(Long id1) {
+        this.firstFriendAccountId = id1;
+    }
+
+    public Long getSecondFriendAccountId() {
+        return secondFriendAccountId;
+    }
+
+    public void setSecondFriendAccountId(Long id2) {
+        this.secondFriendAccountId = id2;
     }
 
     public Account getRequester() {
@@ -70,21 +93,27 @@ public class Friendship {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Friendship)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Friendship that = (Friendship) o;
-        return Objects.equals(requester, that.requester) &&
-                Objects.equals(receiver, that.receiver);
+        return friendshipStatus == that.friendshipStatus && Objects.equals(firstFriendAccountId,
+                that.firstFriendAccountId) && Objects.equals(secondFriendAccountId, that.secondFriendAccountId)
+                && Objects.equals(requester, that.requester) && Objects.equals(receiver, that.receiver);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(requester, receiver);
+        return Objects.hash(firstFriendAccountId, secondFriendAccountId, requester, receiver, friendshipStatus);
     }
 
     @Override
     public String toString() {
-        return "Friendship{ requester=" + requester + ", receiver=" + receiver + ", friendshipStatus="
-                + friendshipStatus + "}";
+        return "Friendship{" +
+                "firstFriendAccountId=" + firstFriendAccountId +
+                ", secondFriendAccountId=" + secondFriendAccountId +
+                ", requester=" + requester +
+                ", receiver=" + receiver +
+                ", friendshipStatus=" + friendshipStatus +
+                '}';
     }
 
     public static class FriendshipId implements Serializable {
@@ -129,6 +158,7 @@ public class Friendship {
         public int hashCode() {
             return Objects.hash(requesterId, receiverId);
         }
+
     }
 
 }
