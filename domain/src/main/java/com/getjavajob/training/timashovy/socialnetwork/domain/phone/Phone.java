@@ -82,7 +82,7 @@ public class Phone {
 
     @Override
     public String toString() {
-        return "Phone{id=" + id + ", phoneType=" + phoneType + ", number=" + number + ", accountId=" + account + "}";
+        return "Phone{id=" + id + ", phoneType=" + phoneType + ", number=" + number + ", account=" + account + "}";
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -63,7 +64,7 @@ public class Account {
     private byte[] avatar;
 
     @OneToMany(mappedBy = "account", cascade = ALL, orphanRemoval = true)
-    private List<Phone> phones;
+    private List<Phone> phones = new ArrayList<>();
 
     @OneToOne(mappedBy = "account", cascade = ALL, fetch = LAZY, optional = false)
     private Password password;
