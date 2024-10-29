@@ -1,7 +1,8 @@
 package com.getjavajob.training.timashovy.socialnetwork.domain.phone;
 
 /**
- * Types of phones that Account can have in application.
+ * Types of {@link com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone phone}
+ * that {@link com.getjavajob.training.timashovy.socialnetwork.domain.account.Account account} can have.
  */
 public enum PhoneType {
 
