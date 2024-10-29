@@ -7,17 +7,24 @@ import java.util.Objects;
 
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.GenerationType.SEQUENCE;
 
+/**
+ * Class describe information about phone entity.
+ * There are {@link com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType two types}
+ * of phones that {@link com.getjavajob.training.timashovy.socialnetwork.domain.account.Account account}
+ * can have. Each account can have several phones of each type.
+ */
 @Table(name = "account_phones", schema = "account_data")
 @Entity
 public class Phone {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = SEQUENCE)
     private Long id;
 
-    @Column(name = "phone_type")
     @Enumerated(STRING)
+    @Column(name = "phone_type")
     private PhoneType phoneType;
 
     @Column(name = "phone_number")
