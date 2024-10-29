@@ -20,7 +20,6 @@ public class Password {
 
     @OneToOne(fetch = LAZY)
     @MapsId
-    @JoinColumn(name = "id")
     private Account account;
 
     @Column(name = "hash_password")
