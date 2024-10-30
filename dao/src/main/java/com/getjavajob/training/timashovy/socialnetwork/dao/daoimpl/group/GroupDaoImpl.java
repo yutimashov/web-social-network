@@ -1,93 +1,87 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group;
 
-import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 
-import javax.sql.DataSource;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import javax.persistence.*;
 import java.util.List;
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.GROUPS_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.GroupTableFields.*;
+import static java.util.Objects.isNull;
 
 public class GroupDaoImpl implements BaseDao<Group> {
 
-    private static final String CREATE = "INSERT INTO " + GROUPS_TABLE + " (" + GROUP_NAME + ", "
-            + GROUP_DESCRIPTION + ", " + GROUP_OWNER_ID + ", " + GROUP_AVATAR + ") VALUES(?, ?, ?, ?)";
-    private static final String GET_GROUP_BY_ID = "SELECT " + GROUP_ID + ", " + GROUP_NAME + ", " + GROUP_DESCRIPTION
-            + ", " + GROUP_OWNER_ID + ", " + GROUP_AVATAR + " FROM " + GROUPS_TABLE + " WHERE " + GROUP_ID + " = ?";
-    private static final String GET_ALL_GROUPS = "SELECT " + GROUP_ID + ", " + GROUP_NAME + ", " + GROUP_DESCRIPTION
-            + ", " + GROUP_OWNER_ID + ", " + GROUP_AVATAR + " FROM " + GROUPS_TABLE + ";";
-    private static final String UPDATE_GROUP_BY_ID = "UPDATE " + GROUPS_TABLE + " SET " + GROUP_NAME + " = ?, "
-            + GROUP_DESCRIPTION + " = ?, " + GROUP_OWNER_ID + " = ?, " + GROUP_AVATAR + " = ? WHERE " + GROUP_ID
-            + " = ?";
-    private static final String DELETE_GROUP_BY_ID = "DELETE FROM " + GROUPS_TABLE + " WHERE " + GROUP_ID + " = ?";
-
-    private final RowMapper<Group> groupRowMapper = (rs, rowNum) -> new Group.Builder()
-            .id(rs.getLong(GROUP_ID))
-            .groupName(rs.getString(GROUP_NAME))
-            .description(rs.getString(GROUP_DESCRIPTION))
-            .accountOwnerId(rs.getLong(GROUP_OWNER_ID))
-            .avatar(rs.getBinaryStream(GROUP_AVATAR))
-            .build();
-
-    private JdbcTemplate jdbcTemplate;
-
-    public void setDataSource(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public Long create(Group group) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(CREATE, new String[] { GROUP_ID });
-            setGroupData(group, ps);
-            return ps;
-        }, keyHolder);
-        Number generatedId = keyHolder.getKey();
-        if (generatedId != null) {
-            Long id = generatedId.longValue();
-            group.setId(id);
-            return id;
-        }
-        return null;
-    }
-
-    private void setGroupData(Group group, PreparedStatement preparedStatement) throws SQLException {
-        preparedStatement.setString(1, group.getName());
-        preparedStatement.setString(2, group.getDescription());
-        preparedStatement.setLong(3, group.getAccountOwner());
-        preparedStatement.setBinaryStream(4, group.getAvatar());
-    }
-
-    @Override
-    public Optional<Group> getById(Long id) {
-        return jdbcTemplate.query(GET_GROUP_BY_ID, groupRowMapper, id).stream().findFirst();
-    }
-
-    @Override
-    public List<Group> getAll() {
-        return jdbcTemplate.query(GET_ALL_GROUPS, groupRowMapper);
+        entityManager.persist(group);
+        entityManager.flush();
+        return group.getId();
     }
 
     @Override
     public boolean updateById(Long id, Group group) {
-        return jdbcTemplate.update(UPDATE_GROUP_BY_ID, ps -> {
-            setGroupData(group, ps);
-            ps.setLong(5, id);
-        }) > 0;
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            Group existingGroup = entityManager.find(Group.class, id);
+            if (isNull(existingGroup)) {
+                return false;
+            }
+            existingGroup.setAvatar(group.getAvatar());
+            existingGroup.setDescription(group.getDescription());
+            existingGroup.setName(group.getName());
+            existingGroup.setAccountOwner(group.getAccountOwner());
+            existingGroup.setMessages(group.getMessages());
+            return true;
+        } catch (PersistenceException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            return false;
+        }
     }
 
     @Override
     public boolean deleteById(Long id) {
-        return jdbcTemplate.update(DELETE_GROUP_BY_ID, id) > 0;
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            Group group = entityManager.find(Group.class, id);
+            if (!isNull(group)) {
+                entityManager.remove(group);
+                transaction.commit();
+                return true;
+            } else {
+                transaction.rollback();
+                return false;
+            }
+        } catch (PersistenceException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            return false;
+        }
+    }
+
+    @Override
+    public Optional<Group> getById(Long groupId) {
+        try {
+            Group group = entityManager.createQuery(
+                            "select g from Group g where g.id = :groupId", Group.class)
+                    .setParameter("groupId", groupId)
+                    .getSingleResult();
+            return Optional.ofNullable(group);
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public List<Group> getAll() {
+        return entityManager.createQuery("select g from Group g", Group.class).getResultList();
     }
 
 }
