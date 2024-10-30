@@ -1,19 +1,15 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 
-import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
 
-import javax.sql.DataSource;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import java.util.List;
 
-import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.valueOf;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNT_PHONES_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.PhonesTableFields.*;
+import static java.util.Objects.isNull;
 
 /**
  * Singleton class responsible for working with `account_data.phones` table in DB.
@@ -21,63 +17,57 @@ import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.f
  */
 public class PhoneDaoImpl implements PhoneDao {
 
-    private static final String CREATE = "INSERT INTO " + ACCOUNT_PHONES_TABLE + " (" + ACCOUNT_ID + ", " + PHONE_TYPE
-            + ", " + PHONE_NUMBER + ") VALUES (?, ?, ?);";
-    private static final String GET_BY_ACCOUNT_ID = "SELECT " + PHONE_ID + ", " + PHONE_TYPE + ", " + PHONE_NUMBER
-            + ", " + ACCOUNT_ID + " FROM " + ACCOUNT_PHONES_TABLE + " WHERE " + ACCOUNT_ID + " = ?;";
-    private static final String UPDATE = "UPDATE " + ACCOUNT_PHONES_TABLE + " SET " + PHONE_NUMBER + " = ? WHERE "
-            + PHONE_ID + " = ?;";
-    private static final String DELETE_BY_ID = "DELETE FROM " + ACCOUNT_PHONES_TABLE + " WHERE " + PHONE_ID + " = ?";
-    private JdbcTemplate jdbcTemplate;
-
-    public void setDataSource(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public Long create(Phone phone) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(CREATE, new String[]{PHONE_ID});
-            setPhoneData(phone, ps);
-            return ps;
-        }, keyHolder);
-        Number generatedId = keyHolder.getKey();
-        if (generatedId != null) {
-            Long id = generatedId.longValue();
-            phone.setId(id);
-            return id;
-        }
-        return null;
-    }
-
-    private void setPhoneData(Phone phone, PreparedStatement ps) throws SQLException {
-        ps.setLong(1, phone.getAccountId());
-        ps.setString(2, phone.getPhoneType().name());
-        ps.setString(3, phone.getNumber());
+        entityManager.persist(phone);
+        entityManager.flush();
+        return phone.getId();
     }
 
     @Override
     public List<Phone> getAll(Long accountId) {
-        return jdbcTemplate.query(GET_BY_ACCOUNT_ID, (rs, rowNum) -> new Phone(
-                rs.getLong(PHONE_ID),
-                valueOf(rs.getString(PHONE_TYPE)),
-                rs.getString(PHONE_NUMBER),
-                rs.getLong(ACCOUNT_ID)
-        ), accountId);
+        return entityManager.createQuery("select p from Phone p", Phone.class).getResultList();
     }
 
     @Override
     public boolean update(Long phoneId, String newPhoneNumber) {
-        return jdbcTemplate.update(UPDATE, ps -> {
-            ps.setString(1, newPhoneNumber);
-            ps.setLong(2, phoneId);
-        }) > 0;
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            Phone existingPhone = entityManager.find(Phone.class, phoneId);
+            if (isNull(existingPhone)) {
+                return false;
+            }
+            existingPhone.setNumber(newPhoneNumber);
+            return true;
+        } catch (PersistenceException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            return false;
+        }
     }
 
     @Override
     public void deleteById(Long id) {
-        jdbcTemplate.update(DELETE_BY_ID, id);
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            Phone phone = entityManager.find(Phone.class, id);
+            if (!isNull(phone)) {
+                entityManager.remove(phone);
+                transaction.commit();
+            } else {
+                transaction.rollback();
+            }
+        } catch (PersistenceException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+        }
     }
 
 }
