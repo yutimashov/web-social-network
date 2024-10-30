@@ -1,25 +1,13 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
-import org.springframework.jdbc.core.RowMapper;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.persistence.*;
 import java.util.List;
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNTS_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.AccountTableFields.*;
-import static com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole.valueOf;
-import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.PERSONAL;
-import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.WORKING;
 import static java.util.Objects.isNull;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
-import static java.util.stream.Collectors.toList;
 
 /**
  * Singleton class responsible for working with {@link com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames#ACCOUNTS_TABLE accounts table}.
@@ -28,44 +16,7 @@ import static java.util.stream.Collectors.toList;
 public class AccountDaoImpl implements BaseDao<Account> {
 
     @PersistenceContext
-    protected EntityManager entityManager;
-
-    private static final String GET_BY_ID = "SELECT " + ACCOUNT_ID + ", " + ACCOUNT_FIRST_NAME + ", "
-            + ACCOUNT_LAST_NAME + ", " + ACCOUNT_MIDDLE_NAME + ", " + ACCOUNT_BIRTH_DATE + ", "
-            + ACCOUNT_PERSONAL_ADDRESS + ", " + ACCOUNT_WORK_ADDRESS + ", " + ACCOUNT_EMAIL + ", " + ACCOUNT_ICQ + ", "
-            + ACCOUNT_SKYPE + ", " + ACCOUNT_ADDITIONAL_INFO + ", " + ACCOUNT_ROLE_TYPE + ", " + ACCOUNT_AVATAR
-            + " FROM " + ACCOUNTS_TABLE + " WHERE " + ACCOUNT_ID + " = ?;";
-    private static final String GET_ALL = "SELECT " + ACCOUNT_ID + ", " + ACCOUNT_FIRST_NAME + ", " + ACCOUNT_LAST_NAME
-            + ", " + ACCOUNT_MIDDLE_NAME + ", " + ACCOUNT_BIRTH_DATE + ", " + ACCOUNT_PERSONAL_ADDRESS + ", "
-            + ACCOUNT_WORK_ADDRESS + ", " + ACCOUNT_EMAIL + ", " + ACCOUNT_ICQ + ", " + ACCOUNT_SKYPE + ", "
-            + ACCOUNT_ADDITIONAL_INFO + ", " + ACCOUNT_ROLE_TYPE + ", " + ACCOUNT_AVATAR + " FROM " + ACCOUNTS_TABLE
-            + ";";
-    private static final String UPDATE_BY_ID = "UPDATE " + ACCOUNTS_TABLE + " SET " + ACCOUNT_FIRST_NAME + " = ?, "
-            + ACCOUNT_LAST_NAME + " = ?, " + ACCOUNT_MIDDLE_NAME + " = ?, " + ACCOUNT_BIRTH_DATE + " = ?, "
-            + ACCOUNT_PERSONAL_ADDRESS + " = ?, " + ACCOUNT_WORK_ADDRESS + " = ?, " + ACCOUNT_EMAIL + " = ?, "
-            + ACCOUNT_ICQ + "= ?, " + ACCOUNT_SKYPE + "= ?, " + ACCOUNT_ADDITIONAL_INFO + " = ?, " + ACCOUNT_ROLE_TYPE
-            + " = ?, " + ACCOUNT_AVATAR + " = ? WHERE " + ACCOUNT_ID + " = ?;";
-    private static final String DELETE_BY_ID = "DELETE FROM " + ACCOUNTS_TABLE + " WHERE " + ACCOUNT_ID + " = ?;";
-    private final PhoneDao phoneDao;
-    private final RowMapper<Account> accountRowMapper = (rs, rowNum) -> new Account.Builder()
-            .id(rs.getLong(ACCOUNT_ID))
-            .firstName(rs.getString(ACCOUNT_FIRST_NAME))
-            .lastName(rs.getString(ACCOUNT_LAST_NAME))
-            .email(rs.getString(ACCOUNT_EMAIL))
-            .birthDate(!isNull(rs.getDate(ACCOUNT_BIRTH_DATE)) ? rs.getDate(ACCOUNT_BIRTH_DATE).toLocalDate() : null)
-            .middleName(rs.getString(ACCOUNT_MIDDLE_NAME))
-            .personalAddress(rs.getString(ACCOUNT_PERSONAL_ADDRESS))
-            .workAddress(rs.getString(ACCOUNT_WORK_ADDRESS))
-            .icq(rs.getString(ACCOUNT_ICQ))
-            .skype(rs.getString(ACCOUNT_SKYPE))
-            .additionalInfo(rs.getString(ACCOUNT_ADDITIONAL_INFO))
-            .role(valueOf(rs.getString(ACCOUNT_ROLE_TYPE)))
-            .avatar(rs.getBinaryStream(ACCOUNT_AVATAR))
-            .build();
-
-    public AccountDaoImpl(PhoneDao phoneDao) {
-        this.phoneDao = phoneDao;
-    }
+    private EntityManager entityManager;
 
     @Override
     public Long create(Account account) {
@@ -76,28 +27,53 @@ public class AccountDaoImpl implements BaseDao<Account> {
 
     @Override
     public boolean updateById(Long id, Account account) {
-        return jdbcTemplate.update(UPDATE_BY_ID, ps -> {
-            setAccountData(account, ps);
-            ps.setLong(13, id);
-        }) > 0;
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            Account existingAccount = entityManager.find(Account.class, id);
+            if (isNull(existingAccount)) {
+                return false;
+            }
+            existingAccount.setFirstName(account.getFirstName());
+            existingAccount.setLastName(account.getLastName());
+            existingAccount.setMiddleName(account.getMiddleName());
+            existingAccount.setBirthDate(account.getBirthDate());
+            existingAccount.setPersonalAddress(account.getPersonalAddress());
+            existingAccount.setWorkAddress(account.getWorkAddress());
+            existingAccount.setEmail(account.getEmail());
+            existingAccount.setIcq(account.getIcq());
+            existingAccount.setSkype(account.getSkype());
+            existingAccount.setAdditionalInfo(account.getAdditionalInfo());
+            existingAccount.setRole(account.getRole());
+            existingAccount.setAvatar(account.getAvatar());
+            existingAccount.setPhones(account.getPhones());
+            existingAccount.setPassword(account.getPassword());
+            return true;
+        } catch (PersistenceException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            return false;
+        }
     }
 
     @Override
     public boolean deleteById(Long id) {
+        EntityTransaction transaction = entityManager.getTransaction();
         try {
-            entityManager.getTransaction().begin();
+            transaction.begin();
             Account account = entityManager.find(Account.class, id);
-            if (account != null) {
+            if (!isNull(account)) {
                 entityManager.remove(account);
-                entityManager.getTransaction().commit();
+                transaction.commit();
                 return true;
             } else {
-                entityManager.getTransaction().rollback();
+                transaction.rollback();
                 return false;
             }
-        } catch (IllegalArgumentException e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
+        } catch (PersistenceException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
             }
             return false;
         }
@@ -105,25 +81,20 @@ public class AccountDaoImpl implements BaseDao<Account> {
 
     @Override
     public Optional<Account> getById(Long accountId) {
-        Account account = jdbcTemplate.query(GET_BY_ID, rs -> rs.next() ? accountRowMapper.mapRow(rs, 1) : null,
-                accountId);
-        if (!isNull(account)) {
-            List<Phone> phones = phoneDao.getAll(accountId);
-            if (!phones.isEmpty()) {
-                account.setPersonalPhoneNumber(phones.stream().filter(phone -> phone.getPhoneType() == PERSONAL)
-                        .collect(toList()));
-                account.setWorkPhoneNumber(phones.stream().filter(phone -> phone.getPhoneType() == WORKING)
-                        .collect(toList()));
-            }
-            return of(account);
-        } else {
-            return empty();
+        try {
+            Account account = entityManager.createQuery(
+                            "select a from Account a where a.id = :accountId", Account.class)
+                    .setParameter("accountId", accountId)
+                    .getSingleResult();
+            return Optional.ofNullable(account);
+        } catch (NoResultException e) {
+            return Optional.empty();
         }
     }
 
     @Override
     public List<Account> getAll() {
-        return jdbcTemplate.query(GET_ALL, accountRowMapper);
+        return entityManager.createQuery("select a from Account a", Account.class).getResultList();
     }
 
 }

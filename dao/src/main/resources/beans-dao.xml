@@ -12,8 +12,6 @@
     <import resource="datasource-config.xml"/>
 
     <bean id="accountDao" class="com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AccountDaoImpl">
-        <constructor-arg ref="phoneDao"/>
-        <property name="dataSource" ref="dataSource"/>
     </bean>
 
     <bean id="passwordDao" class="com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PasswordDaoImpl">
