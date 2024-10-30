@@ -12,7 +12,7 @@ public interface FriendshipDao {
 
     boolean deleteFriend(Long accountId, Long friendId);
 
-    List<Long> getFriendsIds(Long accountId);
+    List<Long> getFriendsIds(Account account);
 
     List<Long> getIncomingRequests(Long accountId);
 
