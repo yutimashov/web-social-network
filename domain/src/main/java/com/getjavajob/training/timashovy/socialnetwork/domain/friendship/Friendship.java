@@ -44,7 +44,10 @@ public class Friendship {
     protected Friendship() {
     }
 
-    public Friendship(Account requester, Account receiver, boolean friendshipStatus) {
+    public Friendship(Long firstFriendAccountId, Long secondFriendAccountId, Account requester, Account receiver,
+                      boolean friendshipStatus) {
+        this.firstFriendAccountId = firstFriendAccountId;
+        this.secondFriendAccountId = secondFriendAccountId;
         this.requester = requester;
         this.receiver = receiver;
         this.friendshipStatus = friendshipStatus;

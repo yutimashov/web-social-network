@@ -1,12 +1,14 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship;
 
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+
 import java.util.List;
 
 public interface FriendshipDao {
 
-    boolean sendRequest(Long requesterId, Long accepterId);
+    void sendRequest(Account requester, Account accepter);
 
-    boolean acceptRequest(Long requesterId, Long accepterId);
+    boolean acceptRequest(Account requester, Account accepter);
 
     boolean deleteFriend(Long accountId, Long friendId);
 

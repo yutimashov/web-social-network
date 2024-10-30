@@ -1,9 +1,11 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipDao;
-import org.springframework.jdbc.core.JdbcTemplate;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.friendship.Friendship;
 
-import javax.sql.DataSource;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.FRIENDSHIP_TABLE;
@@ -15,27 +17,19 @@ import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.f
  */
 public class FriendshipDaoImpl implements FriendshipDao {
 
-    private static final String ACCEPT_REQUEST = "UPDATE " + FRIENDSHIP_TABLE + " SET " + FRIENDSHIP_STATUS + " = "
-            + "TRUE WHERE " + FRIENDSHIP_ACCEPTER_ID + " = ? AND " + FRIENDSHIP_REQUESTER_ID + " = ?;";
+    @PersistenceContext
+    private EntityManager entityManager;
+
     private static final String GET_FRIENDS_IDS = "SELECT " + FRIENDSHIP_ACCOUNT_ID_1 + " FROM " + FRIENDSHIP_TABLE
             + " WHERE " + FRIENDSHIP_ACCOUNT_ID_2 + " = ? AND " + FRIENDSHIP_STATUS + " = TRUE UNION SELECT "
             + FRIENDSHIP_ACCOUNT_ID_2 + " FROM " + FRIENDSHIP_TABLE + " WHERE " + FRIENDSHIP_ACCOUNT_ID_1 + " = ? AND "
             + FRIENDSHIP_STATUS + " = TRUE;";
     private static final String DELETE_FRIEND = "DELETE FROM " + FRIENDSHIP_TABLE + " WHERE " + FRIENDSHIP_ACCOUNT_ID_1
             + " = ? AND " + FRIENDSHIP_ACCOUNT_ID_2 + " = ?;";
-    private static final String SEND_REQUEST = "INSERT INTO " + FRIENDSHIP_TABLE + " (" + FRIENDSHIP_ACCOUNT_ID_1
-            + ", " + FRIENDSHIP_ACCOUNT_ID_2 + ", " + FRIENDSHIP_REQUESTER_ID + ", " + FRIENDSHIP_ACCEPTER_ID + ") "
-            + "VALUES(?, ?, ?, ?);";
     private static final String GET_INCOMING_REQUESTS = "SELECT " + FRIENDSHIP_REQUESTER_ID + " FROM "
             + FRIENDSHIP_TABLE + " WHERE " + FRIENDSHIP_STATUS + " = FALSE AND " + FRIENDSHIP_ACCEPTER_ID + " = ?;";
     private static final String GET_OUTGOING_REQUESTS = "SELECT " + FRIENDSHIP_ACCEPTER_ID + " FROM "
             + FRIENDSHIP_TABLE + " WHERE " + FRIENDSHIP_STATUS + " = FALSE AND " + FRIENDSHIP_REQUESTER_ID + " = ?;";
-
-    private JdbcTemplate jdbcTemplate;
-
-    public void setDataSource(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
 
     /**
      * Add a new record to `friend_data.friendship` table
@@ -48,18 +42,33 @@ public class FriendshipDaoImpl implements FriendshipDao {
      * @return status of friend request delivery
      */
     @Override
-    public boolean sendRequest(Long requesterId, Long accepterId) {
-        return jdbcTemplate.update(SEND_REQUEST, getFriendshipRequestParams(requesterId, accepterId)) > 0;
+    public void sendRequest(Account requester, Account accepter) {
+        entityManager.persist(new Friendship(
+                getFirstAccount(requester, accepter).getId(),
+                getSecondAccount(requester, accepter).getId(),
+                requester,
+                accepter,
+                false
+        ));
     }
 
-    private Object[] getFriendshipRequestParams(Long requesterId, Long accepterId) {
-        return requesterId < accepterId ? new Long[]{requesterId, accepterId, requesterId, accepterId}
-                : new Long[]{accepterId, requesterId, requesterId, accepterId};
+    private Account getFirstAccount(Account requester, Account accepter) {
+        return requester.getId() < accepter.getId() ? requester : accepter;
+    }
+
+    private Account getSecondAccount(Account requester, Account accepter) {
+        return getFirstAccount(requester, accepter).equals(requester) ? accepter : requester;
     }
 
     @Override
-    public boolean acceptRequest(Long requesterId, Long accepterId) {
-        return jdbcTemplate.update(ACCEPT_REQUEST, accepterId, requesterId) > 0;
+    public boolean acceptRequest(Account requester, Account accepter) {
+        return entityManager.createQuery(
+                        "update Friendship f set f.friendshipStatus = true where f.requester = :requester "
+                                + "and f.receiver = :accepter"
+                ).
+                setParameter("requester", requester)
+                .setParameter("accepter", accepter)
+                .executeUpdate() > 0;
     }
 
     /**
