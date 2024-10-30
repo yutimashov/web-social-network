@@ -1,13 +1,10 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipCheckerDao;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 
-import javax.sql.DataSource;
-
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.FRIENDSHIP_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.FriendshipTableFields.*;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  * Singleton class responsible for working with `account_data.friendship` table in DB.
@@ -15,47 +12,39 @@ import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.f
  */
 public class FriendshipCheckerDaoImpl implements FriendshipCheckerDao {
 
-    private static final String FRIENDSHIP_RECORD_EXISTENCE = "SELECT 1 FROM " + FRIENDSHIP_TABLE + " WHERE "
-            + FRIENDSHIP_ACCOUNT_ID_1 + " = ? AND " + FRIENDSHIP_ACCOUNT_ID_2 + " = ?;";
-    private static final String ARE_USERS_FRIENDS = "SELECT 1 FROM " + FRIENDSHIP_TABLE + " WHERE "
-            + FRIENDSHIP_ACCOUNT_ID_1 + " = ? AND " + FRIENDSHIP_ACCOUNT_ID_2 + " = ? AND " + FRIENDSHIP_STATUS
-            + " = TRUE;";
-    private JdbcTemplate jdbcTemplate;
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    public void setDataSource(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    @Override
+    public boolean checkFriendshipRecordExistence(Account requester, Account accepter) {
+        return entityManager.createQuery(
+                        "select 1 from Friendship f where f.firstFriendAccountId = :requesterId "
+                                + "and f.secondFriendAccountId = :accepterId"
+                )
+                .setParameter("requesterId", getFirstId(requester, accepter))
+                .setParameter("accepterId", getSecondId(requester, accepter))
+                .getResultList()
+                .isEmpty();
+    }
+
+    private Long getFirstId(Account requester, Account accepter) {
+        return requester.getId() < accepter.getId() ? requester.getId() : accepter.getId();
+    }
+
+    private Long getSecondId(Account requester, Account accepter) {
+        return requester.getId() < accepter.getId() ? accepter.getId() : requester.getId();
     }
 
     @Override
-    public boolean checkFriendshipRecordExistence(Long requesterId, Long accepterId) {
-        try {
-            Boolean isFriends = jdbcTemplate.queryForObject(FRIENDSHIP_RECORD_EXISTENCE, Boolean.class,
-                    getFirstId(requesterId, accepterId), getSecondId(requesterId, accepterId));
-            return isFriends != null && isFriends;
-        } catch (EmptyResultDataAccessException e) {
-            return false;
-        }
-    }
-
-    private Long getFirstId(Long requesterId, Long accepterId) {
-        return requesterId < accepterId ? requesterId : accepterId;
-    }
-
-    private Long getSecondId(Long requesterId, Long accepterId) {
-        return requesterId < accepterId ? accepterId : requesterId;
-    }
-
-    @Override
-    public boolean checkUsersAreFriends(Long requesterId, Long accepterId) {
-        try {
-            Boolean isFriends = jdbcTemplate.queryForObject(
-                    ARE_USERS_FRIENDS, Boolean.class,
-                    getFirstId(requesterId, accepterId), getSecondId(requesterId, accepterId)
-            );
-            return isFriends != null && isFriends;
-        } catch (EmptyResultDataAccessException e) {
-            return false;
-        }
+    public boolean checkUsersAreFriends(Account requester, Account accepter) {
+        return entityManager.createQuery(
+                        "select 1 from Friendship f where f.firstFriendAccountId = :requesterId "
+                                + "and f.secondFriendAccountId = :accepterId and f.friendshipStatus = true"
+                )
+                .setParameter("requesterId", getFirstId(requester, accepter))
+                .setParameter("accepterId", getSecondId(requester, accepter))
+                .getResultList()
+                .isEmpty();
     }
 
 }

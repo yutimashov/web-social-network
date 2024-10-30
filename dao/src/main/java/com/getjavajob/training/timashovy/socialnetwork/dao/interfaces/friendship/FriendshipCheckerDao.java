@@ -1,9 +1,11 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship;
 
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+
 public interface FriendshipCheckerDao {
 
-    boolean checkFriendshipRecordExistence(Long requesterId, Long accepterId);
+    boolean checkFriendshipRecordExistence(Account requester, Account accepter);
 
-    boolean checkUsersAreFriends(Long requesterId, Long accepterId);
+    boolean checkUsersAreFriends(Account requester, Account accepter);
 
 }
