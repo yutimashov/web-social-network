@@ -10,9 +10,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import java.util.List;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.FRIENDSHIP_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.FriendshipTableFields.FRIENDSHIP_ACCOUNT_ID_1;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.FriendshipTableFields.FRIENDSHIP_ACCOUNT_ID_2;
 import static java.util.Objects.isNull;
 
 /**
@@ -57,10 +54,11 @@ public class FriendshipDaoImpl implements FriendshipDao {
     @Override
     public List<Long> getFriendsIds(Account account) {
         return entityManager.createQuery(
-                        "select f.firstFriendAccountId from Friendship f where f.secondFriendAccountId = :accountId "
-                                + "and f.friendshipStatus = true union "
-                                + "select f.secondFriendAccountId from Friendship f where f.firstFriendAccountId = :accountId "
-                                + "and f.friendshipStatus = true",
+                        "select f.firstFriendAccountId from Friendship f "
+                                + "where f.secondFriendAccountId = :accountId and f.friendshipStatus = true "
+                                + "union "
+                                + "select f.secondFriendAccountId from Friendship f "
+                                + "where f.firstFriendAccountId = :accountId and f.friendshipStatus = true",
                         Long.class
                 )
                 .setParameter("accountId", account.getId())
@@ -89,24 +87,32 @@ public class FriendshipDaoImpl implements FriendshipDao {
                 .getResultList();
     }
 
-    /**
-     * Remove a corresponding record from `friend_data.friendship` table
-     *
-     * @param accountId        id of account who will delete friend
-     * @param deletingFriendId id of friend account who will be deleted
-     * @return status of friend deletion
-     */
     @Override
-    public boolean deleteFriend(Long accountId, Long deletingFriendId) {
-
-        final String DELETE_FRIEND = "DELETE FROM " + FRIENDSHIP_TABLE + " WHERE " + FRIENDSHIP_ACCOUNT_ID_1
-                + " = ? AND " + FRIENDSHIP_ACCOUNT_ID_2 + " = ?;";
-        return jdbcTemplate.update(DELETE_FRIEND, getDeletingFriendIds(accountId, deletingFriendId)) > 0;
-    }
-
-    private Object[] getDeletingFriendIds(Long firstAccountId, Long secondAccountId) {
-        return firstAccountId < secondAccountId ? new Long[]{firstAccountId, secondAccountId}
-                : new Long[]{secondAccountId, firstAccountId};
+    public boolean deleteFriend(Account friendshipOwner, Account friendToRemove) {
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            Friendship.FriendshipId friendshipId;
+            if (friendshipOwner.getId() < friendToRemove.getId()) {
+                friendshipId = new Friendship.FriendshipId(friendshipOwner.getId(), friendToRemove.getId());
+            } else {
+                friendshipId = new Friendship.FriendshipId(friendToRemove.getId(), friendshipOwner.getId());
+            }
+            Friendship friendship = entityManager.find(Friendship.class, friendshipId);
+            if (!isNull(friendship)) {
+                entityManager.remove(friendship);
+                transaction.commit();
+                return true;
+            } else {
+                transaction.rollback();
+                return false;
+            }
+        } catch (PersistenceException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            return false;
+        }
     }
 
 }

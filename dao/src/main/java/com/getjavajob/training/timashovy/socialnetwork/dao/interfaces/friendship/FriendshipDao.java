@@ -10,7 +10,7 @@ public interface FriendshipDao {
 
     boolean acceptRequest(Account requester, Account accepter);
 
-    boolean deleteFriend(Long accountId, Long friendId);
+    boolean deleteFriend(Account friendshipOwner, Account friendToRemove);
 
     List<Long> getFriendsIds(Account account);
 
