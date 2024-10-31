@@ -1,5 +1,8 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces;
 
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
+
 import java.util.List;
 
 /**
@@ -7,24 +10,24 @@ import java.util.List;
  */
 public interface GroupMembershipDao {
 
-    void sendRequest(Long groupId, Long accountId);
+    void sendRequest(Group group, Account account);
 
-    void makeAdmin(Long groupId, Long accountId);
+    void makeAdmin(Group group, Account account);
 
-    void makeMember(Long groupId, Long accountId);
+    void makeMember(Group group, Account account);
 
-    void deleteMember(Long groupId, Long accountId);
+    void deleteMember(Group group, Account account);
 
-    boolean isAdmin(Long groupId, Long accountId);
+    boolean isAdmin(Group group, Account account);
 
-    boolean isSubscriber(Long groupId, Long accountId);
+    boolean isSubscriber(Group group, Account account);
 
-    boolean isMember(Long groupId, Long accountId);
+    boolean isMember(Group group, Account account);
 
-    List<Long> getRegularMembers(Long groupId);
+    List<Account> getRegularMembers(Group group);
 
-    List<Long> getAdmins(Long groupId);
+    List<Account> getAdmins(Group group);
 
-    List<Long> getRequests(Long groupId);
+    List<Account> getRequestAccounts(Group group);
 
 }

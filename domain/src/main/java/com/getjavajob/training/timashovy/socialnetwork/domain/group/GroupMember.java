@@ -33,6 +33,22 @@ public class GroupMember {
     @Column(name = "registration_date")
     private LocalDate registrationDate;
 
+    public GroupMember() {
+    }
+
+    public GroupMember(Account account, Group group) {
+        this.account = account;
+        this.group = group;
+    }
+
+    public GroupMember(Account account, Group group, boolean admin, boolean member, LocalDate registrationDate) {
+        this.account = account;
+        this.group = group;
+        this.admin = admin;
+        this.member = member;
+        this.registrationDate = registrationDate;
+    }
+
     public Long getId() {
         return id;
     }

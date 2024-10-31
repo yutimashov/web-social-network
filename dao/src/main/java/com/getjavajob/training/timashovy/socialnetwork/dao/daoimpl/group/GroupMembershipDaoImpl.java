@@ -1,116 +1,156 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.GroupMembershipDao;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
+import com.getjavajob.training.timashovy.socialnetwork.domain.group.GroupMember;
 
-import javax.sql.DataSource;
+import javax.persistence.*;
 import java.util.List;
-
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.GROUP_MEMBERS_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.GroupMembersFields.*;
 
 public class GroupMembershipDaoImpl implements GroupMembershipDao {
 
-    private static final String ADD_USER = "INSERT INTO " + GROUP_MEMBERS_TABLE + " (" + GROUP_MEMBERS_ACCOUNT_ID
-            + ", " + GROUP_MEMBERS_GROUP_ID + ") VALUES(?, ?);";
-    private static final String MAKE_USER_GROUP_ADMIN = "UPDATE " + GROUP_MEMBERS_TABLE + " SET "
-            + GROUP_MEMBERS_IS_ADMIN + " = TRUE WHERE " + GROUP_MEMBERS_GROUP_ID + " = ? AND "
-            + GROUP_MEMBERS_ACCOUNT_ID + " = ?;";
-    private static final String MAKE_USER_GROUP_MEMBER = "UPDATE " + GROUP_MEMBERS_TABLE + " SET "
-            + GROUP_MEMBERS_IS_MEMBER + " = TRUE " + "WHERE " + GROUP_MEMBERS_GROUP_ID + " = ? AND "
-            + GROUP_MEMBERS_ACCOUNT_ID + " = ?;";
-    private static final String GET_GROUP_FOLLOWERS = "SELECT " + GROUP_MEMBERS_ACCOUNT_ID + " FROM "
-            + GROUP_MEMBERS_TABLE + " WHERE " + GROUP_MEMBERS_GROUP_ID + " = ? AND " + GROUP_MEMBERS_IS_MEMBER
-            + " = FALSE ORDER BY " + GROUP_MEMBERS_REGISTRATION_DATE + " DESC;";
-    private static final String DELETE_GROUP_MEMBER = "DELETE FROM " + GROUP_MEMBERS_TABLE + " WHERE "
-            + GROUP_MEMBERS_GROUP_ID + " = ? AND " + GROUP_MEMBERS_ACCOUNT_ID + " = ?;";
-    private static final String CHECK_ACCOUNT_ADMIN = "SELECT " + GROUP_MEMBERS_ID + " FROM " + GROUP_MEMBERS_TABLE
-            + " WHERE " + GROUP_MEMBERS_GROUP_ID + " = ? AND " + GROUP_MEMBERS_ACCOUNT_ID + " = ? AND "
-            + GROUP_MEMBERS_IS_ADMIN + " = TRUE;";
-    private static final String CHECK_ACCOUNT_SUBSCRIBER = "SELECT " + GROUP_MEMBERS_ID + " FROM " + GROUP_MEMBERS_TABLE
-            + " WHERE " + GROUP_MEMBERS_GROUP_ID + " = ? AND " + GROUP_MEMBERS_ACCOUNT_ID + " = ? AND "
-            + GROUP_MEMBERS_IS_MEMBER + " = FALSE;";
-    private static final String CHECK_ACCOUNT_MEMBER = "SELECT " + GROUP_MEMBERS_ID + " FROM " + GROUP_MEMBERS_TABLE
-            + " WHERE " + GROUP_MEMBERS_GROUP_ID + " = ? AND " + GROUP_MEMBERS_ACCOUNT_ID + " = ? AND "
-            + GROUP_MEMBERS_IS_MEMBER + " = TRUE;";
-    private static final String GET_REGULAR_MEMBERS = "SELECT " + GROUP_MEMBERS_ACCOUNT_ID + " FROM "
-            + GROUP_MEMBERS_TABLE + " WHERE " + GROUP_MEMBERS_GROUP_ID + " = ? AND " + GROUP_MEMBERS_IS_MEMBER
-            + " = TRUE AND " + GROUP_MEMBERS_IS_ADMIN + " = FALSE;";
-    private static final String GET_ADMINS = "SELECT " + GROUP_MEMBERS_ACCOUNT_ID + " FROM " + GROUP_MEMBERS_TABLE
-            + " WHERE " + GROUP_MEMBERS_GROUP_ID + " = ? " + "AND " + GROUP_MEMBERS_IS_MEMBER + " = TRUE AND "
-            + GROUP_MEMBERS_IS_ADMIN + " = TRUE;";
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    private JdbcTemplate jdbcTemplate;
-
-    public void setDataSource(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    @Override
+    public void sendRequest(Group group, Account account) {
+        entityManager.persist(new GroupMember(account, group));
     }
 
     @Override
-    public void sendRequest(Long groupId, Long accountId) {
-        jdbcTemplate.update(ADD_USER, accountId, groupId);
-    }
-
-    @Override
-    public void makeMember(Long groupId, Long accountId) {
-        jdbcTemplate.update(MAKE_USER_GROUP_MEMBER, groupId, accountId);
-    }
-
-    @Override
-    public List<Long> getRequests(Long groupId) {
-        return jdbcTemplate.queryForList(GET_GROUP_FOLLOWERS, Long.class, groupId);
-    }
-
-    @Override
-    public void deleteMember(Long groupId, Long accountId) {
-        jdbcTemplate.update(DELETE_GROUP_MEMBER, groupId, accountId);
-    }
-
-    @Override
-    public boolean isAdmin(Long groupId, Long accountId) {
+    public void makeAdmin(Group group, Account account) {
+        EntityTransaction transaction = entityManager.getTransaction();
         try {
-            Integer adminStatus = jdbcTemplate.queryForObject(CHECK_ACCOUNT_ADMIN, Integer.class, groupId, accountId);
-            return adminStatus != null && adminStatus > 0;
-        } catch (EmptyResultDataAccessException e) {
+            transaction.begin();
+            try {
+                GroupMember groupMember = entityManager.createQuery("select gm from GroupMember gm "
+                                + "where gm.group.id = :groupId "
+                                + "and gm.account.id = :accountId", GroupMember.class)
+                        .setParameter("groupId", group.getId())
+                        .setParameter("accountId", account.getId())
+                        .getSingleResult();
+                groupMember.setAdmin(true);
+                transaction.commit();
+            } catch (NoResultException | NonUniqueResultException e) {
+                transaction.rollback();
+            }
+        } finally {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+        }
+    }
+
+    @Override
+    public void makeMember(Group group, Account account) {
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            try {
+                GroupMember groupMember = entityManager.createQuery("select gm from GroupMember gm "
+                                + "where gm.group.id = :groupId "
+                                + "and gm.account.id = :accountId", GroupMember.class)
+                        .setParameter("groupId", group.getId())
+                        .setParameter("accountId", account.getId())
+                        .getSingleResult();
+                groupMember.setMember(true);
+                transaction.commit();
+            } catch (NoResultException e) {
+                transaction.rollback();
+            }
+        } finally {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+        }
+    }
+
+    @Override
+    public void deleteMember(Group group, Account account) {
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            try {
+                GroupMember groupMember = entityManager.createQuery("select gm from GroupMember gm "
+                                + "where gm.group.id = :groupId "
+                                + "and gm.account.id = :accountId", GroupMember.class)
+                        .setParameter("groupId", group.getId())
+                        .setParameter("accountId", account.getId())
+                        .getSingleResult();
+                entityManager.remove(groupMember);
+                transaction.commit();
+            } catch (PersistenceException e) {
+                transaction.rollback();
+            }
+        } finally {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+        }
+    }
+
+    @Override
+    public boolean isAdmin(Group group, Account account) {
+        try {
+            Boolean isAdmin = entityManager.createQuery(
+                            "select gm.admin from GroupMember gm where gm.group.id = :groupId "
+                                    + "and gm.account.id = :accountId", Boolean.class)
+                    .setParameter("groupId", group.getId())
+                    .setParameter("accountId", account.getId())
+                    .getSingleResult();
+            return Boolean.TRUE.equals(isAdmin);
+        } catch (NoResultException e) {
             return false;
         }
     }
 
     @Override
-    public boolean isSubscriber(Long groupId, Long accountId) {
+    public boolean isSubscriber(Group group, Account account) {
         try {
-            Integer subscriberStatus = jdbcTemplate.queryForObject(CHECK_ACCOUNT_SUBSCRIBER, Integer.class, groupId,
-                    accountId);
-            return subscriberStatus != null && subscriberStatus > 0;
-        } catch (EmptyResultDataAccessException e) {
+            return entityManager.createQuery(
+                            "select 1 from GroupMember gm where gm.group.id = :groupId "
+                                    + "and gm.account.id = :accountId", Boolean.class)
+                    .setParameter("groupId", group.getId())
+                    .setParameter("accountId", account.getId())
+                    .getSingleResult();
+        } catch (NoResultException e) {
             return false;
         }
     }
 
     @Override
-    public boolean isMember(Long groupId, Long accountId) {
+    public boolean isMember(Group group, Account account) {
         try {
-            Integer memberStatus = jdbcTemplate.queryForObject(CHECK_ACCOUNT_MEMBER, Integer.class, groupId, accountId);
-            return memberStatus != null && memberStatus > 0;
-        } catch (EmptyResultDataAccessException e) {
+            return entityManager.createQuery(
+                            "select 1 from GroupMember gm where gm.group.id = :groupId "
+                                    + "and gm.account.id = :accountId and gm.member = true", Boolean.class)
+                    .setParameter("groupId", group.getId())
+                    .setParameter("accountId", account.getId())
+                    .getSingleResult();
+        } catch (NoResultException e) {
             return false;
         }
     }
 
     @Override
-    public List<Long> getRegularMembers(Long groupId) {
-        return jdbcTemplate.queryForList(GET_REGULAR_MEMBERS, Long.class, groupId);
+    public List<Account> getRequestAccounts(Group group) {
+        return entityManager.createQuery("select gm.account from GroupMember gm", Account.class)
+                .getResultList();
     }
 
     @Override
-    public List<Long> getAdmins(Long groupId) {
-        return jdbcTemplate.queryForList(GET_ADMINS, Long.class, groupId);
+    public List<Account> getRegularMembers(Group group) {
+        return entityManager.createQuery("select gm.account from GroupMember gm where gm.group.id = :groupId "
+                        + "and gm.member = true and gm.admin = false", Account.class)
+                .getResultList();
     }
 
     @Override
-    public void makeAdmin(Long groupId, Long accountId) {
-        jdbcTemplate.update(MAKE_USER_GROUP_ADMIN, groupId, accountId);
+    public List<Account> getAdmins(Group group) {
+        return entityManager.createQuery("select gm.account from GroupMember gm where gm.group.id = :groupId "
+                        + "and gm.member = true and gm.admin = true", Account.class)
+                .getResultList();
     }
 
 }
