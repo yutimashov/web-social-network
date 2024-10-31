@@ -1,15 +1,12 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.search;
 
-import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.SearchDao;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 
-import javax.sql.DataSource;
+import javax.persistence.EntityManager;
+import javax.persistence.NonUniqueResultException;
+import javax.persistence.PersistenceContext;
 import java.util.List;
-
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.GROUPS_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.GroupTableFields.*;
 
 /**
  * Singleton class responsible for working with {@link com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames#GROUPS_TABLE groups table}.
@@ -17,34 +14,31 @@ import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.f
  */
 public class SearchGroupDaoImpl implements SearchDao<Group> {
 
-    private static final String FIND_GROUPS = "SELECT * FROM " + GROUPS_TABLE + " WHERE " + GROUP_NAME
-            + " ILIKE ? OFFSET ? LIMIT ?;";
-    private static final String FIND_GROUPS_AMOUNT = "SELECT COUNT(*) AS " + TOTAL_GROUP_AMOUNT_ALIAS + " FROM "
-            + GROUPS_TABLE + " WHERE " + GROUP_NAME + " ILIKE ?;";
-    private JdbcTemplate jdbcTemplate;
-
-    private final RowMapper<Group> groupRowMapper = (rs, rowNumber) -> new Group.Builder()
-            .id(rs.getLong(GROUP_ID))
-            .groupName(rs.getString(GROUP_NAME))
-            .description(rs.getString(GROUP_DESCRIPTION))
-            .accountOwnerId(rs.getLong(GROUP_OWNER_ID))
-            .avatar(rs.getBinaryStream(GROUP_AVATAR))
-            .build();
-
-    public void setDataSource(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
-    public List<Group> searchAccounts(String searchQuery, int currentPage, int recordsPerPage) {
-        return jdbcTemplate.query(FIND_GROUPS, groupRowMapper, "%" + searchQuery + "%",
-                currentPage * recordsPerPage - recordsPerPage, recordsPerPage);
+    public List<Group> findResults(String searchQuery, int currentPage, int recordsPerPage) {
+        return entityManager.createQuery(
+                        "select g from Group g where lower(g.name) like lower(:searchQuery)", Group.class
+                )
+                .setParameter("searchQuery", "%" + searchQuery + "%")
+                .setFirstResult(currentPage * recordsPerPage - recordsPerPage)
+                .setMaxResults(recordsPerPage)
+                .getResultList();
     }
 
     @Override
     public int findResultsAmount(String searchQuery) {
-        Integer total = jdbcTemplate.queryForObject(FIND_GROUPS_AMOUNT, Integer.class, "%" + searchQuery + "%");
-        return (total != null) ? total : -1;
+        try {
+            return entityManager.createQuery(
+                            "select count(*) from Group g where lower(g.name) ilike lower(:searchQuery)",
+                            Integer.class)
+                    .setParameter("searchQuery", "%" + searchQuery + "%")
+                    .getSingleResult();
+        } catch (NonUniqueResultException e) {
+            return -1;
+        }
     }
 
 }

@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface SearchDao<T> {
 
-    List<T> searchAccounts(String searchQuery, int currentPage, int numOfRecords);
+    List<T> findResults(String searchQuery, int currentPage, int numOfRecords);
     int findResultsAmount(String searchQuery);
 
 }

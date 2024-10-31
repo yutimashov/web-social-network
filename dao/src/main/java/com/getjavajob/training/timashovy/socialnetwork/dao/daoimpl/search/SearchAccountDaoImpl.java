@@ -18,7 +18,7 @@ public class SearchAccountDaoImpl implements SearchDao<Account> {
     private EntityManager entityManager;
 
     @Override
-    public List<Account> searchAccounts(String searchQuery, int currentPage, int recordsPerPage) {
+    public List<Account> findResults(String searchQuery, int currentPage, int recordsPerPage) {
         return entityManager.createQuery("SELECT a FROM Account a WHERE LOWER(a.firstName) "
                         + "LIKE LOWER(:searchQuery) OR LOWER(a.lastName) LIKE LOWER(:searchQuery)", Account.class)
                 .setParameter("searchQuery", "%" + searchQuery + "%")
@@ -30,8 +30,12 @@ public class SearchAccountDaoImpl implements SearchDao<Account> {
     @Override
     public int findResultsAmount(String searchQuery) {
         try {
-            return entityManager.createQuery("select count(*) from Account a where a.firstName "
-                    + "ilike :searchQuery or a.lastName ilike :sesrchQuery", Integer.class).getSingleResult();
+            return entityManager.createQuery(
+                            "select count(*) from Account a where a.firstName like lower(:searchQuery) "
+                                    + "or lower(a.lastName) like lower(:sesrchQuery)",
+                            Integer.class)
+                    .setParameter("searchQuery", searchQuery)
+                    .getSingleResult();
         } catch (NonUniqueResultException e) {
             return -1;
         }

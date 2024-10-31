@@ -19,7 +19,7 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public List<Account> findAccounts(String searchQuery, int currentPage, int numOfRecords) {
-        return searchAccountDao.searchAccounts(searchQuery, currentPage, numOfRecords);
+        return searchAccountDao.findResults(searchQuery, currentPage, numOfRecords);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public List<Group> findGroups(String searchQuery, int currentPage, int numOfRecords) {
-        return searchGroupDao.searchAccounts(searchQuery, currentPage, numOfRecords);
+        return searchGroupDao.findResults(searchQuery, currentPage, numOfRecords);
     }
 
 }
