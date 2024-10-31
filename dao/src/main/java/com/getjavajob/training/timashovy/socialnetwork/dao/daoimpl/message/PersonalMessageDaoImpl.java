@@ -1,114 +1,116 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message;
 
-import com.getjavajob.training.timashovy.socialnetwork.domain.message.Message;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.MessageDao;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalMessage;
 
-import javax.sql.DataSource;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import java.util.List;
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.PERSONAL_MESSAGE_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.PersonalMessagesTableFields.*;
+import static java.util.Objects.isNull;
 
-public class PersonalMessageDaoImpl implements MessageDao {
+public class PersonalMessageDaoImpl implements BaseDao<PersonalMessage> {
 
-    private static final String CREATE = "INSERT INTO " + PERSONAL_MESSAGE_TABLE + " ("
-            + PERSONAL_MESSAGE_ACCOUNT_AUTHOR_ID + ", " + PERSONAL_MESSAGE_ACCOUNT_DESTINATION_ID + ", "
-            + PERSONAL_MESSAGE_TEXT + ", " + PERSONAL_MESSAGE_IMAGE + ") VALUES (?, ?, ?, ?);";
-    private static final String GET_ALL_ACCOUNT_IDS = "SELECT DISTINCT " + PERSONAL_MESSAGE_ACCOUNT_AUTHOR_ID
-            + " FROM " + PERSONAL_MESSAGE_TABLE + " WHERE " + PERSONAL_MESSAGE_ACCOUNT_DESTINATION_ID
-            + " = ? UNION SELECT DISTINCT " + PERSONAL_MESSAGE_ACCOUNT_DESTINATION_ID + " FROM "
-            + PERSONAL_MESSAGE_TABLE + " WHERE " + PERSONAL_MESSAGE_ACCOUNT_AUTHOR_ID + " = ?;";
-    private static final String GET_ALL_MESSAGES_WITH_ACCOUNT = "SELECT " + PERSONAL_MESSAGE_ID + ", "
-            + PERSONAL_MESSAGE_ACCOUNT_AUTHOR_ID + ", " + PERSONAL_MESSAGE_ACCOUNT_DESTINATION_ID + ", "
-            + PERSONAL_MESSAGE_TEXT + ", " + PERSONAL_MESSAGE_IMAGE + ", " + PERSONAL_MESSAGE_CREATION_DATE + " FROM "
-            + PERSONAL_MESSAGE_TABLE + " WHERE " + PERSONAL_MESSAGE_ACCOUNT_AUTHOR_ID + " = "
-            + "? AND " + PERSONAL_MESSAGE_ACCOUNT_DESTINATION_ID + " = ? UNION SELECT " + PERSONAL_MESSAGE_ID + ", "
-            + PERSONAL_MESSAGE_ACCOUNT_AUTHOR_ID + ", " + PERSONAL_MESSAGE_ACCOUNT_DESTINATION_ID + ", "
-            + PERSONAL_MESSAGE_TEXT + ", " + PERSONAL_MESSAGE_IMAGE + ", " + PERSONAL_MESSAGE_CREATION_DATE + " FROM "
-            + PERSONAL_MESSAGE_TABLE + " WHERE " + PERSONAL_MESSAGE_ACCOUNT_AUTHOR_ID + " = ? AND "
-            + PERSONAL_MESSAGE_ACCOUNT_DESTINATION_ID + " = ? " + "ORDER BY " + PERSONAL_MESSAGE_CREATION_DATE + ";";
-    private static final String GET_BY_ID = "SELECT " + PERSONAL_MESSAGE_ID + ", " + PERSONAL_MESSAGE_ACCOUNT_AUTHOR_ID
-            + ", " + PERSONAL_MESSAGE_CREATION_DATE + ", " + PERSONAL_MESSAGE_TEXT + ", " + PERSONAL_MESSAGE_IMAGE
-            + ", " + PERSONAL_MESSAGE_ACCOUNT_DESTINATION_ID + " FROM " + PERSONAL_MESSAGE_TABLE + " WHERE "
-            + PERSONAL_MESSAGE_ID + " = ?;";
-    private final RowMapper<Message> personalMessageRowMapper = (rs, rowNum) -> new Message.Builder()
-            .id(rs.getLong(PERSONAL_MESSAGE_ID))
-            .accountAuthorId(rs.getLong(PERSONAL_MESSAGE_ACCOUNT_AUTHOR_ID))
-            .creationDate(rs.getDate(PERSONAL_MESSAGE_CREATION_DATE).toLocalDate())
-            .destinationId(rs.getLong(PERSONAL_MESSAGE_ACCOUNT_DESTINATION_ID))
-            .text(rs.getString(PERSONAL_MESSAGE_TEXT))
-            .photo(rs.getBinaryStream(PERSONAL_MESSAGE_IMAGE))
-            .build();
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    private JdbcTemplate jdbcTemplate;
-
-    public void setDataSource(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    @Override
+    public Long create(PersonalMessage personalMessage) {
+        entityManager.persist(personalMessage);
+        entityManager.flush();
+        return personalMessage.getId();
     }
 
     @Override
-    public Long create(Message message) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        int rowsUpdated = jdbcTemplate.update(
-                con -> {
-                    PreparedStatement ps = con.prepareStatement(CREATE, new String[]{PERSONAL_MESSAGE_ID});
-                    setMessageData(message, ps);
-                    return ps;
-                },
-                keyHolder
-        );
-        if (rowsUpdated > 0) {
-            Number generatedId = keyHolder.getKey();
-            if (generatedId != null) {
-                Long id = generatedId.longValue();
-                message.setId(id);
-                return id;
-            }
+    public Optional<PersonalMessage> get(PersonalMessage personalMessage) {
+        try {
+            PersonalMessage existingMessage = entityManager.createQuery(
+                            "select pm from PersonalMessage pm where pm.id = :messageId", PersonalMessage.class)
+                    .setParameter("messageId", personalMessage.getId())
+                    .getSingleResult();
+            return Optional.ofNullable(existingMessage);
+        } catch (NoResultException e) {
+            return Optional.empty();
         }
-        return null;
-    }
-
-    private void setMessageData(Message message, PreparedStatement preparedStatement) throws SQLException {
-        preparedStatement.setLong(1, message.getAccountAuthorId());
-        preparedStatement.setLong(2, message.getDestinationId());
-        preparedStatement.setString(3, message.getText());
-        preparedStatement.setBinaryStream(4, message.getPhoto());
     }
 
     @Override
-    public Optional<Message> getById(Long id) {
-        return jdbcTemplate.query(GET_BY_ID, personalMessageRowMapper, id).stream().findFirst();
+    public List<PersonalMessage> getAll() {
+        return entityManager.createQuery("select pm from PersonalMessage pm", PersonalMessage.class)
+                .getResultList();
     }
 
     @Override
-    public List<Message> getAll(Long destinationId) {
-        return null;
+    public boolean updateById(Long id, PersonalMessage personalMessage) {
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            PersonalMessage existingPersonalMessage = entityManager.find(PersonalMessage.class, id);
+            if (isNull(existingPersonalMessage)) {
+                return false;
+            }
+            existingPersonalMessage.setDestinationId(personalMessage.getDestinationId());
+            existingPersonalMessage.setText(personalMessage.getText());
+            existingPersonalMessage.setPhoto(personalMessage.getPhoto());
+            existingPersonalMessage.setAccountAuthorId(personalMessage.getAccountAuthorId());
+            return true;
+        } catch (PersistenceException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            return false;
+        }
     }
 
     @Override
-    public boolean updateById(Long id, Message message) {
-        return false;
+    public boolean delete(PersonalMessage personalMessage) {
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            PersonalMessage existingPersonalMessage = entityManager.find(PersonalMessage.class, personalMessage.getId());
+            if (!isNull(existingPersonalMessage)) {
+                entityManager.remove(existingPersonalMessage);
+                transaction.commit();
+                return true;
+            } else {
+                transaction.rollback();
+                return false;
+            }
+        } catch (PersistenceException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            return false;
+        }
     }
 
-    @Override
-    public boolean deleteById(Long id) {
-        return false;
+    public List<Account> getAllAccounts(Long accountId) {
+        return entityManager.createQuery(
+                        "select distinct pm.accountAuthorId from PersonalMessage pm "
+                                + "where pm.destinationId = :accountId "
+                                + "union select distinct pm.destinationId from PersonalMessage pm "
+                                + "where pm.accountAuthorId = :accountId",
+                        Account.class
+                )
+                .getResultList();
     }
 
-    public List<Long> getAllAccountsIds(Long accountId) {
-        return jdbcTemplate.queryForList(GET_ALL_ACCOUNT_IDS, Long.class, accountId, accountId);
-    }
-
-    public List<Message> getAllPersonalMessagesWithAccount(Long authorId, Long receiverId) {
-        return jdbcTemplate.query(GET_ALL_MESSAGES_WITH_ACCOUNT, personalMessageRowMapper, authorId, receiverId,
-                receiverId, authorId);
+    public List<PersonalMessage> getAllPersonalMessagesWithAccount(Long authorId, Long receiverId) {
+        return entityManager.createQuery(
+                        "select pm from PersonalMessage pm where pm.accountAuthorId = :authorId "
+                                + "and pm.destinationId = :receiverId "
+                                + "union select pm from PersonalMessage pm where pm.accountAuthorId = :receiverId "
+                                + "and pm.destinationId = :authorId",
+                        PersonalMessage.class
+                )
+                .setParameter("authorId", authorId)
+                .setParameter("receiverId", receiverId)
+                .getResultList();
     }
 
 }
