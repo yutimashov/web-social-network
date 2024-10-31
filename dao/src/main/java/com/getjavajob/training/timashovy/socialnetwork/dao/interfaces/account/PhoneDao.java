@@ -1,5 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account;
 
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
 
 import java.util.List;
@@ -8,10 +9,10 @@ public interface PhoneDao {
 
     Long create(Phone phone);
 
-    boolean update(Long phoneId, String newPhoneNumber);
+    boolean updateNumber(Phone phone, String newNumber);
 
-    List<Phone> getAll(Long accountId);
+    List<Phone> getAll(Account account);
 
-    void deleteById(Long id);
+    void delete(Phone phone);
 
 }

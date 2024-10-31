@@ -1,6 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
 
 import javax.persistence.EntityManager;
@@ -28,20 +29,22 @@ public class PhoneDaoImpl implements PhoneDao {
     }
 
     @Override
-    public List<Phone> getAll(Long accountId) {
-        return entityManager.createQuery("select p from Phone p", Phone.class).getResultList();
+    public List<Phone> getAll(Account account) {
+        return entityManager.createQuery("select p from Phone p where p.account.id = :accountId", Phone.class)
+                .setParameter("accountId", account.getId())
+                .getResultList();
     }
 
     @Override
-    public boolean update(Long phoneId, String newPhoneNumber) {
+    public boolean updateNumber(Phone phone, String newNumber) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            Phone existingPhone = entityManager.find(Phone.class, phoneId);
+            Phone existingPhone = entityManager.find(Phone.class, phone.getId());
             if (isNull(existingPhone)) {
                 return false;
             }
-            existingPhone.setNumber(newPhoneNumber);
+            existingPhone.setNumber(newNumber);
             return true;
         } catch (PersistenceException e) {
             if (transaction.isActive()) {
@@ -52,13 +55,13 @@ public class PhoneDaoImpl implements PhoneDao {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void delete(Phone phone) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            Phone phone = entityManager.find(Phone.class, id);
-            if (!isNull(phone)) {
-                entityManager.remove(phone);
+            Phone existingPhone = entityManager.find(Phone.class, phone.getId());
+            if (!isNull(existingPhone)) {
+                entityManager.remove(existingPhone);
                 transaction.commit();
             } else {
                 transaction.rollback();

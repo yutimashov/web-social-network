@@ -58,13 +58,13 @@ public class AccountDaoImpl implements BaseDao<Account> {
     }
 
     @Override
-    public boolean deleteById(Long id) {
+    public boolean delete(Account account) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            Account account = entityManager.find(Account.class, id);
-            if (!isNull(account)) {
-                entityManager.remove(account);
+            Account existingAccount = entityManager.find(Account.class, account.getId());
+            if (!isNull(existingAccount)) {
+                entityManager.remove(existingAccount);
                 transaction.commit();
                 return true;
             } else {
@@ -80,13 +80,13 @@ public class AccountDaoImpl implements BaseDao<Account> {
     }
 
     @Override
-    public Optional<Account> getById(Long accountId) {
+    public Optional<Account> get(Account account) {
         try {
-            Account account = entityManager.createQuery(
+            Account existingAccount = entityManager.createQuery(
                             "select a from Account a where a.id = :accountId", Account.class)
-                    .setParameter("accountId", accountId)
+                    .setParameter("accountId", account.getId())
                     .getSingleResult();
-            return Optional.ofNullable(account);
+            return Optional.ofNullable(existingAccount);
         } catch (NoResultException e) {
             return Optional.empty();
         }
