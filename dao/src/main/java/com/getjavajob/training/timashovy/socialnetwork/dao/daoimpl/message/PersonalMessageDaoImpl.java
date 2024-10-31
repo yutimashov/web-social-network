@@ -41,8 +41,8 @@ public class PersonalMessageDaoImpl implements BaseDao<PersonalMessage> {
 
     @Override
     public List<PersonalMessage> getAll() {
-        return entityManager.createQuery("select pm from PersonalMessage pm", PersonalMessage.class)
-                .getResultList();
+        //TODO
+        return null;
     }
 
     @Override

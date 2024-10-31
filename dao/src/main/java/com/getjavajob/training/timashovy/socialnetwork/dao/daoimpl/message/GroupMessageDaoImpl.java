@@ -1,6 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
+import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.GroupMessage;
 
 import javax.persistence.EntityManager;
@@ -40,7 +41,15 @@ public class GroupMessageDaoImpl implements BaseDao<GroupMessage> {
 
     @Override
     public List<GroupMessage> getAll() {
-        return entityManager.createQuery("select gm from GroupMessage gm", GroupMessage.class).getResultList();
+        //TODO
+        return null;
+    }
+
+    public List<GroupMessage> getAll(Group group) {
+        return entityManager.createQuery("select gm from GroupMessage gm where gm.id = :groupId",
+                        GroupMessage.class)
+                .setParameter("groupId", group.getId())
+                .getResultList();
     }
 
     @Override
