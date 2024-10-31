@@ -1,97 +1,90 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message;
 
-import com.getjavajob.training.timashovy.socialnetwork.domain.message.Message;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.MessageDao;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
+import com.getjavajob.training.timashovy.socialnetwork.domain.message.GroupMessage;
 
-import javax.sql.DataSource;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import java.util.List;
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.GROUP_MESSAGE_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.GroupMessageTableFields.*;
+import static java.util.Objects.isNull;
 
-public class GroupMessageDaoImpl implements MessageDao {
+public class GroupMessageDaoImpl implements BaseDao<GroupMessage> {
 
-    private static final String CREATE = "INSERT INTO " + GROUP_MESSAGE_TABLE + " (" + GROUP_MESSAGE_ACCOUNT_AUTHOR_ID
-            + ", " + GROUP_MESSAGE_GROUP_ID + "," + GROUP_MESSAGE_MESSAGE_TEXT + ", " + GROUP_MESSAGE_MESSAGE_IMAGE
-            + ") VALUES (?, ?, ?, ?);";
-    private static final String DELETE_BY_ID = "DELETE FROM " + GROUP_MESSAGE_TABLE + " WHERE " + GROUP_MESSAGE_ID
-            + " = ?;";
-    private static final String UPDATE_BY_ID = "UPDATE " + GROUP_MESSAGE_TABLE + " SET " + GROUP_MESSAGE_MESSAGE_TEXT
-            + " = ? " + "WHERE " + GROUP_MESSAGE_ID + " = ?;";
-    private static final String GET_BY_ID = "SELECT " + GROUP_MESSAGE_ID + ", " + GROUP_MESSAGE_ACCOUNT_AUTHOR_ID
-            + ", " + GROUP_MESSAGE_CREATION_DATE + ", " + GROUP_MESSAGE_MESSAGE_TEXT + ", "
-            + GROUP_MESSAGE_MESSAGE_IMAGE + ", " + GROUP_MESSAGE_GROUP_ID + " FROM " + GROUP_MESSAGE_TABLE + " WHERE "
-            + GROUP_MESSAGE_ID + " = ?;";
-    private static final String GET_ALL = "SELECT " + GROUP_MESSAGE_ID + ", " + GROUP_MESSAGE_ACCOUNT_AUTHOR_ID + ", "
-            + GROUP_MESSAGE_GROUP_ID + ", " + GROUP_MESSAGE_MESSAGE_TEXT + ", " + GROUP_MESSAGE_MESSAGE_IMAGE + ", "
-            + GROUP_MESSAGE_CREATION_DATE + " FROM " + GROUP_MESSAGE_TABLE + " WHERE " + GROUP_MESSAGE_GROUP_ID
-            + " = ? ORDER BY " + GROUP_MESSAGE_CREATION_DATE + " DESC;";
-    private final RowMapper<Message> groupMessageRowMapper = (rs, rowNum) -> new Message.Builder()
-            .id(rs.getLong(GROUP_MESSAGE_ID))
-            .accountAuthorId(rs.getLong(GROUP_MESSAGE_ACCOUNT_AUTHOR_ID))
-            .creationDate(rs.getDate(GROUP_MESSAGE_CREATION_DATE).toLocalDate())
-            .destinationId(rs.getLong(GROUP_MESSAGE_GROUP_ID))
-            .text(rs.getString(GROUP_MESSAGE_MESSAGE_TEXT))
-            .photo(rs.getBinaryStream(GROUP_MESSAGE_MESSAGE_IMAGE))
-            .build();
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    private JdbcTemplate jdbcTemplate;
-
-    public void setDataSource(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    @Override
+    public Long create(GroupMessage message) {
+        entityManager.persist(message);
+        entityManager.flush();
+        return message.getId();
     }
 
     @Override
-    public Long create(Message message) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(conn -> {
-            PreparedStatement ps = conn.prepareStatement(CREATE, new String[]{GROUP_MESSAGE_ID});
-            setMessageData(message, ps);
-            return ps;
-        }, keyHolder);
-        Number generatedId = keyHolder.getKey();
-        if (generatedId != null) {
-            Long id = generatedId.longValue();
-            message.setId(id);
-            return id;
+    public Optional<GroupMessage> get(GroupMessage groupMessage) {
+        try {
+            GroupMessage existingMessage = entityManager.createQuery(
+                            "select gm from GroupMessage gm where gm.id = :accountId", GroupMessage.class)
+                    .setParameter("accountId", groupMessage.getId())
+                    .getSingleResult();
+            return Optional.ofNullable(existingMessage);
+        } catch (NoResultException e) {
+            return Optional.empty();
         }
-        return null;
-    }
-
-    private void setMessageData(Message message, PreparedStatement preparedStatement) throws SQLException {
-        preparedStatement.setLong(1, message.getAccountAuthorId());
-        preparedStatement.setLong(2, message.getDestinationId());
-        preparedStatement.setString(3, message.getText());
-        preparedStatement.setBinaryStream(4, message.getPhoto());
     }
 
     @Override
-    public Optional<Message> getById(Long id) {
-        return jdbcTemplate.query(GET_BY_ID, groupMessageRowMapper, id).stream().findFirst();
-    }
-
-    public List<Message> getAll(Long groupId) {
-        return jdbcTemplate.query(GET_ALL, groupMessageRowMapper, groupId);
+    public List<GroupMessage> getAll() {
+        return entityManager.createQuery("select gm from GroupMessage gm", GroupMessage.class).getResultList();
     }
 
     @Override
-    public boolean updateById(Long id, Message message) {
-        return jdbcTemplate.update(UPDATE_BY_ID, ps -> {
-            ps.setString(1, message.getText());
-            ps.setLong(2, id);
-        }) > 0;
+    public boolean updateById(Long id, GroupMessage groupMessage) {
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            GroupMessage existingGroupMessage = entityManager.find(GroupMessage.class, id);
+            if (isNull(existingGroupMessage)) {
+                return false;
+            }
+            existingGroupMessage.setGroup(groupMessage.getGroup());
+            existingGroupMessage.setText(groupMessage.getText());
+            existingGroupMessage.setPhoto(groupMessage.getPhoto());
+            existingGroupMessage.setAccountAuthorId(groupMessage.getAccountAuthorId());
+            return true;
+        } catch (PersistenceException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            return false;
+        }
     }
 
     @Override
-    public boolean deleteById(Long id) {
-        return jdbcTemplate.update(DELETE_BY_ID, id) > 0;
+    public boolean delete(GroupMessage groupMessage) {
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            GroupMessage existingGroupMessage = entityManager.find(GroupMessage.class, groupMessage.getId());
+            if (!isNull(existingGroupMessage)) {
+                entityManager.remove(existingGroupMessage);
+                transaction.commit();
+                return true;
+            } else {
+                transaction.rollback();
+                return false;
+            }
+        } catch (PersistenceException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            return false;
+        }
     }
 
 }
