@@ -3,10 +3,15 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
+import static java.util.Collections.emptyList;
 import static java.util.Objects.isNull;
 
 /**
@@ -27,6 +32,9 @@ public class AccountDaoImpl implements BaseDao<Account> {
 
     @Override
     public boolean updateById(Long id, Account account) {
+        if (isNull(account)) {
+            return false;
+        }
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
@@ -34,67 +42,107 @@ public class AccountDaoImpl implements BaseDao<Account> {
             if (isNull(existingAccount)) {
                 return false;
             }
-            existingAccount.setFirstName(account.getFirstName());
-            existingAccount.setLastName(account.getLastName());
-            existingAccount.setMiddleName(account.getMiddleName());
-            existingAccount.setBirthDate(account.getBirthDate());
-            existingAccount.setPersonalAddress(account.getPersonalAddress());
-            existingAccount.setWorkAddress(account.getWorkAddress());
-            existingAccount.setEmail(account.getEmail());
-            existingAccount.setIcq(account.getIcq());
-            existingAccount.setSkype(account.getSkype());
-            existingAccount.setAdditionalInfo(account.getAdditionalInfo());
-            existingAccount.setRole(account.getRole());
-            existingAccount.setAvatar(account.getAvatar());
-            existingAccount.setPhones(account.getPhones());
-            existingAccount.setPassword(account.getPassword());
+            if (isFieldChanged(existingAccount.getFirstName(), account.getFirstName())) {
+                existingAccount.setFirstName(account.getFirstName());
+            }
+            if (isFieldChanged(existingAccount.getLastName(), account.getLastName())) {
+                existingAccount.setLastName(account.getLastName());
+            }
+            if (isFieldChanged(existingAccount.getMiddleName(), account.getMiddleName())) {
+                existingAccount.setMiddleName(account.getMiddleName());
+            }
+            if (isFieldChanged(existingAccount.getBirthDate(), account.getBirthDate())) {
+                existingAccount.setBirthDate(account.getBirthDate());
+            }
+            if (isFieldChanged(existingAccount.getPersonalAddress(), account.getPersonalAddress())) {
+                existingAccount.setPersonalAddress(account.getPersonalAddress());
+            }
+            if (isFieldChanged(existingAccount.getWorkAddress(), account.getWorkAddress())) {
+                existingAccount.setWorkAddress(account.getWorkAddress());
+            }
+            if (isFieldChanged(existingAccount.getEmail(), account.getEmail())) {
+                existingAccount.setEmail(account.getEmail());
+            }
+            if (isFieldChanged(existingAccount.getIcq(), account.getIcq())) {
+                existingAccount.setIcq(account.getIcq());
+            }
+            if (isFieldChanged(existingAccount.getSkype(), account.getSkype())) {
+                existingAccount.setSkype(account.getSkype());
+            }
+            if (isFieldChanged(existingAccount.getAdditionalInfo(), account.getAdditionalInfo())) {
+                existingAccount.setAdditionalInfo(account.getAdditionalInfo());
+            }
+            if (isFieldChanged(existingAccount.getRole(), account.getRole())) {
+                existingAccount.setRole(account.getRole());
+            }
+            if (isFieldChanged(existingAccount.getAvatar(), account.getAvatar())) {
+                existingAccount.setAvatar(account.getAvatar());
+            }
+            if (isFieldChanged(existingAccount.getPhones(), account.getPhones())) {
+                existingAccount.setPhones(account.getPhones());
+            }
+            if (isFieldChanged(existingAccount.getPassword(), account.getPassword())) {
+                existingAccount.setPassword(account.getPassword());
+            }
+            transaction.commit();
             return true;
         } catch (PersistenceException e) {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
             return false;
+        } finally {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
         }
     }
 
+    private <T> boolean isFieldChanged(T oldValue, T newValue) {
+        return !Objects.equals(oldValue, newValue);
+    }
+
     @Override
-    public boolean delete(Account account) {
+    public boolean deleteById(Long id) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            Account existingAccount = entityManager.find(Account.class, account.getId());
+            Account existingAccount = entityManager.find(Account.class, id);
             if (!isNull(existingAccount)) {
                 entityManager.remove(existingAccount);
                 transaction.commit();
                 return true;
-            } else {
-                transaction.rollback();
-                return false;
             }
+            return false;
         } catch (PersistenceException e) {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
             return false;
+        } finally {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
         }
     }
 
     @Override
-    public Optional<Account> get(Account account) {
+    public Optional<Account> getById(Long id) {
         try {
-            Account existingAccount = entityManager.createQuery(
-                            "select a from Account a where a.id = :accountId", Account.class)
-                    .setParameter("accountId", account.getId())
-                    .getSingleResult();
+            Account existingAccount = entityManager.find(Account.class, id);
             return Optional.ofNullable(existingAccount);
-        } catch (NoResultException e) {
+        } catch (PersistenceException e) {
             return Optional.empty();
         }
     }
 
     @Override
     public List<Account> getAll() {
-        return entityManager.createQuery("select a from Account a", Account.class).getResultList();
+        try {
+            return entityManager.createQuery("select a from Account a", Account.class).getResultList();
+        } catch (PersistenceException e) {
+            return emptyList();
+        }
     }
 
 }

@@ -12,12 +12,12 @@ public interface BaseDao<T> {
 
     Long create(T t);
 
-    Optional<T> get(T t);
+    Optional<T> getById(Long id);
 
     List<T> getAll();
 
     boolean updateById(Long id, T t);
 
-    boolean delete(T t);
+    boolean deleteById(Long id);
 
 }

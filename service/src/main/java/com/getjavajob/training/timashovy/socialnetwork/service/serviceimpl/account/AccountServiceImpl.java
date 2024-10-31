@@ -1,14 +1,14 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account;
 
-import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole;
-import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
-import com.getjavajob.training.timashovy.socialnetwork.domain.util.AccountRegistrationData;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PasswordDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipCheckerDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipDao;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole;
+import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
+import com.getjavajob.training.timashovy.socialnetwork.domain.util.AccountRegistrationData;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneService;
@@ -18,10 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.PERSONAL;
-import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.WORKING;
 import static java.util.Objects.isNull;
-import static java.util.stream.Collectors.toList;
 
 /**
  * Singleton class for working with methods, managing Account functionality.
@@ -146,17 +143,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public List<Account> getAll() {
-        List<Account> accounts = accountDao.getAll();
-        for (Account account : accounts) {
-            List<Phone> accountPhones = phoneDao.getAll(account.getId());
-            if (!accountPhones.isEmpty()) {
-                account.setPersonalPhoneNumber(accountPhones.stream().filter(phone -> phone.getPhoneType() == PERSONAL)
-                        .collect(toList()));
-                account.setWorkPhoneNumber(accountPhones.stream().filter(phone -> phone.getPhoneType() == WORKING)
-                        .collect(toList()));
-            }
-        }
-        return accounts;
+        return accountDao.getAll();
     }
 
     /**
