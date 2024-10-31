@@ -2,14 +2,11 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.search;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.SearchDao;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
-import org.springframework.jdbc.core.RowMapper;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import java.util.List;
-
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.AccountTableFields.*;
 
 /**
  * Singleton class responsible for working with {@link com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames#ACCOUNTS_TABLE accounts table}.
@@ -19,12 +16,6 @@ public class SearchAccountDaoImpl implements SearchDao<Account> {
 
     @PersistenceContext
     private EntityManager entityManager;
-
-    private final RowMapper<Account> searchAccountRowMapper = (rs, rowNumber) -> new Account.Builder()
-            .id(rs.getLong(ACCOUNT_ID))
-            .firstName(rs.getString(ACCOUNT_FIRST_NAME))
-            .lastName(rs.getString(ACCOUNT_LAST_NAME))
-            .build();
 
     @Override
     public List<Account> searchAccounts(String searchQuery, int currentPage, int recordsPerPage) {
