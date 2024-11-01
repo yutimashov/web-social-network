@@ -54,11 +54,10 @@ public class FriendshipDaoImpl implements FriendshipDao {
     @Override
     public List<Long> getFriendsIds(Long accountId) {
         return entityManager.createQuery(
-                        "select f.firstFriendAccountId from Friendship f "
-                                + "where f.secondFriendAccountId = :accountId and f.friendshipStatus = true "
-                                + "union "
-                                + "select f.secondFriendAccountId from Friendship f "
-                                + "where f.firstFriendAccountId = :accountId and f.friendshipStatus = true",
+                        "select case when f.firstFriendAccountId = :accountId "
+                                + "then f.secondFriendAccountId else f.firstFriendAccountId end from Friendship f "
+                                + "where (f.firstFriendAccountId = :accountId or f.secondFriendAccountId = :accountId) "
+                                + "and f.friendshipStatus = true",
                         Long.class
                 )
                 .setParameter("accountId", accountId)
