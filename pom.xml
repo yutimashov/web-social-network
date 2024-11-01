@@ -32,6 +32,7 @@
         <commons-fileupload.version>1.5</commons-fileupload.version>
         <hibernate-core.version>5.3.36.Final</hibernate-core.version>
         <javax-persistence.version>2.2</javax-persistence.version>
+        <log4j2.version>2.24.1</log4j2.version>
         <!-- plugins versions -->
         <maven-clean-plugin.version>3.3.2</maven-clean-plugin.version>
         <maven-compiler-plugin.version>3.12.1</maven-compiler-plugin.version>

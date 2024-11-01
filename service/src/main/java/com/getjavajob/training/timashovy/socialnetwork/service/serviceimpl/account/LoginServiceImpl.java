@@ -5,6 +5,8 @@ import com.getjavajob.training.timashovy.socialnetwork.domain.password.Password;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.LoginService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
@@ -17,6 +19,8 @@ public class LoginServiceImpl implements LoginService {
     private final AccountService accountService;
     private final PasswordService passwordService;
 
+    private final static Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
+
     public LoginServiceImpl(AccountService accountService, PasswordService passwordService) {
         this.accountService = accountService;
         this.passwordService = passwordService;
@@ -24,6 +28,7 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public Optional<Account> getLoggedInAccount(String email, String password) {
+        logger.info("going to login");
         if (isNull(email) || isNull(password)) {
             return empty();
         }

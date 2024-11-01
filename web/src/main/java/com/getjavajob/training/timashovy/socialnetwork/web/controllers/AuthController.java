@@ -5,13 +5,11 @@ import com.getjavajob.training.timashovy.socialnetwork.domain.util.AccountRegist
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.LoginService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +31,8 @@ public class AuthController {
     private final PasswordService passwordService;
     private final AccountService accountService;
 
+    private final static Logger logger = LoggerFactory.getLogger(AccountController.class);
+
     public AuthController(LoginService loginService, PasswordService passwordService, AccountService accountService) {
         this.loginService = loginService;
         this.passwordService = passwordService;
@@ -41,6 +41,7 @@ public class AuthController {
 
     @GetMapping("/login")
     public String loginPage() {
+        logger.info("going to login");
         return "auth/login";
     }
 
@@ -48,6 +49,7 @@ public class AuthController {
     public String login(@RequestParam String email, @RequestParam String password,
                         @RequestParam Optional<String> rememberMe, Model model,
                         HttpServletResponse resp) {
+        logger.info("going to get loggedIn account with password = {} and email = {}", password, email);
         Optional<Account> loggedInAccount = loginService.getLoggedInAccount(email, password);
         if (loggedInAccount.isPresent()) {
             Account account = loggedInAccount.get();
