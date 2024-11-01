@@ -1,17 +1,20 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.interfaces;
 
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.message.GroupMessage;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.Message;
+import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalMessage;
+import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalWallMessage;
 
 import java.util.List;
 
 public interface MessageService {
 
-    Long createGroupMessage(Message message);
+    Long createGroupMessage(GroupMessage groupMessage);
 
-    Long createPersonalWallMessage(Message message);
+    Long createPersonalWallMessage(PersonalWallMessage personalWallMessage);
 
-    Long createPersonalMessage(Message message);
+    Long createPersonalMessage(PersonalMessage personalMessage);
 
     boolean deleteById(Long id);
 
@@ -21,12 +24,12 @@ public interface MessageService {
 
     Message getPersonalMessageById(Long messageId);
 
-    List<Message> getAllGroupMessages(Long groupId);
+    List<GroupMessage> getAllGroupMessages(Long groupId);
 
-    List<Message> getAllAccountWallMessages(Long destinationId);
+    List<PersonalWallMessage> getAllAccountWallMessages(Long destinationId);
 
     List<Account> getAllAccountsWithPersonalMessages(Long accountId);
 
-    List<Message> getAllPersonalMessagesWithAccount(Long authorId, Long receiverId);
+    List<PersonalMessage> getAllPersonalMessagesWithAccount(Long authorId, Long receiverId);
 
 }

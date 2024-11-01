@@ -41,18 +41,18 @@ public class FriendshipDaoImpl implements FriendshipDao {
     }
 
     @Override
-    public boolean acceptRequest(Account requester, Account accepter) {
+    public boolean acceptRequest(Long requesterId, Long accepterId) {
         return entityManager.createQuery(
                         "update Friendship f set f.friendshipStatus = true where f.requester = :requester "
                                 + "and f.receiver = :accepter"
                 ).
-                setParameter("requester", requester)
-                .setParameter("accepter", accepter)
+                setParameter("requester", requesterId)
+                .setParameter("accepter", accepterId)
                 .executeUpdate() > 0;
     }
 
     @Override
-    public List<Long> getFriendsIds(Account account) {
+    public List<Long> getFriendsIds(Long accountId) {
         return entityManager.createQuery(
                         "select f.firstFriendAccountId from Friendship f "
                                 + "where f.secondFriendAccountId = :accountId and f.friendshipStatus = true "
@@ -61,7 +61,7 @@ public class FriendshipDaoImpl implements FriendshipDao {
                                 + "where f.firstFriendAccountId = :accountId and f.friendshipStatus = true",
                         Long.class
                 )
-                .setParameter("accountId", account.getId())
+                .setParameter("accountId", accountId)
                 .getResultList();
     }
 
@@ -88,15 +88,15 @@ public class FriendshipDaoImpl implements FriendshipDao {
     }
 
     @Override
-    public boolean deleteFriend(Account friendshipOwner, Account friendToRemove) {
+    public boolean deleteFriend(Long accountId, Long deletingFriendId) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
             Friendship.FriendshipId friendshipId;
-            if (friendshipOwner.getId() < friendToRemove.getId()) {
-                friendshipId = new Friendship.FriendshipId(friendshipOwner.getId(), friendToRemove.getId());
+            if (accountId < deletingFriendId) {
+                friendshipId = new Friendship.FriendshipId(accountId, deletingFriendId);
             } else {
-                friendshipId = new Friendship.FriendshipId(friendToRemove.getId(), friendshipOwner.getId());
+                friendshipId = new Friendship.FriendshipId(deletingFriendId, accountId);
             }
             Friendship friendship = entityManager.find(Friendship.class, friendshipId);
             if (!isNull(friendship)) {

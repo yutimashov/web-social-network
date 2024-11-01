@@ -1,7 +1,8 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account;
 
-import com.getjavajob.training.timashovy.socialnetwork.domain.password.Password;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PasswordDao;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.password.Password;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
 
 import java.util.Optional;
@@ -18,9 +19,9 @@ public class PasswordServiceImpl implements PasswordService {
     }
 
     @Override
-    public Password create(Long accountId, String rawPassword) {
+    public Password create(Account account, String rawPassword) {
         String salt = generateSalt();
-        return new Password(accountId, hashCredentialData(rawPassword, salt), salt);
+        return new Password(account, hashCredentialData(rawPassword, salt), salt);
     }
 
     @Override

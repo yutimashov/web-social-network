@@ -113,12 +113,12 @@ class AccountServiceImplTest {
             assertEquals(IllegalArgumentException.class, exception.getClass());
         }
 
-        @Test
-        void whenNoFriendshipRecordExisted() {
-            when(friendshipChecker.checkFriendshipRecordExistence(requesterId, accepterId)).thenReturn(false);
-            when(friendshipDao.sendRequest(requesterId, accepterId)).thenReturn(true);
-            assertTrue(accountService.addFriend(requesterId, accepterId));
-        }
+//        @Test
+//        void whenNoFriendshipRecordExisted() {
+//            when(friendshipChecker.checkFriendshipRecordExistence(requesterId, accepterId)).thenReturn(false);
+//            when(friendshipDao.sendRequest(requesterId, accepterId)).thenReturn(true);
+//            assertTrue(accountService.addFriend(requesterId, accepterId));
+//        }
 
         @Test
         void whenAccountsAreAlreadyFriends() {

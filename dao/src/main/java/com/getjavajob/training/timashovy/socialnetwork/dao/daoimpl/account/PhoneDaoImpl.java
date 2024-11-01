@@ -1,7 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
-import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
 
 import javax.persistence.EntityManager;
@@ -29,18 +28,18 @@ public class PhoneDaoImpl implements PhoneDao {
     }
 
     @Override
-    public List<Phone> getAll(Account account) {
+    public List<Phone> getAll(Long accountId) {
         return entityManager.createQuery("select p from Phone p where p.account.id = :accountId", Phone.class)
-                .setParameter("accountId", account.getId())
+                .setParameter("accountId", accountId)
                 .getResultList();
     }
 
     @Override
-    public boolean updateNumber(Phone phone, String newNumber) {
+    public boolean updateNumber(Long phoneId, String newNumber) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            Phone existingPhone = entityManager.find(Phone.class, phone.getId());
+            Phone existingPhone = entityManager.find(Phone.class, phoneId);
             if (isNull(existingPhone)) {
                 return false;
             }
@@ -55,11 +54,11 @@ public class PhoneDaoImpl implements PhoneDao {
     }
 
     @Override
-    public void delete(Phone phone) {
+    public void delete(Long phoneId) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            Phone existingPhone = entityManager.find(Phone.class, phone.getId());
+            Phone existingPhone = entityManager.find(Phone.class, phoneId);
             if (!isNull(existingPhone)) {
                 entityManager.remove(existingPhone);
                 transaction.commit();

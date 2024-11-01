@@ -1,7 +1,8 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account;
 
-import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneService;
 
 import java.util.ArrayList;
@@ -20,21 +21,21 @@ public class PhoneServiceImpl implements PhoneService {
     }
 
     @Override
-    public List<Phone> createPersonalPhones(Long accountId, String phoneNumbers) {
+    public List<Phone> createPersonalPhones(Account account, String phoneNumbers) {
         List<Phone> phones = new ArrayList<>();
         String[] phoneNumbersSeparated = phoneNumbers.split(",");
         for (String phoneNumberSeparated : phoneNumbersSeparated) {
-            phones.add(new Phone(PERSONAL, phoneNumberSeparated, accountId));
+            phones.add(new Phone(PERSONAL, phoneNumberSeparated, account));
         }
         return phones;
     }
 
     @Override
-    public List<Phone> createWorkingPhones(Long accountId, String phoneNumbers) {
+    public List<Phone> createWorkingPhones(Account account, String phoneNumbers) {
         List<Phone> phones = new ArrayList<>();
         String[] phoneNumbersSeparated = phoneNumbers.split(",");
         for (String phoneNumberSeparated : phoneNumbersSeparated) {
-            phones.add(new Phone(WORKING, phoneNumberSeparated, accountId));
+            phones.add(new Phone(WORKING, phoneNumberSeparated, account));
         }
         return phones;
     }
@@ -51,7 +52,7 @@ public class PhoneServiceImpl implements PhoneService {
 
     @Override
     public boolean update(Long phoneId, String newPhoneNumber) {
-        return phoneDao.update(phoneId, newPhoneNumber);
+        return phoneDao.updateNumber(phoneId, newPhoneNumber);
     }
 
     @Override
@@ -60,8 +61,8 @@ public class PhoneServiceImpl implements PhoneService {
     }
 
     @Override
-    public void deleteById(Long phoneId) {
-        phoneDao.deleteById(phoneId);
+    public void delete(Long phoneId) {
+        phoneDao.delete(phoneId);
     }
 
 }

@@ -6,13 +6,13 @@ import java.util.List;
 
 public interface FriendshipDao {
 
-    void sendRequest(Account requester, Account accepter);
+    void sendRequest(Account requester, Account receiver);
 
-    boolean acceptRequest(Account requester, Account accepter);
+    boolean acceptRequest(Long requesterId, Long accepterId);
 
-    boolean deleteFriend(Account friendshipOwner, Account friendToRemove);
+    boolean deleteFriend(Long accountId, Long deletingFriendId);
 
-    List<Long> getFriendsIds(Account account);
+    List<Long> getFriendsIds(Long accountId);
 
     List<Long> getIncomingRequests(Long accountId);
 

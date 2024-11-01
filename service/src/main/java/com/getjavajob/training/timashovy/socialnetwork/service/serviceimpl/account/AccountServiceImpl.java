@@ -53,16 +53,16 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void create(AccountRegistrationData accountRegisterData) {
         Long accountId = accountDao.create(accountRegisterData.getAccount());
-        passwordDao.create(passwordService.create(accountId, accountRegisterData.getPassword()));
+        passwordDao.create(passwordService.create(accountRegisterData.getAccount(), accountRegisterData.getPassword()));
         if (!accountRegisterData.getPersonalPhoneNumbers().isEmpty()) {
-            List<Phone> personalPhones = phoneService.createPersonalPhones(accountId,
+            List<Phone> personalPhones = phoneService.createPersonalPhones(accountRegisterData.getAccount(),
                     accountRegisterData.getPersonalPhoneNumbers());
             for (Phone personalPhone : personalPhones) {
                 phoneDao.create(personalPhone);
             }
         }
         if (!accountRegisterData.getWorkingPhoneNumbers().isEmpty()) {
-            List<Phone> workingPhones = phoneService.createWorkingPhones(accountId,
+            List<Phone> workingPhones = phoneService.createWorkingPhones(accountRegisterData.getAccount(),
                     accountRegisterData.getWorkingPhoneNumbers());
             for (Phone workingPhone : workingPhones) {
                 phoneDao.create(workingPhone);
@@ -167,7 +167,8 @@ public class AccountServiceImpl implements AccountService {
             throw new IllegalArgumentException("Account cannot send friend request to themselves");
         }
         if (!friendshipCheckerDao.checkFriendshipRecordExistence(requesterId, accepterId)) {
-            return friendshipDao.sendRequest(requesterId, accepterId);
+            friendshipDao.sendRequest(accountDao.getById(requesterId).get(), accountDao.getById(accepterId).get());
+            return true;
         }
         if (friendshipCheckerDao.checkUsersAreFriends(requesterId, accepterId)) {
             return false;

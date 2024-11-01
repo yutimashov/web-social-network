@@ -1,20 +1,21 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.interfaces;
 
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
 
 import java.util.List;
 
 public interface PhoneService {
 
-    List<Phone> createPersonalPhones(Long accountId, String phoneNumbers);
+    List<Phone> createPersonalPhones(Account account, String phoneNumbers);
 
-    List<Phone> createWorkingPhones(Long accountId, String phoneNumbers);
+    List<Phone> createWorkingPhones(Account account, String phoneNumbers);
 
     List<Phone> getPersonalPhoneNumbers(Long accountId);
 
     List<Phone> getWorkPhoneNumbers(Long accountId);
 
-    void deleteById(Long phoneId);
+    void delete(Long phoneId);
 
     boolean update(Long phoneId, String newPhoneNumber);
 

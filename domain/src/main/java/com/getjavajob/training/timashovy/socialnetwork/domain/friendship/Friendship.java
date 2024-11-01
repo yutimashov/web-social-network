@@ -121,31 +121,31 @@ public class Friendship {
 
     public static class FriendshipId implements Serializable {
 
-        private Long requesterId;
-        private Long receiverId;
+        private Long firstFriendAccountId;
+        private Long secondFriendAccountId;
 
         public FriendshipId() {
         }
 
         public FriendshipId(Long requesterId, Long receiverId) {
-            this.requesterId = requesterId;
-            this.receiverId = receiverId;
+            this.firstFriendAccountId = requesterId;
+            this.secondFriendAccountId = receiverId;
         }
 
-        public Long getRequesterId() {
-            return requesterId;
+        public Long getFirstFriendAccountId() {
+            return firstFriendAccountId;
         }
 
-        public void setRequesterId(Long requesterId) {
-            this.requesterId = requesterId;
+        public void setFirstFriendAccountId(Long firstFriendAccountId) {
+            this.firstFriendAccountId = firstFriendAccountId;
         }
 
-        public Long getReceiverId() {
-            return receiverId;
+        public Long getSecondFriendAccountId() {
+            return secondFriendAccountId;
         }
 
-        public void setReceiverId(Long receiverId) {
-            this.receiverId = receiverId;
+        public void setSecondFriendAccountId(Long secondFriendAccountId) {
+            this.secondFriendAccountId = secondFriendAccountId;
         }
 
         @Override
@@ -153,13 +153,13 @@ public class Friendship {
             if (this == o) return true;
             if (!(o instanceof FriendshipId)) return false;
             FriendshipId that = (FriendshipId) o;
-            return Objects.equals(requesterId, that.requesterId) &&
-                    Objects.equals(receiverId, that.receiverId);
+            return Objects.equals(firstFriendAccountId, that.firstFriendAccountId) &&
+                    Objects.equals(secondFriendAccountId, that.secondFriendAccountId);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(requesterId, receiverId);
+            return Objects.hash(firstFriendAccountId, secondFriendAccountId);
         }
 
     }

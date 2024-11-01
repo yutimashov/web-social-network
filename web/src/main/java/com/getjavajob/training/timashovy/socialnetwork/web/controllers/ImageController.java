@@ -1,7 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.controllers;
 
-import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Optional;
 
@@ -42,7 +43,7 @@ public class ImageController {
     public ResponseEntity<InputStreamSource> accountAvatar(@RequestParam("id") long id) {
         Optional<Account> accountOptional = accountService.getById(id);
         if (accountOptional.isPresent()) {
-            InputStream avatar = accountOptional.get().getAvatar();
+            InputStream avatar = new ByteArrayInputStream(accountOptional.get().getAvatar());
             return createImageResponse(avatar);
         }
         return status(NOT_FOUND).build();
@@ -52,7 +53,7 @@ public class ImageController {
     public ResponseEntity<InputStreamSource> groupAvatar(@RequestParam("id") long id) {
         Optional<Group> groupOptional = groupService.getById(id);
         if (groupOptional.isPresent()) {
-            InputStream avatar = groupOptional.get().getAvatar();
+            InputStream avatar = new ByteArrayInputStream(groupOptional.get().getAvatar());
             return createImageResponse(avatar);
         }
         return status(NOT_FOUND).build();
@@ -60,17 +61,17 @@ public class ImageController {
 
     @GetMapping("/group-message/image")
     public ResponseEntity<InputStreamSource> groupPostImage(@RequestParam("id") long id) {
-        return createImageResponse(messageService.getGroupMessageById(id).getPhoto());
+        return createImageResponse(new ByteArrayInputStream(messageService.getGroupMessageById(id).getPhoto()));
     }
 
     @GetMapping("/personal-message/image")
     public ResponseEntity<InputStreamSource> personalMessageImage(@RequestParam("id") long id) {
-        return createImageResponse(messageService.getPersonalMessageById(id).getPhoto());
+        return createImageResponse(new ByteArrayInputStream(messageService.getPersonalMessageById(id).getPhoto()));
     }
 
     @GetMapping("/account-wall/image")
     public ResponseEntity<InputStreamSource> accountPostImage(@RequestParam("id") long id) {
-        return createImageResponse(messageServiceImpl.getAccountWallMessageById(id).getPhoto());
+        return createImageResponse(new ByteArrayInputStream(messageServiceImpl.getAccountWallMessageById(id).getPhoto()));
     }
 
     private ResponseEntity<InputStreamSource> createImageResponse(InputStream inputStream) {

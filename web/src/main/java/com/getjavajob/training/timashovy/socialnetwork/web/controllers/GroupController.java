@@ -1,15 +1,19 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.controllers;
 
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupMembershipService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
-import com.getjavajob.training.timashovy.socialnetwork.web.dto.GroupDto;
-import com.getjavajob.training.timashovy.socialnetwork.web.mappers.GroupMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import javax.servlet.http.HttpServlet;
 import java.io.IOException;
@@ -60,11 +64,11 @@ public class GroupController extends HttpServlet {
     }
 
     @PostMapping("/create")
-    public String processGroupCreation(@ModelAttribute GroupDto groupDto,
+    public String processGroupCreation(@ModelAttribute Group group,
                                        @SessionAttribute("account") Account account) throws IOException {
         Long accountId = account.getId();
-        Long groupId = groupService.create(new GroupMapper().toGroup(groupDto, accountId));
-        groupMembershipService.sendRequest(groupId, accountId);
+        Long groupId = groupService.create(group);
+        groupMembershipService.sendRequest(group, account);
         groupMembershipService.makeMember(groupId, accountId);
         groupMembershipService.makeAdmin(groupId, accountId);
         return "redirect:/group/all";
@@ -108,9 +112,8 @@ public class GroupController extends HttpServlet {
 
     @GetMapping("/send-request")
     public String sendRequest(@RequestParam("id") long id, @SessionAttribute("account") Account account) {
-        Long accountId = account.getId();
-        groupMembershipService.sendRequest(id, accountId);
-        return "redirect:/account?id=" + accountId;
+        groupMembershipService.sendRequest(groupService.getById(id).get(), account);
+        return "redirect:/account?id=" + account.getId();
     }
 
 }

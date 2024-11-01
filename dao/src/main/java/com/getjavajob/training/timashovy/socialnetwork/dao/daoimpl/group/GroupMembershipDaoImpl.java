@@ -5,7 +5,12 @@ import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 import com.getjavajob.training.timashovy.socialnetwork.domain.group.GroupMember;
 
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import java.util.List;
 
 public class GroupMembershipDaoImpl implements GroupMembershipDao {
@@ -19,7 +24,7 @@ public class GroupMembershipDaoImpl implements GroupMembershipDao {
     }
 
     @Override
-    public void makeAdmin(Group group, Account account) {
+    public void makeAdmin(Long groupId, Long accountId) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
@@ -27,8 +32,8 @@ public class GroupMembershipDaoImpl implements GroupMembershipDao {
                 GroupMember groupMember = entityManager.createQuery("select gm from GroupMember gm "
                                 + "where gm.group.id = :groupId "
                                 + "and gm.account.id = :accountId", GroupMember.class)
-                        .setParameter("groupId", group.getId())
-                        .setParameter("accountId", account.getId())
+                        .setParameter("groupId", groupId)
+                        .setParameter("accountId", accountId)
                         .getSingleResult();
                 groupMember.setAdmin(true);
                 transaction.commit();
@@ -43,7 +48,7 @@ public class GroupMembershipDaoImpl implements GroupMembershipDao {
     }
 
     @Override
-    public void makeMember(Group group, Account account) {
+    public void makeMember(Long groupId, Long accountId) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
@@ -51,8 +56,8 @@ public class GroupMembershipDaoImpl implements GroupMembershipDao {
                 GroupMember groupMember = entityManager.createQuery("select gm from GroupMember gm "
                                 + "where gm.group.id = :groupId "
                                 + "and gm.account.id = :accountId", GroupMember.class)
-                        .setParameter("groupId", group.getId())
-                        .setParameter("accountId", account.getId())
+                        .setParameter("groupId", groupId)
+                        .setParameter("accountId", accountId)
                         .getSingleResult();
                 groupMember.setMember(true);
                 transaction.commit();
@@ -67,7 +72,7 @@ public class GroupMembershipDaoImpl implements GroupMembershipDao {
     }
 
     @Override
-    public void deleteMember(Group group, Account account) {
+    public void deleteMember(Long groupId, Long accountId) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
@@ -75,8 +80,8 @@ public class GroupMembershipDaoImpl implements GroupMembershipDao {
                 GroupMember groupMember = entityManager.createQuery("select gm from GroupMember gm "
                                 + "where gm.group.id = :groupId "
                                 + "and gm.account.id = :accountId", GroupMember.class)
-                        .setParameter("groupId", group.getId())
-                        .setParameter("accountId", account.getId())
+                        .setParameter("groupId", groupId)
+                        .setParameter("accountId", accountId)
                         .getSingleResult();
                 entityManager.remove(groupMember);
                 transaction.commit();
@@ -91,13 +96,13 @@ public class GroupMembershipDaoImpl implements GroupMembershipDao {
     }
 
     @Override
-    public boolean isAdmin(Group group, Account account) {
+    public boolean isAdmin(Long groupId, Long accountId) {
         try {
             Boolean isAdmin = entityManager.createQuery(
                             "select gm.admin from GroupMember gm where gm.group.id = :groupId "
                                     + "and gm.account.id = :accountId", Boolean.class)
-                    .setParameter("groupId", group.getId())
-                    .setParameter("accountId", account.getId())
+                    .setParameter("groupId", groupId)
+                    .setParameter("accountId", accountId)
                     .getSingleResult();
             return Boolean.TRUE.equals(isAdmin);
         } catch (NoResultException e) {
@@ -106,13 +111,13 @@ public class GroupMembershipDaoImpl implements GroupMembershipDao {
     }
 
     @Override
-    public boolean isSubscriber(Group group, Account account) {
+    public boolean isSubscriber(Long groupId, Long accountId) {
         try {
             return entityManager.createQuery(
                             "select 1 from GroupMember gm where gm.group.id = :groupId "
                                     + "and gm.account.id = :accountId", Boolean.class)
-                    .setParameter("groupId", group.getId())
-                    .setParameter("accountId", account.getId())
+                    .setParameter("groupId", groupId)
+                    .setParameter("accountId", accountId)
                     .getSingleResult();
         } catch (NoResultException e) {
             return false;
@@ -120,13 +125,13 @@ public class GroupMembershipDaoImpl implements GroupMembershipDao {
     }
 
     @Override
-    public boolean isMember(Group group, Account account) {
+    public boolean isMember(Long groupId, Long accountId) {
         try {
             return entityManager.createQuery(
                             "select 1 from GroupMember gm where gm.group.id = :groupId "
                                     + "and gm.account.id = :accountId and gm.member = true", Boolean.class)
-                    .setParameter("groupId", group.getId())
-                    .setParameter("accountId", account.getId())
+                    .setParameter("groupId", groupId)
+                    .setParameter("accountId", accountId)
                     .getSingleResult();
         } catch (NoResultException e) {
             return false;
@@ -134,22 +139,26 @@ public class GroupMembershipDaoImpl implements GroupMembershipDao {
     }
 
     @Override
-    public List<Account> getRequestAccounts(Group group) {
-        return entityManager.createQuery("select gm.account from GroupMember gm", Account.class)
+    public List<Account> getRequestAccounts(Long groupId) {
+        return entityManager.createQuery("select gm.account from GroupMember gm where gm.group.id = :groupId",
+                        Account.class)
+                .setParameter("groupId", groupId)
                 .getResultList();
     }
 
     @Override
-    public List<Account> getRegularMembers(Group group) {
+    public List<Account> getRegularMembers(Long groupId) {
         return entityManager.createQuery("select gm.account from GroupMember gm where gm.group.id = :groupId "
                         + "and gm.member = true and gm.admin = false", Account.class)
+                .setParameter("groupId", groupId)
                 .getResultList();
     }
 
     @Override
-    public List<Account> getAdmins(Group group) {
+    public List<Account> getAdmins(Long groupId) {
         return entityManager.createQuery("select gm.account from GroupMember gm where gm.group.id = :groupId "
                         + "and gm.member = true and gm.admin = true", Account.class)
+                .setParameter("groupId", groupId)
                 .getResultList();
     }
 

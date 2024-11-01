@@ -1,11 +1,11 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group;
 
-import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.GroupMembershipDao;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupMembershipService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GroupMembershipServiceImpl implements GroupMembershipService {
@@ -19,8 +19,8 @@ public class GroupMembershipServiceImpl implements GroupMembershipService {
     }
 
     @Override
-    public void sendRequest(Long groupId, Long accountId) {
-        groupMembershipDao.sendRequest(groupId, accountId);
+    public void sendRequest(Group group, Account account) {
+        groupMembershipDao.sendRequest(group, account);
     }
 
     @Override
@@ -35,14 +35,7 @@ public class GroupMembershipServiceImpl implements GroupMembershipService {
 
     @Override
     public List<Account> getIncomingRequests(Long groupId) {
-        List<Long> accountsId = groupMembershipDao.getRequests(groupId);
-        List<Account> accounts = new ArrayList<>();
-        for (Long accountId : accountsId) {
-            if (accountService.getById(accountId).isPresent()) {
-                accounts.add(accountService.getById(accountId).get());
-            }
-        }
-        return accounts;
+        return groupMembershipDao.getRequestAccounts(groupId);
     }
 
     @Override
@@ -67,26 +60,12 @@ public class GroupMembershipServiceImpl implements GroupMembershipService {
 
     @Override
     public List<Account> getRegularMembers(Long groupId) {
-        List<Long> accountsId = groupMembershipDao.getRegularMembers(groupId);
-        List<Account> groupMembers = new ArrayList<>();
-        for (Long accountId : accountsId) {
-            if (accountService.getById(accountId).isPresent()) {
-                groupMembers.add(accountService.getById(accountId).get());
-            }
-        }
-        return groupMembers;
+        return groupMembershipDao.getRegularMembers(groupId);
     }
 
     @Override
     public List<Account> getAdmins(Long groupId) {
-        List<Long> accountsId = groupMembershipDao.getAdmins(groupId);
-        List<Account> admins = new ArrayList<>();
-        for (Long accountId : accountsId) {
-            if (accountService.getById(accountId).isPresent()) {
-                admins.add(accountService.getById(accountId).get());
-            }
-        }
-        return admins;
+        return groupMembershipDao.getAdmins(groupId);
     }
 
 }

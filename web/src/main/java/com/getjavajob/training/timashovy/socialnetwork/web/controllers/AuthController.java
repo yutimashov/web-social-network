@@ -5,11 +5,13 @@ import com.getjavajob.training.timashovy.socialnetwork.domain.util.AccountRegist
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.LoginService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
-import com.getjavajob.training.timashovy.socialnetwork.web.dto.AccountDto;
-import com.getjavajob.training.timashovy.socialnetwork.web.mappers.AccountMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -78,12 +80,12 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String processAccountRegistration(@ModelAttribute AccountDto accountDto,
+    public String processAccountRegistration(@ModelAttribute Account account,
                                              @RequestParam("password") String password,
                                              @RequestParam("personalPhones") String personalPhones,
                                              @RequestParam("workingPhones") String workingPhones) {
         accountService.create(new AccountRegistrationData.Builder()
-                .account(new AccountMapper().toAccount(accountDto))
+                .account(account)
                 .password(password)
                 .personalPhoneNumber(personalPhones)
                 .workPhoneNumber(workingPhones)

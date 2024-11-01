@@ -27,11 +27,11 @@ public class PersonalMessageDaoImpl implements BaseDao<PersonalMessage> {
     }
 
     @Override
-    public Optional<PersonalMessage> get(PersonalMessage personalMessage) {
+    public Optional<PersonalMessage> getById(Long id) {
         try {
             PersonalMessage existingMessage = entityManager.createQuery(
                             "select pm from PersonalMessage pm where pm.id = :messageId", PersonalMessage.class)
-                    .setParameter("messageId", personalMessage.getId())
+                    .setParameter("messageId", id)
                     .getSingleResult();
             return Optional.ofNullable(existingMessage);
         } catch (NoResultException e) {
@@ -68,11 +68,11 @@ public class PersonalMessageDaoImpl implements BaseDao<PersonalMessage> {
     }
 
     @Override
-    public boolean delete(PersonalMessage personalMessage) {
+    public boolean deleteById(Long id) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            PersonalMessage existingPersonalMessage = entityManager.find(PersonalMessage.class, personalMessage.getId());
+            PersonalMessage existingPersonalMessage = entityManager.find(PersonalMessage.class, id);
             if (!isNull(existingPersonalMessage)) {
                 entityManager.remove(existingPersonalMessage);
                 transaction.commit();

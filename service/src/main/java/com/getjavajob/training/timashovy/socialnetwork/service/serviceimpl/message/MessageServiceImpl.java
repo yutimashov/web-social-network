@@ -1,23 +1,26 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.message;
 
-import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.domain.message.Message;
+import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.GroupMessageDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.PersonalMessageDaoImpl;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.MessageDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.PersonalWallMessageDaoImpl;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.message.GroupMessage;
+import com.getjavajob.training.timashovy.socialnetwork.domain.message.Message;
+import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalMessage;
+import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalWallMessage;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MessageServiceImpl implements MessageService {
 
-    private final MessageDao groupMessageDao;
-    private final MessageDao accountWallMessageDao;
+    private final GroupMessageDaoImpl groupMessageDao;
+    private final PersonalWallMessageDaoImpl accountWallMessageDao;
     private final PersonalMessageDaoImpl personalMessageDao;
     private final AccountService accountService;
 
-    public MessageServiceImpl(MessageDao groupMessageDao, MessageDao accountWallMessageDao,
+    public MessageServiceImpl(GroupMessageDaoImpl groupMessageDao, PersonalWallMessageDaoImpl accountWallMessageDao,
                               PersonalMessageDaoImpl personalMessageDao, AccountService accountService) {
         this.groupMessageDao = groupMessageDao;
         this.accountWallMessageDao = accountWallMessageDao;
@@ -26,18 +29,18 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Long createGroupMessage(Message message) {
-        return groupMessageDao.create(message);
+    public Long createGroupMessage(GroupMessage groupMessage) {
+        return groupMessageDao.create(groupMessage);
     }
 
     @Override
-    public Long createPersonalWallMessage(Message message) {
-        return accountWallMessageDao.create(message);
+    public Long createPersonalWallMessage(PersonalWallMessage personalWallMessage) {
+        return accountWallMessageDao.create(personalWallMessage);
     }
 
     @Override
-    public Long createPersonalMessage(Message message) {
-        return personalMessageDao.create(message);
+    public Long createPersonalMessage(PersonalMessage personalMessage) {
+        return personalMessageDao.create(personalMessage);
     }
 
     @Override
@@ -70,29 +73,22 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<Message> getAllGroupMessages(Long groupId) {
+    public List<GroupMessage> getAllGroupMessages(Long groupId) {
         return groupMessageDao.getAll(groupId);
     }
 
     @Override
-    public List<Message> getAllAccountWallMessages(Long destinationId) {
+    public List<PersonalWallMessage> getAllAccountWallMessages(Long destinationId) {
         return accountWallMessageDao.getAll(destinationId);
     }
 
     @Override
     public List<Account> getAllAccountsWithPersonalMessages(Long accountId) {
-        List<Long> personalMessageAccountsIds = personalMessageDao.getAllAccountsIds(accountId);
-        List<Account> accounts = new ArrayList<>();
-        for (Long personalMessageAccountsId : personalMessageAccountsIds) {
-            if (accountService.getById(personalMessageAccountsId).isPresent()) {
-                accounts.add(accountService.getById(personalMessageAccountsId).get());
-            }
-        }
-        return accounts;
+        return personalMessageDao.getAllAccounts(accountId);
     }
 
     @Override
-    public List<Message> getAllPersonalMessagesWithAccount(Long authorId, Long receiverId) {
+    public List<PersonalMessage> getAllPersonalMessagesWithAccount(Long authorId, Long receiverId) {
         return personalMessageDao.getAllPersonalMessagesWithAccount(authorId, receiverId);
     }
 

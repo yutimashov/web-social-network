@@ -32,7 +32,7 @@ public class LoginServiceImpl implements LoginService {
         String dbPasswordValue = dbPassword.getPassword();
         String verifyingSaltedPasswordValue = hashCredentialData(password, dbPassword.getSalt());
         return dbPasswordValue.equals(verifyingSaltedPasswordValue)
-                ? accountService.getById(dbPassword.getAccountId()) : empty();
+                ? accountService.getById(dbPassword.getAccount().getId()) : empty();
     }
 
 }

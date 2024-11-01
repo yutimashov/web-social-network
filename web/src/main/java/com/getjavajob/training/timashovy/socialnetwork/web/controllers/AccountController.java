@@ -9,11 +9,14 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.Accoun
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AdminService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneService;
-import com.getjavajob.training.timashovy.socialnetwork.web.dto.AccountDto;
-import com.getjavajob.training.timashovy.socialnetwork.web.mappers.AccountMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -87,9 +90,9 @@ public class AccountController {
     }
 
     @PostMapping("/edit")
-    public String processAccountEditing(@ModelAttribute AccountDto accountDto, @RequestParam("id") Long accountId,
+    public String processAccountEditing(@ModelAttribute Account account, @RequestParam("id") Long accountId,
                                         HttpServletRequest req) throws IOException {
-        accountService.update(accountId, new AccountMapper().toAccount(accountDto));
+        accountService.update(accountId, account);
         addPhones(req, accountId);
         updatePhones(req);
         deletePhones(req);
@@ -100,7 +103,7 @@ public class AccountController {
         JsonNode rootNode = getRootNode(req);
         JsonNode deletedNode = rootNode.get("deletedPhonesIds");
         for (int i = 0; i < deletedNode.size(); i++) {
-            phoneService.deleteById(deletedNode.get(i).asLong());
+            phoneService.delete(deletedNode.get(i).asLong());
         }
     }
 
@@ -118,10 +121,10 @@ public class AccountController {
         JsonNode personalAddedNode = addedNode.get("personal");
         JsonNode workingAddedNode = addedNode.get("working");
         for (JsonNode phoneNode : personalAddedNode) {
-            phoneService.create(new Phone(PERSONAL, phoneNode.get("number").asText(), accountId));
+            phoneService.create(new Phone(PERSONAL, phoneNode.get("number").asText(), accountService.getById(accountId).get()));
         }
         for (JsonNode phoneNode : workingAddedNode) {
-            phoneService.create(new Phone(WORKING, phoneNode.get("number").asText(), accountId));
+            phoneService.create(new Phone(WORKING, phoneNode.get("number").asText(), accountService.getById(accountId).get()));
         }
     }
 

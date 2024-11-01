@@ -1,13 +1,19 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.controllers;
 
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.message.GroupMessage;
+import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalMessage;
+import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalWallMessage;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
-import com.getjavajob.training.timashovy.socialnetwork.web.dto.MessageDto;
-import com.getjavajob.training.timashovy.socialnetwork.web.mappers.MessageMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import java.io.IOException;
 
@@ -41,27 +47,25 @@ public class MessageController {
     }
 
     @PostMapping("/group/message/create")
-    public String createGroupMessage(@ModelAttribute MessageDto messageDto, @RequestParam("groupId") long groupId,
+    public String createGroupMessage(@ModelAttribute GroupMessage groupMessage, @RequestParam("groupId") long groupId,
                                      @SessionAttribute("account") Account account) throws IOException {
-        messageService.createGroupMessage(new MessageMapper().toMessage(messageDto, account.getId(), groupId));
+        messageService.createGroupMessage(groupMessage);
         return "redirect:/group?id=" + groupId;
     }
 
     @PostMapping("/account-wall/message/create")
-    public String createAccountWallMessage(@ModelAttribute MessageDto messageDto,
+    public String createAccountWallMessage(@ModelAttribute PersonalWallMessage personalWallMessage,
                                            @RequestParam("accountReceiverId") long accountReceiverId,
                                            @SessionAttribute("account") Account account) throws IOException {
-        messageService.createPersonalWallMessage(new MessageMapper().toMessage(messageDto, account.getId(),
-                accountReceiverId));
+        messageService.createPersonalWallMessage(personalWallMessage);
         return "redirect:/account?id=" + accountReceiverId;
     }
 
     @PostMapping("/account/messages/create")
-    public String createPersonalMessage(@ModelAttribute MessageDto messageDto,
+    public String createPersonalMessage(@ModelAttribute PersonalMessage personalMessage,
                                         @RequestParam("accountReceiverId") long accountReceiverId,
                                         @SessionAttribute("account") Account account) throws IOException {
-        messageService.createPersonalMessage(new MessageMapper().toMessage(messageDto, account.getId(),
-                accountReceiverId));
+        messageService.createPersonalMessage(personalMessage);
         return "redirect:/account/messages/dialog?id=" + accountReceiverId;
     }
 

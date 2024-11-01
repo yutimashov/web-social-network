@@ -5,7 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class MessageDto {
 
     private Long accountAuthorId;
-    private MessageType messageType;
+//    private MessageType messageType;
     private Long destinationId;
     private String text;
     private MultipartFile photo;
@@ -21,13 +21,13 @@ public class MessageDto {
         this.accountAuthorId = accountAuthorId;
     }
 
-    public MessageType getMessageType() {
-        return messageType;
-    }
-
-    public void setMessageType(MessageType messageType) {
-        this.messageType = messageType;
-    }
+//    public MessageType getMessageType() {
+//        return messageType;
+//    }
+//
+//    public void setMessageType(MessageType messageType) {
+//        this.messageType = messageType;
+//    }
 
     public Long getDestinationId() {
         return destinationId;
