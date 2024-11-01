@@ -28,7 +28,7 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public Optional<Account> getLoggedInAccount(String email, String password) {
-        logger.info("going to login");
+        logger.info("going to get loggedIn account with password = {} and email = {}", password, email);
         if (isNull(email) || isNull(password)) {
             return empty();
         }
