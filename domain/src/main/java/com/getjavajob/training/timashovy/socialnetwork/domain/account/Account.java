@@ -2,6 +2,7 @@ package com.getjavajob.training.timashovy.socialnetwork.domain.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.domain.password.Password;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -69,6 +70,7 @@ public class Account {
     private AccountRole role;
 
     @Lob
+    @Type(type="org.hibernate.type.BinaryType")
     private byte[] avatar;
 
     @OneToMany(mappedBy = "account", cascade = ALL, orphanRemoval = true)
