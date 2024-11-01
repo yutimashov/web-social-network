@@ -91,21 +91,20 @@ public class PersonalMessageDaoImpl implements BaseDao<PersonalMessage> {
 
     public List<Account> getAllAccounts(Long accountId) {
         return entityManager.createQuery(
-                        "select distinct pm.accountAuthorId from PersonalMessage pm "
-                                + "where pm.destinationId = :accountId "
-                                + "union select distinct pm.destinationId from PersonalMessage pm "
-                                + "where pm.accountAuthorId = :accountId",
+                        "select distinct a from Account a " +
+                                "join PersonalMessage pm on (pm.accountAuthorId = a.id or pm.destinationId = a.id) " +
+                                "where pm.accountAuthorId = :accountId or pm.destinationId = :accountId",
                         Account.class
                 )
+                .setParameter("accountId", accountId)
                 .getResultList();
     }
 
     public List<PersonalMessage> getAllPersonalMessagesWithAccount(Long authorId, Long receiverId) {
         return entityManager.createQuery(
-                        "select pm from PersonalMessage pm where pm.accountAuthorId = :authorId "
-                                + "and pm.destinationId = :receiverId "
-                                + "union select pm from PersonalMessage pm where pm.accountAuthorId = :receiverId "
-                                + "and pm.destinationId = :authorId",
+                        "select pm from PersonalMessage pm where " +
+                                "(pm.accountAuthorId = :authorId and pm.destinationId = :receiverId) " +
+                                "or (pm.accountAuthorId = :receiverId and pm.destinationId = :authorId)",
                         PersonalMessage.class
                 )
                 .setParameter("authorId", authorId)

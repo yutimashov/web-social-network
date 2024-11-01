@@ -1,5 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.domain.message;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -21,6 +23,7 @@ public abstract class Message {
     private String text;
 
     @Lob
+    @Type(type = "org.hibernate.type.BinaryType")
     @Column(name = "message_image")
     private byte[] photo;
 
