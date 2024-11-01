@@ -6,6 +6,7 @@ import com.getjavajob.training.timashovy.socialnetwork.domain.password.Password;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import java.util.Optional;
 
 /**
@@ -25,14 +26,11 @@ public class PasswordDaoImpl implements PasswordDao {
     }
 
     @Override
-    public Optional<Password> getById(Long accountId) {
+    public Optional<Password> getById(Long id) {
         try {
-            Password password = entityManager.createQuery(
-                            "select p from Password p where p.account.id = :accountId", Password.class)
-                    .setParameter("accountId", accountId)
-                    .getSingleResult();
-            return Optional.ofNullable(password);
-        } catch (NoResultException e) {
+            Password existingPassword = entityManager.find(Password.class, id);
+            return Optional.ofNullable(existingPassword);
+        } catch (PersistenceException e) {
             return Optional.empty();
         }
     }
