@@ -85,19 +85,19 @@
                         <!-- Phones -->
                         <div class="row gx-3">
                             <!-- Personal phones -->
-                            <c:if test="${not empty requestScope.account.personalPhoneNumber}">
+                            <c:if test="${not empty requestScope.personalPhones}">
                                 <div class="col-md-6">
                                     <p>Personal phones:</p>
-                                    <c:forEach var="phone" items="${requestScope.account.personalPhoneNumber}">
+                                    <c:forEach var="phone" items="${requestScope.personalPhones}">
                                         <p><i class="fa-solid fa-phone"></i>&nbsp;&nbsp;${phone.number}</p>
                                     </c:forEach>
                                 </div>
                             </c:if>
                             <!-- Working phones -->
-                            <c:if test="${not empty requestScope.account.workPhoneNumber}">
+                            <c:if test="${not empty requestScope.workingPhones}">
                                 <div class="col-md-6">
                                     <p>Working phones:</p>
-                                    <c:forEach var="phone" items="${requestScope.account.workPhoneNumber}">
+                                    <c:forEach var="phone" items="${requestScope.workingPhones}">
                                         <p><i class="fa-solid fa-phone"></i>&nbsp;&nbsp;${phone.number}</p>
                                     </c:forEach>
                                 </div>

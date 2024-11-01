@@ -49,6 +49,8 @@ public class AccountController {
             model.addAttribute("account", accountService.getById(accountId).get());
             model.addAttribute("wallPosts", messageService.getAllAccountWallMessages(accountId));
             model.addAttribute("accountService", accountService);
+            model.addAttribute("personalPhones", phoneService.getPersonalPhoneNumbers(accountId));
+            model.addAttribute("workingPhones", phoneService.getWorkPhoneNumbers(accountId));
         }
         return "account/account";
     }
