@@ -24,15 +24,17 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public Optional<Account> getLoggedInAccount(String email, String password) {
-        Optional<Password> accountPasswordOptional = passwordService.findPasswordByEmail(email);
-        if (isNull(email) || isNull(password) || !accountPasswordOptional.isPresent()) {
+        if (isNull(email) || isNull(password)) {
             return empty();
         }
-        Password dbPassword = accountPasswordOptional.get();
-        String dbPasswordValue = dbPassword.getPassword();
-        String verifyingSaltedPasswordValue = hashCredentialData(password, dbPassword.getSalt());
-        return dbPasswordValue.equals(verifyingSaltedPasswordValue)
-                ? accountService.getById(dbPassword.getAccount().getId()) : empty();
+        Optional<Password> accountPassword = passwordService.findPasswordByEmail(email);
+        if (!accountPassword.isPresent()) {
+            return empty();
+        }
+        Password dbPassword = accountPassword.get();
+        return dbPassword.getPasswordValue().equals(hashCredentialData(password, dbPassword.getSalt()))
+                ? accountService.getById(dbPassword.getId())
+                : empty();
     }
 
 }

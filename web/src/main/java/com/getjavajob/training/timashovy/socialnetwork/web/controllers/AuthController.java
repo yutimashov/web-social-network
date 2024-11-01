@@ -64,7 +64,7 @@ public class AuthController {
     private void createRememberMeCookies(Account account, HttpServletResponse resp) {
         prepareCookie(resp, "login", account.getEmail());
         if (passwordService.get(account.getId()).isPresent()) {
-            prepareCookie(resp, "password", passwordService.get(account.getId()).get().getPassword());
+            prepareCookie(resp, "password", passwordService.get(account.getId()).get().getPasswordValue());
         }
     }
 

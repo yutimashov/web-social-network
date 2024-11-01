@@ -23,13 +23,13 @@ public class Password {
     private Account account;
 
     @Column(name = "hash_password")
-    private String password;
+    private String passwordValue;
 
     private String salt;
 
     public Password(Account account, String password, String salt) {
         this.account = account;
-        this.password = password;
+        this.passwordValue = password;
         this.salt = salt;
     }
 
@@ -44,12 +44,12 @@ public class Password {
         this.id = id;
     }
 
-    public String getPassword() {
-        return password;
+    public String getPasswordValue() {
+        return passwordValue;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPasswordValue(String password) {
+        this.passwordValue = password;
     }
 
     public String getSalt() {
@@ -74,17 +74,17 @@ public class Password {
         if (o == null || getClass() != o.getClass()) return false;
         Password password1 = (Password) o;
         return Objects.equals(id, password1.id) && Objects.equals(account, password1.account)
-                & Objects.equals(password, password1.password) && Objects.equals(salt, password1.salt);
+                & Objects.equals(passwordValue, password1.passwordValue) && Objects.equals(salt, password1.salt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, account, password, salt);
+        return Objects.hash(id, account, passwordValue, salt);
     }
 
     @Override
     public String toString() {
-        return "Password{id=" + id + ", account=" + account + ", password=" + password + ", salt=" + salt + "}";
+        return "Password{id=" + id + ", account=" + account + ", password=" + passwordValue + ", salt=" + salt + "}";
     }
 
 }
