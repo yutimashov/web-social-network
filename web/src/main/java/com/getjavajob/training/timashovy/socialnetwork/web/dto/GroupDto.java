@@ -8,7 +8,8 @@ public class GroupDto {
     private String description;
     private MultipartFile avatar;
 
-    public GroupDto() {}
+    public GroupDto() {
+    }
 
     public String getGroupName() {
         return groupName;
@@ -32,6 +33,15 @@ public class GroupDto {
 
     public void setAvatar(MultipartFile avatar) {
         this.avatar = avatar;
+    }
+
+    @Override
+    public String toString() {
+        return "GroupDto{" +
+                "groupName='" + groupName + '\'' +
+                ", description='" + description + '\'' +
+                ", avatar=" + avatar +
+                '}';
     }
 
 }

@@ -3,7 +3,15 @@ package com.getjavajob.training.timashovy.socialnetwork.domain.group;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.GroupMessage;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,6 +51,9 @@ public class Group {
     @OneToMany(mappedBy = "group", cascade = ALL, orphanRemoval = true)
     private List<GroupMessage> messages = new ArrayList<>();
 
+    @Lob
+    private byte[] avatar;
+
     public void addMessage(GroupMessage message) {
         messages.add(message);
         message.setGroup(this);
@@ -53,10 +64,7 @@ public class Group {
         message.setGroup(null);
     }
 
-    @Lob
-    private byte[] avatar;
-
-    protected Group() {
+    public Group() {
     }
 
     private Group(Builder builder) {

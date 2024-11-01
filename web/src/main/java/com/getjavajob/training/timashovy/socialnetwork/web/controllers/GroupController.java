@@ -6,6 +6,8 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.Accoun
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupMembershipService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
+import com.getjavajob.training.timashovy.socialnetwork.web.dto.GroupDto;
+import com.getjavajob.training.timashovy.socialnetwork.web.mappers.GroupMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,8 +54,7 @@ public class GroupController extends HttpServlet {
     }
 
     @GetMapping("/accept-request")
-    public String acceptRequest(@RequestParam("groupId") long groupId,
-                                @RequestParam("accountId") long accountId) {
+    public String acceptRequest(@RequestParam("groupId") long groupId, @RequestParam("accountId") long accountId) {
         groupMembershipService.makeMember(groupId, accountId);
         return "redirect:/group?id=" + groupId;
     }
@@ -64,9 +65,11 @@ public class GroupController extends HttpServlet {
     }
 
     @PostMapping("/create")
-    public String processGroupCreation(@ModelAttribute Group group,
-                                       @SessionAttribute("account") Account account) throws IOException {
+    public String processGroupCreation(@ModelAttribute GroupDto groupDto, @SessionAttribute("account") Account account)
+            throws IOException {
+        System.out.println(groupDto);
         Long accountId = account.getId();
+        Group group = new GroupMapper().toGroup(groupDto, account);
         Long groupId = groupService.create(group);
         groupMembershipService.sendRequest(group, account);
         groupMembershipService.makeMember(groupId, accountId);
