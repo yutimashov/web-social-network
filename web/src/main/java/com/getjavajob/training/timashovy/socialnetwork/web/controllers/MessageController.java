@@ -3,9 +3,10 @@ package com.getjavajob.training.timashovy.socialnetwork.web.controllers;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.GroupMessage;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalMessage;
-import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalWallMessage;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
+import com.getjavajob.training.timashovy.socialnetwork.web.dto.MessageDto;
+import com.getjavajob.training.timashovy.socialnetwork.web.mappers.MessageMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,10 +55,11 @@ public class MessageController {
     }
 
     @PostMapping("/account-wall/message/create")
-    public String createAccountWallMessage(@ModelAttribute PersonalWallMessage personalWallMessage,
+    public String createAccountWallMessage(@ModelAttribute MessageDto messageDto,
                                            @RequestParam("accountReceiverId") long accountReceiverId,
                                            @SessionAttribute("account") Account account) throws IOException {
-        messageService.createPersonalWallMessage(personalWallMessage);
+        messageService.createPersonalWallMessage(new MessageMapper().toMessage(messageDto, account.getId(),
+                accountReceiverId));
         return "redirect:/account?id=" + accountReceiverId;
     }
 
