@@ -70,7 +70,7 @@ public class Account {
     private AccountRole role;
 
     @Lob
-    @Type(type="org.hibernate.type.BinaryType")
+    @Type(type = "org.hibernate.type.BinaryType")
     private byte[] avatar;
 
     @OneToMany(mappedBy = "account", cascade = ALL, orphanRemoval = true)
