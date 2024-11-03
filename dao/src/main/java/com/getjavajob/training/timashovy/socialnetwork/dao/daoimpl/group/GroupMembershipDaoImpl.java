@@ -5,12 +5,7 @@ import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 import com.getjavajob.training.timashovy.socialnetwork.domain.group.GroupMember;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceException;
+import javax.persistence.*;
 import java.util.List;
 
 public class GroupMembershipDaoImpl implements GroupMembershipDao {
@@ -98,13 +93,12 @@ public class GroupMembershipDaoImpl implements GroupMembershipDao {
     @Override
     public boolean isAdmin(Long groupId, Long accountId) {
         try {
-            Boolean isAdmin = entityManager.createQuery(
-                            "select gm.admin from GroupMember gm where gm.group.id = :groupId "
-                                    + "and gm.account.id = :accountId", Boolean.class)
+            return entityManager.createQuery(
+                            "select 1 from GroupMember gm where gm.group.id = :groupId "
+                                    + "and gm.account.id = :accountId and gm.admin = true", Integer.class)
                     .setParameter("groupId", groupId)
                     .setParameter("accountId", accountId)
-                    .getSingleResult();
-            return Boolean.TRUE.equals(isAdmin);
+                    .getSingleResult() != 0;
         } catch (NoResultException e) {
             return false;
         }
@@ -115,10 +109,10 @@ public class GroupMembershipDaoImpl implements GroupMembershipDao {
         try {
             return entityManager.createQuery(
                             "select 1 from GroupMember gm where gm.group.id = :groupId "
-                                    + "and gm.account.id = :accountId", Boolean.class)
+                                    + "and gm.account.id = :accountId", Integer.class)
                     .setParameter("groupId", groupId)
                     .setParameter("accountId", accountId)
-                    .getSingleResult();
+                    .getSingleResult() != 0;
         } catch (NoResultException e) {
             return false;
         }
@@ -129,10 +123,10 @@ public class GroupMembershipDaoImpl implements GroupMembershipDao {
         try {
             return entityManager.createQuery(
                             "select 1 from GroupMember gm where gm.group.id = :groupId "
-                                    + "and gm.account.id = :accountId and gm.member = true", Boolean.class)
+                                    + "and gm.account.id = :accountId and gm.member = true", Integer.class)
                     .setParameter("groupId", groupId)
                     .setParameter("accountId", accountId)
-                    .getSingleResult();
+                    .getSingleResult() != 0;
         } catch (NoResultException e) {
             return false;
         }

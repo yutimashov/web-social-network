@@ -25,7 +25,7 @@
                 </c:choose>
             </div>
             <div class="col-md-10 col-sm-10">
-                <h5><a href="${pageContext.request.contextPath}/group?id=${group.id}">${group.groupName}</a></h5>
+                <h5><a href="${pageContext.request.contextPath}/group?id=${group.id}">${group.name}</a></h5>
                 <p>${group.description}</p>
             </div>
         </div>

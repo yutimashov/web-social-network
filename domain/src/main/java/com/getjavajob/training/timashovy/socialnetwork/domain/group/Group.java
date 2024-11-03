@@ -2,16 +2,9 @@ package com.getjavajob.training.timashovy.socialnetwork.domain.group;
 
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.GroupMessage;
+import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -52,6 +45,7 @@ public class Group {
     private List<GroupMessage> messages = new ArrayList<>();
 
     @Lob
+    @Type(type = "org.hibernate.type.BinaryType")
     private byte[] avatar;
 
     public void addMessage(GroupMessage message) {

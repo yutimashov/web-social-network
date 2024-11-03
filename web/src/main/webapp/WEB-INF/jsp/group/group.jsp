@@ -10,7 +10,7 @@
 <body>
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <div class="container-xl mt-4">
-    <h2>${requestScope.group.groupName}</h2>
+    <h2>${requestScope.group.name}</h2>
     <p>${requestScope.group.description}</p>
     <c:if test="${not empty requestScope.avatarInputStream}">
         <img src="${rootUrl}/group/avatar?id=${requestScope.group.id}" alt="Group avatar" width="250px" height="250px">

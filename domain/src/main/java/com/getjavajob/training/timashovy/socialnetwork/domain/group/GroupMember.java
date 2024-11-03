@@ -9,7 +9,7 @@ import java.util.Objects;
 import static javax.persistence.GenerationType.SEQUENCE;
 
 @Entity
-@Table(name = "group_members")
+@Table(name = "group_members", schema = "group_data")
 public class GroupMember {
 
     @Id
