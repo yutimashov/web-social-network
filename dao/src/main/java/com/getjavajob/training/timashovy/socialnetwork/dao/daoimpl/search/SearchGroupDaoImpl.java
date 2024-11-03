@@ -29,15 +29,15 @@ public class SearchGroupDaoImpl implements SearchDao<Group> {
     }
 
     @Override
-    public int findResultsAmount(String searchQuery) {
+    public Long findResultsAmount(String searchQuery) {
         try {
             return entityManager.createQuery(
                             "select count(*) from Group g where lower(g.name) ilike lower(:searchQuery)",
-                            Integer.class)
+                            Long.class)
                     .setParameter("searchQuery", "%" + searchQuery + "%")
                     .getSingleResult();
         } catch (NonUniqueResultException e) {
-            return -1;
+            return -1L;
         }
     }
 

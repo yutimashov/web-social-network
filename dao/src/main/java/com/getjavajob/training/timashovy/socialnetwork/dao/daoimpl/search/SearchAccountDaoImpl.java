@@ -28,16 +28,16 @@ public class SearchAccountDaoImpl implements SearchDao<Account> {
     }
 
     @Override
-    public int findResultsAmount(String searchQuery) {
+    public Long findResultsAmount(String searchQuery) {
         try {
             return entityManager.createQuery(
                             "select count(*) from Account a where a.firstName like lower(:searchQuery) "
-                                    + "or lower(a.lastName) like lower(:sesrchQuery)",
-                            Integer.class)
+                                    + "or lower(a.lastName) like lower(:searchQuery)",
+                            Long.class)
                     .setParameter("searchQuery", searchQuery)
                     .getSingleResult();
         } catch (NonUniqueResultException e) {
-            return -1;
+            return -1L;
         }
     }
 

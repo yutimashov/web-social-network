@@ -28,7 +28,7 @@ public class SearchController {
         model.addAttribute("searchQuery", searchQuery);
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("searchType", searchType);
-        int numberOfPages = 0;
+        long numberOfPages = 0;
         if (ACCOUNT_SEARCH_TYPE.equals(searchType)) {
             numberOfPages = handleAccountSearch(searchQuery, currentPage, model);
         } else if ("group".equals(searchType)) {
@@ -39,18 +39,18 @@ public class SearchController {
         return "/search/result";
     }
 
-    private int handleAccountSearch(String searchQuery, int currentPage, Model model) {
+    private Long handleAccountSearch(String searchQuery, int currentPage, Model model) {
         model.addAttribute("accounts", searchService.findAccounts(searchQuery, currentPage, RESULTS_PER_PAGE));
         return calculateNumberOfPages(searchService.findAccountResultsAmount(searchQuery));
     }
 
-    private int handleGroupSearch(String searchQuery, int currentPage, Model model) {
+    private Long handleGroupSearch(String searchQuery, int currentPage, Model model) {
         model.addAttribute("groups", searchService.findGroups(searchQuery, currentPage, RESULTS_PER_PAGE));
         return calculateNumberOfPages(searchService.findGroupResultsAmount(searchQuery));
     }
 
-    private int calculateNumberOfPages(int totalResults) {
-        return (int) Math.ceil((double) totalResults / RESULTS_PER_PAGE);
+    private Long calculateNumberOfPages(long totalResults) {
+        return (long) Math.ceil((double) totalResults / RESULTS_PER_PAGE);
     }
 
     @GetMapping("/search_ajax")

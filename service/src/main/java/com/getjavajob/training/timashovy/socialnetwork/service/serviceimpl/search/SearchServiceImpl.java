@@ -23,12 +23,12 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public int findAccountResultsAmount(String searchQuery) {
+    public Long findAccountResultsAmount(String searchQuery) {
         return searchAccountDao.findResultsAmount(searchQuery);
     }
 
     @Override
-    public int findGroupResultsAmount(String searchQuery) {
+    public Long findGroupResultsAmount(String searchQuery) {
         return searchGroupDao.findResultsAmount(searchQuery);
     }
 
