@@ -65,7 +65,7 @@
                         <div>
                             <form action="${pageContext.request.contextPath}/account/messages/create" method="POST"
                                   enctype="multipart/form-data">
-                                <input type="hidden" name="accountReceiverId" value="${param.id}">
+                                <input type="hidden" name="destinationId" value="${param.id}">
                                 <textarea class="form-control bg-body-tertiary" id="text" name="text"
                                           rows="4"></textarea>
                                 <label class="form-label" for="text"></label>

@@ -7,6 +7,8 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.Accoun
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
 import com.getjavajob.training.timashovy.socialnetwork.web.dto.MessageDto;
 import com.getjavajob.training.timashovy.socialnetwork.web.mappers.MessageMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +26,7 @@ public class MessageController {
 
     private final AccountService accountService;
     private final MessageService messageService;
+    private final static Logger logger = LoggerFactory.getLogger(MessageController.class);
 
     public MessageController(AccountService accountService, MessageService messageService) {
         this.accountService = accountService;
@@ -65,10 +68,11 @@ public class MessageController {
 
     @PostMapping("/account/messages/create")
     public String createPersonalMessage(@ModelAttribute PersonalMessage personalMessage,
-                                        @RequestParam("accountReceiverId") long accountReceiverId,
+                                        @RequestParam("destinationId") long destinationId,
                                         @SessionAttribute("account") Account account) throws IOException {
+        logger.info("Creating personal message: {}", personalMessage);
         messageService.createPersonalMessage(personalMessage);
-        return "redirect:/account/messages/dialog?id=" + accountReceiverId;
+        return "redirect:/account/messages/dialog?id=" + destinationId;
     }
 
 }

@@ -10,6 +10,7 @@ import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalMe
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalWallMessage;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -33,6 +34,7 @@ public class MessageServiceImpl implements MessageService {
         return groupMessageDao.create(groupMessage);
     }
 
+    @Transactional
     @Override
     public Long createPersonalWallMessage(PersonalWallMessage personalWallMessage) {
         return accountWallMessageDao.create(personalWallMessage);

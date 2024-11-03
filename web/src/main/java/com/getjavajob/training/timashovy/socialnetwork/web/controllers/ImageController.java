@@ -29,14 +29,12 @@ public class ImageController {
     private final AccountService accountService;
     private final GroupService groupService;
     private final MessageService messageService;
-    private final MessageServiceImpl messageServiceImpl;
 
     public ImageController(AccountService accountService, GroupService groupService,
-                           MessageService messageService, MessageServiceImpl messageServiceImpl) {
+                           MessageService messageService) {
         this.accountService = accountService;
         this.groupService = groupService;
         this.messageService = messageService;
-        this.messageServiceImpl = messageServiceImpl;
     }
 
     @GetMapping("/account/avatar")
@@ -71,7 +69,7 @@ public class ImageController {
 
     @GetMapping("/account-wall/image")
     public ResponseEntity<InputStreamSource> accountPostImage(@RequestParam("id") long id) {
-        return createImageResponse(new ByteArrayInputStream(messageServiceImpl.getAccountWallMessageById(id).getPhoto()));
+        return createImageResponse(new ByteArrayInputStream(messageService.getAccountWallMessageById(id).getPhoto()));
     }
 
     private ResponseEntity<InputStreamSource> createImageResponse(InputStream inputStream) {
