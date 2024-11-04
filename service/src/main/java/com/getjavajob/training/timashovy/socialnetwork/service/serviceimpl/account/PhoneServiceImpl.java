@@ -4,8 +4,8 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.Ph
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneService;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.PERSONAL;
@@ -20,24 +20,22 @@ public class PhoneServiceImpl implements PhoneService {
         this.phoneDao = phoneDao;
     }
 
+    @Transactional
     @Override
-    public List<Phone> createPersonalPhones(Account account, String phoneNumbers) {
-        List<Phone> phones = new ArrayList<>();
+    public void createPersonalPhones(Account account, String phoneNumbers) {
         String[] phoneNumbersSeparated = phoneNumbers.split(",");
         for (String phoneNumberSeparated : phoneNumbersSeparated) {
-            phones.add(new Phone(PERSONAL, phoneNumberSeparated, account));
+            phoneDao.create(new Phone(PERSONAL, phoneNumberSeparated, account));
         }
-        return phones;
     }
 
+    @Transactional
     @Override
-    public List<Phone> createWorkingPhones(Account account, String phoneNumbers) {
-        List<Phone> phones = new ArrayList<>();
+    public void createWorkingPhones(Account account, String phoneNumbers) {
         String[] phoneNumbersSeparated = phoneNumbers.split(",");
         for (String phoneNumberSeparated : phoneNumbersSeparated) {
-            phones.add(new Phone(WORKING, phoneNumberSeparated, account));
+            phoneDao.create(new Phone(WORKING, phoneNumberSeparated, account));
         }
-        return phones;
     }
 
     @Override

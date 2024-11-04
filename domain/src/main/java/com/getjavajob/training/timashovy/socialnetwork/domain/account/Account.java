@@ -23,7 +23,7 @@ import static java.util.Objects.hash;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.LAZY;
-import static javax.persistence.GenerationType.SEQUENCE;
+import static javax.persistence.GenerationType.IDENTITY;
 
 /**
  * Model of Account entity in application.
@@ -37,7 +37,7 @@ import static javax.persistence.GenerationType.SEQUENCE;
 public class Account {
 
     @Id
-    @GeneratedValue(strategy = SEQUENCE)
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @Column(name = "first_name")
@@ -76,10 +76,10 @@ public class Account {
     @OneToMany(mappedBy = "account", cascade = ALL, orphanRemoval = true)
     private List<Phone> phones = new ArrayList<>();
 
-    @OneToOne(mappedBy = "account", cascade = ALL, fetch = LAZY, optional = false)
+    @OneToOne(mappedBy = "account", cascade = ALL, fetch = LAZY)
     private Password password;
 
-    protected Account() {
+    public Account() {
     }
 
     private Account(Builder builder) {
@@ -230,6 +230,14 @@ public class Account {
         phone.setAccount(null);
     }
 
+    public Password getPassword() {
+        return password;
+    }
+
+    public void setPassword(Password password) {
+        this.password = password;
+    }
+
     public Long getId() {
         return id;
     }
@@ -340,14 +348,6 @@ public class Account {
 
     public void setAvatar(byte[] avatar) {
         this.avatar = avatar;
-    }
-
-    public Password getPassword() {
-        return password;
-    }
-
-    public void setPassword(Password password) {
-        this.password = password;
     }
 
     @Override

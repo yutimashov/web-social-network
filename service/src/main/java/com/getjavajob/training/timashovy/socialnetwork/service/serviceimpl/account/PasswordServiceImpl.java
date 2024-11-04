@@ -4,6 +4,7 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.Pa
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.password.Password;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -18,10 +19,11 @@ public class PasswordServiceImpl implements PasswordService {
         this.passwordDao = passwordDao;
     }
 
+    @Transactional
     @Override
-    public Password create(Account account, String rawPassword) {
+    public Long create(Account account, String rawPassword) {
         String salt = generateSalt();
-        return new Password(account, hashCredentialData(rawPassword, salt), salt);
+        return passwordDao.create(new Password(account, hashCredentialData(rawPassword, salt), salt));
     }
 
     @Override

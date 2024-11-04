@@ -2,12 +2,19 @@ package com.getjavajob.training.timashovy.socialnetwork.domain.phone;
 
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.util.Objects;
 
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.LAZY;
-import static javax.persistence.GenerationType.SEQUENCE;
+import static javax.persistence.GenerationType.IDENTITY;
 
 /**
  * Class describe information about phone entity.
@@ -20,7 +27,7 @@ import static javax.persistence.GenerationType.SEQUENCE;
 public class Phone {
 
     @Id
-    @GeneratedValue(strategy = SEQUENCE)
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @Enumerated(STRING)

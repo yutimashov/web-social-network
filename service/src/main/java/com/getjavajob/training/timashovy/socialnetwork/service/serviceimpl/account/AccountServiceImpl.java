@@ -7,12 +7,11 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipDao;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole;
-import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
-import com.getjavajob.training.timashovy.socialnetwork.domain.util.AccountRegistrationData;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneService;
 import com.getjavajob.training.timashovy.socialnetwork.service.util.exceptions.ServiceException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,24 +49,10 @@ public class AccountServiceImpl implements AccountService {
      *
      * @param accountRegisterData object which data will be inserted in db as new account
      */
+    @Transactional
     @Override
-    public void create(AccountRegistrationData accountRegisterData) {
-        Long accountId = accountDao.create(accountRegisterData.getAccount());
-        passwordDao.create(passwordService.create(accountRegisterData.getAccount(), accountRegisterData.getPassword()));
-        if (!accountRegisterData.getPersonalPhoneNumbers().isEmpty()) {
-            List<Phone> personalPhones = phoneService.createPersonalPhones(accountRegisterData.getAccount(),
-                    accountRegisterData.getPersonalPhoneNumbers());
-            for (Phone personalPhone : personalPhones) {
-                phoneDao.create(personalPhone);
-            }
-        }
-        if (!accountRegisterData.getWorkingPhoneNumbers().isEmpty()) {
-            List<Phone> workingPhones = phoneService.createWorkingPhones(accountRegisterData.getAccount(),
-                    accountRegisterData.getWorkingPhoneNumbers());
-            for (Phone workingPhone : workingPhones) {
-                phoneDao.create(workingPhone);
-            }
-        }
+    public Long create(Account account) {
+        return accountDao.create(account);
     }
 
     @Override
