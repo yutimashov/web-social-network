@@ -4,7 +4,6 @@ import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.LoginService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
-import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneService;
 import com.getjavajob.training.timashovy.socialnetwork.web.dto.AccountDto;
 import com.getjavajob.training.timashovy.socialnetwork.web.mappers.AccountMapper;
 import org.slf4j.Logger;
@@ -32,16 +31,13 @@ public class AuthController {
     private final LoginService loginService;
     private final PasswordService passwordService;
     private final AccountService accountService;
-    private final PhoneService phoneService;
 
     private final static Logger logger = LoggerFactory.getLogger(AccountController.class);
 
-    public AuthController(LoginService loginService, PasswordService passwordService, AccountService accountService,
-                          PhoneService phoneService) {
+    public AuthController(LoginService loginService, PasswordService passwordService, AccountService accountService) {
         this.loginService = loginService;
         this.passwordService = passwordService;
         this.accountService = accountService;
-        this.phoneService = phoneService;
     }
 
     @GetMapping("/login")
@@ -50,8 +46,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam String email, @RequestParam String password,
-                        @RequestParam Optional<String> rememberMe, Model model,
+    public String login(@RequestParam String email,
+                        @RequestParam String password,
+                        @RequestParam Optional<String> rememberMe,
+                        Model model,
                         HttpServletResponse resp) {
         Optional<Account> loggedInAccount = loginService.getLoggedInAccount(email, password);
         if (loggedInAccount.isPresent()) {

@@ -70,6 +70,10 @@
                                         <label for="password" class="form-label">Password</label>
                                     </div>
                                 </div>
+                                <div class="form-check" style="padding-left: 40px;">
+                                    <input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe">
+                                    <label class="form-check-label" for="rememberMe">Remember me</label>
+                                </div>
                                 <div class="col-12">
                                     <div class="d-grid my-3">
                                         <button class="btn btn-primary btn-lg" type="submit">Log in</button>
