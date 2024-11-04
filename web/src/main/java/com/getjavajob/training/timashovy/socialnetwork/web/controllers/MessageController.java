@@ -2,7 +2,6 @@ package com.getjavajob.training.timashovy.socialnetwork.web.controllers;
 
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.GroupMessage;
-import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalMessage;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
 import com.getjavajob.training.timashovy.socialnetwork.web.dto.MessageDto;
@@ -67,11 +66,11 @@ public class MessageController {
     }
 
     @PostMapping("/account/messages/create")
-    public String createPersonalMessage(@ModelAttribute PersonalMessage personalMessage,
+    public String createPersonalMessage(@ModelAttribute MessageDto messageDto,
                                         @RequestParam("destinationId") long destinationId,
                                         @SessionAttribute("account") Account account) throws IOException {
-        logger.info("Creating personal message: {}", personalMessage);
-        messageService.createPersonalMessage(personalMessage);
+        messageService.createPersonalMessage(new MessageMapper().toPersonalMessage(messageDto, account.getId(),
+                destinationId));
         return "redirect:/account/messages/dialog?id=" + destinationId;
     }
 

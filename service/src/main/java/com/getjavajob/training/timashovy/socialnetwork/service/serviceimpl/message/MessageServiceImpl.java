@@ -40,6 +40,7 @@ public class MessageServiceImpl implements MessageService {
         return accountWallMessageDao.create(personalWallMessage);
     }
 
+    @Transactional
     @Override
     public Long createPersonalMessage(PersonalMessage personalMessage) {
         return personalMessageDao.create(personalMessage);
