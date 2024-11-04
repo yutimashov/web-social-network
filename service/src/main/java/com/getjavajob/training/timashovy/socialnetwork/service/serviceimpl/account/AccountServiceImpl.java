@@ -46,9 +46,12 @@ public class AccountServiceImpl implements AccountService {
 
     @Transactional
     @Override
-    public Long create(Account account, String password) {
+    public Long create(Account account, String password, String personalPhones, String workingPhones) {
         Long accountId = accountDao.create(account);
         passwordService.create(account, password);
+        System.out.println(account);
+        phoneService.createPersonalPhones(account, personalPhones);
+        phoneService.createWorkingPhones(account, workingPhones);
         return accountId;
     }
 

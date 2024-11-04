@@ -50,11 +50,6 @@ public class Phone {
         this.account = account;
     }
 
-    public Phone(Long id, PhoneType type, String number, Account account) {
-        this(type, number, account);
-        this.id = id;
-    }
-
     public Long getId() {
         return id;
     }

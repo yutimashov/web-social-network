@@ -8,11 +8,10 @@ import java.util.Optional;
 
 /**
  * Interface contains all methods for organizing logic in communication with {@link Account} entity in application.
- *
  */
 public interface AccountService {
 
-    Long create(Account account, String password);
+    Long create(Account account, String password, String personalPhones, String workingPhones);
 
     void update(Long accountId, Account updatedAccount);
 
