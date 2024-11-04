@@ -48,7 +48,6 @@ public class AuthController {
     public String login(@RequestParam String email, @RequestParam String password,
                         @RequestParam Optional<String> rememberMe, Model model,
                         HttpServletResponse resp) {
-        logger.info("going to get loggedIn account with password = {} and email = {}", password, email);
         Optional<Account> loggedInAccount = loginService.getLoggedInAccount(email, password);
         if (loggedInAccount.isPresent()) {
             Account account = loggedInAccount.get();
