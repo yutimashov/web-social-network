@@ -29,6 +29,7 @@ public class MessageServiceImpl implements MessageService {
         this.accountService = accountService;
     }
 
+    @Transactional
     @Override
     public Long createGroupMessage(GroupMessage groupMessage) {
         return groupMessageDao.create(groupMessage);
