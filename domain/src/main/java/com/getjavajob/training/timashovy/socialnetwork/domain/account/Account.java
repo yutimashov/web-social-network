@@ -1,18 +1,9 @@
 package com.getjavajob.training.timashovy.socialnetwork.domain.account;
 
-import com.getjavajob.training.timashovy.socialnetwork.domain.password.Password;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,7 +14,6 @@ import static com.getjavajob.training.timashovy.socialnetwork.domain.account.Acc
 import static java.util.Objects.hash;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
-import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 /**
@@ -77,9 +67,6 @@ public class Account {
     @OneToMany(mappedBy = "account", cascade = ALL, orphanRemoval = true)
     private List<Phone> phones = new ArrayList<>();
 
-    @OneToOne(mappedBy = "account", cascade = ALL, fetch = LAZY)
-    private Password password;
-
     public Account() {
     }
 
@@ -98,7 +85,6 @@ public class Account {
         additionalInfo = builder.additionalInfo;
         role = builder.role;
         avatar = builder.avatar;
-        password = builder.password;
     }
 
     public static class Builder {
@@ -117,7 +103,6 @@ public class Account {
         private String additionalInfo;
         private AccountRole role;
         private byte[] avatar;
-        private Password password;
 
         public Builder() {
         }
@@ -137,7 +122,6 @@ public class Account {
             this.additionalInfo = account.getAdditionalInfo();
             this.role = account.getRole();
             this.avatar = account.getAvatar();
-            this.password = password;
         }
 
         public Builder id(Long id) {
@@ -210,11 +194,6 @@ public class Account {
             return this;
         }
 
-        public Builder password(Password password) {
-            this.password = password;
-            return this;
-        }
-
         public Account build() {
             return new Account(this);
         }
@@ -229,14 +208,6 @@ public class Account {
     public void removePhone(Phone phone) {
         phones.remove(phone);
         phone.setAccount(null);
-    }
-
-    public Password getPassword() {
-        return password;
-    }
-
-    public void setPassword(Password password) {
-        this.password = password;
     }
 
     public Long getId() {
@@ -367,7 +338,7 @@ public class Account {
                 && Objects.equals(workAddress, account.workAddress) && Objects.equals(email, account.email)
                 && Objects.equals(icq, account.icq) && Objects.equals(skype, account.skype)
                 && Objects.equals(additionalInfo, account.additionalInfo) && Objects.equals(role, account.role)
-                && Arrays.equals(avatar, account.avatar) && Objects.equals(password, account.password);
+                && Arrays.equals(avatar, account.avatar);
     }
 
     @Override
@@ -381,7 +352,7 @@ public class Account {
         return "Account {id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", middleName="
                 + middleName + ", birthDate=" + birthDate + ", phones=" + phones + ", personalAddress="
                 + personalAddress + ", workAddress=" + workAddress + ", email=" + email + ", icq=" + icq + ", skype="
-                + skype + ", additionalInfo=" + additionalInfo + ", role= " + role + " password= " + password + " }";
+                + skype + ", additionalInfo=" + additionalInfo + ", role= " + role + " }";
     }
 
 }

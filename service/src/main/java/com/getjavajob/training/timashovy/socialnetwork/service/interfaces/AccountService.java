@@ -12,7 +12,7 @@ import java.util.Optional;
  */
 public interface AccountService {
 
-    Long create(Account account);
+    Long create(Account account, String password);
 
     void update(Long accountId, Account updatedAccount);
 

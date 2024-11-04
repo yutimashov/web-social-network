@@ -20,6 +20,7 @@ public class Password {
 
     @OneToOne(fetch = LAZY)
     @MapsId
+    @JoinColumn(name = "id")
     private Account account;
 
     @Column(name = "hash_password")
@@ -27,9 +28,8 @@ public class Password {
 
     private String salt;
 
-    public Password(Account account, String password, String salt) {
-        this.account = account;
-        this.passwordValue = password;
+    public Password(String passwordValue, String salt) {
+        this.passwordValue = passwordValue;
         this.salt = salt;
     }
 

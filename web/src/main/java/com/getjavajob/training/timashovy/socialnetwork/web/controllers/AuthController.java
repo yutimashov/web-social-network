@@ -93,18 +93,12 @@ public class AuthController {
         return "auth/register";
     }
 
-    @Transactional
     @PostMapping("/register")
     public String processAccountRegistration(@ModelAttribute AccountDto accountDto,
                                              @RequestParam("password") String password,
                                              @RequestParam("personalPhones") String personalPhones,
                                              @RequestParam("workingPhones") String workingPhones) throws IOException {
-        Account account = new AccountMapper().toAccount(accountDto);
-        Long accountId = accountService.create(account);
-        account = accountService.getById(accountId).get();
-        String salt = generateSalt();
-        Password accountPassword = new Password(account, hashCredentialData(password, salt), salt);
-        account.setPassword(accountPassword);
+        accountService.create(new AccountMapper().toAccount(accountDto), password);
 //        passwordService.create(account, password);
 //        phoneService.createPersonalPhones(account, personalPhones);
 //        phoneService.createWorkingPhones(account, workingPhones);

@@ -44,15 +44,12 @@ public class AccountServiceImpl implements AccountService {
         this.passwordDao = passwordDao;
     }
 
-    /**
-     * Create new account inserting it in database with auto generated incremented key
-     *
-     * @param accountRegisterData object which data will be inserted in db as new account
-     */
     @Transactional
     @Override
-    public Long create(Account account) {
-        return accountDao.create(account);
+    public Long create(Account account, String password) {
+        Long accountId = accountDao.create(account);
+        passwordService.create(account, password);
+        return accountId;
     }
 
     @Override

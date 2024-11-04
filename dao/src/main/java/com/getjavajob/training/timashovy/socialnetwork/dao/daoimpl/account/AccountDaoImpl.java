@@ -81,9 +81,6 @@ public class AccountDaoImpl implements BaseDao<Account> {
             if (isFieldChanged(existingAccount.getPhones(), account.getPhones())) {
                 existingAccount.setPhones(account.getPhones());
             }
-            if (isFieldChanged(existingAccount.getPassword(), account.getPassword())) {
-                existingAccount.setPassword(account.getPassword());
-            }
             transaction.commit();
             return true;
         } catch (PersistenceException e) {

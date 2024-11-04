@@ -23,7 +23,9 @@ public class PasswordServiceImpl implements PasswordService {
     @Override
     public Long create(Account account, String rawPassword) {
         String salt = generateSalt();
-        return passwordDao.create(new Password(account, hashCredentialData(rawPassword, salt), salt));
+        Password password = new Password(hashCredentialData(rawPassword, salt), salt);
+        password.setAccount(account);
+        return passwordDao.create(password);
     }
 
     @Override
