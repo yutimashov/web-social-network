@@ -101,8 +101,6 @@ public class AuthController {
                                              @RequestParam("workingPhones") String workingPhones) throws IOException {
         Account account = new AccountMapper().toAccount(accountDto);
         Long accountId = accountService.create(account);
-        account.setId(accountId);
-        // Получить управляемый объект Account, если он не в управляемом состоянии
         account = accountService.getById(accountId).get();
         String salt = generateSalt();
         Password accountPassword = new Password(account, hashCredentialData(password, salt), salt);

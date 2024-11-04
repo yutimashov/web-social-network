@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import static com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole.REGULAR;
 import static java.util.Objects.hash;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
@@ -67,7 +68,7 @@ public class Account {
 
     @Enumerated(STRING)
     @Column(name = "role_type")
-    private AccountRole role;
+    private AccountRole role = REGULAR;
 
     @Lob
     @Type(type = "org.hibernate.type.BinaryType")
