@@ -160,6 +160,7 @@ public class AccountServiceImpl implements AccountService {
         return friendshipDao.acceptRequest(requesterId, accepterId);
     }
 
+    @Transactional
     @Override
     public boolean deleteFriend(Long accountId, Long deletingFriendId) {
         validateAccountId(accountId);
