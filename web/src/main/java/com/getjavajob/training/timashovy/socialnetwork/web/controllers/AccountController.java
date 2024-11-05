@@ -62,10 +62,11 @@ public class AccountController {
     }
 
     @GetMapping("/delete")
-    public String deleteAccount(@RequestParam("id") long id, @SessionAttribute Account account) {
-        Long accountIdToDelete = id;
-        accountService.delete(accountIdToDelete);
-        if (!Objects.equals(account.getId(), accountIdToDelete)) {
+    public String deleteAccount(@RequestParam("id") long id,
+                                @SessionAttribute Account account) {
+        Long accountToDeleteId = id;
+        accountService.delete(accountToDeleteId);
+        if (!Objects.equals(account.getId(), accountToDeleteId)) {
             return "redirect:/account/all";
         } else {
             return "redirect:/login" + DELETE_ACCOUNT_SUCCESS.getValue();

@@ -1,7 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.interfaces;
 
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,8 +29,6 @@ public interface AccountService {
     List<Account> getIncomingFriendRequests(Long accountId);
 
     List<Account> getOutgoingFriendRequests(Long accountId);
-
-    void updateRole(Long accountId, AccountRole role);
 
     boolean checkFriendshipRecordExistence(Long requesterId, Long accepterId);
 

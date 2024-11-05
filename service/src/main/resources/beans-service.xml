@@ -35,7 +35,7 @@
 
     <bean id="adminService"
           class="com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AdminServiceImpl">
-        <constructor-arg ref="accountService"/>
+        <constructor-arg ref="accountDao"/>
     </bean>
 
     <bean id="messageService"

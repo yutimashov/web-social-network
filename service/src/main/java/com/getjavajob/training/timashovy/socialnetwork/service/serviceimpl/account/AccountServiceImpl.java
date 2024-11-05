@@ -6,7 +6,6 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.Ph
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipCheckerDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipDao;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneService;
@@ -102,16 +101,6 @@ public class AccountServiceImpl implements AccountService {
     private <T> void validateAccountFieldNotNull(T fieldName) {
         if (isNull(fieldName)) {
             throw new IllegalArgumentException("updating field should not be null");
-        }
-    }
-
-    @Override
-    public void updateRole(Long accountId, AccountRole role) {
-        validateAccountId(accountId);
-        validateAccountFieldNotNull(role);
-        if (accountDao.getById(accountId).isPresent()) {
-            accountDao.updateById(accountId,
-                    new Account.Builder(accountDao.getById(accountId).get()).role(role).build());
         }
     }
 
