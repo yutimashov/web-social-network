@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
-import java.io.IOException;
-
 @Controller
 @RequestMapping
 public class MessageController {
@@ -53,7 +51,7 @@ public class MessageController {
     @PostMapping("/group/message/create")
     public String createGroupMessage(@ModelAttribute MessageDto messageDto,
                                      @RequestParam("groupId") long groupId,
-                                     @SessionAttribute("account") Account account) throws IOException {
+                                     @SessionAttribute("account") Account account) {
         messageService.createGroupMessage(new MessageMapper().toGroupMessage(messageDto, account.getId(), groupId));
         return "redirect:/group?id=" + groupId;
     }
@@ -61,7 +59,7 @@ public class MessageController {
     @PostMapping("/account-wall/message/create")
     public String createAccountWallMessage(@ModelAttribute MessageDto messageDto,
                                            @RequestParam("accountReceiverId") long accountReceiverId,
-                                           @SessionAttribute("account") Account account) throws IOException {
+                                           @SessionAttribute("account") Account account) {
         messageService.createPersonalWallMessage(new MessageMapper().toPersonalWallMessage(messageDto, account.getId(),
                 accountReceiverId));
         return "redirect:/account?id=" + accountReceiverId;
@@ -70,7 +68,7 @@ public class MessageController {
     @PostMapping("/account/messages/create")
     public String createPersonalMessage(@ModelAttribute MessageDto messageDto,
                                         @RequestParam("destinationId") long destinationId,
-                                        @SessionAttribute("account") Account account) throws IOException {
+                                        @SessionAttribute("account") Account account) {
         messageService.createPersonalMessage(new MessageMapper().toPersonalMessage(messageDto, account.getId(),
                 destinationId));
         return "redirect:/account/messages/dialog?id=" + destinationId;
