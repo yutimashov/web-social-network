@@ -52,8 +52,10 @@ public class AccountController {
             model.addAttribute("accountService", accountService);
             model.addAttribute("personalPhones", phoneService.getPersonalPhoneNumbers(accountId));
             model.addAttribute("workingPhones", phoneService.getWorkPhoneNumbers(accountId));
+            return "account/account";
+        } else {
+            return "error/404";
         }
-        return "account/account";
     }
 
     @GetMapping("/all")
