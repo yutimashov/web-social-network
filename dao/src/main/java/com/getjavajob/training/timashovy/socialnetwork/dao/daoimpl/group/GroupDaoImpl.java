@@ -73,11 +73,8 @@ public class GroupDaoImpl implements BaseDao<Group> {
     @Override
     public Optional<Group> getById(Long groupId) {
         try {
-            Group group = entityManager.createQuery(
-                            "select g from Group g where g.id = :groupId", Group.class)
-                    .setParameter("groupId", groupId)
-                    .getSingleResult();
-            return Optional.ofNullable(group);
+            Group existingGroup = entityManager.find(Group.class, groupId);
+            return Optional.ofNullable(existingGroup);
         } catch (NoResultException e) {
             return Optional.empty();
         }

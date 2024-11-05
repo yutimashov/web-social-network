@@ -12,10 +12,10 @@
 <div class="container-xl mt-4">
     <h2>${requestScope.group.name}</h2>
     <p>${requestScope.group.description}</p>
-    <c:if test="${not empty requestScope.avatarInputStream}">
+    <c:if test="${not empty requestScope.group.avatar}">
         <img src="${rootUrl}/group/avatar?id=${requestScope.group.id}" alt="Group avatar" width="250px" height="250px">
     </c:if>
-    <c:if test="${empty requestScope.avatarInputStream}">
+    <c:if test="${empty requestScope.group.avatar}">
         <img src="${rootUrl}/static/img/img-coming-soon-placeholder.png" alt="Group avatar placeholder">
     </c:if><br>
     <hr>

@@ -45,7 +45,8 @@ public class AccountController {
     }
 
     @GetMapping
-    public String account(@RequestParam("id") long accountId, Model model) {
+    public String account(@RequestParam("id") Long accountId,
+                          Model model) {
         if (accountService.getById(accountId).isPresent()) {
             model.addAttribute("account", accountService.getById(accountId).get());
             model.addAttribute("wallPosts", messageService.getAllAccountWallMessages(accountId));

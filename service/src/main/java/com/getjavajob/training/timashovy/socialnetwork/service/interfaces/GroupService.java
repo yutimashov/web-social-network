@@ -14,5 +14,4 @@ public interface GroupService {
 
     Optional<Group> getById(Long groupId);
 
-
 }

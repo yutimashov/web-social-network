@@ -1,7 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.controllers;
 
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupMembershipService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupService;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import javax.servlet.http.HttpServlet;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/group")
@@ -38,13 +36,11 @@ public class GroupController extends HttpServlet {
     }
 
     @GetMapping
-    public String group(@RequestParam("groupId") Long groupId,
+    public String group(@RequestParam("id") Long groupId,
                         @SessionAttribute("account") Account account,
                         Model model) {
-        Optional<Group> group = groupService.getById(groupId);
-        if (group.isPresent()) {
-            model.addAttribute("group", group.get());
-            model.addAttribute("avatarInputStream", group.get().getAvatar());
+        if (groupService.getById(groupId).isPresent()) {
+            model.addAttribute("group", groupService.getById(groupId).get());
             Long accountId = account.getId();
             model.addAttribute("isAdmin", groupMembershipService.isAdmin(groupId, accountId));
             model.addAttribute("isSubscriber", groupMembershipService.isSubscriber(groupId, accountId));
