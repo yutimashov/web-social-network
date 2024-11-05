@@ -10,6 +10,8 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.Accoun
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneService;
 import com.getjavajob.training.timashovy.socialnetwork.service.util.exceptions.ServiceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -30,6 +32,7 @@ public class AccountServiceImpl implements AccountService {
     private final PhoneDao phoneDao;
     private final PasswordService passwordService;
     private final PasswordDao passwordDao;
+    private static final Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class);
 
     public AccountServiceImpl(BaseDao<Account> accountDao, FriendshipDao friendshipDao,
                               FriendshipCheckerDao friendshipCheckerDao, PhoneService phoneService, PhoneDao phoneDao,
@@ -134,11 +137,13 @@ public class AccountServiceImpl implements AccountService {
      * @param accepterId  if of account, who is addresses of friendship request
      * @return whether two account becomes friends
      */
+    @Transactional
     @Override
     public boolean addFriend(Long requesterId, Long accepterId) {
         validateAccountId(requesterId);
         validateAccountId(accepterId);
         if (requesterId.equals(accepterId)) {
+            logger.error("account with id = {} is going to accept friend request with itself", requesterId);
             throw new IllegalArgumentException("Account cannot send friend request to themselves");
         }
         if (!friendshipCheckerDao.checkFriendshipRecordExistence(requesterId, accepterId)) {
@@ -146,8 +151,12 @@ public class AccountServiceImpl implements AccountService {
             return true;
         }
         if (friendshipCheckerDao.checkUsersAreFriends(requesterId, accepterId)) {
+            logger.error("account with id = {} is going to make friendship with account with id = {}. " +
+                    "But friendship already existed", requesterId, accepterId);
             return false;
         }
+        logger.info("going to make friendship: requester with id = {} and accepter with id = {}", requesterId,
+                accepterId);
         return friendshipDao.acceptRequest(requesterId, accepterId);
     }
 
