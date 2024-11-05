@@ -20,28 +20,31 @@ public class FriendshipController {
     }
 
     @GetMapping("/accept-request")
-    public String acceptRequest(@SessionAttribute("account") Account account,
-                                @RequestParam("id") long requesterAccountId) {
+    public String acceptRequest(@SessionAttribute Account account,
+                                @RequestParam("id") Long requesterAccountId) {
         accountService.addFriend(requesterAccountId, account.getId());
         return "redirect:/friends?id=" + account.getId();
     }
 
     @GetMapping("/delete")
-    public String delete(@SessionAttribute("account") Account account, @RequestParam("id") long id) {
+    public String delete(@SessionAttribute("account") Account account,
+                         @RequestParam("id") Long id) {
         Long accountId = account.getId();
         accountService.deleteFriend(accountId, id);
         return "redirect:/account?id=" + accountId;
     }
 
     @GetMapping("/send-request")
-    protected String sendRequest(@SessionAttribute("account") Account account, @RequestParam("id") long id) {
+    protected String sendRequest(@SessionAttribute("account") Account account,
+                                 @RequestParam("id") Long id) {
         Long requesterAccountId = account.getId();
         accountService.addFriend(requesterAccountId, id);
         return "redirect:/account?id=" + requesterAccountId;
     }
 
     @GetMapping()
-    public String showAllFriends(Model model, @RequestParam("id") long id) {
+    public String showAllFriends(Model model,
+                                 @RequestParam("id") Long id) {
         model.addAttribute("friends", accountService.getFriends(id));
         return "friendship/friends";
     }
@@ -52,14 +55,17 @@ public class FriendshipController {
     }
 
     @GetMapping("/requests/incoming")
-    public String showIncomingRequests(@SessionAttribute("account") Account account, Model model) {
+    public String showIncomingRequests(@SessionAttribute("account") Account account,
+                                       Model model) {
         model.addAttribute("friendRequests", accountService.getIncomingFriendRequests(account.getId()));
         return "friendship/requests/incoming";
     }
 
     @GetMapping("/requests/outgoing")
-    public String showOutgoingRequests(@SessionAttribute("account") Account account, Model model) {
-        model.addAttribute("outgoingFriendRequests", accountService.getOutgoingFriendRequests(account.getId()));
+    public String showOutgoingRequests(@SessionAttribute("account") Account account,
+                                       Model model) {
+        model.addAttribute("outgoingFriendRequests", accountService
+                .getOutgoingFriendRequests(account.getId()));
         return "friendship/requests/outgoing";
     }
 
