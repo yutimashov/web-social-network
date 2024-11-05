@@ -73,14 +73,15 @@ public class GroupController extends HttpServlet {
     }
 
     @GetMapping({"/decline-request", "/delete-member"})
-    public String deleteGroupMember(@RequestParam("groupId") long groupId,
-                                    @RequestParam("accountId") long accountId) {
+    public String deleteGroupMember(@RequestParam("groupId") Long groupId,
+                                    @RequestParam("accountId") Long accountId) {
         groupMembershipService.deleteMember(groupId, accountId);
         return "redirect:/group?id=" + groupId;
     }
 
     @GetMapping("/members")
-    public String groupMembers(@RequestParam("id") long groupId, Model model) {
+    public String groupMembers(@RequestParam("id") Long groupId,
+                               Model model) {
         if (groupService.getById(groupId).isPresent()) {
             model.addAttribute("group", groupService.getById(groupId).get());
             model.addAttribute("groupMembers", groupMembershipService.getRegularMembers(groupId));
@@ -90,7 +91,8 @@ public class GroupController extends HttpServlet {
     }
 
     @GetMapping("/requests")
-    public String requests(@RequestParam("id") long groupId, Model model) {
+    public String requests(@RequestParam("id") Long groupId,
+                           Model model) {
         model.addAttribute("groupRequests", groupMembershipService.getIncomingRequests(groupId));
         model.addAttribute("groupId", groupId);
         return "group/requests";
@@ -103,14 +105,16 @@ public class GroupController extends HttpServlet {
     }
 
     @GetMapping("/make-admin")
-    public String makeAdmin(@RequestParam("groupId") long groupId, @RequestParam("accountId") long accountId) {
+    public String makeAdmin(@RequestParam("groupId") Long groupId,
+                            @RequestParam("accountId") Long accountId) {
         groupMembershipService.makeAdmin(groupId, accountId);
         return "redirect:/group?id=" + groupId;
     }
 
     @GetMapping("/send-request")
-    public String sendRequest(@RequestParam("id") long id, @SessionAttribute("account") Account account) {
-        groupMembershipService.sendRequest(groupService.getById(id).get(), account);
+    public String sendRequest(@RequestParam("id") Long groupId,
+                              @SessionAttribute("account") Account account) {
+        groupMembershipService.sendRequest(groupId, account.getId());
         return "redirect:/account?id=" + account.getId();
     }
 

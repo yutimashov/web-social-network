@@ -56,6 +56,7 @@
           class="com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group.GroupMembershipServiceImpl">
         <constructor-arg ref="accountService"/>
         <constructor-arg ref="groupMembershipDao"/>
+        <constructor-arg ref="groupService"/>
     </bean>
 
     <bean id="searchService"
