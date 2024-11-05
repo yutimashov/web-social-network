@@ -5,7 +5,6 @@ import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import java.util.List;
@@ -33,67 +32,50 @@ public class AccountDaoImpl implements BaseDao<Account> {
 
     @Override
     public boolean updateById(Long id, Account account) {
-        if (isNull(account)) {
+        Account existingAccount = entityManager.find(Account.class, id);
+        if (isNull(existingAccount)) {
             return false;
         }
-        EntityTransaction transaction = entityManager.getTransaction();
-        try {
-            transaction.begin();
-            Account existingAccount = entityManager.find(Account.class, id);
-            if (isNull(existingAccount)) {
-                return false;
-            }
-            if (isFieldChanged(existingAccount.getFirstName(), account.getFirstName())) {
-                existingAccount.setFirstName(account.getFirstName());
-            }
-            if (isFieldChanged(existingAccount.getLastName(), account.getLastName())) {
-                existingAccount.setLastName(account.getLastName());
-            }
-            if (isFieldChanged(existingAccount.getMiddleName(), account.getMiddleName())) {
-                existingAccount.setMiddleName(account.getMiddleName());
-            }
-            if (isFieldChanged(existingAccount.getBirthDate(), account.getBirthDate())) {
-                existingAccount.setBirthDate(account.getBirthDate());
-            }
-            if (isFieldChanged(existingAccount.getPersonalAddress(), account.getPersonalAddress())) {
-                existingAccount.setPersonalAddress(account.getPersonalAddress());
-            }
-            if (isFieldChanged(existingAccount.getWorkAddress(), account.getWorkAddress())) {
-                existingAccount.setWorkAddress(account.getWorkAddress());
-            }
-            if (isFieldChanged(existingAccount.getEmail(), account.getEmail())) {
-                existingAccount.setEmail(account.getEmail());
-            }
-            if (isFieldChanged(existingAccount.getIcq(), account.getIcq())) {
-                existingAccount.setIcq(account.getIcq());
-            }
-            if (isFieldChanged(existingAccount.getSkype(), account.getSkype())) {
-                existingAccount.setSkype(account.getSkype());
-            }
-            if (isFieldChanged(existingAccount.getAdditionalInfo(), account.getAdditionalInfo())) {
-                existingAccount.setAdditionalInfo(account.getAdditionalInfo());
-            }
-            if (isFieldChanged(existingAccount.getRole(), account.getRole())) {
-                existingAccount.setRole(account.getRole());
-            }
-            if (isFieldChanged(existingAccount.getAvatar(), account.getAvatar())) {
-                existingAccount.setAvatar(account.getAvatar());
-            }
-            if (isFieldChanged(existingAccount.getPhones(), account.getPhones())) {
-                existingAccount.setPhones(account.getPhones());
-            }
-            transaction.commit();
-            return true;
-        } catch (PersistenceException e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            return false;
-        } finally {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
+        if (isFieldChanged(existingAccount.getFirstName(), account.getFirstName())) {
+            existingAccount.setFirstName(account.getFirstName());
         }
+        if (isFieldChanged(existingAccount.getLastName(), account.getLastName())) {
+            existingAccount.setLastName(account.getLastName());
+        }
+        if (isFieldChanged(existingAccount.getMiddleName(), account.getMiddleName())) {
+            existingAccount.setMiddleName(account.getMiddleName());
+        }
+        if (isFieldChanged(existingAccount.getBirthDate(), account.getBirthDate())) {
+            existingAccount.setBirthDate(account.getBirthDate());
+        }
+        if (isFieldChanged(existingAccount.getPersonalAddress(), account.getPersonalAddress())) {
+            existingAccount.setPersonalAddress(account.getPersonalAddress());
+        }
+        if (isFieldChanged(existingAccount.getWorkAddress(), account.getWorkAddress())) {
+            existingAccount.setWorkAddress(account.getWorkAddress());
+        }
+        if (isFieldChanged(existingAccount.getEmail(), account.getEmail())) {
+            existingAccount.setEmail(account.getEmail());
+        }
+        if (isFieldChanged(existingAccount.getIcq(), account.getIcq())) {
+            existingAccount.setIcq(account.getIcq());
+        }
+        if (isFieldChanged(existingAccount.getSkype(), account.getSkype())) {
+            existingAccount.setSkype(account.getSkype());
+        }
+        if (isFieldChanged(existingAccount.getAdditionalInfo(), account.getAdditionalInfo())) {
+            existingAccount.setAdditionalInfo(account.getAdditionalInfo());
+        }
+        if (isFieldChanged(existingAccount.getRole(), account.getRole())) {
+            existingAccount.setRole(account.getRole());
+        }
+        if (isFieldChanged(existingAccount.getAvatar(), account.getAvatar())) {
+            existingAccount.setAvatar(account.getAvatar());
+        }
+        if (isFieldChanged(existingAccount.getPhones(), account.getPhones())) {
+            existingAccount.setPhones(account.getPhones());
+        }
+        return true;
     }
 
     private <T> boolean isFieldChanged(T oldValue, T newValue) {

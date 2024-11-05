@@ -3,6 +3,7 @@ package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.acco
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AdminService;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole.ADMIN;
 import static java.util.Objects.isNull;
@@ -15,6 +16,7 @@ public class AdminServiceImpl implements AdminService {
         this.accountDao = accountDao;
     }
 
+    @Transactional
     @Override
     public void makeAdmin(Long accountId) {
         validateAccountId(accountId);
