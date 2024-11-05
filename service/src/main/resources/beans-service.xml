@@ -49,6 +49,7 @@
     <bean id="groupService"
           class="com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group.GroupServiceImpl">
         <constructor-arg ref="groupDao"/>
+        <constructor-arg ref="groupMembershipService"/>
     </bean>
 
     <bean id="groupMembershipService"

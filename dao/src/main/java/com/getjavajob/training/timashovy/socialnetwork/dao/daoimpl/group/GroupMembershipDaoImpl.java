@@ -5,7 +5,11 @@ import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 import com.getjavajob.training.timashovy.socialnetwork.domain.group.GroupMember;
 
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import java.util.List;
 
 public class GroupMembershipDaoImpl implements GroupMembershipDao {
@@ -20,50 +24,24 @@ public class GroupMembershipDaoImpl implements GroupMembershipDao {
 
     @Override
     public void makeAdmin(Long groupId, Long accountId) {
-        EntityTransaction transaction = entityManager.getTransaction();
-        try {
-            transaction.begin();
-            try {
-                GroupMember groupMember = entityManager.createQuery("select gm from GroupMember gm "
-                                + "where gm.group.id = :groupId "
-                                + "and gm.account.id = :accountId", GroupMember.class)
-                        .setParameter("groupId", groupId)
-                        .setParameter("accountId", accountId)
-                        .getSingleResult();
-                groupMember.setAdmin(true);
-                transaction.commit();
-            } catch (NoResultException | NonUniqueResultException e) {
-                transaction.rollback();
-            }
-        } finally {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-        }
+        GroupMember groupMember = entityManager.createQuery("select gm from GroupMember gm "
+                        + "where gm.group.id = :groupId "
+                        + "and gm.account.id = :accountId", GroupMember.class)
+                .setParameter("groupId", groupId)
+                .setParameter("accountId", accountId)
+                .getSingleResult();
+        groupMember.setAdmin(true);
     }
 
     @Override
     public void makeMember(Long groupId, Long accountId) {
-        EntityTransaction transaction = entityManager.getTransaction();
-        try {
-            transaction.begin();
-            try {
-                GroupMember groupMember = entityManager.createQuery("select gm from GroupMember gm "
-                                + "where gm.group.id = :groupId "
-                                + "and gm.account.id = :accountId", GroupMember.class)
-                        .setParameter("groupId", groupId)
-                        .setParameter("accountId", accountId)
-                        .getSingleResult();
-                groupMember.setMember(true);
-                transaction.commit();
-            } catch (NoResultException e) {
-                transaction.rollback();
-            }
-        } finally {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-        }
+        GroupMember groupMember = entityManager.createQuery("select gm from GroupMember gm "
+                        + "where gm.group.id = :groupId "
+                        + "and gm.account.id = :accountId", GroupMember.class)
+                .setParameter("groupId", groupId)
+                .setParameter("accountId", accountId)
+                .getSingleResult();
+        groupMember.setMember(true);
     }
 
     @Override

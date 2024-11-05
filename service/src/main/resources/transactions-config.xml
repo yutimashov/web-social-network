@@ -27,7 +27,8 @@
     <aop:config proxy-target-class="true">
         <aop:pointcut id="accountServiceOperations"
                       expression="execution(void com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountServiceImpl.create(..))
-                                  or execution(void com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountServiceImpl.update(..))"/>
+                                  or execution(void com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountServiceImpl.update(..))
+                                    or execution(void com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group.GroupServiceImpl.create(..))"/>
         <aop:advisor advice-ref="txAdvice" pointcut-ref="accountServiceOperations"/>
     </aop:config>
 

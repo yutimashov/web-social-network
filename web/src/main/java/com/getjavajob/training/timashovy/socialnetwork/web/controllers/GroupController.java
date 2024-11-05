@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import javax.servlet.http.HttpServlet;
-import java.io.IOException;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/group")
@@ -38,23 +38,28 @@ public class GroupController extends HttpServlet {
     }
 
     @GetMapping
-    public String group(@RequestParam("id") long id, @SessionAttribute("account") Account account,
+    public String group(@RequestParam("groupId") Long groupId,
+                        @SessionAttribute("account") Account account,
                         Model model) {
-        if (groupService.getById(id).isPresent()) {
-            model.addAttribute("group", groupService.getById(id).get());
-            model.addAttribute("avatarInputStream", groupService.getById(id).get().getAvatar());
+        Optional<Group> group = groupService.getById(groupId);
+        if (group.isPresent()) {
+            model.addAttribute("group", group.get());
+            model.addAttribute("avatarInputStream", group.get().getAvatar());
             Long accountId = account.getId();
-            model.addAttribute("isAdmin", groupMembershipService.isAdmin(id, accountId));
-            model.addAttribute("isSubscriber", groupMembershipService.isSubscriber(id, accountId));
-            model.addAttribute("isMember", groupMembershipService.isMember(id, accountId));
-            model.addAttribute("groupPosts", messageService.getAllGroupMessages(id));
+            model.addAttribute("isAdmin", groupMembershipService.isAdmin(groupId, accountId));
+            model.addAttribute("isSubscriber", groupMembershipService.isSubscriber(groupId, accountId));
+            model.addAttribute("isMember", groupMembershipService.isMember(groupId, accountId));
+            model.addAttribute("groupPosts", messageService.getAllGroupMessages(groupId));
             model.addAttribute("accountService", accountService);
+            return "group/group";
+        } else {
+            return "error/404";
         }
-        return "group/group";
     }
 
     @GetMapping("/accept-request")
-    public String acceptRequest(@RequestParam("groupId") long groupId, @RequestParam("accountId") long accountId) {
+    public String acceptRequest(@RequestParam("groupId") Long groupId,
+                                @RequestParam("accountId") Long accountId) {
         groupMembershipService.makeMember(groupId, accountId);
         return "redirect:/group?id=" + groupId;
     }
@@ -65,15 +70,9 @@ public class GroupController extends HttpServlet {
     }
 
     @PostMapping("/create")
-    public String processGroupCreation(@ModelAttribute GroupDto groupDto, @SessionAttribute("account") Account account)
-            throws IOException {
-        System.out.println(groupDto);
-        Long accountId = account.getId();
-        Group group = new GroupMapper().toGroup(groupDto, account);
-        Long groupId = groupService.create(group);
-        groupMembershipService.sendRequest(group, account);
-        groupMembershipService.makeMember(groupId, accountId);
-        groupMembershipService.makeAdmin(groupId, accountId);
+    public String processGroupCreation(@ModelAttribute GroupDto groupDto,
+                                       @SessionAttribute("account") Account account) {
+        groupService.create(new GroupMapper().toGroup(groupDto, account), account);
         return "redirect:/group/all";
     }
 
