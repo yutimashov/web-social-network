@@ -33,11 +33,11 @@
                     <div class="card-header">${requestScope.account.firstName} ${requestScope.account.lastName}</div>
                     <c:if test="${sessionAccountId ne pageAccountId and empty(requestScope.alreadySentFriendRequest)}">
                         <a href="${rootUrl}/friends/send-request?id=${pageAccountId}" role="button"
-                           class="btn btn-primary bg-danger">Send friend request</a>
+                           class="btn btn-warning">Send friend request</a>
                     </c:if>
                     <c:if test="${sessionAccountId ne pageAccountId}">
                         <a href="${rootUrl}account/messages/dialog?id=${pageAccountId}" role="button"
-                           class="btn btn-primary bg-danger">Send message</a>
+                           class="btn btn-primary">Send message</a>
                     </c:if>
                     <div class="card-body">
                         <div>

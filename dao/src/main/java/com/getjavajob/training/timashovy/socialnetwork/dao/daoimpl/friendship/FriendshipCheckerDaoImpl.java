@@ -16,7 +16,7 @@ public class FriendshipCheckerDaoImpl implements FriendshipCheckerDao {
 
     @Override
     public boolean checkFriendshipRecordExistence(Long requesterId, Long accepterId) {
-        return entityManager.createQuery(
+        return !entityManager.createQuery(
                         "select 1 from Friendship f where f.firstFriendAccountId = :requesterId "
                                 + "and f.secondFriendAccountId = :accepterId"
                 )

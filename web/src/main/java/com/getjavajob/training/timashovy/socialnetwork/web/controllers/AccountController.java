@@ -46,8 +46,12 @@ public class AccountController {
 
     @GetMapping
     public String account(@RequestParam("id") Long accountId,
+                          @SessionAttribute Account account,
                           Model model) {
         if (accountService.getById(accountId).isPresent()) {
+            if (accountService.checkFriendshipRecordExistence(account.getId(), accountId)) {
+                model.addAttribute("alreadySentFriendRequest", true);
+            }
             model.addAttribute("account", accountService.getById(accountId).get());
             model.addAttribute("wallPosts", messageService.getAllAccountWallMessages(accountId));
             model.addAttribute("accountService", accountService);
