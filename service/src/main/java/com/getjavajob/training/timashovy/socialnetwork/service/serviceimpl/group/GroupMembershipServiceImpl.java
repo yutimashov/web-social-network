@@ -2,9 +2,9 @@ package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.grou
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.GroupMembershipDao;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupMembershipService;
-import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupService;
 
 import java.util.List;
 
@@ -12,18 +12,15 @@ public class GroupMembershipServiceImpl implements GroupMembershipService {
 
     private final AccountService accountService;
     private final GroupMembershipDao groupMembershipDao;
-    private final GroupService groupService;
 
-    public GroupMembershipServiceImpl(AccountService accountService, GroupMembershipDao groupMembershipDao,
-                                      GroupService groupService) {
+    public GroupMembershipServiceImpl(AccountService accountService, GroupMembershipDao groupMembershipDao) {
         this.accountService = accountService;
         this.groupMembershipDao = groupMembershipDao;
-        this.groupService = groupService;
     }
 
     @Override
-    public void sendRequest(Long groupId, Long accountId) {
-        groupMembershipDao.sendRequest(groupService.getById(groupId).get(), accountService.getById(accountId).get());
+    public void sendRequest(Group group, Account account) {
+        groupMembershipDao.sendRequest(group, account);
     }
 
     @Override

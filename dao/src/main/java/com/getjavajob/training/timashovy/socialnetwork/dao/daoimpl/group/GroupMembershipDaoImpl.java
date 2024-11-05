@@ -6,10 +6,8 @@ import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 import com.getjavajob.training.timashovy.socialnetwork.domain.group.GroupMember;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceException;
 import java.util.List;
 
 public class GroupMembershipDaoImpl implements GroupMembershipDao {
@@ -46,26 +44,13 @@ public class GroupMembershipDaoImpl implements GroupMembershipDao {
 
     @Override
     public void deleteMember(Long groupId, Long accountId) {
-        EntityTransaction transaction = entityManager.getTransaction();
-        try {
-            transaction.begin();
-            try {
-                GroupMember groupMember = entityManager.createQuery("select gm from GroupMember gm "
-                                + "where gm.group.id = :groupId "
-                                + "and gm.account.id = :accountId", GroupMember.class)
-                        .setParameter("groupId", groupId)
-                        .setParameter("accountId", accountId)
-                        .getSingleResult();
-                entityManager.remove(groupMember);
-                transaction.commit();
-            } catch (PersistenceException e) {
-                transaction.rollback();
-            }
-        } finally {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-        }
+        GroupMember groupMember = entityManager.createQuery("select gm from GroupMember gm "
+                        + "where gm.group.id = :groupId "
+                        + "and gm.account.id = :accountId", GroupMember.class)
+                .setParameter("groupId", groupId)
+                .setParameter("accountId", accountId)
+                .getSingleResult();
+        entityManager.remove(groupMember);
     }
 
     @Override
@@ -112,7 +97,8 @@ public class GroupMembershipDaoImpl implements GroupMembershipDao {
 
     @Override
     public List<Account> getRequestAccounts(Long groupId) {
-        return entityManager.createQuery("select gm.account from GroupMember gm where gm.group.id = :groupId",
+        return entityManager.createQuery("select gm.account from GroupMember gm where gm.group.id = :groupId "
+                                + "and gm.admin = false and gm.member = false",
                         Account.class)
                 .setParameter("groupId", groupId)
                 .getResultList();

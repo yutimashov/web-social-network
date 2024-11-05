@@ -23,9 +23,9 @@ public class GroupServiceImpl implements GroupService {
     @Transactional
     @Override
     public Long create(Group group, Account account) {
+        groupMembershipService.sendRequest(group, account);
         Long groupId = groupDao.create(group);
         Long accountId = account.getId();
-        groupMembershipService.sendRequest(groupId, accountId);
         groupMembershipService.makeMember(groupId, accountId);
         groupMembershipService.makeAdmin(groupId, accountId);
         return groupId;

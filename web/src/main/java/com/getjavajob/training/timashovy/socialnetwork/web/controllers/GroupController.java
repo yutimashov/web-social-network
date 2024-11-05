@@ -114,8 +114,12 @@ public class GroupController extends HttpServlet {
     @GetMapping("/send-request")
     public String sendRequest(@RequestParam("id") Long groupId,
                               @SessionAttribute("account") Account account) {
-        groupMembershipService.sendRequest(groupId, account.getId());
-        return "redirect:/account?id=" + account.getId();
+        if (groupService.getById(groupId).isPresent()) {
+            groupMembershipService.sendRequest(groupService.getById(groupId).get(), account);
+            return "redirect:/account?id=" + account.getId();
+        } else {
+            return "error/404";
+        }
     }
 
 }
