@@ -1,11 +1,15 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.filters;
 
-import javax.servlet.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.getjavajob.training.timashovy.socialnetwork.web.util.StatusTypes.AUTHORIZATION_ERROR;
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.UrlStatusParameter.AUTHORIZATION_ERROR;
 import static java.util.Objects.isNull;
 
 public class IsAuthorizedFilter implements Filter {
@@ -20,7 +24,7 @@ public class IsAuthorizedFilter implements Filter {
                 || "/register".equals(requestUri)) {
             filterChain.doFilter(req, resp);
         } else if (isNull(req.getSession().getAttribute("account"))) {
-            resp.sendRedirect("/login" + AUTHORIZATION_ERROR);
+            resp.sendRedirect("/login" + AUTHORIZATION_ERROR.getValue());
         } else {
             filterChain.doFilter(req, resp);
         }

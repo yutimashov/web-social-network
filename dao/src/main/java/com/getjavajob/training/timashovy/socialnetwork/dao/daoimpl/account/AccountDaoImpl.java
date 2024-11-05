@@ -2,6 +2,7 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -99,28 +100,15 @@ public class AccountDaoImpl implements BaseDao<Account> {
         return !Objects.equals(oldValue, newValue);
     }
 
+    @Transactional
     @Override
     public boolean deleteById(Long id) {
-        EntityTransaction transaction = entityManager.getTransaction();
-        try {
-            transaction.begin();
-            Account existingAccount = entityManager.find(Account.class, id);
-            if (!isNull(existingAccount)) {
-                entityManager.remove(existingAccount);
-                transaction.commit();
-                return true;
-            }
-            return false;
-        } catch (PersistenceException e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            return false;
-        } finally {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
+        Account existingAccount = entityManager.find(Account.class, id);
+        if (!isNull(existingAccount)) {
+            entityManager.remove(existingAccount);
+            return true;
         }
+        return false;
     }
 
     @Override

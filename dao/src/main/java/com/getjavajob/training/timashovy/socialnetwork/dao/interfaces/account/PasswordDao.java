@@ -12,4 +12,6 @@ public interface PasswordDao {
 
     Optional<Password> findByEmail(String email);
 
+    void deleteById(Long id);
+
 }

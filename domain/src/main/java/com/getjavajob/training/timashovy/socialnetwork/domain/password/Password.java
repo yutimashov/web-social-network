@@ -2,7 +2,13 @@ package com.getjavajob.training.timashovy.socialnetwork.domain.password;
 
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.util.Objects;
 
 import static javax.persistence.FetchType.LAZY;

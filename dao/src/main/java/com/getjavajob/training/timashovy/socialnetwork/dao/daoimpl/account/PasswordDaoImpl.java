@@ -9,6 +9,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import java.util.Optional;
 
+import static java.util.Objects.isNull;
+
 /**
  * Singleton class responsible for working with {@link com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames#ACCOUNTS_TABLE accounts table} table in DB.
  * It provides safe multithreading approach for creating singleton object using synchronization mechanism.
@@ -45,6 +47,14 @@ public class PasswordDaoImpl implements PasswordDao {
             return Optional.ofNullable(password);
         } catch (NoResultException e) {
             return Optional.empty();
+        }
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        Password existingPassword = entityManager.find(Password.class, id);
+        if (!isNull(existingPassword)) {
+            entityManager.remove(existingPassword);
         }
     }
 

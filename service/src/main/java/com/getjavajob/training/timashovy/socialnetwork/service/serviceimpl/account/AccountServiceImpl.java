@@ -115,9 +115,11 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
+    @Transactional
     @Override
     public boolean delete(Long accountId) {
         validateAccountId(accountId);
+        passwordDao.deleteById(accountId);
         return accountDao.deleteById(accountId);
     }
 

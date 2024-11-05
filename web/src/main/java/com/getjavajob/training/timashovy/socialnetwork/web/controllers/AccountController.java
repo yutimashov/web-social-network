@@ -24,7 +24,7 @@ import java.util.Objects;
 
 import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.WORKING;
-import static com.getjavajob.training.timashovy.socialnetwork.web.util.StatusTypes.DELETE_ACCOUNT_SUCCESS;
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.UrlStatusParameter.DELETE_ACCOUNT_SUCCESS;
 
 @Controller
 @RequestMapping("/account")
@@ -62,13 +62,13 @@ public class AccountController {
     }
 
     @GetMapping("/delete")
-    public String deleteAccount(@RequestParam("id") long id, @SessionAttribute("account") Account account) {
+    public String deleteAccount(@RequestParam("id") long id, @SessionAttribute Account account) {
         Long accountIdToDelete = id;
         accountService.delete(accountIdToDelete);
         if (!Objects.equals(account.getId(), accountIdToDelete)) {
             return "redirect:/account/all";
         } else {
-            return "redirect:/login" + DELETE_ACCOUNT_SUCCESS;
+            return "redirect:/login" + DELETE_ACCOUNT_SUCCESS.getValue();
         }
     }
 
