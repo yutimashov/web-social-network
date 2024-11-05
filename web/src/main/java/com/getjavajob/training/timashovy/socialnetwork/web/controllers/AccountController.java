@@ -9,6 +9,8 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.Accoun
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AdminService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneService;
+import com.getjavajob.training.timashovy.socialnetwork.web.dto.AccountDto;
+import com.getjavajob.training.timashovy.socialnetwork.web.mappers.AccountMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.Objects;
 
 import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.PERSONAL;
@@ -80,7 +81,7 @@ public class AccountController {
     }
 
     @GetMapping("/edit")
-    public String editAccount(Model model, @RequestParam("id") long accountId) {
+    public String edit(Model model, @RequestParam("id") long accountId) {
         if (accountService.getById(accountId).isPresent()) {
             model.addAttribute("account", accountService.getById(accountId).get());
             model.addAttribute("avatarInputStream", accountService.getById(accountId).get().getAvatar());
@@ -93,9 +94,10 @@ public class AccountController {
     }
 
     @PostMapping("/edit")
-    public String processAccountEditing(@ModelAttribute Account account, @RequestParam("id") Long accountId,
-                                        HttpServletRequest req) throws IOException {
-        accountService.update(accountId, account);
+    public String update(@ModelAttribute AccountDto accountDto,
+                         @RequestParam("id") Long accountId,
+                         HttpServletRequest req) {
+        accountService.update(accountId, new AccountMapper().toAccount(accountDto));
         addPhones(req, accountId);
         updatePhones(req);
         deletePhones(req);

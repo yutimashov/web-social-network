@@ -54,10 +54,11 @@ public class AccountServiceImpl implements AccountService {
         return accountId;
     }
 
+    @Transactional
     @Override
     public void update(Long accountId, Account updatedAccount) {
         Account newAccount = accountDao.getById(accountId).isPresent() ? accountDao.getById(accountId).get() : null;
-        if (newAccount == null) {
+        if (isNull(newAccount)) {
             throw new ServiceException("updating non-existing account");
         }
         if (updatedAccount.getAvatar() != null) {
@@ -84,7 +85,6 @@ public class AccountServiceImpl implements AccountService {
         if (updatedAccount.getEmail() != null && !updatedAccount.getEmail().isEmpty()) {
             newAccount.setEmail(updatedAccount.getEmail());
         }
-        accountDao.updateById(accountId, newAccount);
     }
 
     /**
