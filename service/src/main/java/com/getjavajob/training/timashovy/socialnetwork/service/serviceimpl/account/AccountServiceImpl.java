@@ -51,8 +51,12 @@ public class AccountServiceImpl implements AccountService {
     public Long create(Account account, String password, String personalPhones, String workingPhones) {
         Long accountId = accountDao.create(account);
         passwordService.create(account, password);
-        phoneService.createPersonalPhones(account, personalPhones);
-        phoneService.createWorkingPhones(account, workingPhones);
+        if (!personalPhones.isEmpty()) {
+            phoneService.createPersonalPhones(account, personalPhones);
+        }
+        if (!workingPhones.isEmpty()) {
+            phoneService.createWorkingPhones(account, workingPhones);
+        }
         return accountId;
     }
 
