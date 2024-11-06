@@ -27,7 +27,7 @@ public abstract class Message {
     @Column(name = "message_image")
     private byte[] photo;
 
-    @Column(name = "creation_date")
+    @Column(name = "creation_date", insertable = false)
     private LocalDate creationDate;
 
     protected Message() {

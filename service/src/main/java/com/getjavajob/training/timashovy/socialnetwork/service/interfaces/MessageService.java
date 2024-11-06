@@ -10,11 +10,11 @@ import java.util.List;
 
 public interface MessageService {
 
-    Long createGroupMessage(GroupMessage groupMessage);
+    void createGroupMessage(GroupMessage groupMessage);
 
-    Long createPersonalWallMessage(PersonalWallMessage personalWallMessage);
+    void createPersonalWallMessage(PersonalWallMessage personalWallMessage);
 
-    Long createPersonalMessage(PersonalMessage personalMessage);
+    void createPersonalMessage(PersonalMessage personalMessage);
 
     boolean deleteById(Long id);
 

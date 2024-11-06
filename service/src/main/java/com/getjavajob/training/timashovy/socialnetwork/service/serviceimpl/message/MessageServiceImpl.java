@@ -10,9 +10,12 @@ import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalMe
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalWallMessage;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
+import org.slf4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class MessageServiceImpl implements MessageService {
 
@@ -20,6 +23,7 @@ public class MessageServiceImpl implements MessageService {
     private final PersonalWallMessageDaoImpl accountWallMessageDao;
     private final PersonalMessageDaoImpl personalMessageDao;
     private final AccountService accountService;
+    private static final Logger logger = getLogger(MessageService.class);
 
     public MessageServiceImpl(GroupMessageDaoImpl groupMessageDao, PersonalWallMessageDaoImpl accountWallMessageDao,
                               PersonalMessageDaoImpl personalMessageDao, AccountService accountService) {
@@ -31,20 +35,22 @@ public class MessageServiceImpl implements MessageService {
 
     @Transactional
     @Override
-    public Long createGroupMessage(GroupMessage groupMessage) {
-        return groupMessageDao.create(groupMessage);
+    public void createGroupMessage(GroupMessage groupMessage) {
+        logger.info("creating group message in the group with id = {}", groupMessage.getGroup().getId());
+        groupMessageDao.create(groupMessage);
     }
 
     @Transactional
     @Override
-    public Long createPersonalWallMessage(PersonalWallMessage personalWallMessage) {
-        return accountWallMessageDao.create(personalWallMessage);
+    public void createPersonalWallMessage(PersonalWallMessage personalWallMessage) {
+        logger.info("creating personal wall message in the wall of account with id = {}", personalWallMessage.getId());
+        accountWallMessageDao.create(personalWallMessage);
     }
 
     @Transactional
     @Override
-    public Long createPersonalMessage(PersonalMessage personalMessage) {
-        return personalMessageDao.create(personalMessage);
+    public void createPersonalMessage(PersonalMessage personalMessage) {
+        personalMessageDao.create(personalMessage);
     }
 
     @Override
