@@ -6,10 +6,11 @@ import com.getjavajob.training.timashovy.socialnetwork.domain.password.Password;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceException;
 import java.util.Optional;
 
 import static java.util.Objects.isNull;
+import static java.util.Optional.empty;
+import static java.util.Optional.ofNullable;
 
 /**
  * Singleton class responsible for working with {@link com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames#ACCOUNTS_TABLE accounts table} table in DB.
@@ -23,30 +24,23 @@ public class PasswordDaoImpl implements PasswordDao {
     @Override
     public Long create(Password password) {
         entityManager.persist(password);
-        entityManager.flush();
         return password.getId();
     }
 
     @Override
     public Optional<Password> getById(Long id) {
-        try {
-            Password existingPassword = entityManager.find(Password.class, id);
-            return Optional.ofNullable(existingPassword);
-        } catch (PersistenceException e) {
-            return Optional.empty();
-        }
+        return ofNullable(entityManager.find(Password.class, id));
     }
 
     @Override
     public Optional<Password> findByEmail(String email) {
         try {
-            Password password = entityManager.createQuery(
-                            "select p from Password p where p.account.email = :email", Password.class)
+            return ofNullable(entityManager.createQuery(
+                            "select p from Password p join p.account a where a.email = :email", Password.class)
                     .setParameter("email", email)
-                    .getSingleResult();
-            return Optional.ofNullable(password);
+                    .getSingleResult());
         } catch (NoResultException e) {
-            return Optional.empty();
+            return empty();
         }
     }
 
