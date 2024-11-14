@@ -3,8 +3,6 @@ package com.getjavajob.training.timashovy.socialnetwork.web.dto;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
-
 import static com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole.REGULAR;
 
 public class AccountDto {
