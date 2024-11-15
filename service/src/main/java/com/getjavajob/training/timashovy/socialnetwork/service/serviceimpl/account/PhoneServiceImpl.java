@@ -3,6 +3,7 @@ package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.acco
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
+import com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneService;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,7 +11,6 @@ import java.util.List;
 
 import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.WORKING;
-import static java.util.stream.Collectors.toList;
 
 public class PhoneServiceImpl implements PhoneService {
 
@@ -39,20 +39,22 @@ public class PhoneServiceImpl implements PhoneService {
     }
 
     @Override
-    public List<Phone> getPersonalPhoneNumbers(Long accountId) {
-        return phoneDao.getAll(accountId).stream().filter(phone -> phone.getPhoneType() == PERSONAL).collect(toList());
+    public List<Phone> getPhones(Long accountId, PhoneType phoneType) {
+        return phoneDao.getPhones(accountId, phoneType);
     }
 
     @Override
-    public List<Phone> getWorkPhoneNumbers(Long accountId) {
-        return phoneDao.getAll(accountId).stream().filter(phone -> phone.getPhoneType() == WORKING).collect(toList());
+    public List<String> getPhoneNumbers(Long accountId, PhoneType phoneType) {
+        return phoneDao.getPhoneNumbers(accountId, phoneType);
     }
 
+    @Transactional
     @Override
     public boolean update(Long phoneId, String newPhoneNumber) {
         return phoneDao.updateNumber(phoneId, newPhoneNumber);
     }
 
+    @Transactional
     @Override
     public Long create(Phone phone) {
         return phoneDao.create(phone);

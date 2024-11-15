@@ -2,6 +2,7 @@ package com.getjavajob.training.timashovy.socialnetwork.service.interfaces;
 
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
+import com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType;
 
 import java.util.List;
 
@@ -11,9 +12,9 @@ public interface PhoneService {
 
     void createWorkingPhones(Account account, String phoneNumbers);
 
-    List<Phone> getPersonalPhoneNumbers(Long accountId);
+    List<Phone> getPhones(Long accountId, PhoneType phoneType);
 
-    List<Phone> getWorkPhoneNumbers(Long accountId);
+    List<String> getPhoneNumbers(Long accountId, PhoneType phoneType);
 
     void delete(Long phoneId);
 

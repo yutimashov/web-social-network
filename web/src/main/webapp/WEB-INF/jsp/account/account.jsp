@@ -89,7 +89,7 @@
                                 <div class="col-md-6">
                                     <p>Personal phones:</p>
                                     <c:forEach var="phone" items="${requestScope.personalPhones}">
-                                        <p><i class="fa-solid fa-phone"></i>&nbsp;&nbsp;${phone.number}</p>
+                                        <p><i class="fa-solid fa-phone"></i>&nbsp;&nbsp;${phone}</p>
                                     </c:forEach>
                                 </div>
                             </c:if>
@@ -98,7 +98,7 @@
                                 <div class="col-md-6">
                                     <p>Working phones:</p>
                                     <c:forEach var="phone" items="${requestScope.workingPhones}">
-                                        <p><i class="fa-solid fa-phone"></i>&nbsp;&nbsp;${phone.number}</p>
+                                        <p><i class="fa-solid fa-phone"></i>&nbsp;&nbsp;${phone}</p>
                                     </c:forEach>
                                 </div>
                             </c:if>

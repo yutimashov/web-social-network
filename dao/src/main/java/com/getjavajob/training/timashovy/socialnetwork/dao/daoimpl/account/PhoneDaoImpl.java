@@ -2,11 +2,10 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
+import com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceException;
 import java.util.List;
 
 import static java.util.Objects.isNull;
@@ -28,47 +27,38 @@ public class PhoneDaoImpl implements PhoneDao {
     }
 
     @Override
-    public List<Phone> getAll(Long accountId) {
-        return entityManager.createQuery("select p from Phone p where p.account.id = :accountId", Phone.class)
+    public List<Phone> getPhones(Long accountId, PhoneType phoneType) {
+        return entityManager.createQuery("select p from Phone p where p.account.id = :accountId "
+                        + "and p.phoneType = :phoneType", Phone.class)
                 .setParameter("accountId", accountId)
+                .setParameter("phoneType", phoneType)
+                .getResultList();
+    }
+
+    @Override
+    public List<String> getPhoneNumbers(Long accountId, PhoneType phoneType) {
+        return entityManager.createQuery("select p.number from Phone p where p.account.id = :accountId "
+                        + "and p.phoneType = :phoneType", String.class)
+                .setParameter("accountId", accountId)
+                .setParameter("phoneType", phoneType)
                 .getResultList();
     }
 
     @Override
     public boolean updateNumber(Long phoneId, String newNumber) {
-        EntityTransaction transaction = entityManager.getTransaction();
-        try {
-            transaction.begin();
-            Phone existingPhone = entityManager.find(Phone.class, phoneId);
-            if (isNull(existingPhone)) {
-                return false;
-            }
-            existingPhone.setNumber(newNumber);
-            return true;
-        } catch (PersistenceException e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
+        Phone existingPhone = entityManager.find(Phone.class, phoneId);
+        if (isNull(existingPhone)) {
             return false;
         }
+        existingPhone.setNumber(newNumber);
+        return true;
     }
 
     @Override
     public void delete(Long phoneId) {
-        EntityTransaction transaction = entityManager.getTransaction();
-        try {
-            transaction.begin();
-            Phone existingPhone = entityManager.find(Phone.class, phoneId);
-            if (!isNull(existingPhone)) {
-                entityManager.remove(existingPhone);
-                transaction.commit();
-            } else {
-                transaction.rollback();
-            }
-        } catch (PersistenceException e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
+        Phone existingPhone = entityManager.find(Phone.class, phoneId);
+        if (!isNull(existingPhone)) {
+            entityManager.remove(existingPhone);
         }
     }
 

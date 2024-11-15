@@ -57,8 +57,8 @@ public class AccountController {
             model.addAttribute("account", maybeAccount.get());
             model.addAttribute("wallPosts", messageService.getAllAccountWallMessages(accountId));
             model.addAttribute("accountService", accountService);
-            model.addAttribute("personalPhones", phoneService.getPersonalPhoneNumbers(accountId));
-            model.addAttribute("workingPhones", phoneService.getWorkPhoneNumbers(accountId));
+            model.addAttribute("personalPhones", phoneService.getPhoneNumbers(accountId, PERSONAL));
+            model.addAttribute("workingPhones", phoneService.getPhoneNumbers(accountId, WORKING));
             return "account/account";
         } else {
             return "error/404";
@@ -94,8 +94,8 @@ public class AccountController {
         if (accountService.getById(accountId).isPresent()) {
             model.addAttribute("account", accountService.getById(accountId).get());
             model.addAttribute("avatarInputStream", accountService.getById(accountId).get().getAvatar());
-            model.addAttribute("personalPhones", phoneService.getPersonalPhoneNumbers(accountId));
-            model.addAttribute("workingPhones", phoneService.getWorkPhoneNumbers(accountId));
+            model.addAttribute("personalPhones", phoneService.getPhones(accountId, PERSONAL));
+            model.addAttribute("workingPhones", phoneService.getPhones(accountId, WORKING));
             return "account/edit";
         } else {
             return "error/404";
