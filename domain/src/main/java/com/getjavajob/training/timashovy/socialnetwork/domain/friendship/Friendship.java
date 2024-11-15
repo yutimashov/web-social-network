@@ -6,6 +6,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
+import static javax.persistence.FetchType.LAZY;
+
 /**
  * Model of Friendship entity in application.
  * Friendship is entity created as a connection between two Accounts: requester and receiver.
@@ -30,7 +32,7 @@ public class Friendship {
     @Column(name = "id_2")
     private Long secondFriendAccountId;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "requester_id")
     private Account requester;
 

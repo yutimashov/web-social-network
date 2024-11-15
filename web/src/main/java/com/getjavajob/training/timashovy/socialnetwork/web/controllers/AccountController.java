@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.WORKING;
@@ -48,11 +49,12 @@ public class AccountController {
     public String account(@RequestParam("id") Long accountId,
                           @SessionAttribute Account account,
                           Model model) {
-        if (accountService.getById(accountId).isPresent()) {
+        Optional<Account> maybeAccount = accountService.getById(accountId);
+        if (maybeAccount.isPresent()) {
             if (accountService.checkFriendshipRecordExistence(account.getId(), accountId)) {
                 model.addAttribute("alreadySentFriendRequest", true);
             }
-            model.addAttribute("account", accountService.getById(accountId).get());
+            model.addAttribute("account", maybeAccount.get());
             model.addAttribute("wallPosts", messageService.getAllAccountWallMessages(accountId));
             model.addAttribute("accountService", accountService);
             model.addAttribute("personalPhones", phoneService.getPersonalPhoneNumbers(accountId));
