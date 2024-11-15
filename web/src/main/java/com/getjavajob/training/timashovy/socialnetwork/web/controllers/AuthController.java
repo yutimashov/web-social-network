@@ -92,6 +92,8 @@ public class AuthController {
                                              @RequestParam("password") String password,
                                              @RequestParam("personalPhones") String personalPhones,
                                              @RequestParam("workingPhones") String workingPhones) {
+        logger.debug("Register new user controller: accountDto = {}, password = {}, personalPhones = {}," +
+                " workingPhones = {}", accountDto, password, personalPhones, workingPhones);
         accountService.create(new AccountMapper().toAccount(accountDto), password, personalPhones, workingPhones);
         return "redirect:/login" + REG_SUCCESS.getValue();
     }
