@@ -3,7 +3,9 @@ package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.mess
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.GroupMessageDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.PersonalMessageDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.PersonalWallMessageDaoImpl;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.GroupMessage;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.Message;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalMessage;
@@ -23,20 +25,23 @@ public class MessageServiceImpl implements MessageService {
     private final PersonalWallMessageDaoImpl accountWallMessageDao;
     private final PersonalMessageDaoImpl personalMessageDao;
     private final AccountService accountService;
+    private final BaseDao<Group> groupDao;
     private static final Logger logger = getLogger(MessageService.class);
 
     public MessageServiceImpl(GroupMessageDaoImpl groupMessageDao, PersonalWallMessageDaoImpl accountWallMessageDao,
-                              PersonalMessageDaoImpl personalMessageDao, AccountService accountService) {
+                              PersonalMessageDaoImpl personalMessageDao, AccountService accountService,
+                              BaseDao<Group> groupDao) {
         this.groupMessageDao = groupMessageDao;
         this.accountWallMessageDao = accountWallMessageDao;
         this.personalMessageDao = personalMessageDao;
         this.accountService = accountService;
+        this.groupDao = groupDao;
     }
 
     @Transactional
     @Override
-    public void createGroupMessage(GroupMessage groupMessage) {
-        logger.info("creating group message in the group with id = {}", groupMessage.getGroup().getId());
+    public void createGroupMessage(GroupMessage groupMessage, Long groupId) {
+        groupMessage.setGroup(groupDao.getById(groupId).get());
         groupMessageDao.create(groupMessage);
     }
 

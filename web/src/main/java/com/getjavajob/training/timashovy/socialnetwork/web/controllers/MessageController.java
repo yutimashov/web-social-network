@@ -52,7 +52,7 @@ public class MessageController {
     public String createGroupMessage(@ModelAttribute MessageDto messageDto,
                                      @RequestParam("groupId") long groupId,
                                      @SessionAttribute("account") Account account) {
-        messageService.createGroupMessage(new MessageMapper().toGroupMessage(messageDto, account.getId(), groupId));
+        messageService.createGroupMessage(new MessageMapper().toGroupMessage(messageDto, account.getId()), groupId);
         return "redirect:/group?id=" + groupId;
     }
 

@@ -38,11 +38,10 @@ public class MessageMapper {
         }
     }
 
-    public GroupMessage toGroupMessage(MessageDto messageDto, Long accountAuthorId, Long destinationId) {
+    public GroupMessage toGroupMessage(MessageDto messageDto, Long accountAuthorId) {
         try {
             return new GroupMessage.Builder()
                     .accountAuthorId(accountAuthorId)
-                    .accountAuthorId(destinationId)
                     .text(messageDto.getText())
                     .photo(messageDto.getPhoto() != null && messageDto.getPhoto().getSize() > 0
                             ? messageDto.getPhoto().getBytes() : null)
