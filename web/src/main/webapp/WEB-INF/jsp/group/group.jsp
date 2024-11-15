@@ -33,7 +33,6 @@
         </a>
         <hr>
     </c:if>
-    <p>${requestScope.group.id}</p>
     <c:if test="${requestScope.isMember eq true}">
         <c:if test="${requestScope.isAdmin eq true}">
             <%-- group message --%>
