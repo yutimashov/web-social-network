@@ -13,6 +13,8 @@ import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static java.util.Objects.isNull;
+import static java.util.Optional.empty;
+import static java.util.Optional.ofNullable;
 
 /**
  * Singleton class responsible for working with {@link com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames#ACCOUNTS_TABLE accounts table}.
@@ -94,9 +96,9 @@ public class AccountDao implements AccountRepository {
     public Optional<Account> getById(Long id) {
         try {
             Account existingAccount = entityManager.find(Account.class, id);
-            return Optional.ofNullable(existingAccount);
+            return ofNullable(existingAccount);
         } catch (PersistenceException e) {
-            return Optional.empty();
+            return empty();
         }
     }
 

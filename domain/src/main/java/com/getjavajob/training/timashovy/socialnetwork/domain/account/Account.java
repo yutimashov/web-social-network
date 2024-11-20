@@ -358,7 +358,7 @@ public class Account implements BaseEntity<Long> {
     @Override
     public String toString() {
         return "Account {id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", middleName="
-                + middleName + ", birthDate=" + birthDate + ", phones=" + phones + ", personalAddress="
+                + middleName + ", birthDate=" + birthDate + ", personalAddress="
                 + personalAddress + ", workAddress=" + workAddress + ", email=" + email + ", icq=" + icq + ", skype="
                 + skype + ", additionalInfo=" + additionalInfo + ", role= " + role + " }";
     }
