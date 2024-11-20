@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.group.GroupRepository;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupMembershipService;
@@ -12,23 +12,23 @@ import java.util.Optional;
 
 public class GroupServiceImpl implements GroupService {
 
-    private final BaseDao<Group> groupDao;
+    private final GroupRepository groupDao;
     private final GroupMembershipService groupMembershipService;
 
-    public GroupServiceImpl(BaseDao<Group> groupDao, GroupMembershipService groupMembershipService) {
+    public GroupServiceImpl(GroupRepository groupDao, GroupMembershipService groupMembershipService) {
         this.groupDao = groupDao;
         this.groupMembershipService = groupMembershipService;
     }
 
     @Transactional
     @Override
-    public Long create(Group group, Account account) {
+    public Group create(Group group, Account account) {
         groupMembershipService.sendRequest(group, account);
-        Long groupId = groupDao.create(group);
+        Group createdGroup = groupDao.save(group);
         Long accountId = account.getId();
-        groupMembershipService.makeMember(groupId, accountId);
-        groupMembershipService.makeAdmin(groupId, accountId);
-        return groupId;
+        groupMembershipService.makeMember(createdGroup.getId(), accountId);
+        groupMembershipService.makeAdmin(createdGroup.getId(), accountId);
+        return createdGroup;
     }
 
     @Override

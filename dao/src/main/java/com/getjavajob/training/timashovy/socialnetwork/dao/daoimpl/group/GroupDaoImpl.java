@@ -1,72 +1,34 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.group.GroupRepository;
 import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceException;
 import java.util.List;
 import java.util.Optional;
 
 import static java.util.Objects.isNull;
+import static java.util.Optional.empty;
+import static java.util.Optional.ofNullable;
 
-public class GroupDaoImpl implements BaseDao<Group> {
+public class GroupDaoImpl implements GroupRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
-    public Long create(Group group) {
+    public Group save(Group group) {
         entityManager.persist(group);
-        entityManager.flush();
-        return group.getId();
+        return group;
     }
 
     @Override
-    public boolean updateById(Long id, Group group) {
-        EntityTransaction transaction = entityManager.getTransaction();
-        try {
-            transaction.begin();
-            Group existingGroup = entityManager.find(Group.class, id);
-            if (isNull(existingGroup)) {
-                return false;
-            }
-            existingGroup.setAvatar(group.getAvatar());
-            existingGroup.setDescription(group.getDescription());
-            existingGroup.setName(group.getName());
-            existingGroup.setAccountOwner(group.getAccountOwner());
-            existingGroup.setMessages(group.getMessages());
-            return true;
-        } catch (PersistenceException e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            return false;
-        }
-    }
-
-    @Override
-    public boolean deleteById(Long id) {
-        EntityTransaction transaction = entityManager.getTransaction();
-        try {
-            transaction.begin();
-            Group group = entityManager.find(Group.class, id);
-            if (!isNull(group)) {
-                entityManager.remove(group);
-                transaction.commit();
-                return true;
-            } else {
-                transaction.rollback();
-                return false;
-            }
-        } catch (PersistenceException e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            return false;
+    public void delete(Long id) {
+        Group group = entityManager.find(Group.class, id);
+        if (!isNull(group)) {
+            entityManager.remove(group);
         }
     }
 
@@ -74,9 +36,9 @@ public class GroupDaoImpl implements BaseDao<Group> {
     public Optional<Group> getById(Long groupId) {
         try {
             Group existingGroup = entityManager.find(Group.class, groupId);
-            return Optional.ofNullable(existingGroup);
+            return ofNullable(existingGroup);
         } catch (NoResultException e) {
-            return Optional.empty();
+            return empty();
         }
     }
 

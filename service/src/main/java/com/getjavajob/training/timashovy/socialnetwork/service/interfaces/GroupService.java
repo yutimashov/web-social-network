@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface GroupService {
 
-    Long create(Group group, Account account);
+    Group create(Group group, Account account);
 
     List<Group> getAll();
 
