@@ -10,11 +10,11 @@ import java.util.Optional;
  */
 public interface AccountService {
 
-    Long create(Account account, String password, String personalPhones, String workingPhones);
+    Account create(Account account, String password, String personalPhones, String workingPhones);
 
     void update(Long accountId, Account updatedAccount);
 
-    boolean delete(Long accountId);
+    void delete(Long accountId);
 
     Optional<Account> getById(Long accountId);
 

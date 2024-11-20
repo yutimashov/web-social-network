@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.AccountRepository;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,16 +18,15 @@ import static java.util.Objects.isNull;
  * Singleton class responsible for working with {@link com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames#ACCOUNTS_TABLE accounts table}.
  * It provides functionality for working with data inside above-mentioned table.
  */
-public class AccountDaoImpl implements BaseDao<Account> {
+public class AccountDao implements AccountRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
-    public Long create(Account account) {
+    public Account save(Account account) {
         entityManager.persist(account);
-        entityManager.flush();
-        return account.getId();
+        return account;
     }
 
     @Override
@@ -84,13 +83,11 @@ public class AccountDaoImpl implements BaseDao<Account> {
 
     @Transactional
     @Override
-    public boolean deleteById(Long id) {
+    public void delete(Long id) {
         Account existingAccount = entityManager.find(Account.class, id);
         if (!isNull(existingAccount)) {
             entityManager.remove(existingAccount);
-            return true;
         }
-        return false;
     }
 
     @Override

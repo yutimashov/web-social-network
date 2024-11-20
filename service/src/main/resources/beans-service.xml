@@ -22,7 +22,6 @@
         <constructor-arg ref="friendshipDao"/>
         <constructor-arg ref="friendshipCheckerDao"/>
         <constructor-arg ref="phoneService"/>
-        <constructor-arg ref="phoneRepository"/>
         <constructor-arg ref="passwordService"/>
         <constructor-arg ref="passwordRepository"/>
     </bean>

@@ -1,8 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.AccountRepository;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PasswordRepository;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneRepository;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipCheckerDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipDao;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
@@ -25,31 +24,29 @@ import static java.util.Objects.isNull;
  */
 public class AccountServiceImpl implements AccountService {
 
-    private final BaseDao<Account> accountDao;
+    private final AccountRepository accountDao;
     private final FriendshipDao friendshipDao;
     private final FriendshipCheckerDao friendshipCheckerDao;
     private final PhoneService phoneService;
-    private final PhoneRepository phoneRepository;
     private final PasswordService passwordService;
     private final PasswordRepository passwordRepository;
     private static final Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class);
 
-    public AccountServiceImpl(BaseDao<Account> accountDao, FriendshipDao friendshipDao,
-                              FriendshipCheckerDao friendshipCheckerDao, PhoneService phoneService, PhoneRepository phoneRepository,
+    public AccountServiceImpl(AccountRepository accountDao, FriendshipDao friendshipDao,
+                              FriendshipCheckerDao friendshipCheckerDao, PhoneService phoneService,
                               PasswordService passwordService, PasswordRepository passwordRepository) {
         this.accountDao = accountDao;
         this.friendshipDao = friendshipDao;
         this.friendshipCheckerDao = friendshipCheckerDao;
         this.phoneService = phoneService;
-        this.phoneRepository = phoneRepository;
         this.passwordService = passwordService;
         this.passwordRepository = passwordRepository;
     }
 
     @Transactional
     @Override
-    public Long create(Account account, String password, String personalPhones, String workingPhones) {
-        Long accountId = accountDao.create(account);
+    public Account create(Account account, String password, String personalPhones, String workingPhones) {
+        Account createdAccount = accountDao.save(account);
         passwordService.create(account, password);
         logger.debug("Creating new account. PersonalPhones = {}", personalPhones);
         if (!personalPhones.isEmpty()) {
@@ -58,7 +55,7 @@ public class AccountServiceImpl implements AccountService {
         if (!workingPhones.isEmpty()) {
             phoneService.createWorkingPhones(account, workingPhones);
         }
-        return accountId;
+        return createdAccount;
     }
 
     @Transactional
@@ -113,10 +110,10 @@ public class AccountServiceImpl implements AccountService {
 
     @Transactional
     @Override
-    public boolean delete(Long accountId) {
+    public void delete(Long accountId) {
         validateAccountId(accountId);
         passwordRepository.delete(accountId);
-        return accountDao.deleteById(accountId);
+        accountDao.delete(accountId);
     }
 
     @Override
