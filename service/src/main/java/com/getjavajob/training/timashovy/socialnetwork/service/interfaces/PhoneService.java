@@ -20,6 +20,6 @@ public interface PhoneService {
 
     boolean update(Long phoneId, String newPhoneNumber);
 
-    Long create(Phone phone);
+    Phone create(Phone phone);
 
 }

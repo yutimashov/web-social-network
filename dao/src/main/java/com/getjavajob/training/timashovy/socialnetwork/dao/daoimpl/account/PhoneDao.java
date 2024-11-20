@@ -1,12 +1,13 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneRepository;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
@@ -14,16 +15,21 @@ import static java.util.Objects.isNull;
  * Singleton class responsible for working with `account_data.phones` table in DB.
  * It provides safe multithreading approach for creating singleton object using synchronization mechanism.
  */
-public class PhoneDaoImpl implements PhoneDao {
+public class PhoneDao implements PhoneRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
-    public Long create(Phone phone) {
+    public Phone save(Phone phone) {
         entityManager.persist(phone);
-        entityManager.flush();
-        return phone.getId();
+        return phone;
+    }
+
+    @Override
+    public Optional<Phone> getById(Long id) {
+        //TODO: implement this method instead of `updateNumber`
+        return Optional.empty();
     }
 
     @Override

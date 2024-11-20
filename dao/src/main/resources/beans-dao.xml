@@ -12,7 +12,7 @@
     <bean id="passwordRepository" class="com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PasswordDao">
     </bean>
 
-    <bean id="phoneDao" class="com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PhoneDaoImpl">
+    <bean id="phoneRepository" class="com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PhoneDao">
     </bean>
 
     <bean id="friendshipCheckerDao"

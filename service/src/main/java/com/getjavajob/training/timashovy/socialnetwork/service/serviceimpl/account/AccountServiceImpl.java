@@ -2,7 +2,7 @@ package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.acco
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PasswordRepository;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneRepository;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipCheckerDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipDao;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
@@ -29,19 +29,19 @@ public class AccountServiceImpl implements AccountService {
     private final FriendshipDao friendshipDao;
     private final FriendshipCheckerDao friendshipCheckerDao;
     private final PhoneService phoneService;
-    private final PhoneDao phoneDao;
+    private final PhoneRepository phoneRepository;
     private final PasswordService passwordService;
     private final PasswordRepository passwordRepository;
     private static final Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class);
 
     public AccountServiceImpl(BaseDao<Account> accountDao, FriendshipDao friendshipDao,
-                              FriendshipCheckerDao friendshipCheckerDao, PhoneService phoneService, PhoneDao phoneDao,
+                              FriendshipCheckerDao friendshipCheckerDao, PhoneService phoneService, PhoneRepository phoneRepository,
                               PasswordService passwordService, PasswordRepository passwordRepository) {
         this.accountDao = accountDao;
         this.friendshipDao = friendshipDao;
         this.friendshipCheckerDao = friendshipCheckerDao;
         this.phoneService = phoneService;
-        this.phoneDao = phoneDao;
+        this.phoneRepository = phoneRepository;
         this.passwordService = passwordService;
         this.passwordRepository = passwordRepository;
     }

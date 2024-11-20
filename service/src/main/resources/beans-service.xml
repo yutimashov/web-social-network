@@ -13,7 +13,7 @@
 
     <bean id="phoneService"
           class="com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.PhoneServiceImpl">
-        <constructor-arg ref="phoneDao"/>
+        <constructor-arg ref="phoneRepository"/>
     </bean>
 
     <bean id="accountService"
@@ -22,7 +22,7 @@
         <constructor-arg ref="friendshipDao"/>
         <constructor-arg ref="friendshipCheckerDao"/>
         <constructor-arg ref="phoneService"/>
-        <constructor-arg ref="phoneDao"/>
+        <constructor-arg ref="phoneRepository"/>
         <constructor-arg ref="passwordService"/>
         <constructor-arg ref="passwordRepository"/>
     </bean>

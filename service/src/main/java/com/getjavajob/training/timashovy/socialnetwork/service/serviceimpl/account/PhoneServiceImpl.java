@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneRepository;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType;
@@ -14,10 +14,10 @@ import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone
 
 public class PhoneServiceImpl implements PhoneService {
 
-    private final PhoneDao phoneDao;
+    private final PhoneRepository phoneRepository;
 
-    public PhoneServiceImpl(PhoneDao phoneDao) {
-        this.phoneDao = phoneDao;
+    public PhoneServiceImpl(PhoneRepository phoneRepository) {
+        this.phoneRepository = phoneRepository;
     }
 
     @Transactional
@@ -25,7 +25,7 @@ public class PhoneServiceImpl implements PhoneService {
     public void createPersonalPhones(Account account, String phoneNumbers) {
         String[] phoneNumbersSeparated = phoneNumbers.split(",");
         for (String phoneNumberSeparated : phoneNumbersSeparated) {
-            phoneDao.create(new Phone(PERSONAL, phoneNumberSeparated, account));
+            phoneRepository.save(new Phone(PERSONAL, phoneNumberSeparated, account));
         }
     }
 
@@ -34,35 +34,35 @@ public class PhoneServiceImpl implements PhoneService {
     public void createWorkingPhones(Account account, String phoneNumbers) {
         String[] phoneNumbersSeparated = phoneNumbers.split(",");
         for (String phoneNumberSeparated : phoneNumbersSeparated) {
-            phoneDao.create(new Phone(WORKING, phoneNumberSeparated, account));
+            phoneRepository.save(new Phone(WORKING, phoneNumberSeparated, account));
         }
     }
 
     @Override
     public List<Phone> getPhones(Long accountId, PhoneType phoneType) {
-        return phoneDao.getPhones(accountId, phoneType);
+        return phoneRepository.getPhones(accountId, phoneType);
     }
 
     @Override
     public List<String> getPhoneNumbers(Long accountId, PhoneType phoneType) {
-        return phoneDao.getPhoneNumbers(accountId, phoneType);
+        return phoneRepository.getPhoneNumbers(accountId, phoneType);
     }
 
     @Transactional
     @Override
     public boolean update(Long phoneId, String newPhoneNumber) {
-        return phoneDao.updateNumber(phoneId, newPhoneNumber);
+        return phoneRepository.updateNumber(phoneId, newPhoneNumber);
     }
 
     @Transactional
     @Override
-    public Long create(Phone phone) {
-        return phoneDao.create(phone);
+    public Phone create(Phone phone) {
+        return phoneRepository.save(phone);
     }
 
     @Override
     public void delete(Long phoneId) {
-        phoneDao.delete(phoneId);
+        phoneRepository.delete(phoneId);
     }
 
 }
