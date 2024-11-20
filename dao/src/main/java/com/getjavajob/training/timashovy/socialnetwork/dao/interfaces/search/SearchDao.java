@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces;
+package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.search;
 
 import java.util.List;
 

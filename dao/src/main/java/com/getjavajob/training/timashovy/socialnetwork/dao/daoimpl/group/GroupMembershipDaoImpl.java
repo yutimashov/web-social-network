@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.GroupMembershipDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.group.GroupMembershipDao;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 import com.getjavajob.training.timashovy.socialnetwork.domain.group.GroupMember;

@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.search;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.SearchDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.search.SearchDao;
 import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 
 import javax.persistence.EntityManager;
