@@ -1,9 +1,9 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.message;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.PersonalWallMessageDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.group.GroupRepository;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.message.GroupMessageRepository;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.message.PersonalMessageRepository;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.message.PersonalWallMessageRepository;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.GroupMessage;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.Message;
@@ -20,12 +20,12 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class MessageServiceImpl implements MessageService {
 
     private final GroupMessageRepository groupMessageDao;
-    private final PersonalWallMessageDaoImpl accountWallMessageDao;
+    private final PersonalWallMessageRepository accountWallMessageDao;
     private final PersonalMessageRepository personalMessageDao;
     private final GroupRepository groupDao;
     private static final Logger logger = getLogger(MessageService.class);
 
-    public MessageServiceImpl(GroupMessageRepository groupMessageDao, PersonalWallMessageDaoImpl accountWallMessageDao,
+    public MessageServiceImpl(GroupMessageRepository groupMessageDao, PersonalWallMessageRepository accountWallMessageDao,
                               PersonalMessageRepository personalMessageDao, GroupRepository groupDao) {
         this.groupMessageDao = groupMessageDao;
         this.accountWallMessageDao = accountWallMessageDao;
@@ -44,7 +44,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public void createPersonalWallMessage(PersonalWallMessage personalWallMessage) {
         logger.info("creating personal wall message in the wall of account with id = {}", personalWallMessage.getId());
-        accountWallMessageDao.create(personalWallMessage);
+        accountWallMessageDao.save(personalWallMessage);
     }
 
     @Transactional

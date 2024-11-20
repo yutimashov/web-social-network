@@ -1,8 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.message.PersonalWallMessageRepository;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalWallMessage;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -10,20 +9,23 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Objects.isNull;
+import static java.util.Optional.empty;
+import static java.util.Optional.ofNullable;
+
 /**
  * Singleton class responsible for working with {@link com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames#PERSONAL_WALL_MESSAGE_TABLE personal wall messages table}.
  * It provides safe multithreading approach for creating singleton object using synchronization mechanism.
  */
-public class PersonalWallMessageDaoImpl implements BaseDao<PersonalWallMessage> {
+public class PersonalWallMessageDaoImpl implements PersonalWallMessageRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
-    public Long create(PersonalWallMessage personalMessage) {
+    public PersonalWallMessage save(PersonalWallMessage personalMessage) {
         entityManager.persist(personalMessage);
-        entityManager.flush();
-        return personalMessage.getId();
+        return personalMessage;
     }
 
     @Override
@@ -34,18 +36,13 @@ public class PersonalWallMessageDaoImpl implements BaseDao<PersonalWallMessage> 
                             PersonalWallMessage.class)
                     .setParameter("messageId", id)
                     .getSingleResult();
-            return Optional.ofNullable(existingMessage);
+            return ofNullable(existingMessage);
         } catch (NoResultException e) {
-            return Optional.empty();
+            return empty();
         }
     }
 
     @Override
-    public List<PersonalWallMessage> getAll() {
-        //TODO
-        return null;
-    }
-
     public List<PersonalWallMessage> getAll(Long accountId) {
         return entityManager.createQuery(
                         "select pm from PersonalWallMessage pm where pm.accountReceiverId = :accountId "
@@ -57,13 +54,11 @@ public class PersonalWallMessageDaoImpl implements BaseDao<PersonalWallMessage> 
     }
 
     @Override
-    public boolean updateById(Long id, PersonalWallMessage personalWallMessage) {
-        return false;
-    }
-
-    @Override
-    public boolean deleteById(Long id) {
-        return false;
+    public void delete(Long id) {
+        PersonalWallMessage existingPersonalWallMessage = entityManager.find(PersonalWallMessage.class, id);
+        if (!isNull(existingPersonalWallMessage)) {
+            entityManager.remove(existingPersonalWallMessage);
+        }
     }
 
 }
