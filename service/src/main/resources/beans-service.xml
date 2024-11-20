@@ -42,7 +42,6 @@
         <constructor-arg ref="groupMessageDao"/>
         <constructor-arg ref="personalWallMessageDao"/>
         <constructor-arg ref="personalMessageDao"/>
-        <constructor-arg ref="accountService"/>
         <constructor-arg ref="groupDao"/>
     </bean>
 

@@ -45,7 +45,7 @@ public class GroupController extends HttpServlet {
             model.addAttribute("isAdmin", groupMembershipService.isAdmin(groupId, accountId));
             model.addAttribute("isSubscriber", groupMembershipService.isSubscriber(groupId, accountId));
             model.addAttribute("isMember", groupMembershipService.isMember(groupId, accountId));
-            model.addAttribute("groupPosts", messageService.getAllGroupMessages(groupId));
+            model.addAttribute("groupPosts", messageService.getMessagesByGroupId(groupId));
             model.addAttribute("accountService", accountService);
             return "group/group";
         } else {

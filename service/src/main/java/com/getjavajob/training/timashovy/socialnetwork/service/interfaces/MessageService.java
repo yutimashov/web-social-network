@@ -24,7 +24,7 @@ public interface MessageService {
 
     Message getPersonalMessageById(Long messageId);
 
-    List<GroupMessage> getAllGroupMessages(Long groupId);
+    List<GroupMessage> getMessagesByGroupId(Long groupId);
 
     List<PersonalWallMessage> getAllAccountWallMessages(Long destinationId);
 

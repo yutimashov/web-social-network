@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.AccountRepository;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AdminService;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,9 +10,9 @@ import static java.util.Objects.isNull;
 
 public class AdminServiceImpl implements AdminService {
 
-    private final BaseDao<Account> accountDao;
+    private final AccountRepository accountDao;
 
-    public AdminServiceImpl(BaseDao<Account> accountDao) {
+    public AdminServiceImpl(AccountRepository accountDao) {
         this.accountDao = accountDao;
     }
 
