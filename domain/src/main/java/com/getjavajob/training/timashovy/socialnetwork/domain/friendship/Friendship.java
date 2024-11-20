@@ -141,8 +141,11 @@ public class Friendship implements BaseEntity<Friendship.FriendshipId> {
 
     public static class FriendshipId implements Serializable {
 
-        private final Long initiatorAccountId;
-        private final Long friendAccountId;
+        private Long initiatorAccountId;
+        private Long friendAccountId;
+
+        protected FriendshipId() {
+        }
 
         public FriendshipId(Long requesterId, Long receiverId) {
             this.initiatorAccountId = requesterId;
