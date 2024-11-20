@@ -9,7 +9,7 @@
     <bean id="accountDao" class="com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.AccountDaoImpl">
     </bean>
 
-    <bean id="passwordDao" class="com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PasswordDaoImpl">
+    <bean id="passwordRepository" class="com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PasswordDao">
     </bean>
 
     <bean id="phoneDao" class="com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account.PhoneDaoImpl">

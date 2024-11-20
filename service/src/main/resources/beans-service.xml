@@ -8,7 +8,7 @@
 
     <bean id="passwordService"
           class="com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.PasswordServiceImpl">
-        <constructor-arg ref="passwordDao"/>
+        <constructor-arg ref="passwordRepository"/>
     </bean>
 
     <bean id="phoneService"
@@ -24,7 +24,7 @@
         <constructor-arg ref="phoneService"/>
         <constructor-arg ref="phoneDao"/>
         <constructor-arg ref="passwordService"/>
-        <constructor-arg ref="passwordDao"/>
+        <constructor-arg ref="passwordRepository"/>
     </bean>
 
     <bean id="loginService"

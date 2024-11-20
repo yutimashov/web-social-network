@@ -1,7 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PasswordDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PasswordRepository;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipCheckerDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipDao;
@@ -31,19 +31,19 @@ public class AccountServiceImpl implements AccountService {
     private final PhoneService phoneService;
     private final PhoneDao phoneDao;
     private final PasswordService passwordService;
-    private final PasswordDao passwordDao;
+    private final PasswordRepository passwordRepository;
     private static final Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class);
 
     public AccountServiceImpl(BaseDao<Account> accountDao, FriendshipDao friendshipDao,
                               FriendshipCheckerDao friendshipCheckerDao, PhoneService phoneService, PhoneDao phoneDao,
-                              PasswordService passwordService, PasswordDao passwordDao) {
+                              PasswordService passwordService, PasswordRepository passwordRepository) {
         this.accountDao = accountDao;
         this.friendshipDao = friendshipDao;
         this.friendshipCheckerDao = friendshipCheckerDao;
         this.phoneService = phoneService;
         this.phoneDao = phoneDao;
         this.passwordService = passwordService;
-        this.passwordDao = passwordDao;
+        this.passwordRepository = passwordRepository;
     }
 
     @Transactional
@@ -115,7 +115,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public boolean delete(Long accountId) {
         validateAccountId(accountId);
-        passwordDao.deleteById(accountId);
+        passwordRepository.delete(accountId);
         return accountDao.deleteById(accountId);
     }
 

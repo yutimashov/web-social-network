@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PasswordDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PasswordRepository;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.password.Password;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
@@ -13,29 +13,29 @@ import static com.getjavajob.training.timashovy.socialnetwork.service.util.Passw
 
 public class PasswordServiceImpl implements PasswordService {
 
-    private final PasswordDao passwordDao;
+    private final PasswordRepository passwordRepository;
 
-    public PasswordServiceImpl(PasswordDao passwordDao) {
-        this.passwordDao = passwordDao;
+    public PasswordServiceImpl(PasswordRepository passwordRepository) {
+        this.passwordRepository = passwordRepository;
     }
 
     @Transactional
     @Override
-    public Long create(Account account, String rawPassword) {
+    public Password create(Account account, String rawPassword) {
         String salt = generateSalt();
         Password password = new Password(hashCredentialData(rawPassword, salt), salt);
         password.setAccount(account);
-        return passwordDao.create(password);
+        return passwordRepository.save(password);
     }
 
     @Override
     public Optional<Password> get(Long accountId) {
-        return passwordDao.getById(accountId);
+        return passwordRepository.getById(accountId);
     }
 
     @Override
     public Optional<Password> findPasswordByEmail(String email) {
-        return passwordDao.findByEmail(email);
+        return passwordRepository.findByEmail(email);
     }
 
 }
