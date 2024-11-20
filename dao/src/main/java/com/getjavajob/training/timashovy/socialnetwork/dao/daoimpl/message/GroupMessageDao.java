@@ -13,7 +13,7 @@ import static java.util.Objects.isNull;
 import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 
-public class GroupMessageDaoImpl implements GroupMessageRepository {
+public class GroupMessageDao implements GroupMessageRepository {
 
     @PersistenceContext
     private EntityManager entityManager;

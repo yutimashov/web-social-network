@@ -1,29 +1,26 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.message.PersonalMessageRepository;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalMessage;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceException;
 import java.util.List;
 import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
-public class PersonalMessageDaoImpl implements BaseDao<PersonalMessage> {
+public class PersonalMessageDaoImpl implements PersonalMessageRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
-    public Long create(PersonalMessage personalMessage) {
+    public PersonalMessage save(PersonalMessage personalMessage) {
         entityManager.persist(personalMessage);
-        entityManager.flush();
-        return personalMessage.getId();
+        return personalMessage;
     }
 
     @Override
@@ -40,55 +37,14 @@ public class PersonalMessageDaoImpl implements BaseDao<PersonalMessage> {
     }
 
     @Override
-    public List<PersonalMessage> getAll() {
-        //TODO
-        return null;
-    }
-
-    @Override
-    public boolean updateById(Long id, PersonalMessage personalMessage) {
-        EntityTransaction transaction = entityManager.getTransaction();
-        try {
-            transaction.begin();
-            PersonalMessage existingPersonalMessage = entityManager.find(PersonalMessage.class, id);
-            if (isNull(existingPersonalMessage)) {
-                return false;
-            }
-            existingPersonalMessage.setDestinationId(personalMessage.getDestinationId());
-            existingPersonalMessage.setText(personalMessage.getText());
-            existingPersonalMessage.setPhoto(personalMessage.getPhoto());
-            existingPersonalMessage.setAccountAuthorId(personalMessage.getAccountAuthorId());
-            return true;
-        } catch (PersistenceException e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            return false;
+    public void delete(Long id) {
+        PersonalMessage existingPersonalMessage = entityManager.find(PersonalMessage.class, id);
+        if (!isNull(existingPersonalMessage)) {
+            entityManager.remove(existingPersonalMessage);
         }
     }
 
     @Override
-    public boolean deleteById(Long id) {
-        EntityTransaction transaction = entityManager.getTransaction();
-        try {
-            transaction.begin();
-            PersonalMessage existingPersonalMessage = entityManager.find(PersonalMessage.class, id);
-            if (!isNull(existingPersonalMessage)) {
-                entityManager.remove(existingPersonalMessage);
-                transaction.commit();
-                return true;
-            } else {
-                transaction.rollback();
-                return false;
-            }
-        } catch (PersistenceException e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            return false;
-        }
-    }
-
     public List<Account> getAllAccounts(Long accountId) {
         return entityManager.createQuery(
                         "select distinct a from Account a " +
@@ -100,6 +56,7 @@ public class PersonalMessageDaoImpl implements BaseDao<PersonalMessage> {
                 .getResultList();
     }
 
+    @Override
     public List<PersonalMessage> getAllPersonalMessagesWithAccount(Long authorId, Long receiverId) {
         return entityManager.createQuery(
                         "select pm from PersonalMessage pm where " +

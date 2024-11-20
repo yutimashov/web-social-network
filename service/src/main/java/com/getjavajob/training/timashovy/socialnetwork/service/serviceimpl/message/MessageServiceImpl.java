@@ -1,9 +1,9 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.message;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.PersonalMessageDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.PersonalWallMessageDaoImpl;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.group.GroupRepository;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.message.GroupMessageRepository;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.message.PersonalMessageRepository;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.GroupMessage;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.Message;
@@ -21,12 +21,12 @@ public class MessageServiceImpl implements MessageService {
 
     private final GroupMessageRepository groupMessageDao;
     private final PersonalWallMessageDaoImpl accountWallMessageDao;
-    private final PersonalMessageDaoImpl personalMessageDao;
+    private final PersonalMessageRepository personalMessageDao;
     private final GroupRepository groupDao;
     private static final Logger logger = getLogger(MessageService.class);
 
     public MessageServiceImpl(GroupMessageRepository groupMessageDao, PersonalWallMessageDaoImpl accountWallMessageDao,
-                              PersonalMessageDaoImpl personalMessageDao, GroupRepository groupDao) {
+                              PersonalMessageRepository personalMessageDao, GroupRepository groupDao) {
         this.groupMessageDao = groupMessageDao;
         this.accountWallMessageDao = accountWallMessageDao;
         this.personalMessageDao = personalMessageDao;
@@ -50,7 +50,7 @@ public class MessageServiceImpl implements MessageService {
     @Transactional
     @Override
     public void createPersonalMessage(PersonalMessage personalMessage) {
-        personalMessageDao.create(personalMessage);
+        personalMessageDao.save(personalMessage);
     }
 
     @Override
