@@ -1,5 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.domain.account;
 
+import com.getjavajob.training.timashovy.socialnetwork.domain.BaseEntity;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
 import org.hibernate.annotations.Type;
 
@@ -32,7 +33,7 @@ import static javax.persistence.GenerationType.IDENTITY;
  */
 @Table(name = "accounts", schema = "account_data")
 @Entity
-public class Account {
+public class Account implements BaseEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)

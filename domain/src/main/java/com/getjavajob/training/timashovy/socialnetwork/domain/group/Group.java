@@ -1,5 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.domain.group;
 
+import com.getjavajob.training.timashovy.socialnetwork.domain.BaseEntity;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.GroupMessage;
 import org.hibernate.annotations.Type;
@@ -33,7 +34,7 @@ import static javax.persistence.GenerationType.IDENTITY;
  */
 @Entity
 @Table(name = "groups", schema = "group_data")
-public class Group {
+public class Group implements BaseEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)

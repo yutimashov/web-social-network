@@ -17,8 +17,8 @@ public class FriendshipCheckerDaoImpl implements FriendshipCheckerDao {
     @Override
     public boolean checkFriendshipRecordExistence(Long requesterId, Long accepterId) {
         return entityManager.createQuery(
-                        "select 1 from Friendship f where f.firstFriendAccountId = :requesterId "
-                                + "and f.secondFriendAccountId = :accepterId"
+                        "select 1 from Friendship f where f.initiatorAccountId = :requesterId "
+                                + "and f.friendAccountId = :accepterId"
                 )
                 .setParameter("requesterId", getFirstId(requesterId, accepterId))
                 .setParameter("accepterId", getSecondId(requesterId, accepterId))
@@ -37,8 +37,8 @@ public class FriendshipCheckerDaoImpl implements FriendshipCheckerDao {
     @Override
     public boolean checkUsersAreFriends(Long requesterId, Long accepterId) {
         return entityManager.createQuery(
-                        "select 1 from Friendship f where f.firstFriendAccountId = :requesterId "
-                                + "and f.secondFriendAccountId = :accepterId and f.friendshipStatus = true"
+                        "select 1 from Friendship f where f.initiatorAccountId = :requesterId "
+                                + "and f.friendAccountId = :accepterId and f.friendshipStatus = true"
                 )
                 .setParameter("requesterId", getFirstId(requesterId, accepterId))
                 .setParameter("accepterId", getSecondId(requesterId, accepterId))

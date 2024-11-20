@@ -1,5 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.domain.phone;
 
+import com.getjavajob.training.timashovy.socialnetwork.domain.BaseEntity;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 
 import javax.persistence.Column;
@@ -24,7 +25,7 @@ import static javax.persistence.GenerationType.IDENTITY;
  */
 @Table(name = "account_phones", schema = "account_data")
 @Entity
-public class Phone {
+public class Phone implements BaseEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)

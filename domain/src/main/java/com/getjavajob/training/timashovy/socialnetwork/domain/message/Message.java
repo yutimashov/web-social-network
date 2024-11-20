@@ -1,8 +1,13 @@
 package com.getjavajob.training.timashovy.socialnetwork.domain.message;
 
+import com.getjavajob.training.timashovy.socialnetwork.domain.BaseEntity;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.MappedSuperclass;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Objects;
@@ -10,7 +15,7 @@ import java.util.Objects;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @MappedSuperclass
-public abstract class Message {
+public abstract class Message implements BaseEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)

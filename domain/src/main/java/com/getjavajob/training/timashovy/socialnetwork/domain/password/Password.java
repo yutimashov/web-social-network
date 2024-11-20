@@ -1,5 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.domain.password;
 
+import com.getjavajob.training.timashovy.socialnetwork.domain.BaseEntity;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 
 import javax.persistence.Column;
@@ -19,7 +20,7 @@ import static javax.persistence.FetchType.LAZY;
  */
 @Entity
 @Table(name = "account_passwords", schema = "account_data")
-public class Password {
+public class Password implements BaseEntity<Long> {
 
     @Id
     private Long id;
