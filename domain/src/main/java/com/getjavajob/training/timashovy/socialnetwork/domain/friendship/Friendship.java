@@ -1,8 +1,15 @@
 package com.getjavajob.training.timashovy.socialnetwork.domain.friendship;
 
+import com.getjavajob.training.timashovy.socialnetwork.domain.BaseEntity;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -22,15 +29,15 @@ import static javax.persistence.FetchType.LAZY;
 @Entity
 @IdClass(Friendship.FriendshipId.class)
 @Table(schema = "friend_data")
-public class Friendship {
+public class Friendship implements BaseEntity<Friendship.FriendshipId> {
 
     @Id
     @Column(name = "id_1")
-    private Long firstFriendAccountId;
+    private Long initiatorAccountId;
 
     @Id
     @Column(name = "id_2")
-    private Long secondFriendAccountId;
+    private Long friendAccountId;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "requester_id")
@@ -46,29 +53,40 @@ public class Friendship {
     protected Friendship() {
     }
 
-    public Friendship(Long firstFriendAccountId, Long secondFriendAccountId, Account requester, Account receiver,
+    public Friendship(Long initiatorAccountId, Long friendAccountId, Account requester, Account receiver,
                       boolean friendshipStatus) {
-        this.firstFriendAccountId = firstFriendAccountId;
-        this.secondFriendAccountId = secondFriendAccountId;
+        this.initiatorAccountId = initiatorAccountId;
+        this.friendAccountId = friendAccountId;
         this.requester = requester;
         this.receiver = receiver;
         this.friendshipStatus = friendshipStatus;
     }
 
-    public Long getFirstFriendAccountId() {
-        return firstFriendAccountId;
+    @Override
+    public FriendshipId getId() {
+        return new Friendship.FriendshipId(initiatorAccountId, friendAccountId);
     }
 
-    public void setFirstFriendAccountId(Long id1) {
-        this.firstFriendAccountId = id1;
+    @Override
+    public void setId(FriendshipId friendshipId) {
+        this.initiatorAccountId = friendshipId.getInitiatorAccountId();
+        this.friendAccountId = friendshipId.getFriendAccountId();
     }
 
-    public Long getSecondFriendAccountId() {
-        return secondFriendAccountId;
+    public Long getInitiatorAccountId() {
+        return initiatorAccountId;
     }
 
-    public void setSecondFriendAccountId(Long id2) {
-        this.secondFriendAccountId = id2;
+    public void setInitiatorAccountId(Long id1) {
+        this.initiatorAccountId = id1;
+    }
+
+    public Long getFriendAccountId() {
+        return friendAccountId;
+    }
+
+    public void setFriendAccountId(Long id2) {
+        this.friendAccountId = id2;
     }
 
     public Account getRequester() {
@@ -100,21 +118,21 @@ public class Friendship {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Friendship that = (Friendship) o;
-        return friendshipStatus == that.friendshipStatus && Objects.equals(firstFriendAccountId,
-                that.firstFriendAccountId) && Objects.equals(secondFriendAccountId, that.secondFriendAccountId)
+        return friendshipStatus == that.friendshipStatus && Objects.equals(initiatorAccountId,
+                that.initiatorAccountId) && Objects.equals(friendAccountId, that.friendAccountId)
                 && Objects.equals(requester, that.requester) && Objects.equals(receiver, that.receiver);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstFriendAccountId, secondFriendAccountId, requester, receiver, friendshipStatus);
+        return Objects.hash(initiatorAccountId, friendAccountId, requester, receiver, friendshipStatus);
     }
 
     @Override
     public String toString() {
         return "Friendship{" +
-                "firstFriendAccountId=" + firstFriendAccountId +
-                ", secondFriendAccountId=" + secondFriendAccountId +
+                "firstFriendAccountId=" + initiatorAccountId +
+                ", secondFriendAccountId=" + friendAccountId +
                 ", requester=" + requester +
                 ", receiver=" + receiver +
                 ", friendshipStatus=" + friendshipStatus +
@@ -123,31 +141,20 @@ public class Friendship {
 
     public static class FriendshipId implements Serializable {
 
-        private Long firstFriendAccountId;
-        private Long secondFriendAccountId;
-
-        public FriendshipId() {
-        }
+        private final Long initiatorAccountId;
+        private final Long friendAccountId;
 
         public FriendshipId(Long requesterId, Long receiverId) {
-            this.firstFriendAccountId = requesterId;
-            this.secondFriendAccountId = receiverId;
+            this.initiatorAccountId = requesterId;
+            this.friendAccountId = receiverId;
         }
 
-        public Long getFirstFriendAccountId() {
-            return firstFriendAccountId;
+        protected Long getInitiatorAccountId() {
+            return initiatorAccountId;
         }
 
-        public void setFirstFriendAccountId(Long firstFriendAccountId) {
-            this.firstFriendAccountId = firstFriendAccountId;
-        }
-
-        public Long getSecondFriendAccountId() {
-            return secondFriendAccountId;
-        }
-
-        public void setSecondFriendAccountId(Long secondFriendAccountId) {
-            this.secondFriendAccountId = secondFriendAccountId;
+        protected Long getFriendAccountId() {
+            return friendAccountId;
         }
 
         @Override
@@ -155,13 +162,13 @@ public class Friendship {
             if (this == o) return true;
             if (!(o instanceof FriendshipId)) return false;
             FriendshipId that = (FriendshipId) o;
-            return Objects.equals(firstFriendAccountId, that.firstFriendAccountId) &&
-                    Objects.equals(secondFriendAccountId, that.secondFriendAccountId);
+            return Objects.equals(initiatorAccountId, that.initiatorAccountId) &&
+                    Objects.equals(friendAccountId, that.friendAccountId);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(firstFriendAccountId, secondFriendAccountId);
+            return Objects.hash(initiatorAccountId, friendAccountId);
         }
 
     }
