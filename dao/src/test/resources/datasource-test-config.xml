@@ -11,6 +11,6 @@
         <property name="password" value="${test.password}"/>
     </bean>
 
-    <context:property-placeholder location="classpath*:test-jdbc.properties"/>
+    <context:property-placeholder location="classpath*:test-db.properties"/>
 
 </beans>
