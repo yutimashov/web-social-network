@@ -85,7 +85,7 @@ public class Phone implements BaseEntity<Long> {
 
     @Override
     public String toString() {
-        return "Phone{id=" + id + ", phoneType=" + phoneType + ", number=" + number + ", account=" + account + "}";
+        return "Phone{id=" + id + ", phoneType=" + phoneType + ", number=" + number + "}";
     }
 
     @Override
@@ -94,7 +94,7 @@ public class Phone implements BaseEntity<Long> {
         if (o == null || getClass() != o.getClass()) return false;
         Phone phone = (Phone) o;
         return Objects.equals(id, phone.id) && Objects.equals(phoneType, phone.phoneType)
-                && Objects.equals(number, phone.number) && Objects.equals(account, phone.account);
+                && Objects.equals(number, phone.number);
     }
 
     @Override

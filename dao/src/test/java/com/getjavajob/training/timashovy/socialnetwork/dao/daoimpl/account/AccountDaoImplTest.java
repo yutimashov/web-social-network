@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -22,7 +21,9 @@ import static com.getjavajob.training.timashovy.socialnetwork.domain.account.Acc
 import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.PERSONAL;
 import static java.time.LocalDate.of;
 import static java.util.Optional.empty;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
@@ -72,7 +73,9 @@ class AccountDaoImplTest {
 
     private void setTestAccountEqualsToRecordInTestTable() {
         List<Phone> phones = new ArrayList<>();
-        phones.add(new Phone(PERSONAL, "+375291112233", TEST_ACCOUNT));
+        Phone testPhone = new Phone(PERSONAL, "+375291112233", TEST_ACCOUNT);
+        testPhone.setId(1L);
+        phones.add(testPhone);
         TEST_ACCOUNT.setId(1L);
         TEST_ACCOUNT.setFirstName("test");
         TEST_ACCOUNT.setLastName("test");
@@ -130,19 +133,28 @@ class AccountDaoImplTest {
 
         @Test
         void shouldReturnActualListWhenTableIsNotEmpty() {
+            Phone testPhone = new Phone(PERSONAL, "+375291112233", TEST_ACCOUNT);
+            testPhone.setId(1L);
+            List<Phone> phones = new ArrayList<>();
+            phones.add(testPhone);
+            List<Phone> emptyPhoneList = new ArrayList<>();
             List<Account> accounts = new ArrayList<>();
             accounts.add(new Account.Builder().id(1L).firstName("test").middleName("test").lastName("test")
                     .birthDate(of(2000, 1, 1)).personalAddress("test").workAddress("test")
-                    .email("test").icq("test").skype("test").additionalInfo("test").role(REGULAR).build());
+                    .email("test").icq("test").skype("test").additionalInfo("test").role(REGULAR)
+                    .phones(phones).build());
             accounts.add(new Account.Builder().id(2L).firstName("test1").middleName("test1").lastName("test1")
                     .birthDate(of(2000, 1, 1)).personalAddress("test1").workAddress("test1")
-                    .email("test1").icq("test1").skype("test1").additionalInfo("test1").role(REGULAR).build());
+                    .email("test1").icq("test1").skype("test1").additionalInfo("test1").role(REGULAR)
+                    .phones(emptyPhoneList).build());
             accounts.add(new Account.Builder().id(3L).firstName("test2").middleName("test2").lastName("test2")
                     .birthDate(of(2000, 1, 1)).personalAddress("test2").workAddress("test2")
-                    .email("test2").icq("test2").skype("test2").additionalInfo("test2").role(REGULAR).build());
+                    .email("test2").icq("test2").skype("test2").additionalInfo("test2").role(REGULAR)
+                    .phones(emptyPhoneList).build());
             accounts.add(new Account.Builder().id(4L).firstName("test3").middleName("test3").lastName("test3")
                     .birthDate(of(2000, 1, 1)).personalAddress("test3").workAddress("test3")
-                    .email("test3").icq("test3").skype("test3").additionalInfo("test3").role(REGULAR).build());
+                    .email("test3").icq("test3").skype("test3").additionalInfo("test3").role(REGULAR)
+                    .phones(emptyPhoneList).build());
             assertEquals(accounts, accountDao.getAll());
         }
 
