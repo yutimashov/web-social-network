@@ -17,7 +17,7 @@ import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 
 /**
- * Singleton class responsible for working with {@link com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames#ACCOUNTS_TABLE accounts table}.
+ * Singleton class responsible for working with `account_data.accounts` table.
  * It provides functionality for working with data inside above-mentioned table.
  */
 public class AccountDao implements AccountRepository {

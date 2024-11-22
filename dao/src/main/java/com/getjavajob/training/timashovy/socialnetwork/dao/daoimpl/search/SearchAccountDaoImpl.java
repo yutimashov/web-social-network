@@ -9,8 +9,7 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 /**
- * Singleton class responsible for working with {@link com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames#ACCOUNTS_TABLE accounts table}.
- * It provides safe multithreading approach for creating singleton object using synchronization mechanism.
+ * Class provides functionality for searching accounts.
  */
 public class SearchAccountDaoImpl implements SearchDao<Account> {
 

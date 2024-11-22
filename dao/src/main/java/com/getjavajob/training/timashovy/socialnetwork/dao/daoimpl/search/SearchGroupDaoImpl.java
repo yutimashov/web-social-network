@@ -9,8 +9,7 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 /**
- * Singleton class responsible for working with {@link com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames#GROUPS_TABLE groups table}.
- * It provides safe multithreading approach for creating singleton object using synchronization mechanism.
+ * Class provides functionality for searching groups.
  */
 public class SearchGroupDaoImpl implements SearchDao<Group> {
 

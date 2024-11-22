@@ -13,7 +13,7 @@ import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 
 /**
- * Singleton class responsible for working with {@link com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames#ACCOUNTS_TABLE accounts table} table in DB.
+ * Singleton class responsible for working with `account_data.passwords` table.
  * It provides safe multithreading approach for creating singleton object using synchronization mechanism.
  */
 public class PasswordDao implements PasswordRepository {

@@ -14,7 +14,7 @@ import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 
 /**
- * Singleton class responsible for working with {@link com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames#PERSONAL_WALL_MESSAGE_TABLE personal wall messages table}.
+ * Singleton class responsible for working with `message_data.personal_messages`.
  * It provides safe multithreading approach for creating singleton object using synchronization mechanism.
  */
 public class PersonalWallMessageDaoImpl implements PersonalWallMessageRepository {
