@@ -1,7 +1,9 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 
+import com.getjavajob.training.timashovy.socialnetwork.dao.exception.DaoException;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.AccountRepository;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import org.slf4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -15,6 +17,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Objects.isNull;
 import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Singleton class responsible for working with `account_data.accounts` table.
@@ -22,13 +25,21 @@ import static java.util.Optional.ofNullable;
  */
 public class AccountDao implements AccountRepository {
 
+    private static final Logger logger = getLogger(AccountDao.class);
+
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
     public Account save(Account account) {
-        entityManager.persist(account);
-        return account;
+        try {
+            entityManager.persist(account);
+            return account;
+        } catch (PersistenceException e) {
+            logger.error("Error persisting account firstName={}, lastName={}", account.getFirstName(),
+                    account.getLastName());
+            throw new DaoException("Cannot save account to persistent storage", e);
+        }
     }
 
     @Override
