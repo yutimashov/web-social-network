@@ -7,13 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
@@ -34,10 +29,8 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.openMocks;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration("classpath:test-config.xml")
-@Transactional
 class AccountDaoImplTest {
 
     @Mock
@@ -53,11 +46,20 @@ class AccountDaoImplTest {
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.openMocks(this);
+        openMocks(this);
         account = new Account.Builder()
-                .firstName("").lastName("")
-                .middleName("").birthDate(of(2000, 1, 1)).phones(new ArrayList<>())
-                .personalAddress("").workAddress("").email("").icq("").skype("").additionalInfo("").role(REGULAR)
+                .firstName("")
+                .lastName("")
+                .middleName("")
+                .birthDate(of(2000, 1, 1))
+                .phones(new ArrayList<>())
+                .personalAddress("")
+                .workAddress("")
+                .email("")
+                .icq("")
+                .skype("")
+                .additionalInfo("")
+                .role(REGULAR)
                 .build();
     }
 
