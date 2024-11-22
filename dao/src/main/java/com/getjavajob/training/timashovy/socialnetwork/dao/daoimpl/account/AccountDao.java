@@ -3,6 +3,7 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 import com.getjavajob.training.timashovy.socialnetwork.dao.exception.DaoException;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.AccountRepository;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole;
 import org.slf4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,12 +11,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
-import static java.util.Collections.emptyList;
 import static java.util.Objects.isNull;
-import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -43,63 +41,27 @@ public class AccountDao implements AccountRepository {
     }
 
     @Override
-    public boolean updateById(Long id, Account account) {
-        Account existingAccount = entityManager.find(Account.class, id);
-        if (isNull(existingAccount)) {
-            return false;
+    public void changeRole(Long id, AccountRole role) {
+        try {
+            Account existingAccount = entityManager.find(Account.class, id);
+            existingAccount.setRole(role);
+        } catch (PersistenceException e) {
+            logger.error("Error changing account role: id={}, role={}", id, role);
+            throw new DaoException("Cannot change account role", e);
         }
-        if (isFieldChanged(existingAccount.getFirstName(), account.getFirstName())) {
-            existingAccount.setFirstName(account.getFirstName());
-        }
-        if (isFieldChanged(existingAccount.getLastName(), account.getLastName())) {
-            existingAccount.setLastName(account.getLastName());
-        }
-        if (isFieldChanged(existingAccount.getMiddleName(), account.getMiddleName())) {
-            existingAccount.setMiddleName(account.getMiddleName());
-        }
-        if (isFieldChanged(existingAccount.getBirthDate(), account.getBirthDate())) {
-            existingAccount.setBirthDate(account.getBirthDate());
-        }
-        if (isFieldChanged(existingAccount.getPersonalAddress(), account.getPersonalAddress())) {
-            existingAccount.setPersonalAddress(account.getPersonalAddress());
-        }
-        if (isFieldChanged(existingAccount.getWorkAddress(), account.getWorkAddress())) {
-            existingAccount.setWorkAddress(account.getWorkAddress());
-        }
-        if (isFieldChanged(existingAccount.getEmail(), account.getEmail())) {
-            existingAccount.setEmail(account.getEmail());
-        }
-        if (isFieldChanged(existingAccount.getIcq(), account.getIcq())) {
-            existingAccount.setIcq(account.getIcq());
-        }
-        if (isFieldChanged(existingAccount.getSkype(), account.getSkype())) {
-            existingAccount.setSkype(account.getSkype());
-        }
-        if (isFieldChanged(existingAccount.getAdditionalInfo(), account.getAdditionalInfo())) {
-            existingAccount.setAdditionalInfo(account.getAdditionalInfo());
-        }
-        if (isFieldChanged(existingAccount.getRole(), account.getRole())) {
-            existingAccount.setRole(account.getRole());
-        }
-        if (isFieldChanged(existingAccount.getAvatar(), account.getAvatar())) {
-            existingAccount.setAvatar(account.getAvatar());
-        }
-        if (isFieldChanged(existingAccount.getPhones(), account.getPhones())) {
-            existingAccount.setPhones(account.getPhones());
-        }
-        return true;
-    }
-
-    private <T> boolean isFieldChanged(T oldValue, T newValue) {
-        return !Objects.equals(oldValue, newValue);
     }
 
     @Transactional
     @Override
     public void delete(Long id) {
-        Account existingAccount = entityManager.find(Account.class, id);
-        if (!isNull(existingAccount)) {
-            entityManager.remove(existingAccount);
+        try {
+            Account deletingAccount = entityManager.find(Account.class, id);
+            if (!isNull(deletingAccount)) {
+                entityManager.remove(deletingAccount);
+            }
+        } catch (PersistenceException e) {
+            logger.error("Error deleting account with id={}", id);
+            throw new DaoException("Cannot delete account by provided id", e);
         }
     }
 
@@ -109,7 +71,8 @@ public class AccountDao implements AccountRepository {
             Account existingAccount = entityManager.find(Account.class, id);
             return ofNullable(existingAccount);
         } catch (PersistenceException e) {
-            return empty();
+            logger.error("Error getting account by id: id={}", id);
+            throw new DaoException("Cannot get account by provided id", e);
         }
     }
 
@@ -118,7 +81,8 @@ public class AccountDao implements AccountRepository {
         try {
             return entityManager.createQuery("select a from Account a", Account.class).getResultList();
         } catch (PersistenceException e) {
-            return emptyList();
+            logger.error("Error getting all accounts");
+            throw new DaoException("Cannot get accounts", e);
         }
     }
 

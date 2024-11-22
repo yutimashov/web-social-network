@@ -1,7 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.AccountRepository;
-import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AdminService;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,8 +20,7 @@ public class AdminServiceImpl implements AdminService {
     public void makeAdmin(Long accountId) {
         validateAccountId(accountId);
         if (accountDao.getById(accountId).isPresent()) {
-            accountDao.updateById(accountId,
-                    new Account.Builder(accountDao.getById(accountId).get()).role(ADMIN).build());
+            accountDao.changeRole(accountId, ADMIN);
         }
     }
 
