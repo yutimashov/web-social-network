@@ -68,8 +68,7 @@ public class AccountDao implements AccountRepository {
     @Override
     public Optional<Account> getById(Long id) {
         try {
-            Account existingAccount = entityManager.find(Account.class, id);
-            return ofNullable(existingAccount);
+            return ofNullable(entityManager.find(Account.class, id));
         } catch (PersistenceException e) {
             logger.error("Error getting account by id: id={}", id);
             throw new DaoException("Cannot get account by provided id", e);

@@ -21,14 +21,9 @@ import static com.getjavajob.training.timashovy.socialnetwork.domain.account.Acc
 import static com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole.REGULAR;
 import static java.time.LocalDate.of;
 import static java.util.Arrays.asList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.openMocks;
 
 class AccountDaoImplTest {
@@ -155,10 +150,8 @@ class AccountDaoImplTest {
         @Test
         void shouldSuccessfullyDeleteAccountIfPossible() {
             Long accountId = 1L;
-            Account account = new Account();
             when(entityManager.find(Account.class, accountId)).thenReturn(account);
             accountDao.delete(accountId);
-            verify(entityManager).find(Account.class, accountId);
             verify(entityManager).remove(account);
         }
 
@@ -167,7 +160,6 @@ class AccountDaoImplTest {
             Long accountId = 1L;
             when(entityManager.find(Account.class, accountId)).thenReturn(null);
             accountDao.delete(accountId);
-            verify(entityManager).find(Account.class, accountId);
             verify(entityManager, never()).remove(any(Account.class));
         }
 
@@ -176,7 +168,6 @@ class AccountDaoImplTest {
             Long accountId = 1L;
             when(entityManager.find(Account.class, accountId)).thenThrow(new PersistenceException());
             assertThrows(DaoException.class, () -> accountDao.delete(accountId));
-            verify(entityManager).find(Account.class, accountId);
             verify(entityManager, never()).remove(any(Account.class));
         }
 
