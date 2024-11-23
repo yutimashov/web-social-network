@@ -20,9 +20,9 @@ public interface AccountService {
 
     List<Account> getAll();
 
-    boolean addFriend(Long accountId, Long friendId);
+    void addFriend(Long accountId, Long friendId);
 
-    boolean deleteFriend(Long accountId, Long friendId);
+    void deleteFriend(Long accountId, Long friendId);
 
     List<Account> getFriends(Long accountId);
 
