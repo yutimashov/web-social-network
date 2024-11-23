@@ -1,0 +1,4 @@
+2024-11-23 18:28:59 ERROR AccountServiceImpl:156 - account with id = 1 is going to make friendship with account with id = 2. But friendship already existed
+2024-11-23 18:28:59 ERROR AccountServiceImpl:148 - account with id = 1 is going to accept friend request with itself
+2024-11-23 18:31:12 ERROR AccountServiceImpl:156 - account with id = 1 is going to make friendship with account with id = 2. But friendship already existed
+2024-11-23 18:31:12 ERROR AccountServiceImpl:148 - account with id = 1 is going to accept friend request with itself
