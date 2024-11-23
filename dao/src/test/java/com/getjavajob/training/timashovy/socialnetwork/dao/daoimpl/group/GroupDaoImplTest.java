@@ -1,129 +1,118 @@
-//package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group;
-//
-//import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
-//import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
-//import org.junit.jupiter.api.DisplayName;
-//import org.junit.jupiter.api.Nested;
-//import org.junit.jupiter.api.Test;
-//import org.junit.jupiter.api.extension.ExtendWith;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.test.context.ContextConfiguration;
-//import org.springframework.test.context.jdbc.Sql;
-//import org.springframework.test.context.junit.jupiter.SpringExtension;
-//
-//import java.io.ByteArrayInputStream;
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//import static java.util.Optional.empty;
-//import static org.junit.jupiter.api.Assertions.*;
-//import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
-//import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
-//
-//@ExtendWith(SpringExtension.class)
-//@ContextConfiguration("classpath:test-config.xml")
-//@Sql(
-//        scripts = {
-//                "classpath:scripts/group/create.sql",
-//                "classpath:scripts/group/load.sql"
-//        },
-//        executionPhase = BEFORE_TEST_METHOD
-//)
-//@Sql(
-//        scripts = {
-//                "classpath:scripts/group/clear.sql",
-//                "classpath:scripts/group/drop.sql"
-//        },
-//        executionPhase = AFTER_TEST_METHOD
-//)
-//class GroupDaoImplTest {
-//
-//    @Autowired
-//    private BaseDao<Group> GROUP_DAO_INSTANCE;
-//    private static final Group TEST_GROUP = new Group.Builder().groupName("").description("").accountOwnerId(1L)
-//            .build();
-//
-//    private void restoreTestGroupDefaultState() {
-//        TEST_GROUP.setName("");
-//        TEST_GROUP.setDescription("");
-//        TEST_GROUP.setAccountOwner(1L);
-//    }
-//
-//    private void setTestGroupEqualsToRecordInTestTable() {
-//        TEST_GROUP.setId(1L);
-//        TEST_GROUP.setName("test");
-//        TEST_GROUP.setDescription("test");
-//        TEST_GROUP.setAccountOwner(1L);
-//        TEST_GROUP.setAvatar(new ByteArrayInputStream("testAvatar".getBytes()));
-//    }
-//
-//    @Nested
-//    @DisplayName("Long create(Group group)")
-//    class TestCreateGroup {
-//
-//        @Test
-//        public void shouldReturn1WhenCreateGroup() {
-//            restoreTestGroupDefaultState();
-//            assertEquals(2L, GROUP_DAO_INSTANCE.create(TEST_GROUP));
-//        }
-//
-//    }
-//
-//    @Nested
-//    @DisplayName("Group getById(Long id)")
-//    class TestGetGroupById {
-//
-//        @Test
-//        public void shouldReturnEmptyOptionalWhenGroupIsNotExisted() {
-//            assertEquals(empty(), GROUP_DAO_INSTANCE.getById(10L));
-//        }
-//
-//    }
-//
-//    @Nested
-//    @DisplayName("List<Group> getAll()")
-//    class TestGetAllGroups {
-//
-//        @Test
-//        public void testGetAllWithOneExistingGroup() {
-//            setTestGroupEqualsToRecordInTestTable();
-//            List<Group> groups = new ArrayList<>();
-//            groups.add(TEST_GROUP);
-//            assertIterableEquals(groups, GROUP_DAO_INSTANCE.getAll());
-//        }
-//
-//    }
-//
-//    @Nested
-//    @DisplayName("boolean updateById(Long id, Group group)")
-//    class TestUpdateGroupById {
-//
-//        @Test
-//        public void testUpdateByIdUpdateNonExistingId() {
-//            assertFalse(GROUP_DAO_INSTANCE.updateById(-1L, TEST_GROUP));
-//        }
-//
-//        @Test
-//        public void testUpdateByIdUpdateExistingGroup() {
-//            assertTrue(GROUP_DAO_INSTANCE.updateById(1L, TEST_GROUP));
-//        }
-//
-//    }
-//
-//    @Nested
-//    @DisplayName("boolean deleteById(Long id)")
-//    class testDeleteGroupById {
-//
-//        @Test
-//        public void testDeleteByIdWhenIdDoesNotExist() {
-//            assertFalse(GROUP_DAO_INSTANCE.deleteById(-1L));
-//        }
-//
-//        @Test
-//        public void deleteByIdDeleteExistingGroup() {
-//            assertTrue(GROUP_DAO_INSTANCE.deleteById(1L));
-//        }
-//
-//    }
-//
-//}
+package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group;
+
+import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import java.util.List;
+import java.util.Optional;
+
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.openMocks;
+
+class GroupDaoImplTest {
+
+    @Mock
+    private EntityManager entityManager;
+
+    @Mock
+    private TypedQuery<Group> groupsQuery;
+
+    @InjectMocks
+    private GroupDao groupDao;
+    private Group group;
+
+    @BeforeEach
+    void setUp() {
+        openMocks(this);
+        group = new Group();
+    }
+
+    @Nested
+    @DisplayName("Group save(Group group)")
+    class TestSaveGroup {
+
+        @Test
+        public void shouldReturnGroupWhenGroupWasSaved() {
+            assertEquals(group, groupDao.save(group));
+            verify(entityManager).persist(group);
+        }
+
+    }
+
+    @Nested
+    @DisplayName("Group getById(Long id)")
+    class TestGetGroupById {
+
+        @Test
+        public void shouldReturnOptionalWithGroupWhenGroupExisted() {
+            Long id = 1L;
+            when(entityManager.find(Group.class, id)).thenReturn(group);
+            Optional<Group> optionalGroup = groupDao.getById(id);
+            assertTrue(optionalGroup.isPresent());
+            assertEquals(group, optionalGroup.get());
+        }
+
+        @Test
+        public void shouldReturnEmptyOptionalWhenGroupIsNotExisted() {
+            Long id = 1L;
+            when(entityManager.find(Group.class, id)).thenReturn(null);
+            assertFalse(groupDao.getById(id).isPresent());
+        }
+
+    }
+
+    @Nested
+    @DisplayName("List<Group> getAll()")
+    class TestGetAllGroups {
+
+        @Test
+        public void shouldReturnListWithOneExistingGroupWhenOneGroupExists() {
+            List<Group> groups = singletonList(group);
+            when(entityManager.createQuery("select g from Group g", Group.class)).thenReturn(groupsQuery);
+            when(groupsQuery.getResultList()).thenReturn(groups);
+            assertEquals(groups, groupDao.getAll());
+        }
+
+        @Test
+        public void shouldReturnEmptyListWhenNoGroupExists() {
+            List<Group> groups = emptyList();
+            when(entityManager.createQuery("select g from Group g", Group.class)).thenReturn(groupsQuery);
+            when(groupsQuery.getResultList()).thenReturn(groups);
+            assertEquals(groups, groupDao.getAll());
+        }
+
+    }
+
+    @Nested
+    @DisplayName("void delete(Long id)")
+    class testDeleteGroup {
+
+        @Test
+        public void shouldNotDeleteGroupWhenGroupIsNotExisted() {
+            Long id = 1L;
+            when(entityManager.find(Group.class, id)).thenReturn(null);
+            groupDao.delete(id);
+            verify(entityManager, never()).remove(group);
+        }
+
+        @Test
+        public void shouldSuccessfullyDeleteGroupWhenGroupExists() {
+            Long id = 1L;
+            when(entityManager.find(Group.class, id)).thenReturn(group);
+            groupDao.delete(id);
+            verify(entityManager).remove(group);
+        }
+
+    }
+
+}

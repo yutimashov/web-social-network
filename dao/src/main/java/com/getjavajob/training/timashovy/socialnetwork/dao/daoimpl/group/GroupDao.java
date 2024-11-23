@@ -1,50 +1,70 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group;
 
+import com.getjavajob.training.timashovy.socialnetwork.dao.exception.DaoException;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.group.GroupRepository;
 import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
+import org.slf4j.Logger;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import java.util.List;
 import java.util.Optional;
 
 import static java.util.Objects.isNull;
-import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class GroupDao implements GroupRepository {
+
+    private static final Logger logger = getLogger(GroupDao.class);
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
     public Group save(Group group) {
-        entityManager.persist(group);
-        return group;
-    }
-
-    @Override
-    public void delete(Long id) {
-        Group group = entityManager.find(Group.class, id);
-        if (!isNull(group)) {
-            entityManager.remove(group);
+        try {
+            entityManager.persist(group);
+            return group;
+        } catch (PersistenceException e) {
+            logger.error("Error persisting group name={} from account={}", group.getName(),
+                    group.getAccountOwner().getId());
+            throw new DaoException("Cannot save group to persistent storage", e);
         }
     }
 
     @Override
-    public Optional<Group> getById(Long groupId) {
+    public void delete(Long id) {
         try {
-            Group existingGroup = entityManager.find(Group.class, groupId);
-            return ofNullable(existingGroup);
-        } catch (NoResultException e) {
-            return empty();
+            Group group = entityManager.find(Group.class, id);
+            if (!isNull(group)) {
+                entityManager.remove(group);
+            }
+        } catch (PersistenceException e) {
+            logger.error("Error deleting group: id={}", id);
+            throw new DaoException("Cannot delete group by provided id", e);
+        }
+    }
+
+    @Override
+    public Optional<Group> getById(Long id) {
+        try {
+            return ofNullable(entityManager.find(Group.class, id));
+        } catch (PersistenceException e) {
+            logger.error("Error getting group by id: id={}", id);
+            throw new DaoException("Cannot get group by provided id", e);
         }
     }
 
     @Override
     public List<Group> getAll() {
-        return entityManager.createQuery("select g from Group g", Group.class).getResultList();
+        try {
+            return entityManager.createQuery("select g from Group g", Group.class).getResultList();
+        } catch (PersistenceException e) {
+            logger.error("Error getting all groups");
+            throw new DaoException("Cannot get all groups from persistent storage", e);
+        }
     }
 
 }
