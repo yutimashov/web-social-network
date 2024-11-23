@@ -1,93 +1,231 @@
-//package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
-//
-//import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
-//import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
-//import org.junit.jupiter.api.*;
-//import org.junit.jupiter.api.extension.ExtendWith;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.dao.DataAccessException;
-//import org.springframework.test.context.ContextConfiguration;
-//import org.springframework.test.context.jdbc.Sql;
-//import org.springframework.test.context.junit.jupiter.SpringExtension;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.PERSONAL;
-//import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.WORKING;
-//import static java.util.Collections.emptyList;
-//import static org.junit.jupiter.api.Assertions.*;
-//import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
-//import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
-//
-//@ExtendWith(SpringExtension.class)
-//@ContextConfiguration("classpath:test-config.xml")
-//@Sql(
-//        scripts = {
-//                "classpath:scripts/account/create.sql",
-//                "classpath:scripts/account/load.sql"
-//        },
-//        executionPhase = BEFORE_TEST_METHOD
-//)
-//@Sql(
-//        scripts = {
-//                "classpath:scripts/account/clear.sql",
-//                "classpath:scripts/account/drop.sql"
-//        },
-//        executionPhase = AFTER_TEST_METHOD
-//)
-//class PhoneDaoImplTest {
-//
-//    @Autowired
-//    private PhoneDao PHONE_DAO;
-//
-//    @Nested
-//    @DisplayName("Long create(Phone phone)")
-//    class TestCreatePhone {
-//
-//        @Test
-//        void shouldReturnPhoneIdWhenPhoneWasCreated() {
-//            assertEquals(3L, PHONE_DAO.create(new Phone(PERSONAL, "test", 1L)));
-//        }
-//
-//        @Test
-//        void shouldThrowExceptionWhenCreationFailed() {
-//            assertThrows(DataAccessException.class, () -> {
-//                PHONE_DAO.create(new Phone(PERSONAL, "test", -1L));
-//                throw new UnsupportedOperationException("Not supported");
-//            });
-//        }
-//
-//    }
-//
-//    @Nested
-//    @DisplayName("List<Phone> getAll(Long accountId)")
-//    class TestGetAllPhones {
-//
-//        @Test
-//        void shouldReturnPhonesWhenAccountHasPhones() {
-//            List<Phone> expectedPhones = new ArrayList<>();
-//            expectedPhones.add(new Phone(1L, PERSONAL, "+375291112233", 1L));
-//            expectedPhones.add(new Phone(2L, WORKING, "+375291112233", 1L));
-//            assertIterableEquals(expectedPhones, PHONE_DAO.getAll(1L));
-//        }
-//
-//        @Test
-//        void shouldReturnEmptyListWhenAccountHasNoPhones() {
-//            assertIterableEquals(emptyList(), PHONE_DAO.getAll(2L));
-//        }
-//
-//    }
-//
-//    @Nested
-//    @DisplayName("boolean update(Long phoneId, String newPhoneNumber)")
-//    class TestUpdatePhone {
-//
-//        @Test
-//        void shouldReturnTrueWhenUpdateWithSuccess() {
-//            assertTrue(PHONE_DAO.update(1L, "test"));
-//        }
-//
-//    }
-//
-//}
+package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
+
+import com.getjavajob.training.timashovy.socialnetwork.dao.exception.DaoException;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
+import com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
+import javax.persistence.TypedQuery;
+import java.util.List;
+import java.util.Optional;
+
+import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.PERSONAL;
+import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.WORKING;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.openMocks;
+
+
+class PhoneDaoImplTest {
+
+    @Mock
+    private EntityManager entityManager;
+
+    @Mock
+    private TypedQuery<Phone> query;
+
+    @Mock
+    private TypedQuery<String> phoneValuesQuery;
+
+    @InjectMocks
+    private PhoneDao phoneDao;
+
+    private Phone phone;
+
+    @BeforeEach
+    public void setUp() {
+        openMocks(this);
+        phone = new Phone(PERSONAL, "", new Account());
+    }
+
+
+    @Nested
+    @DisplayName("Phone save(Phone phone)")
+    class TestCreatePhone {
+
+        @Test
+        void shouldReturnPhoneWhenPhoneSaved() {
+            assertEquals(phone, phoneDao.save(phone));
+        }
+
+        @Test
+        public void shouldThrowDaoExceptionWhenPhoneNotSaved() {
+            doThrow(new PersistenceException()).when(entityManager).persist(phone);
+            assertThrows(DaoException.class, () -> phoneDao.save(phone));
+        }
+
+    }
+
+    @Nested
+    @DisplayName("Optional<Phone> getById(Long id)")
+    class TestGetById {
+
+        @Test
+        void shouldReturnOptionalWithPhoneWhenPhoneExists() {
+            Long id = 1L;
+            when(entityManager.find(Phone.class, id)).thenReturn(phone);
+            Optional<Phone> optionalAccount = phoneDao.getById(id);
+            assertTrue(optionalAccount.isPresent());
+            assertEquals(phone, optionalAccount.get());
+        }
+
+        @Test
+        void shouldReturnEmptyOptionalWhenPhoneNotExists() {
+            Long id = 1L;
+            when(entityManager.find(Phone.class, id)).thenThrow(new PersistenceException());
+            assertThrows(DaoException.class, () -> phoneDao.getById(id));
+        }
+
+    }
+
+    @Nested
+    @DisplayName("List<Phone> getPhones(Long accountId, PhoneType phoneType)")
+    class TestGetPhones {
+
+        @Test
+        void shouldReturnWorkingPhonesWhenRequestForWorkingPhones() {
+            PhoneType phoneType = WORKING;
+            Long accountId = 1L;
+            List<Phone> expectedPhones = asList(phone, phone);
+            when(entityManager.createQuery("select p from Phone p where p.account.id = :accountId "
+                    + "and p.phoneType = :phoneType", Phone.class)).thenReturn(query);
+            when(query.setParameter("accountId", accountId)).thenReturn(query);
+            when(query.setParameter("phoneType", phoneType)).thenReturn(query);
+            when(query.getResultList()).thenReturn(expectedPhones);
+            assertEquals(expectedPhones, phoneDao.getPhones(accountId, phoneType));
+        }
+
+        @Test
+        void shouldReturnEmptyPhoneListWhenNoSuchPhonesExisting() {
+            PhoneType phoneType = WORKING;
+            Long accountId = 1L;
+            List<Phone> expectedPhones = emptyList();
+            when(entityManager.createQuery("select p from Phone p where p.account.id = :accountId "
+                    + "and p.phoneType = :phoneType", Phone.class)).thenReturn(query);
+            when(query.setParameter("accountId", accountId)).thenReturn(query);
+            when(query.setParameter("phoneType", phoneType)).thenReturn(query);
+            when(query.getResultList()).thenReturn(expectedPhones);
+            assertEquals(expectedPhones, phoneDao.getPhones(accountId, phoneType));
+        }
+
+        @Test
+        void shouldThrowDaoExceptionWhenCanNotGetPhones() {
+            PhoneType phoneType = WORKING;
+            Long accountId = 1L;
+            when(entityManager.createQuery("select p from Phone p where p.account.id = :accountId "
+                    + "and p.phoneType = :phoneType", Phone.class)).thenReturn(query);
+            when(query.setParameter("accountId", accountId)).thenReturn(query);
+            when(query.setParameter("phoneType", phoneType)).thenReturn(query);
+            when(query.getResultList()).thenThrow(new PersistenceException());
+            assertThrows(DaoException.class, () -> phoneDao.getPhones(accountId, phoneType));
+        }
+
+    }
+
+    @Nested
+    @DisplayName("List<String> getPhoneNumbers(Long accountId, PhoneType phoneType)")
+    class TestGetPhoneNumbers {
+
+        @Test
+        void shouldReturnWorkingPhonesValuesWhenRequestForWorkingPhonesValues() {
+            PhoneType phoneType = WORKING;
+            Long accountId = 1L;
+            List<String> expectedPhoneValues = asList("", "");
+            when(entityManager.createQuery("select p.number from Phone p where p.account.id = :accountId "
+                    + "and p.phoneType = :phoneType", String.class)).thenReturn(phoneValuesQuery);
+            when(phoneValuesQuery.setParameter("accountId", accountId)).thenReturn(phoneValuesQuery);
+            when(phoneValuesQuery.setParameter("phoneType", phoneType)).thenReturn(phoneValuesQuery);
+            when(phoneValuesQuery.getResultList()).thenReturn(expectedPhoneValues);
+            assertEquals(expectedPhoneValues, phoneDao.getPhoneNumbers(accountId, phoneType));
+        }
+
+        @Test
+        void shouldReturnEmptyPhoneValuesListWhenNoSuchPhonesExisting() {
+            PhoneType phoneType = WORKING;
+            Long accountId = 1L;
+            List<String> expectedPhoneValues = emptyList();
+            when(entityManager.createQuery("select p.number from Phone p where p.account.id = :accountId "
+                    + "and p.phoneType = :phoneType", String.class)).thenReturn(phoneValuesQuery);
+            when(phoneValuesQuery.setParameter("accountId", accountId)).thenReturn(phoneValuesQuery);
+            when(phoneValuesQuery.setParameter("phoneType", phoneType)).thenReturn(phoneValuesQuery);
+            when(phoneValuesQuery.getResultList()).thenReturn(expectedPhoneValues);
+            assertEquals(expectedPhoneValues, phoneDao.getPhoneNumbers(accountId, phoneType));
+        }
+
+        @Test
+        void shouldThrowDaoExceptionWhenCanNotGetPhonesValues() {
+            PhoneType phoneType = WORKING;
+            Long accountId = 1L;
+            when(entityManager.createQuery("select p.number from Phone p where p.account.id = :accountId "
+                    + "and p.phoneType = :phoneType", String.class)).thenReturn(phoneValuesQuery);
+            when(phoneValuesQuery.setParameter("accountId", accountId)).thenReturn(phoneValuesQuery);
+            when(phoneValuesQuery.setParameter("phoneType", phoneType)).thenReturn(phoneValuesQuery);
+            when(phoneValuesQuery.getResultList()).thenThrow(new PersistenceException());
+            assertThrows(DaoException.class, () -> phoneDao.getPhoneNumbers(accountId, phoneType));
+        }
+
+    }
+
+    @Nested
+    @DisplayName("void updateNumber(Long phoneId, String newNumber)")
+    class TestUpdatePhoneNumber {
+
+        @Test
+        void shouldReturnTrueWhenUpdateWithSuccess() {
+            Long id = 1L;
+            when(entityManager.find(Phone.class, id)).thenReturn(phone);
+            phoneDao.updateNumber(id, "test");
+            assertEquals(phone.getNumber(), "test");
+        }
+
+        @Test
+        void shouldThrowDaoExceptionWhenCanNotUpdatePhone() {
+            Long id = 1L;
+            when(entityManager.find(Phone.class, id)).thenThrow(new PersistenceException());
+            assertThrows(DaoException.class, () -> phoneDao.updateNumber(id, ""));
+        }
+
+    }
+
+    @Nested
+    @DisplayName("void delete(Long id)")
+    class TestDelete {
+
+        @Test
+        void shouldSuccessfullyDeletePhoneIfPossible() {
+            Long id = 1L;
+            when(entityManager.find(Phone.class, id)).thenReturn(phone);
+            phoneDao.delete(id);
+            verify(entityManager).remove(phone);
+        }
+
+        @Test
+        public void shouldNotCallDeleteIfAccountNotFound() {
+            Long id = 1L;
+            when(entityManager.find(Phone.class, id)).thenReturn(null);
+            phoneDao.delete(id);
+            verify(entityManager, never()).remove(any(Phone.class));
+        }
+
+        @Test
+        public void shouldThrowDaoExceptionIfAccountCannotBeDeleted() {
+            Long id = 1L;
+            when(entityManager.find(Phone.class, id)).thenThrow(new PersistenceException());
+            assertThrows(DaoException.class, () -> phoneDao.delete(id));
+            verify(entityManager, never()).remove(any(Phone.class));
+        }
+
+    }
+
+}

@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface PhoneRepository extends Repository<Long, Phone> {
 
-    boolean updateNumber(Long phoneId, String newNumber);
+    void updateNumber(Long phoneId, String newNumber);
 
     List<Phone> getPhones(Long accountId, PhoneType phoneType);
 

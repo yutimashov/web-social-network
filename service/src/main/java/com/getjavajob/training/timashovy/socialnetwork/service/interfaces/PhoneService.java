@@ -18,7 +18,7 @@ public interface PhoneService {
 
     void delete(Long phoneId);
 
-    boolean update(Long phoneId, String newPhoneNumber);
+    void update(Long phoneId, String newPhoneNumber);
 
     Phone create(Phone phone);
 

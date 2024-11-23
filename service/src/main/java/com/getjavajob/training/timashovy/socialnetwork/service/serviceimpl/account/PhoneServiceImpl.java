@@ -50,8 +50,8 @@ public class PhoneServiceImpl implements PhoneService {
 
     @Transactional
     @Override
-    public boolean update(Long phoneId, String newPhoneNumber) {
-        return phoneRepository.updateNumber(phoneId, newPhoneNumber);
+    public void update(Long phoneId, String newPhoneNumber) {
+        phoneRepository.updateNumber(phoneId, newPhoneNumber);
     }
 
     @Transactional
