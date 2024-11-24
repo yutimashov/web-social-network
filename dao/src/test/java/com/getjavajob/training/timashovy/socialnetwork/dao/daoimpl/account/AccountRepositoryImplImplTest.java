@@ -13,13 +13,10 @@ import org.mockito.Mock;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole.ADMIN;
-import static com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole.REGULAR;
-import static java.time.LocalDate.of;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -42,20 +39,7 @@ class AccountRepositoryImplImplTest {
     @BeforeEach
     public void setUp() {
         openMocks(this);
-        account = new Account.Builder()
-                .firstName("")
-                .lastName("")
-                .middleName("")
-                .birthDate(of(2000, 1, 1))
-                .phones(new ArrayList<>())
-                .personalAddress("")
-                .workAddress("")
-                .email("")
-                .icq("")
-                .skype("")
-                .additionalInfo("")
-                .role(REGULAR)
-                .build();
+        account = new Account();
     }
 
     @Nested
