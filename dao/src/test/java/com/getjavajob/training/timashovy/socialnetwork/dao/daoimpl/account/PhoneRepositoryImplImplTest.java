@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.openMocks;
 
 
-class PhoneDaoImplTest {
+class PhoneRepositoryImplImplTest {
 
     @Mock
     private EntityManager entityManager;
@@ -39,7 +39,7 @@ class PhoneDaoImplTest {
     private TypedQuery<String> phoneValuesQuery;
 
     @InjectMocks
-    private PhoneDao phoneDao;
+    private PhoneRepositoryImpl phoneRepositoryImpl;
 
     private Phone phone;
 
@@ -56,13 +56,13 @@ class PhoneDaoImplTest {
 
         @Test
         void shouldReturnPhoneWhenPhoneSaved() {
-            assertEquals(phone, phoneDao.save(phone));
+            assertEquals(phone, phoneRepositoryImpl.save(phone));
         }
 
         @Test
         public void shouldThrowDaoExceptionWhenPhoneNotSaved() {
             doThrow(new PersistenceException()).when(entityManager).persist(phone);
-            assertThrows(DaoException.class, () -> phoneDao.save(phone));
+            assertThrows(DaoException.class, () -> phoneRepositoryImpl.save(phone));
         }
 
     }
@@ -75,7 +75,7 @@ class PhoneDaoImplTest {
         void shouldReturnOptionalWithPhoneWhenPhoneExists() {
             Long id = 1L;
             when(entityManager.find(Phone.class, id)).thenReturn(phone);
-            Optional<Phone> optionalAccount = phoneDao.getById(id);
+            Optional<Phone> optionalAccount = phoneRepositoryImpl.getById(id);
             assertTrue(optionalAccount.isPresent());
             assertEquals(phone, optionalAccount.get());
         }
@@ -84,7 +84,7 @@ class PhoneDaoImplTest {
         void shouldReturnEmptyOptionalWhenPhoneNotExists() {
             Long id = 1L;
             when(entityManager.find(Phone.class, id)).thenThrow(new PersistenceException());
-            assertThrows(DaoException.class, () -> phoneDao.getById(id));
+            assertThrows(DaoException.class, () -> phoneRepositoryImpl.getById(id));
         }
 
     }
@@ -103,7 +103,7 @@ class PhoneDaoImplTest {
             when(query.setParameter("accountId", accountId)).thenReturn(query);
             when(query.setParameter("phoneType", phoneType)).thenReturn(query);
             when(query.getResultList()).thenReturn(expectedPhones);
-            assertEquals(expectedPhones, phoneDao.getPhones(accountId, phoneType));
+            assertEquals(expectedPhones, phoneRepositoryImpl.getPhones(accountId, phoneType));
         }
 
         @Test
@@ -116,7 +116,7 @@ class PhoneDaoImplTest {
             when(query.setParameter("accountId", accountId)).thenReturn(query);
             when(query.setParameter("phoneType", phoneType)).thenReturn(query);
             when(query.getResultList()).thenReturn(expectedPhones);
-            assertEquals(expectedPhones, phoneDao.getPhones(accountId, phoneType));
+            assertEquals(expectedPhones, phoneRepositoryImpl.getPhones(accountId, phoneType));
         }
 
         @Test
@@ -128,7 +128,7 @@ class PhoneDaoImplTest {
             when(query.setParameter("accountId", accountId)).thenReturn(query);
             when(query.setParameter("phoneType", phoneType)).thenReturn(query);
             when(query.getResultList()).thenThrow(new PersistenceException());
-            assertThrows(DaoException.class, () -> phoneDao.getPhones(accountId, phoneType));
+            assertThrows(DaoException.class, () -> phoneRepositoryImpl.getPhones(accountId, phoneType));
         }
 
     }
@@ -147,7 +147,7 @@ class PhoneDaoImplTest {
             when(phoneValuesQuery.setParameter("accountId", accountId)).thenReturn(phoneValuesQuery);
             when(phoneValuesQuery.setParameter("phoneType", phoneType)).thenReturn(phoneValuesQuery);
             when(phoneValuesQuery.getResultList()).thenReturn(expectedPhoneValues);
-            assertEquals(expectedPhoneValues, phoneDao.getPhoneNumbers(accountId, phoneType));
+            assertEquals(expectedPhoneValues, phoneRepositoryImpl.getPhoneNumbers(accountId, phoneType));
         }
 
         @Test
@@ -160,7 +160,7 @@ class PhoneDaoImplTest {
             when(phoneValuesQuery.setParameter("accountId", accountId)).thenReturn(phoneValuesQuery);
             when(phoneValuesQuery.setParameter("phoneType", phoneType)).thenReturn(phoneValuesQuery);
             when(phoneValuesQuery.getResultList()).thenReturn(expectedPhoneValues);
-            assertEquals(expectedPhoneValues, phoneDao.getPhoneNumbers(accountId, phoneType));
+            assertEquals(expectedPhoneValues, phoneRepositoryImpl.getPhoneNumbers(accountId, phoneType));
         }
 
         @Test
@@ -172,7 +172,7 @@ class PhoneDaoImplTest {
             when(phoneValuesQuery.setParameter("accountId", accountId)).thenReturn(phoneValuesQuery);
             when(phoneValuesQuery.setParameter("phoneType", phoneType)).thenReturn(phoneValuesQuery);
             when(phoneValuesQuery.getResultList()).thenThrow(new PersistenceException());
-            assertThrows(DaoException.class, () -> phoneDao.getPhoneNumbers(accountId, phoneType));
+            assertThrows(DaoException.class, () -> phoneRepositoryImpl.getPhoneNumbers(accountId, phoneType));
         }
 
     }
@@ -185,7 +185,7 @@ class PhoneDaoImplTest {
         void shouldReturnTrueWhenUpdateWithSuccess() {
             Long id = 1L;
             when(entityManager.find(Phone.class, id)).thenReturn(phone);
-            phoneDao.updateNumber(id, "test");
+            phoneRepositoryImpl.updateNumber(id, "test");
             assertEquals(phone.getNumber(), "test");
         }
 
@@ -193,7 +193,7 @@ class PhoneDaoImplTest {
         void shouldThrowDaoExceptionWhenCanNotUpdatePhone() {
             Long id = 1L;
             when(entityManager.find(Phone.class, id)).thenThrow(new PersistenceException());
-            assertThrows(DaoException.class, () -> phoneDao.updateNumber(id, ""));
+            assertThrows(DaoException.class, () -> phoneRepositoryImpl.updateNumber(id, ""));
         }
 
     }
@@ -206,7 +206,7 @@ class PhoneDaoImplTest {
         void shouldSuccessfullyDeletePhoneIfPossible() {
             Long id = 1L;
             when(entityManager.find(Phone.class, id)).thenReturn(phone);
-            phoneDao.delete(id);
+            phoneRepositoryImpl.delete(id);
             verify(entityManager).remove(phone);
         }
 
@@ -214,7 +214,7 @@ class PhoneDaoImplTest {
         public void shouldNotCallDeleteIfAccountNotFound() {
             Long id = 1L;
             when(entityManager.find(Phone.class, id)).thenReturn(null);
-            phoneDao.delete(id);
+            phoneRepositoryImpl.delete(id);
             verify(entityManager, never()).remove(any(Phone.class));
         }
 
@@ -222,7 +222,7 @@ class PhoneDaoImplTest {
         public void shouldThrowDaoExceptionIfAccountCannotBeDeleted() {
             Long id = 1L;
             when(entityManager.find(Phone.class, id)).thenThrow(new PersistenceException());
-            assertThrows(DaoException.class, () -> phoneDao.delete(id));
+            assertThrows(DaoException.class, () -> phoneRepositoryImpl.delete(id));
             verify(entityManager, never()).remove(any(Phone.class));
         }
 

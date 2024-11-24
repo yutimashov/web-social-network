@@ -17,7 +17,7 @@ import static java.util.Optional.ofNullable;
  * Singleton class responsible for working with `message_data.personal_messages`.
  * It provides safe multithreading approach for creating singleton object using synchronization mechanism.
  */
-public class PersonalWallMessageDaoImpl implements PersonalWallMessageRepository {
+public class PersonalWallMessageRepositoryImpl implements PersonalWallMessageRepository {
 
     @PersistenceContext
     private EntityManager entityManager;

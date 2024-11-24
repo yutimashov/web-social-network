@@ -20,9 +20,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 /**
  * Provides functionality for working with data inside `account_data.accounts` table.
  */
-public class AccountDao implements AccountRepository {
+public class AccountRepositoryImpl implements AccountRepository {
 
-    private static final Logger logger = getLogger(AccountDao.class);
+    private static final Logger logger = getLogger(AccountRepositoryImpl.class);
 
     @PersistenceContext
     private EntityManager entityManager;

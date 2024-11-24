@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.openMocks;
 
-class GroupDaoImplTest {
+class GroupRepositoryImplImplTest {
 
     @Mock
     private EntityManager entityManager;
@@ -28,7 +28,7 @@ class GroupDaoImplTest {
     private TypedQuery<Group> groupsQuery;
 
     @InjectMocks
-    private GroupDao groupDao;
+    private GroupRepositoryImpl groupRepositoryImpl;
     private Group group;
 
     @BeforeEach
@@ -43,7 +43,7 @@ class GroupDaoImplTest {
 
         @Test
         public void shouldReturnGroupWhenGroupWasSaved() {
-            assertEquals(group, groupDao.save(group));
+            assertEquals(group, groupRepositoryImpl.save(group));
             verify(entityManager).persist(group);
         }
 
@@ -57,7 +57,7 @@ class GroupDaoImplTest {
         public void shouldReturnOptionalWithGroupWhenGroupExisted() {
             Long id = 1L;
             when(entityManager.find(Group.class, id)).thenReturn(group);
-            Optional<Group> optionalGroup = groupDao.getById(id);
+            Optional<Group> optionalGroup = groupRepositoryImpl.getById(id);
             assertTrue(optionalGroup.isPresent());
             assertEquals(group, optionalGroup.get());
         }
@@ -66,7 +66,7 @@ class GroupDaoImplTest {
         public void shouldReturnEmptyOptionalWhenGroupIsNotExisted() {
             Long id = 1L;
             when(entityManager.find(Group.class, id)).thenReturn(null);
-            assertFalse(groupDao.getById(id).isPresent());
+            assertFalse(groupRepositoryImpl.getById(id).isPresent());
         }
 
     }
@@ -80,7 +80,7 @@ class GroupDaoImplTest {
             List<Group> groups = singletonList(group);
             when(entityManager.createQuery("select g from Group g", Group.class)).thenReturn(groupsQuery);
             when(groupsQuery.getResultList()).thenReturn(groups);
-            assertEquals(groups, groupDao.getAll());
+            assertEquals(groups, groupRepositoryImpl.getAll());
         }
 
         @Test
@@ -88,7 +88,7 @@ class GroupDaoImplTest {
             List<Group> groups = emptyList();
             when(entityManager.createQuery("select g from Group g", Group.class)).thenReturn(groupsQuery);
             when(groupsQuery.getResultList()).thenReturn(groups);
-            assertEquals(groups, groupDao.getAll());
+            assertEquals(groups, groupRepositoryImpl.getAll());
         }
 
     }
@@ -101,7 +101,7 @@ class GroupDaoImplTest {
         public void shouldNotDeleteGroupWhenGroupIsNotExisted() {
             Long id = 1L;
             when(entityManager.find(Group.class, id)).thenReturn(null);
-            groupDao.delete(id);
+            groupRepositoryImpl.delete(id);
             verify(entityManager, never()).remove(group);
         }
 
@@ -109,7 +109,7 @@ class GroupDaoImplTest {
         public void shouldSuccessfullyDeleteGroupWhenGroupExists() {
             Long id = 1L;
             when(entityManager.find(Group.class, id)).thenReturn(group);
-            groupDao.delete(id);
+            groupRepositoryImpl.delete(id);
             verify(entityManager).remove(group);
         }
 

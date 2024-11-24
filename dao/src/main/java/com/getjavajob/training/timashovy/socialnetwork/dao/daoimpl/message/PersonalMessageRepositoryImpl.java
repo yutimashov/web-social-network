@@ -12,7 +12,7 @@ import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
-public class PersonalMessageDaoImpl implements PersonalMessageRepository {
+public class PersonalMessageRepositoryImpl implements PersonalMessageRepository {
 
     @PersistenceContext
     private EntityManager entityManager;

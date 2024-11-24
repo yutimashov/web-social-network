@@ -15,9 +15,9 @@ import static java.util.Objects.isNull;
 import static java.util.Optional.ofNullable;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class GroupDao implements GroupRepository {
+public class GroupRepositoryImpl implements GroupRepository {
 
-    private static final Logger logger = getLogger(GroupDao.class);
+    private static final Logger logger = getLogger(GroupRepositoryImpl.class);
 
     @PersistenceContext
     private EntityManager entityManager;

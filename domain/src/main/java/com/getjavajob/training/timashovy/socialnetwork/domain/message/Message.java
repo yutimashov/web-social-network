@@ -103,8 +103,8 @@ public abstract class Message implements BaseEntity<Long> {
 
     @Override
     public String toString() {
-        return "Message{id=" + id + ", accountAuthorId=" + accountAuthorId + ", text=" + text + ", photo="
-                + Arrays.toString(photo) + ", creationDate=" + creationDate + "}";
+        return "Message{id=" + id + ", accountAuthorId=" + accountAuthorId + ", text=" + text
+                + ", creationDate=" + creationDate + "}";
     }
 
 }

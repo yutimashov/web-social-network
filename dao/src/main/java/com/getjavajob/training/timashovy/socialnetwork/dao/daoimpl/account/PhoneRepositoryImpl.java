@@ -20,9 +20,9 @@ import static org.slf4j.LoggerFactory.getLogger;
  * Singleton class responsible for working with `account_data.phones` table in DB.
  * It provides safe multithreading approach for creating singleton object using synchronization mechanism.
  */
-public class PhoneDao implements PhoneRepository {
+public class PhoneRepositoryImpl implements PhoneRepository {
 
-    private static final Logger logger = getLogger(PhoneDao.class);
+    private static final Logger logger = getLogger(PhoneRepositoryImpl.class);
 
     @PersistenceContext
     private EntityManager entityManager;

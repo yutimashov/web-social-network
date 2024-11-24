@@ -21,7 +21,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.openMocks;
 
-class PasswordDaoImplTest {
+class PasswordRepositoryImplImplTest {
 
     @Mock
     private EntityManager entityManager;
@@ -30,7 +30,7 @@ class PasswordDaoImplTest {
     private TypedQuery<Password> query;
 
     @InjectMocks
-    private PasswordDao passwordDao;
+    private PasswordRepositoryImpl passwordRepositoryImpl;
 
     private Password password;
 
@@ -46,13 +46,13 @@ class PasswordDaoImplTest {
 
         @Test
         public void shouldReturnPasswordWhenPasswordSaved() {
-            assertEquals(password, passwordDao.save(password));
+            assertEquals(password, passwordRepositoryImpl.save(password));
         }
 
         @Test
         void shouldThrowExceptionWhenPasswordCannotBeSaved() {
             doThrow(new PersistenceException()).when(entityManager).persist(password);
-            assertThrows(DaoException.class, () -> passwordDao.save(password));
+            assertThrows(DaoException.class, () -> passwordRepositoryImpl.save(password));
         }
 
     }
@@ -65,14 +65,14 @@ class PasswordDaoImplTest {
         void shouldReturnOptionalWithPasswordWhenPasswordExists() {
             Long id = 1L;
             when(entityManager.find(Password.class, id)).thenReturn(password);
-            Optional<Password> optionalAccount = passwordDao.getById(id);
+            Optional<Password> optionalAccount = passwordRepositoryImpl.getById(id);
             assertTrue(optionalAccount.isPresent());
             assertEquals(password, optionalAccount.get());
         }
 
         @Test
         void shouldReturnEmptyOptionalWhenPasswordDoesNotExist() {
-            assertEquals(empty(), passwordDao.getById(-1L));
+            assertEquals(empty(), passwordRepositoryImpl.getById(-1L));
         }
 
     }
@@ -89,7 +89,7 @@ class PasswordDaoImplTest {
                     .thenReturn(query);
             when(query.setParameter("email", email)).thenReturn(query);
             when(query.getSingleResult()).thenReturn(password);
-            Optional<Password> result = passwordDao.findByEmail(email);
+            Optional<Password> result = passwordRepositoryImpl.findByEmail(email);
             assertEquals(Optional.of(password), result);
         }
 
@@ -101,7 +101,7 @@ class PasswordDaoImplTest {
                     .thenReturn(query);
             when(query.setParameter("email", email)).thenReturn(query);
             when(query.getSingleResult()).thenThrow(new NoResultException());
-            Optional<Password> result = passwordDao.findByEmail(email);
+            Optional<Password> result = passwordRepositoryImpl.findByEmail(email);
             assertEquals(Optional.empty(), result);
         }
 
@@ -113,7 +113,7 @@ class PasswordDaoImplTest {
                     .thenReturn(query);
             when(query.setParameter("email", email)).thenReturn(query);
             when(query.getSingleResult()).thenThrow(new PersistenceException());
-            assertThrows(DaoException.class, () -> passwordDao.findByEmail(email));
+            assertThrows(DaoException.class, () -> passwordRepositoryImpl.findByEmail(email));
         }
 
     }
@@ -126,7 +126,7 @@ class PasswordDaoImplTest {
         void shouldSuccessfullyDeletePasswordIfPossible() {
             Long id = 1L;
             when(entityManager.find(Password.class, id)).thenReturn(password);
-            passwordDao.delete(id);
+            passwordRepositoryImpl.delete(id);
             verify(entityManager).remove(password);
         }
 
@@ -134,7 +134,7 @@ class PasswordDaoImplTest {
         public void shouldNotCallDeleteIfPasswordNotFound() {
             Long id = 1L;
             when(entityManager.find(Password.class, id)).thenReturn(null);
-            passwordDao.delete(id);
+            passwordRepositoryImpl.delete(id);
             verify(entityManager, never()).remove(any(Password.class));
         }
 
@@ -142,7 +142,7 @@ class PasswordDaoImplTest {
         public void shouldThrowDaoExceptionIfPasswordCannotBeDeleted() {
             Long id = 1L;
             when(entityManager.find(Password.class, id)).thenThrow(new PersistenceException());
-            assertThrows(DaoException.class, () -> passwordDao.delete(id));
+            assertThrows(DaoException.class, () -> passwordRepositoryImpl.delete(id));
             verify(entityManager, never()).remove(any(Password.class));
         }
 

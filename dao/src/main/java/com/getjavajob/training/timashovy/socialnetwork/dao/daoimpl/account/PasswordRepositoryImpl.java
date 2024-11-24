@@ -20,9 +20,9 @@ import static org.slf4j.LoggerFactory.getLogger;
  * Singleton class responsible for working with `account_data.passwords` table.
  * It provides safe multithreading approach for creating singleton object using synchronization mechanism.
  */
-public class PasswordDao implements PasswordRepository {
+public class PasswordRepositoryImpl implements PasswordRepository {
 
-    private static final Logger logger = getLogger(PasswordDao.class);
+    private static final Logger logger = getLogger(PasswordRepositoryImpl.class);
 
     @PersistenceContext
     private EntityManager entityManager;
