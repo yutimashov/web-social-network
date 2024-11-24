@@ -6,6 +6,9 @@ import com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRol
 
 import java.util.List;
 
+/**
+ * Contains specific methods for working with Account entity.
+ */
 public interface AccountRepository extends Repository<Long, Account> {
 
     List<Account> getAll();
