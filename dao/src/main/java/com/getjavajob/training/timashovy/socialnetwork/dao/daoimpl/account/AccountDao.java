@@ -18,8 +18,7 @@ import static java.util.Optional.ofNullable;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * Singleton class responsible for working with `account_data.accounts` table.
- * It provides functionality for working with data inside above-mentioned table.
+ * Provides functionality for working with data inside `account_data.accounts` table.
  */
 public class AccountDao implements AccountRepository {
 
