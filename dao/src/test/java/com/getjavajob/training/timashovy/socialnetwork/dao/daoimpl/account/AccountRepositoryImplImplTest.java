@@ -35,11 +35,13 @@ class AccountRepositoryImplImplTest {
     private AccountRepositoryImpl accountRepositoryImpl;
 
     private Account account;
+    private Long id;
 
     @BeforeEach
     public void setUp() {
         openMocks(this);
         account = new Account();
+        id = 1L;
     }
 
     @Nested
@@ -65,20 +67,18 @@ class AccountRepositoryImplImplTest {
 
         @Test
         public void shouldCallChangeRoleWhenRoleChanged() {
-            Long accountId = 1L;
             AccountRole newRole = ADMIN;
-            when(entityManager.find(Account.class, accountId)).thenReturn(account);
-            accountRepositoryImpl.changeRole(accountId, newRole);
-            verify(entityManager).find(Account.class, accountId);
+            when(entityManager.find(Account.class, id)).thenReturn(account);
+            accountRepositoryImpl.changeRole(id, newRole);
+            verify(entityManager).find(Account.class, id);
             assertEquals(newRole, account.getRole());
         }
 
         @Test
         public void shouldThrowDaoExceptionWhenRoleNotChanged() {
-            Long accountId = 1L;
-            when(entityManager.find(Account.class, accountId)).thenThrow(new PersistenceException());
-            assertThrows(DaoException.class, () -> accountRepositoryImpl.changeRole(accountId, ADMIN));
-            verify(entityManager).find(Account.class, accountId);
+            when(entityManager.find(Account.class, id)).thenThrow(new PersistenceException());
+            assertThrows(DaoException.class, () -> accountRepositoryImpl.changeRole(id, ADMIN));
+            verify(entityManager).find(Account.class, id);
         }
 
     }
@@ -89,19 +89,17 @@ class AccountRepositoryImplImplTest {
 
         @Test
         void shouldReturnOptionalWithAccountWhenAccountExists() {
-            Long accountId = 1L;
-            when(entityManager.find(Account.class, accountId)).thenReturn(account);
-            Optional<Account> optionalAccount = accountRepositoryImpl.getById(accountId);
+            when(entityManager.find(Account.class, id)).thenReturn(account);
+            Optional<Account> optionalAccount = accountRepositoryImpl.getById(id);
             assertTrue(optionalAccount.isPresent());
             assertEquals(account, optionalAccount.get());
         }
 
         @Test
         void shouldReturnEmptyOptionalWhenAccountNotExists() {
-            Long accountId = 1L;
-            when(entityManager.find(Account.class, accountId)).thenThrow(new PersistenceException());
-            assertThrows(DaoException.class, () -> accountRepositoryImpl.getById(accountId));
-            verify(entityManager).find(Account.class, accountId);
+            when(entityManager.find(Account.class, id)).thenThrow(new PersistenceException());
+            assertThrows(DaoException.class, () -> accountRepositoryImpl.getById(id));
+            verify(entityManager).find(Account.class, id);
         }
 
     }
@@ -133,25 +131,22 @@ class AccountRepositoryImplImplTest {
 
         @Test
         void shouldSuccessfullyDeleteAccountIfPossible() {
-            Long accountId = 1L;
-            when(entityManager.find(Account.class, accountId)).thenReturn(account);
-            accountRepositoryImpl.delete(accountId);
+            when(entityManager.find(Account.class, id)).thenReturn(account);
+            accountRepositoryImpl.delete(id);
             verify(entityManager).remove(account);
         }
 
         @Test
         public void shouldNotCallDeleteIfAccountNotFound() {
-            Long accountId = 1L;
-            when(entityManager.find(Account.class, accountId)).thenReturn(null);
-            accountRepositoryImpl.delete(accountId);
+            when(entityManager.find(Account.class, id)).thenReturn(null);
+            accountRepositoryImpl.delete(id);
             verify(entityManager, never()).remove(any(Account.class));
         }
 
         @Test
         public void shouldThrowDaoExceptionIfAccountCannotBeDeleted() {
-            Long accountId = 1L;
-            when(entityManager.find(Account.class, accountId)).thenThrow(new PersistenceException());
-            assertThrows(DaoException.class, () -> accountRepositoryImpl.delete(accountId));
+            when(entityManager.find(Account.class, id)).thenThrow(new PersistenceException());
+            assertThrows(DaoException.class, () -> accountRepositoryImpl.delete(id));
             verify(entityManager, never()).remove(any(Account.class));
         }
 

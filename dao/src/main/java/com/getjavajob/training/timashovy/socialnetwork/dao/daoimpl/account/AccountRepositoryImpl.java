@@ -50,7 +50,6 @@ public class AccountRepositoryImpl implements AccountRepository {
         }
     }
 
-    @Transactional
     @Override
     public void delete(Long id) {
         try {
