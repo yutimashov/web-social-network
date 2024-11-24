@@ -27,10 +27,10 @@
         </property>
     </bean>
 
-    <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
-
     <jee:jndi-lookup id="dataSource" jndi-name="java:/comp/env/jdbc/socialNetwork"
                      expected-type="javax.sql.DataSource"/>
+
+    <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
