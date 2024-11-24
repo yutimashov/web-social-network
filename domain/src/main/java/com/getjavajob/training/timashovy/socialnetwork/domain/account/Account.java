@@ -27,9 +27,6 @@ import static javax.persistence.GenerationType.IDENTITY;
 /**
  * Model of Account entity in application.
  * Contains all relevant information about Account.
- *
- * @author Yuriy Timashov
- * @since 10.01.2024
  */
 @Table(name = "accounts", schema = "account_data")
 @Entity
