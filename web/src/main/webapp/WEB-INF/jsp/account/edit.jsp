@@ -27,6 +27,16 @@
                     <label for="avatar" class="form-label">Upload new avatar</label>
                     <input form="editAccountForm" class="form-control form-control-sm" name="avatar" id="avatar"
                            type="file"/>
+                    <!-- Update account through uploading xml file -->
+                    <div>
+                        <form action="${pageContext.request.contextPath}/account/xml-update?id=${requestScope.account.id}"
+                              method="POST" enctype="multipart/form-data" id="xmlFile">
+                            <label for="xmlFile" class="form-label">Update account using xml-file</label>
+                            <input form="xmlFile" class="form-control form-control-sm" name="file"
+                                   id="file" type="file"/>
+                            <button type="submit" class="btn btn-dark">Send</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

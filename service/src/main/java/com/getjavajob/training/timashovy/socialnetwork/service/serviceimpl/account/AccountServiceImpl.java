@@ -12,10 +12,18 @@ import com.getjavajob.training.timashovy.socialnetwork.service.util.exceptions.S
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 
 import static java.util.Objects.isNull;
 
@@ -213,6 +221,39 @@ public class AccountServiceImpl implements AccountService {
         validateAccountId(requesterId);
         validateAccountId(accepterId);
         return friendshipCheckerDao.checkFriendshipRecordExistence(requesterId, accepterId);
+    }
+
+    @Override
+    public void xmlFileUpdateAccount(InputStream inputStream) {
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = null;
+        try {
+            builder = documentBuilderFactory.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            throw new RuntimeException(e);
+        }
+        Document document = null;
+        try {
+            document = builder.parse(inputStream);
+        } catch (SAXException | IOException e) {
+            throw new RuntimeException(e);
+        }
+        Element xmlAccount = document.getDocumentElement();
+        NodeList xmlAccountProperties = xmlAccount.getChildNodes();
+        Map<String, String> accountPropertiesMap = new HashMap<>();
+        for (int i = 0; i < xmlAccountProperties.getLength(); i++) {
+            Node property = xmlAccountProperties.item(i);
+            if (!property.getNodeName().equals("#text") && !property.getNodeName().equals("#comment")
+                    && !property.getTextContent().isEmpty()) {
+                System.out.println("Property: " + property.getNodeName() + ". Value: " + property.getTextContent());
+                accountPropertiesMap.put(property.getNodeName(), property.getTextContent());
+            }
+        }
+        Account account = new Account.Builder()
+                .firstName(accountPropertiesMap.get("firstName"))
+                .lastName(accountPropertiesMap.get("lastName"))
+                .build();
+        System.out.println(account);
     }
 
 }

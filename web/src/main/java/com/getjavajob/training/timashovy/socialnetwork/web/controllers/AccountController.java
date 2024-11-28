@@ -11,16 +11,14 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.Messag
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneService;
 import com.getjavajob.training.timashovy.socialnetwork.web.dto.AccountDto;
 import com.getjavajob.training.timashovy.socialnetwork.web.mappers.AccountMapper;
+import com.getjavajob.training.timashovy.socialnetwork.web.util.exceptions.WebException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -110,6 +108,28 @@ public class AccountController {
         addPhones(req, accountId);
         updatePhones(req);
         deletePhones(req);
+        return "redirect:/account?id=" + accountId;
+    }
+
+    @PostMapping("/xml-update")
+    public String updateXml(@RequestParam("file") MultipartFile file,
+                            @RequestParam("id") Long accountId,
+                            HttpServletRequest req) {
+//        accountService.update(accountId, new AccountMapper().toAccount(accountDto));
+//        addPhones(req, accountId);
+//        updatePhones(req);
+//        deletePhones(req);
+        if (file.isEmpty()) {
+            // no file is sent or empty file is sent
+        }
+        if (file.getSize() > 1024) {
+            // if file size > 1 mb
+        }
+        try {
+            accountService.xmlFileUpdateAccount(file.getInputStream());
+        } catch (IOException e) {
+            throw new WebException(e.getMessage(), e.getCause());
+        }
         return "redirect:/account?id=" + accountId;
     }
 
