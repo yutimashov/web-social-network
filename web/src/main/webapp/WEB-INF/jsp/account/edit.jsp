@@ -29,13 +29,22 @@
                            type="file"/>
                     <!-- Update account through uploading xml file -->
                     <div>
-                        <form action="${pageContext.request.contextPath}/account/xml-update?id=${requestScope.account.id}"
+                        <form action="${rootUrl}/account/xml-update?id=${requestScope.account.id}"
                               method="POST" enctype="multipart/form-data" id="xmlFile">
                             <label for="xmlFile" class="form-label">Update account using xml-file</label>
                             <input form="xmlFile" class="form-control form-control-sm" name="file"
                                    id="file" type="file"/>
                             <button type="submit" class="btn btn-dark">Send</button>
                         </form>
+                    </div>
+                    <!-- Download account info to xml file -->
+                    <div>
+                        <div class="col-12">
+                            <p class="m-0 text-secondary text-center">Download account info as xml-file
+                                <a href="${rootUrl}/account/xml-download?id=${requestScope.account.id}"
+                                   class="link-primary text-decoration-none">Download</a>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>

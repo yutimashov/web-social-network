@@ -12,12 +12,25 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneS
 import com.getjavajob.training.timashovy.socialnetwork.web.dto.AccountDto;
 import com.getjavajob.training.timashovy.socialnetwork.web.mappers.AccountMapper;
 import com.getjavajob.training.timashovy.socialnetwork.web.util.exceptions.WebException;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
@@ -131,6 +144,53 @@ public class AccountController {
             throw new WebException(e.getMessage(), e.getCause());
         }
         return "redirect:/account?id=" + accountId;
+    }
+
+    @GetMapping("/xml-download")
+    public ResponseEntity<byte[]> downloadAccountXml(@ModelAttribute AccountDto accountDto,
+                                   @RequestParam("id") Long accountId) {
+        try {
+            // Здесь должна быть логика получения данных Account по accountId
+            Account account = new AccountMapper().toAccount(accountDto);
+
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document document = builder.newDocument();
+
+            // Создание корневого элемента
+            Element root = document.createElement("Account");
+            document.appendChild(root);
+
+            // Создание дочерних элементов с данными
+            Element username = document.createElement("firstName");
+            username.appendChild(document.createTextNode(account.getFirstName()));
+            root.appendChild(username);
+
+            Element email = document.createElement("email");
+            email.appendChild(document.createTextNode(account.getEmail()));
+            root.appendChild(email);
+
+            DOMSource source = new DOMSource(document);
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            StreamResult result = new StreamResult(outputStream);
+
+            // Создание Transformer для преобразования XML в поток
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty("{https://xml.apache.org/xslt}indent-amount", "4");
+            transformer.transform(source, result);
+
+            // Установка заголовков для скачивания файла
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=account.xml");
+            headers.add(HttpHeaders.CONTENT_TYPE, "application/xml");
+
+            return new ResponseEntity<>(outputStream.toByteArray(), headers, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     private void deletePhones(HttpServletRequest req) {
