@@ -148,7 +148,7 @@ public class AccountController {
         } catch (IOException e) {
             throw new WebException(e.getMessage(), e.getCause());
         }
-        return "redirect:/account?id=" + accountId;
+        return "redirect:/account/edit?id=" + accountId;
     }
 
     @GetMapping("/xml-download")

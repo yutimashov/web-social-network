@@ -27,25 +27,13 @@
                     <label for="avatar" class="form-label">Upload new avatar</label>
                     <input form="editAccountForm" class="form-control form-control-sm" name="avatar" id="avatar"
                            type="file"/>
-                    <!-- Update account through uploading xml file -->
-                    <div>
-                        <form action="${rootUrl}/account/xml-update?id=${requestScope.account.id}"
-                              method="POST" enctype="multipart/form-data" id="xmlFile">
-                            <label for="xmlFile" class="form-label">Update account using xml-file</label>
-                            <input form="xmlFile" class="form-control form-control-sm" name="file"
-                                   id="file" type="file"/>
-                            <button type="submit" class="btn btn-dark">Send</button>
-                        </form>
-                    </div>
                     <!-- Download account info to xml file -->
-                    <div>
-                        <div class="col-12">
-                            <p class="m-0 text-secondary text-center">Download account info as xml-file
-                                <a href="${rootUrl}/account/xml-download?id=${requestScope.account.id}"
-                                   class="link-primary text-decoration-none">Download</a>
-                            </p>
+                    <c:if test="${sessionAccountId eq param.id or sessionScope.account.role eq 'ADMIN'}">
+                        <div align="left">
+                            <a href="${rootUrl}/account/xml-download?id=${requestScope.account.id}"
+                               class="btn btn-dark btn-sm">Download info as xml-file</a>
                         </div>
-                    </div>
+                    </c:if>
                 </div>
             </div>
         </div>
@@ -209,6 +197,20 @@
                             </div>
                         </div>
                     </form>
+                    <hr class="hr"/>
+                    <!-- edit using xml file -->
+                    <c:if test="${sessionAccountId eq param.id or sessionScope.account.role eq 'ADMIN'}">
+                        <!-- Update account through uploading xml file -->
+                        <div class="row gx-3 mb-3">
+                            <form action="${rootUrl}/account/xml-update?id=${requestScope.account.id}"
+                                  method="POST" enctype="multipart/form-data" id="xmlFile">
+                                <label for="xmlFile" class="form-label text-primary">Update account using xml-file</label>
+                                <input form="xmlFile" class="form-control form-control-sm" name="file"
+                                       id="file" type="file"/>
+                                <button type="submit" class="btn btn-dark btn-sm">Send</button>
+                            </form>
+                        </div>
+                    </c:if>
                 </div>
             </div>
         </div>
