@@ -31,7 +31,7 @@
                     <c:if test="${sessionAccountId eq param.id or sessionScope.account.role eq 'ADMIN'}">
                         <div align="left">
                             <a href="${rootUrl}/account/xml-download?id=${requestScope.account.id}"
-                               class="btn btn-dark btn-sm">Download info as xml-file</a>
+                               class="btn btn-dark btn-sm mt-2">Download info as xml-file</a>
                         </div>
                     </c:if>
                 </div>
@@ -107,7 +107,7 @@
                             </div>
                         </div>
                         <!-- Form Row phones -->
-                        <div class="row gx-3 mb-3">
+                        <div class="row gx-3 mb-2">
                             <input type="hidden" id="phoneData" name="phoneData">
                             <!-- Form Group (phone number)-->
                             <div class="col-md-6" id="personalPhones">
@@ -207,7 +207,7 @@
                                 <label for="xmlFile" class="form-label text-primary">Update account using xml-file</label>
                                 <input form="xmlFile" class="form-control form-control-sm" name="file"
                                        id="file" type="file"/>
-                                <button type="submit" class="btn btn-dark btn-sm">Send</button>
+                                <button type="submit" class="btn btn-dark btn-sm mt-2">Send</button>
                             </form>
                         </div>
                     </c:if>

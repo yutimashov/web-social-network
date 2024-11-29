@@ -109,11 +109,11 @@
                 <div class="card mb-1">
                     <div class="card-header">Friends</div>
                     <div class="card-body row gx-3">
-                        <div>
+                        <div class="col-md-6">
                             <a class="link-underline-dark" href="${rootUrl}/friends?id=${pageAccountId}"><i
                                     class="fa-solid fa-user-group"></i>&nbsp;Friends</a>
                         </div>
-                        <div>
+                        <div class="col-md-6">
                             <c:if test="${sessionAccountId eq pageAccountId}">
                                 <a class="link-underline-dark" href="${rootUrl}/friends/requests"><i
                                         class="fa-solid fa-bell"></i>&nbsp;Requests</a><br>
@@ -139,9 +139,8 @@
                     </div>
                 </c:if>
                 <!-- Account management buttons -->
-                <div class="mb-2">
+                <div class="m-2">
                     <c:if test="${sessionAccountId eq param.id or sessionScope.account.role eq 'ADMIN'}">
-                        <hr class="hr"/>
                         <a href="${rootUrl}/account/edit?id=${pageAccountId}" class="btn btn-warning"
                            role="button">Edit account</a>&nbsp;&nbsp;
                         <a href="${rootUrl}/account/delete?id=${pageAccountId}" class="btn btn-danger"
