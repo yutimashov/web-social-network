@@ -17,8 +17,7 @@
             <div class="col-md-2 col-sm-2">
                 <c:if test="${not empty account.avatar}">
                     <img src="${rootUrl}/account/avatar?id=${account.id}" alt="user" class="profile-photo-lg"
-                         width="100px"
-                         height="100px">
+                         width="100px" height="100px">
                 </c:if>
                 <c:if test="${empty account.avatar}">
                     <img src="${rootUrl}/static/img/img-coming-soon-placeholder.png" alt="user"
@@ -43,7 +42,7 @@
                 </c:if>
             </div>
             <div class="col-md-10 col-sm-10">
-                <h5><a href="${rootUrl}/group?id=${group.id}">${group.groupName}</a></h5>
+                <h5><a href="${rootUrl}/group?id=${group.id}">${group.name}</a></h5>
             </div>
         </div>
     </c:forEach>
