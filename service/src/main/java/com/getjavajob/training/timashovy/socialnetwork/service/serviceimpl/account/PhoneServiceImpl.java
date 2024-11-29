@@ -60,6 +60,7 @@ public class PhoneServiceImpl implements PhoneService {
         return phoneRepository.save(phone);
     }
 
+    @Transactional
     @Override
     public void delete(Long phoneId) {
         phoneRepository.delete(phoneId);

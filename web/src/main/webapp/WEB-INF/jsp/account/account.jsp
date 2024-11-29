@@ -176,26 +176,28 @@
             <c:if test="${requestScope.wallPosts ne null}">
                 <div>
                     <c:forEach items="${requestScope.wallPosts}" var="post">
-                        <hr>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span>Created: ${post.creationDate}</span>
-                            <button type="button" class="close" aria-label="Close"
-                                    style="background: none; border: none; cursor: pointer;">
-                                <span aria-hidden="true" style="font-size: 20px;">&times;</span>
-                            </button>
+                        <div class="account-wall-msg">
+                            <hr>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span>Created: ${post.creationDate}</span>
+                                <button type="button" class="close btn-delete-account-wall-msg" aria-label="Close"
+                                        style="background: none; border: none; cursor: pointer;">
+                                    <span aria-hidden="true" style="font-size: 20px;">&times;</span>
+                                </button>
+                            </div>
+                            <p>Author:
+                                <a href="${rootUrl}/account?id=${post.accountAuthorId}">
+                                        ${requestScope.accountService.getById(post.accountAuthorId).get().firstName}
+                                        ${requestScope.accountService.getById(post.accountAuthorId).get().lastName}
+                                </a>
+                            </p>
+                            <p>${post.text}</p>
+                            <c:if test="${post.photo ne null}">
+                                <img src="${rootUrl}/account-wall/image?id=${post.id}" alt="Message photo" width="150px"
+                                     height="150px">
+                            </c:if>
+                            <hr>
                         </div>
-                        <p>Author:
-                            <a href="${rootUrl}/account?id=${post.accountAuthorId}">
-                                    ${requestScope.accountService.getById(post.accountAuthorId).get().firstName}
-                                    ${requestScope.accountService.getById(post.accountAuthorId).get().lastName}
-                            </a>
-                        </p>
-                        <p>${post.text}</p>
-                        <c:if test="${post.photo ne null}">
-                            <img src="${rootUrl}/account-wall/image?id=${post.id}" alt="Message photo" width="150px"
-                                 height="150px">
-                        </c:if>
-                        <hr>
                     </c:forEach>
                 </div>
             </c:if>
@@ -203,5 +205,6 @@
     </div>
 </div>
 <jsp:include page="/WEB-INF/jsp/include/footer.jsp"/>
+<script src="${rootUrl}/static/js/account.js"></script>
 </body>
 </html>
