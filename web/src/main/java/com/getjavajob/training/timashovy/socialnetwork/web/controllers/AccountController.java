@@ -25,11 +25,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -154,20 +151,7 @@ public class AccountController {
     @GetMapping("/xml-download")
     public ResponseEntity<byte[]> downloadAccountXml(@RequestParam("id") Long accountId) {
         try {
-            Account account = accountService.getById(accountId).get();
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.newDocument();
-            // Создание корневого элемента
-            Element root = document.createElement("account");
-            document.appendChild(root);
-            // Создание дочерних элементов с данными
-            Element firstName = document.createElement("firstName");
-            firstName.appendChild(document.createTextNode(account.getFirstName()));
-            root.appendChild(firstName);
-            Element email = document.createElement("email");
-            email.appendChild(document.createTextNode(account.getEmail()));
-            root.appendChild(email);
+            Document document = accountService.xmlFileDownloadAccount(accountId);
             DOMSource source = new DOMSource(document);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             StreamResult result = new StreamResult(outputStream);

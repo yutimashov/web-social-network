@@ -22,12 +22,6 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -264,34 +258,22 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public ByteArrayOutputStream xmlFileDownloadAccount(Long accountId, Account account) {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        try {
-            DocumentBuilderFactory factory = newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.newDocument();
-            // корневой элемент
-            Element root = document.createElement("Account");
-            document.appendChild(root);
-            // дочерние элементы с данными
-            Element username = document.createElement("firstName");
-            username.appendChild(document.createTextNode(account.getFirstName()));
-            root.appendChild(username);
-            Element email = document.createElement("email");
-            email.appendChild(document.createTextNode(account.getEmail()));
-            root.appendChild(email);
-            DOMSource source = new DOMSource(document);
-            StreamResult result = new StreamResult(outputStream);
-            // transformer для записи XML в файл
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty("{https://xml.apache.org/xslt}indent-amount", "4");
-            transformer.transform(source, result);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return outputStream;
+    public Document xmlFileDownloadAccount(Long accountId) throws ParserConfigurationException {
+        Account account = getById(accountId).get();
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document document = builder.newDocument();
+        // Создание корневого элемента
+        Element root = document.createElement("account");
+        document.appendChild(root);
+        // Создание дочерних элементов с данными
+        Element firstName = document.createElement("firstName");
+        firstName.appendChild(document.createTextNode(account.getFirstName()));
+        root.appendChild(firstName);
+        Element email = document.createElement("email");
+        email.appendChild(document.createTextNode(account.getEmail()));
+        root.appendChild(email);
+        return document;
     }
 
 }
