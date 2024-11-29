@@ -177,7 +177,13 @@
                 <div>
                     <c:forEach items="${requestScope.wallPosts}" var="post">
                         <hr>
-                        <span>Created: ${post.creationDate}</span><br>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>Created: ${post.creationDate}</span>
+                            <button type="button" class="close" aria-label="Close"
+                                    style="background: none; border: none; cursor: pointer;">
+                                <span aria-hidden="true" style="font-size: 20px;">&times;</span>
+                            </button>
+                        </div>
                         <p>Author:
                             <a href="${rootUrl}/account?id=${post.accountAuthorId}">
                                     ${requestScope.accountService.getById(post.accountAuthorId).get().firstName}
