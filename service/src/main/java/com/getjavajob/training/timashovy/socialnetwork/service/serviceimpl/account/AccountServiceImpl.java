@@ -270,11 +270,9 @@ public class AccountServiceImpl implements AccountService {
             DocumentBuilderFactory factory = newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.newDocument();
-
             // корневой элемент
             Element root = document.createElement("Account");
             document.appendChild(root);
-
             // дочерние элементы с данными
             Element username = document.createElement("firstName");
             username.appendChild(document.createTextNode(account.getFirstName()));
@@ -284,14 +282,12 @@ public class AccountServiceImpl implements AccountService {
             root.appendChild(email);
             DOMSource source = new DOMSource(document);
             StreamResult result = new StreamResult(outputStream);
-
             // transformer для записи XML в файл
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.setOutputProperty("{https://xml.apache.org/xslt}indent-amount", "4");
             transformer.transform(source, result);
-
         } catch (Exception e) {
             e.printStackTrace();
         }

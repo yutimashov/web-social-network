@@ -17,7 +17,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -147,45 +152,35 @@ public class AccountController {
     }
 
     @GetMapping("/xml-download")
-    public ResponseEntity<byte[]> downloadAccountXml(@ModelAttribute AccountDto accountDto,
-                                   @RequestParam("id") Long accountId) {
+    public ResponseEntity<byte[]> downloadAccountXml(@RequestParam("id") Long accountId) {
         try {
-            // Здесь должна быть логика получения данных Account по accountId
-            Account account = new AccountMapper().toAccount(accountDto);
-
+            Account account = accountService.getById(accountId).get();
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.newDocument();
-
             // Создание корневого элемента
-            Element root = document.createElement("Account");
+            Element root = document.createElement("account");
             document.appendChild(root);
-
             // Создание дочерних элементов с данными
-            Element username = document.createElement("firstName");
-            username.appendChild(document.createTextNode(account.getFirstName()));
-            root.appendChild(username);
-
+            Element firstName = document.createElement("firstName");
+            firstName.appendChild(document.createTextNode(account.getFirstName()));
+            root.appendChild(firstName);
             Element email = document.createElement("email");
             email.appendChild(document.createTextNode(account.getEmail()));
             root.appendChild(email);
-
             DOMSource source = new DOMSource(document);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             StreamResult result = new StreamResult(outputStream);
-
             // Создание Transformer для преобразования XML в поток
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.setOutputProperty("{https://xml.apache.org/xslt}indent-amount", "4");
             transformer.transform(source, result);
-
             // Установка заголовков для скачивания файла
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=account.xml");
             headers.add(HttpHeaders.CONTENT_TYPE, "application/xml");
-
             return new ResponseEntity<>(outputStream.toByteArray(), headers, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
