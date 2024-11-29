@@ -139,7 +139,7 @@ public class AccountController {
             // if file size > 1 mb
         }
         try {
-            accountService.xmlFileUpdateAccount(file.getInputStream());
+            accountService.xmlFileUpdateAccount(file.getInputStream(), accountId);
         } catch (IOException e) {
             throw new WebException(e.getMessage(), e.getCause());
         }

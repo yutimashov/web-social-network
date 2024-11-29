@@ -15,4 +15,6 @@ public interface AccountRepository extends Repository<Long, Account> {
 
     void changeRole(Long id, AccountRole role);
 
+    void updateById(Account account, Long accountId);
+
 }

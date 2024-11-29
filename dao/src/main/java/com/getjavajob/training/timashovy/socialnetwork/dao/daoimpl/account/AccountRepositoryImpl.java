@@ -5,7 +5,6 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.Ac
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole;
 import org.slf4j.Logger;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -32,6 +31,41 @@ public class AccountRepositoryImpl implements AccountRepository {
         try {
             entityManager.persist(account);
             return account;
+        } catch (PersistenceException e) {
+            logger.error("Error persisting account firstName={}, lastName={}", account.getFirstName(),
+                    account.getLastName());
+            throw new DaoException("Cannot save account to persistent storage", e);
+        }
+    }
+
+    @Override
+    public void updateById(Account account, Long accountId) {
+        try {
+            Account updatedAccount = entityManager.find(Account.class, accountId);
+            if (account.getAvatar() != null) {
+                updatedAccount.setAvatar(account.getAvatar());
+            }
+            if (account.getFirstName() != null && !updatedAccount.getFirstName().isEmpty()) {
+                updatedAccount.setFirstName(account.getFirstName());
+            }
+            if (account.getLastName() != null && !updatedAccount.getLastName().isEmpty()) {
+                updatedAccount.setLastName(account.getLastName());
+            }
+            if (account.getMiddleName() != null && !updatedAccount.getMiddleName().isEmpty()) {
+                updatedAccount.setMiddleName(account.getMiddleName());
+            }
+            if (account.getBirthDate() != null) {
+                updatedAccount.setBirthDate(account.getBirthDate());
+            }
+            if (account.getSkype() != null && !updatedAccount.getSkype().isEmpty()) {
+                updatedAccount.setSkype(account.getSkype());
+            }
+            if (account.getIcq() != null && !updatedAccount.getIcq().isEmpty()) {
+                updatedAccount.setIcq(account.getIcq());
+            }
+            if (account.getEmail() != null && !updatedAccount.getEmail().isEmpty()) {
+                updatedAccount.setEmail(account.getEmail());
+            }
         } catch (PersistenceException e) {
             logger.error("Error persisting account firstName={}, lastName={}", account.getFirstName(),
                     account.getLastName());

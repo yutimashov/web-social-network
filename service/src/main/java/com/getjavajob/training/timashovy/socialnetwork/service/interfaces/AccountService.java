@@ -34,7 +34,7 @@ public interface AccountService {
 
     boolean checkFriendshipRecordExistence(Long requesterId, Long accepterId);
 
-    void xmlFileUpdateAccount(InputStream inputStream);
+    void xmlFileUpdateAccount(InputStream inputStream, Long accountId);
 
     ByteArrayOutputStream xmlFileDownloadAccount(Long accountId, Account account);
 

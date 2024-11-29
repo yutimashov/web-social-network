@@ -5,6 +5,7 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.Pa
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipCheckerDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipDao;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneService;
@@ -29,9 +30,17 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static java.util.Objects.isNull;
+import static javax.xml.parsers.DocumentBuilderFactory.newInstance;
 
 /**
  * Singleton class for working with methods, managing Account functionality.
@@ -79,30 +88,7 @@ public class AccountServiceImpl implements AccountService {
         if (isNull(newAccount)) {
             throw new ServiceException("updating non-existing account");
         }
-        if (updatedAccount.getAvatar() != null) {
-            newAccount.setAvatar(updatedAccount.getAvatar());
-        }
-        if (updatedAccount.getFirstName() != null && !updatedAccount.getFirstName().isEmpty()) {
-            newAccount.setFirstName(updatedAccount.getFirstName());
-        }
-        if (updatedAccount.getLastName() != null && !updatedAccount.getLastName().isEmpty()) {
-            newAccount.setLastName(updatedAccount.getLastName());
-        }
-        if (updatedAccount.getMiddleName() != null && !updatedAccount.getMiddleName().isEmpty()) {
-            newAccount.setMiddleName(updatedAccount.getMiddleName());
-        }
-        if (updatedAccount.getBirthDate() != null) {
-            newAccount.setBirthDate(updatedAccount.getBirthDate());
-        }
-        if (updatedAccount.getSkype() != null && !updatedAccount.getSkype().isEmpty()) {
-            newAccount.setSkype(updatedAccount.getSkype());
-        }
-        if (updatedAccount.getIcq() != null && !updatedAccount.getIcq().isEmpty()) {
-            newAccount.setIcq(updatedAccount.getIcq());
-        }
-        if (updatedAccount.getEmail() != null && !updatedAccount.getEmail().isEmpty()) {
-            newAccount.setEmail(updatedAccount.getEmail());
-        }
+        accountDao.updateById(updatedAccount, accountId);
     }
 
     /**
@@ -229,36 +215,51 @@ public class AccountServiceImpl implements AccountService {
         return friendshipCheckerDao.checkFriendshipRecordExistence(requesterId, accepterId);
     }
 
+    @Transactional
     @Override
-    public void xmlFileUpdateAccount(InputStream inputStream) {
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+    public void xmlFileUpdateAccount(InputStream inputStream, Long accountId) {
+        DocumentBuilderFactory documentBuilderFactory = newInstance();
         DocumentBuilder builder = null;
         try {
             builder = documentBuilderFactory.newDocumentBuilder();
         } catch (ParserConfigurationException e) {
-            throw new RuntimeException(e);
+            throw new ServiceException(e.getMessage(), e.getCause());
         }
         Document document = null;
         try {
             document = builder.parse(inputStream);
         } catch (SAXException | IOException e) {
-            throw new RuntimeException(e);
+            throw new ServiceException(e.getMessage(), e.getCause());
         }
         Element xmlAccount = document.getDocumentElement();
         NodeList xmlAccountProperties = xmlAccount.getChildNodes();
         Map<String, String> accountPropertiesMap = new HashMap<>();
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         for (int i = 0; i < xmlAccountProperties.getLength(); i++) {
             Node property = xmlAccountProperties.item(i);
             if (!property.getNodeName().equals("#text") && !property.getNodeName().equals("#comment")
                     && !property.getTextContent().isEmpty()) {
-                System.out.println("Property: " + property.getNodeName() + ". Value: " + property.getTextContent());
                 accountPropertiesMap.put(property.getNodeName(), property.getTextContent());
             }
         }
         Account account = new Account.Builder()
-                .firstName(accountPropertiesMap.get("firstName"))
-                .lastName(accountPropertiesMap.get("lastName"))
+                .firstName(accountPropertiesMap.getOrDefault("firstName", null))
+                .lastName(accountPropertiesMap.getOrDefault("lastName", null))
+                .middleName(accountPropertiesMap.getOrDefault("middleName", null))
+                .birthDate(accountPropertiesMap.getOrDefault("birthDate", null) == null
+                        ? null : LocalDate.parse(accountPropertiesMap.get("birthDate"), dateFormatter))
+                .personalAddress(accountPropertiesMap.getOrDefault("personalAddress", null))
+                .workAddress(accountPropertiesMap.getOrDefault("workAddress", null))
+                .email(accountPropertiesMap.getOrDefault("email", null))
+                .icq(accountPropertiesMap.getOrDefault("icq", null))
+                .skype(accountPropertiesMap.getOrDefault("skype", null))
+                .additionalInfo(accountPropertiesMap.getOrDefault("additionalInfo", null))
+                .role(accountPropertiesMap.getOrDefault("role", null) == null
+                        ? null : AccountRole.valueOf(accountPropertiesMap.get("role").toUpperCase()))
+                .avatar(accountPropertiesMap.getOrDefault("avatar", null) == null
+                        ? null : Base64.getDecoder().decode(accountPropertiesMap.get("avatar").replaceAll("\\s+", "")))
                 .build();
+        accountDao.updateById(account, accountId);
         System.out.println(account);
     }
 
@@ -266,7 +267,7 @@ public class AccountServiceImpl implements AccountService {
     public ByteArrayOutputStream xmlFileDownloadAccount(Long accountId, Account account) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilderFactory factory = newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.newDocument();
 
