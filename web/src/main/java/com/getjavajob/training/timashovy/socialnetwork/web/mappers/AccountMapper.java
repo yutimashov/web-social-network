@@ -24,7 +24,6 @@ public class AccountMapper {
                             ? accountDto.getAvatar().getBytes() : null)
                     .birthDate(!isNull(accountDto.getBirthDate()) && !accountDto.getBirthDate().isEmpty()
                             ? parse(accountDto.getBirthDate()) : null)
-                    .role(accountDto.getRole())
                     .build();
         } catch (IOException e) {
             throw new WebException(e.getMessage(), e.getCause());

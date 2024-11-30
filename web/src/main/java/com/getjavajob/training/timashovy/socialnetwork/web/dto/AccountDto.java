@@ -1,9 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.dto;
 
-import com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole;
 import org.springframework.web.multipart.MultipartFile;
-
-import static com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole.REGULAR;
 
 public class AccountDto {
 
@@ -15,17 +12,8 @@ public class AccountDto {
     private String skype;
     private MultipartFile avatar;
     private String birthDate;
-    private AccountRole role = REGULAR;
 
     public AccountDto() {
-    }
-
-    public AccountRole getRole() {
-        return role;
-    }
-
-    public void setRole(AccountRole role) {
-        this.role = role;
     }
 
     public String getFirstName() {
