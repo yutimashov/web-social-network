@@ -4,14 +4,7 @@ import com.getjavajob.training.timashovy.socialnetwork.domain.BaseEntity;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -69,7 +62,7 @@ public class Account implements BaseEntity<Long> {
     @Type(type = "org.hibernate.type.BinaryType")
     private byte[] avatar;
 
-    @OneToMany(mappedBy = "account", cascade = ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "account", cascade = ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Phone> phones = new ArrayList<>();
 
     public Account() {

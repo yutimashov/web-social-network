@@ -81,7 +81,8 @@ public class XmlDataHandlerImpl implements XmlDataHandler {
                             NodeList numbers = phoneTypeNode.getChildNodes();
                             for (int k = 0; k < numbers.getLength(); k++) {
                                 Node numberNode = numbers.item(k);
-                                if (numberNode.getNodeType() == Node.ELEMENT_NODE && numberNode.getNodeName().equals("number")) {
+                                if (numberNode.getNodeType() == Node.ELEMENT_NODE && numberNode.getNodeName()
+                                        .equals("number")) {
                                     String number = numberNode.getTextContent().trim();
                                     if (!number.isEmpty()) {
                                         if (phoneTypeName.equals("personalPhones")) {
@@ -126,7 +127,6 @@ public class XmlDataHandlerImpl implements XmlDataHandler {
         ofNullable((String) accountPropertiesMap.get("avatar"))
                 .map(avatar -> Base64.getDecoder().decode(avatar.replaceAll("\\s+", "")))
                 .ifPresent(accountBuilder::avatar);
-        // Добавление телефонов
         ofNullable((List<Phone>) accountPropertiesMap.get("phones")).ifPresent(accountBuilder::phones);
         return accountBuilder.build();
     }
@@ -138,17 +138,51 @@ public class XmlDataHandlerImpl implements XmlDataHandler {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document document = builder.newDocument();
-        // Создание корневого элемента
         Element root = document.createElement("account");
         document.appendChild(root);
-        // Создание дочерних элементов с данными
-        Element firstName = document.createElement("firstName");
-        firstName.appendChild(document.createTextNode(account.getFirstName()));
-        root.appendChild(firstName);
-        Element email = document.createElement("email");
-        email.appendChild(document.createTextNode(account.getEmail()));
-        root.appendChild(email);
+        createElementWithText(document, root, "firstName", account.getFirstName());
+        createElementWithText(document, root, "lastName", account.getLastName());
+        createElementWithText(document, root, "middleName", account.getMiddleName());
+        createElementWithText(document, root, "birthDate", account.getBirthDate().toString());
+        createElementWithText(document, root, "personalAddress", account.getPersonalAddress());
+        createElementWithText(document, root, "workAddress", account.getWorkAddress());
+        createElementWithText(document, root, "email", account.getEmail());
+        createElementWithText(document, root, "icq", account.getIcq());
+        createElementWithText(document, root, "skype", account.getSkype());
+        createElementWithText(document, root, "additionalInfo", account.getAdditionalInfo());
+        createElementWithText(document, root, "roleType", account.getRole().toString());
+        Element phonesElement = document.createElement("phones");
+        root.appendChild(phonesElement);
+        Element personalPhonesElement = document.createElement("personalPhones");
+        Element workingPhonesElement = document.createElement("workingPhones");
+        boolean hasPersonalPhones = false;
+        boolean hasWorkingPhones = false;
+        for (Phone phone : account.getPhones()) {
+            Element phoneElement = document.createElement("number");
+            phoneElement.appendChild(document.createTextNode(phone.getNumber()));
+            if (PERSONAL.equals(phone.getPhoneType())) {
+                personalPhonesElement.appendChild(phoneElement);
+                hasPersonalPhones = true;
+            } else if (WORKING.equals(phone.getPhoneType())) {
+                workingPhonesElement.appendChild(phoneElement);
+                hasWorkingPhones = true;
+            }
+        }
+        if (hasPersonalPhones) {
+            phonesElement.appendChild(personalPhonesElement);
+        }
+        if (hasWorkingPhones) {
+            phonesElement.appendChild(workingPhonesElement);
+        }
         return document;
+    }
+
+    private void createElementWithText(Document document, Element parent, String name, String text) {
+        if (text != null && !text.isEmpty()) {
+            Element element = document.createElement(name);
+            element.appendChild(document.createTextNode(text));
+            parent.appendChild(element);
+        }
     }
 
 }

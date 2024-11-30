@@ -153,13 +153,11 @@ public class AccountController {
                 DOMSource source = new DOMSource(document);
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                 StreamResult result = new StreamResult(outputStream);
-                // Создание Transformer для преобразования XML в поток
                 TransformerFactory transformerFactory = TransformerFactory.newInstance();
                 Transformer transformer = transformerFactory.newTransformer();
                 transformer.setOutputProperty(OutputKeys.INDENT, "yes");
                 transformer.setOutputProperty("{https://xml.apache.org/xslt}indent-amount", "4");
                 transformer.transform(source, result);
-                // Установка заголовков для скачивания файла
                 HttpHeaders headers = new HttpHeaders();
                 headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=account.xml");
                 headers.add(HttpHeaders.CONTENT_TYPE, "application/xml");
