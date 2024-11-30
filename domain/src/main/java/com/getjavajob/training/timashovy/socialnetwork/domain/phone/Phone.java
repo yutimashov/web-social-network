@@ -45,6 +45,11 @@ public class Phone implements BaseEntity<Long> {
     protected Phone() {
     }
 
+    public Phone(PhoneType phoneType, String number) {
+        this.phoneType = phoneType;
+        this.number = number;
+    }
+
     public Phone(PhoneType phoneType, String number, Account account) {
         this.phoneType = phoneType;
         this.number = number;

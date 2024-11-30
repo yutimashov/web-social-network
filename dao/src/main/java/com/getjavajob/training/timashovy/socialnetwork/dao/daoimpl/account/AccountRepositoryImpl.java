@@ -4,6 +4,7 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.exception.DaoExceptio
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.AccountRepository;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole;
+import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
 import org.slf4j.Logger;
 
 import javax.persistence.EntityManager;
@@ -69,6 +70,13 @@ public class AccountRepositoryImpl implements AccountRepository {
             if (account.getPersonalAddress() != null && !account.getPersonalAddress().isEmpty()) {
                 updatedAccount.setPersonalAddress(account.getPersonalAddress());
             }
+            if (account.getPhones() != null && !account.getPhones().isEmpty()) {
+                for (Phone phone : account.getPhones()) {
+                    phone.setAccount(updatedAccount);
+                }
+                updatedAccount.getPhones().addAll(account.getPhones());
+            }
+            entityManager.merge(updatedAccount);
         } catch (PersistenceException e) {
             logger.error("Error persisting account firstName={}, lastName={}", account.getFirstName(),
                     account.getLastName());

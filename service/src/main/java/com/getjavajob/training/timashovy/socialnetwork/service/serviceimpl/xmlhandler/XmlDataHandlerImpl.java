@@ -3,6 +3,7 @@ package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.xmlh
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.AccountRepository;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole;
+import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.XmlDataHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,14 +19,13 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
-import static java.time.LocalDate.parse;
-import static java.time.format.DateTimeFormatter.ofPattern;
-import static java.util.Base64.getDecoder;
+import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.PERSONAL;
+import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.WORKING;
 import static java.util.Optional.ofNullable;
-import static org.w3c.dom.Node.ELEMENT_NODE;
 
 public class XmlDataHandlerImpl implements XmlDataHandler {
 
@@ -48,7 +48,7 @@ public class XmlDataHandlerImpl implements XmlDataHandler {
         }
         try (InputStream is = inputStream) {
             Document document = parseXml(is);
-            Map<String, String> accountPropertiesMap = extractAccountProperties(document);
+            Map<String, Object> accountPropertiesMap = extractAccountProperties(document);
             Account newAccount = generateAccount(accountPropertiesMap);
             accountDao.updateById(newAccount, accountId);
             logger.info("Xml update account with id={}. New account={}", accountId, newAccount);
@@ -62,39 +62,71 @@ public class XmlDataHandlerImpl implements XmlDataHandler {
                 .parse(inputStream);
     }
 
-    private Map<String, String> extractAccountProperties(Document document) {
+    private Map<String, Object> extractAccountProperties(Document document) {
         Element accountRootElement = document.getDocumentElement();
         NodeList accountPropertiesElements = accountRootElement.getChildNodes();
-        Map<String, String> accountPropertiesMap = new HashMap<>();
+        Map<String, Object> accountPropertiesMap = new HashMap<>();
+        List<Phone> phones = new ArrayList<>();
         for (int i = 0; i < accountPropertiesElements.getLength(); i++) {
             Node property = accountPropertiesElements.item(i);
-            if (property.getNodeType() == ELEMENT_NODE) {
+            if (property.getNodeType() == Node.ELEMENT_NODE) {
+                String nodeName = property.getNodeName();
                 String textContent = property.getTextContent().trim();
-                if (!textContent.isEmpty()) {
-                    accountPropertiesMap.put(property.getNodeName(), textContent);
+                if (nodeName.equals("phones")) {
+                    NodeList phoneTypes = property.getChildNodes();
+                    for (int j = 0; j < phoneTypes.getLength(); j++) {
+                        Node phoneTypeNode = phoneTypes.item(j);
+                        if (phoneTypeNode.getNodeType() == Node.ELEMENT_NODE) {
+                            String phoneTypeName = phoneTypeNode.getNodeName();
+                            NodeList numbers = phoneTypeNode.getChildNodes();
+                            for (int k = 0; k < numbers.getLength(); k++) {
+                                Node numberNode = numbers.item(k);
+                                if (numberNode.getNodeType() == Node.ELEMENT_NODE && numberNode.getNodeName().equals("number")) {
+                                    String number = numberNode.getTextContent().trim();
+                                    if (!number.isEmpty()) {
+                                        if (phoneTypeName.equals("personalPhones")) {
+                                            phones.add(new Phone(PERSONAL, number));
+                                        } else if (phoneTypeName.equals("workingPhones")) {
+                                            phones.add(new Phone(WORKING, number));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    if (!textContent.isEmpty()) {
+                        accountPropertiesMap.put(nodeName, textContent);
+                    }
                 }
             }
         }
+        accountPropertiesMap.put("phones", phones);
         return accountPropertiesMap;
     }
 
-    private Account generateAccount(Map<String, String> accountPropertiesMap) {
+    private Account generateAccount(Map<String, Object> accountPropertiesMap) {
         Account.Builder accountBuilder = new Account.Builder();
-        ofNullable(accountPropertiesMap.get("firstName")).ifPresent(accountBuilder::firstName);
-        ofNullable(accountPropertiesMap.get("lastName")).ifPresent(accountBuilder::lastName);
-        ofNullable(accountPropertiesMap.get("middleName")).ifPresent(accountBuilder::middleName);
-        ofNullable(accountPropertiesMap.get("birthDate"))
-                .map(date -> parse(date, ofPattern("yyyy-MM-dd"))).ifPresent(accountBuilder::birthDate);
-        ofNullable(accountPropertiesMap.get("personalAddress")).ifPresent(accountBuilder::personalAddress);
-        ofNullable(accountPropertiesMap.get("email")).ifPresent(accountBuilder::email);
-        ofNullable(accountPropertiesMap.get("icq")).ifPresent(accountBuilder::icq);
-        ofNullable(accountPropertiesMap.get("skype")).ifPresent(accountBuilder::skype);
-        ofNullable(accountPropertiesMap.get("role"))
+        ofNullable((String) accountPropertiesMap.get("firstName")).ifPresent(accountBuilder::firstName);
+        ofNullable((String) accountPropertiesMap.get("lastName")).ifPresent(accountBuilder::lastName);
+        ofNullable((String) accountPropertiesMap.get("middleName")).ifPresent(accountBuilder::middleName);
+        ofNullable((String) accountPropertiesMap.get("birthDate"))
+                .map(date -> LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .ifPresent(accountBuilder::birthDate);
+        ofNullable((String) accountPropertiesMap.get("personalAddress")).ifPresent(accountBuilder::personalAddress);
+        ofNullable((String) accountPropertiesMap.get("workAddress")).ifPresent(accountBuilder::workAddress);
+        ofNullable((String) accountPropertiesMap.get("email")).ifPresent(accountBuilder::email);
+        ofNullable((String) accountPropertiesMap.get("icq")).ifPresent(accountBuilder::icq);
+        ofNullable((String) accountPropertiesMap.get("skype")).ifPresent(accountBuilder::skype);
+        ofNullable((String) accountPropertiesMap.get("additionalInfo")).ifPresent(accountBuilder::additionalInfo);
+        ofNullable((String) accountPropertiesMap.get("role"))
                 .map(role -> AccountRole.valueOf(role.toUpperCase()))
                 .ifPresent(accountBuilder::role);
-        ofNullable(accountPropertiesMap.get("avatar"))
-                .map(avatar -> getDecoder().decode(avatar.replaceAll("\\s+", "")))
+        ofNullable((String) accountPropertiesMap.get("avatar"))
+                .map(avatar -> Base64.getDecoder().decode(avatar.replaceAll("\\s+", "")))
                 .ifPresent(accountBuilder::avatar);
+        // Добавление телефонов
+        ofNullable((List<Phone>) accountPropertiesMap.get("phones")).ifPresent(accountBuilder::phones);
         return accountBuilder.build();
     }
 
