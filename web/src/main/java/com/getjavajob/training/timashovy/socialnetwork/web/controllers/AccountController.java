@@ -22,8 +22,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -129,20 +131,15 @@ public class AccountController {
     public String updateXml(@RequestParam("file") MultipartFile file,
                             @RequestParam("id") Long accountId,
                             HttpServletRequest req) {
-//        accountService.update(accountId, new AccountMapper().toAccount(accountDto));
 //        addPhones(req, accountId);
 //        updatePhones(req);
 //        deletePhones(req);
-        if (file.isEmpty()) {
-            // no file is sent or empty file is sent
-        }
-        if (file.getSize() > 1024) {
-            // if file size > 1 mb
-        }
         try {
             xmlDataHandler.updateAccount(file.getInputStream(), accountId);
         } catch (IOException e) {
             throw new WebException(e.getMessage(), e.getCause());
+        } catch (ParserConfigurationException | SAXException e) {
+            throw new RuntimeException(e);
         }
         return "redirect:/account/edit?id=" + accountId;
     }

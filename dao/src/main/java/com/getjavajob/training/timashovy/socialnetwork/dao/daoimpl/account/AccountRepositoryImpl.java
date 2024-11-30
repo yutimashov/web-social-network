@@ -45,26 +45,29 @@ public class AccountRepositoryImpl implements AccountRepository {
             if (account.getAvatar() != null) {
                 updatedAccount.setAvatar(account.getAvatar());
             }
-            if (account.getFirstName() != null && !updatedAccount.getFirstName().isEmpty()) {
+            if (account.getFirstName() != null && !account.getFirstName().isEmpty()) {
                 updatedAccount.setFirstName(account.getFirstName());
             }
-            if (account.getLastName() != null && !updatedAccount.getLastName().isEmpty()) {
+            if (account.getLastName() != null && !account.getLastName().isEmpty()) {
                 updatedAccount.setLastName(account.getLastName());
             }
-            if (account.getMiddleName() != null && !updatedAccount.getMiddleName().isEmpty()) {
+            if (account.getMiddleName() != null && !account.getMiddleName().isEmpty()) {
                 updatedAccount.setMiddleName(account.getMiddleName());
             }
             if (account.getBirthDate() != null) {
                 updatedAccount.setBirthDate(account.getBirthDate());
             }
-            if (account.getSkype() != null && !updatedAccount.getSkype().isEmpty()) {
+            if (account.getSkype() != null && !account.getSkype().isEmpty()) {
                 updatedAccount.setSkype(account.getSkype());
             }
-            if (account.getIcq() != null && !updatedAccount.getIcq().isEmpty()) {
+            if (account.getIcq() != null && !account.getIcq().isEmpty()) {
                 updatedAccount.setIcq(account.getIcq());
             }
-            if (account.getEmail() != null && !updatedAccount.getEmail().isEmpty()) {
+            if (account.getEmail() != null && !account.getEmail().isEmpty()) {
                 updatedAccount.setEmail(account.getEmail());
+            }
+            if (account.getPersonalAddress() != null && !account.getPersonalAddress().isEmpty()) {
+                updatedAccount.setPersonalAddress(account.getPersonalAddress());
             }
         } catch (PersistenceException e) {
             logger.error("Error persisting account firstName={}, lastName={}", account.getFirstName(),
