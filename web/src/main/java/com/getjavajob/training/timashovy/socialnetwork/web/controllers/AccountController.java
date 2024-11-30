@@ -6,29 +6,24 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.*;
+import com.getjavajob.training.timashovy.socialnetwork.service.util.exceptions.ServiceException;
 import com.getjavajob.training.timashovy.socialnetwork.web.dto.AccountDto;
 import com.getjavajob.training.timashovy.socialnetwork.web.mappers.AccountMapper;
 import com.getjavajob.training.timashovy.socialnetwork.web.util.exceptions.WebException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayOutputStream;
@@ -39,6 +34,12 @@ import java.util.Optional;
 import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.WORKING;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.UrlStatusParameter.DELETE_ACCOUNT_SUCCESS;
+import static javax.xml.transform.OutputKeys.INDENT;
+import static javax.xml.transform.TransformerFactory.newInstance;
+import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.OK;
 
 @Controller
 @RequestMapping("/account")
@@ -49,6 +50,7 @@ public class AccountController {
     private final PhoneService phoneService;
     private final AdminService adminService;
     private final XmlDataHandler xmlDataHandler;
+    private static final Logger logger = LoggerFactory.getLogger(AccountController.class);
 
     public AccountController(AccountService accountService, MessageService messageService, PhoneService phoneService,
                              AdminService adminService, XmlDataHandler xmlDataHandler) {
@@ -129,17 +131,15 @@ public class AccountController {
 
     @PostMapping("/xml-update")
     public String updateXml(@RequestParam("file") MultipartFile file,
-                            @RequestParam("id") Long accountId,
-                            HttpServletRequest req) {
-//        addPhones(req, accountId);
-//        updatePhones(req);
-//        deletePhones(req);
+                            @RequestParam("id") Long accountId) {
         try {
             xmlDataHandler.updateAccount(file.getInputStream(), accountId);
         } catch (IOException e) {
-            throw new WebException(e.getMessage(), e.getCause());
-        } catch (ParserConfigurationException | SAXException e) {
-            throw new RuntimeException(e);
+            logger.error("IO error while updating account with id={}", accountId, e);
+            throw new WebException("Failed to process the file. Please try again later.");
+        } catch (ServiceException e) {
+            logger.error("Service error for account with id={}", accountId, e);
+            throw new WebException("An error occurred while processing the account data. Please try again later.");
         }
         return "redirect:/account/edit?id=" + accountId;
     }
@@ -153,21 +153,25 @@ public class AccountController {
                 DOMSource source = new DOMSource(document);
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                 StreamResult result = new StreamResult(outputStream);
-                TransformerFactory transformerFactory = TransformerFactory.newInstance();
-                Transformer transformer = transformerFactory.newTransformer();
-                transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+                Transformer transformer = newInstance().newTransformer();
+                transformer.setOutputProperty(INDENT, "yes");
                 transformer.setOutputProperty("{https://xml.apache.org/xslt}indent-amount", "4");
                 transformer.transform(source, result);
                 HttpHeaders headers = new HttpHeaders();
-                headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=account.xml");
-                headers.add(HttpHeaders.CONTENT_TYPE, "application/xml");
-                return new ResponseEntity<>(outputStream.toByteArray(), headers, HttpStatus.OK);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                headers.add(CONTENT_DISPOSITION, "attachment; filename=account.xml");
+                headers.add(CONTENT_TYPE, "application/xml");
+                return new ResponseEntity<>(outputStream.toByteArray(), headers, OK);
+            } catch (TransformerConfigurationException e) {
+                logger.error("Configuration error composing xml data file for account={}", accountId);
+                throw new WebException("Failed to transform data to xml file. Problem with transformer configuration");
+            } catch (TransformerException e) {
+                logger.error("Unrecoverable error occurs during composing xml data file for account={}", accountId);
+                throw new WebException("Failed to transform data to xml file. Problem with processing data.");
+            } catch (ServiceException e) {
+                throw new WebException("An error occurred while processing the account data. Please try again later.");
             }
         } else {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(NOT_FOUND);
         }
     }
 

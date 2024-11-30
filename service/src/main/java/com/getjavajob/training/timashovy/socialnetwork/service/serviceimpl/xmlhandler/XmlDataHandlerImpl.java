@@ -5,6 +5,7 @@ import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.XmlDataHandler;
+import com.getjavajob.training.timashovy.socialnetwork.service.util.exceptions.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,8 +39,7 @@ public class XmlDataHandlerImpl implements XmlDataHandler {
 
     @Transactional
     @Override
-    public void updateAccount(InputStream inputStream, Long accountId) throws ParserConfigurationException,
-            IOException, SAXException {
+    public void updateAccount(InputStream inputStream, Long accountId) {
         if (inputStream == null) {
             throw new IllegalArgumentException("InputStream cannot be null");
         }
@@ -52,6 +52,12 @@ public class XmlDataHandlerImpl implements XmlDataHandler {
             Account newAccount = generateAccount(accountPropertiesMap);
             accountDao.updateById(newAccount, accountId);
             logger.info("Xml update account with id={}. New account={}", accountId, newAccount);
+        } catch (ParserConfigurationException | SAXException e) {
+            logger.error("Error parsing XML for account with id={}", accountId, e);
+            throw new ServiceException("Error parsing XML", e);
+        } catch (IOException e) {
+            logger.error("IO error while processing XML for account with id={}", accountId, e);
+            throw new ServiceException("IO error during XML processing", e);
         }
     }
 
@@ -134,9 +140,14 @@ public class XmlDataHandlerImpl implements XmlDataHandler {
 
     @Transactional
     @Override
-    public Document downloadAccountInfo(Account account) throws ParserConfigurationException {
+    public Document downloadAccountInfo(Account account) {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
+        DocumentBuilder builder = null;
+        try {
+            builder = factory.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            logger.error("Error generating xml file with account info: DocumentBuilder cannot be created", e);
+        }
         Document document = builder.newDocument();
         Element root = document.createElement("account");
         document.appendChild(root);

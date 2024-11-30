@@ -1,6 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.controlleradvices;
 
 import com.getjavajob.training.timashovy.socialnetwork.web.util.exceptions.WebException;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -8,7 +9,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(WebException.class)
-    public String handleWebException() {
+    public String handleWebException(WebException e, Model model) {
+        model.addAttribute("errorMessage", e.getMessage());
         return "error/500";
     }
 
