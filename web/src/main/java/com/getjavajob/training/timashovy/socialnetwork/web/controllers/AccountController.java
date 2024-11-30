@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
-import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
-import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AdminService;
-import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
-import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneService;
+import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.*;
 import com.getjavajob.training.timashovy.socialnetwork.web.dto.AccountDto;
 import com.getjavajob.training.timashovy.socialnetwork.web.mappers.AccountMapper;
 import com.getjavajob.training.timashovy.socialnetwork.web.util.exceptions.WebException;
@@ -49,13 +46,15 @@ public class AccountController {
     private final MessageService messageService;
     private final PhoneService phoneService;
     private final AdminService adminService;
+    private final XmlDataHandler xmlDataHandler;
 
     public AccountController(AccountService accountService, MessageService messageService, PhoneService phoneService,
-                             AdminService adminService) {
+                             AdminService adminService, XmlDataHandler xmlDataHandler) {
         this.accountService = accountService;
         this.messageService = messageService;
         this.phoneService = phoneService;
         this.adminService = adminService;
+        this.xmlDataHandler = xmlDataHandler;
     }
 
     @GetMapping
@@ -141,7 +140,7 @@ public class AccountController {
             // if file size > 1 mb
         }
         try {
-            accountService.xmlFileUpdateAccount(file.getInputStream(), accountId);
+            xmlDataHandler.updateAccount(file.getInputStream(), accountId);
         } catch (IOException e) {
             throw new WebException(e.getMessage(), e.getCause());
         }
@@ -150,24 +149,29 @@ public class AccountController {
 
     @GetMapping("/xml-download")
     public ResponseEntity<byte[]> downloadAccountXml(@RequestParam("id") Long accountId) {
-        try {
-            Document document = accountService.xmlFileDownloadAccount(accountId);
-            DOMSource source = new DOMSource(document);
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            StreamResult result = new StreamResult(outputStream);
-            // Создание Transformer для преобразования XML в поток
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty("{https://xml.apache.org/xslt}indent-amount", "4");
-            transformer.transform(source, result);
-            // Установка заголовков для скачивания файла
-            HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=account.xml");
-            headers.add(HttpHeaders.CONTENT_TYPE, "application/xml");
-            return new ResponseEntity<>(outputStream.toByteArray(), headers, HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
+        Optional<Account> maybeAccount = accountService.getById(accountId);
+        if (maybeAccount.isPresent()) {
+            try {
+                Document document = xmlDataHandler.downloadAccountInfo(maybeAccount.get());
+                DOMSource source = new DOMSource(document);
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                StreamResult result = new StreamResult(outputStream);
+                // Создание Transformer для преобразования XML в поток
+                TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                Transformer transformer = transformerFactory.newTransformer();
+                transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+                transformer.setOutputProperty("{https://xml.apache.org/xslt}indent-amount", "4");
+                transformer.transform(source, result);
+                // Установка заголовков для скачивания файла
+                HttpHeaders headers = new HttpHeaders();
+                headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=account.xml");
+                headers.add(HttpHeaders.CONTENT_TYPE, "application/xml");
+                return new ResponseEntity<>(outputStream.toByteArray(), headers, HttpStatus.OK);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } else {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

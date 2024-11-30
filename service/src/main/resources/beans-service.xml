@@ -63,4 +63,9 @@
         <constructor-arg ref="searchGroupDao"/>
     </bean>
 
+    <bean id="xmlHandler"
+          class="com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.xmlhandler.XmlDataHandlerImpl">
+        <constructor-arg ref="accountDao"/>
+    </bean>
+
 </beans>

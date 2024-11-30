@@ -1,10 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.interfaces;
 
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
-import org.w3c.dom.Document;
 
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,9 +31,5 @@ public interface AccountService {
     List<Account> getOutgoingFriendRequests(Long accountId);
 
     boolean checkFriendshipRecordExistence(Long requesterId, Long accepterId);
-
-    void xmlFileUpdateAccount(InputStream inputStream, Long accountId);
-
-    Document xmlFileDownloadAccount(Long accountId) throws ParserConfigurationException;
 
 }
