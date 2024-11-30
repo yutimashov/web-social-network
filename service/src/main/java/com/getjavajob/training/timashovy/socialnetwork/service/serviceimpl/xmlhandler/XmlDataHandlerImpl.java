@@ -105,6 +105,7 @@ public class XmlDataHandlerImpl implements XmlDataHandler {
         return accountPropertiesMap;
     }
 
+    @SuppressWarnings("unchecked")
     private Account generateAccount(Map<String, Object> accountPropertiesMap) {
         Account.Builder accountBuilder = new Account.Builder();
         ofNullable((String) accountPropertiesMap.get("firstName")).ifPresent(accountBuilder::firstName);
