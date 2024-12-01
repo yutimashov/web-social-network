@@ -2,13 +2,13 @@
 <Configuration status="trace">
 
     <Appenders>
-        <File name="File" fileName="/opt/tomcat/log.log">
+        <File name="File" fileName="/opt/tomcat/app-logs/social-network/log.log">
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n"/>
         </File>
     </Appenders>
 
     <Loggers>
-        <Logger name="com.getjavajob.training.timashovy.socialnetwork.service" level="trace" additivity="false">
+        <Logger name="com.getjavajob.training.timashovy.socialnetwork.service" level="debug" additivity="false">
             <AppenderRef ref="File"/>
         </Logger>
     </Loggers>
