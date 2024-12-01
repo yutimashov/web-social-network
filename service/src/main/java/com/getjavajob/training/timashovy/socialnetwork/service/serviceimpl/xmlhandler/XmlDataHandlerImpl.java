@@ -68,12 +68,9 @@ public class XmlDataHandlerImpl implements XmlDataHandler {
         createElementWithText(document, root, "middleName", account.getMiddleName());
         createElementWithText(document, root, "birthDate", account.getBirthDate().toString());
         createElementWithText(document, root, "personalAddress", account.getPersonalAddress());
-        createElementWithText(document, root, "workAddress", account.getWorkAddress());
         createElementWithText(document, root, "email", account.getEmail());
         createElementWithText(document, root, "icq", account.getIcq());
         createElementWithText(document, root, "skype", account.getSkype());
-        createElementWithText(document, root, "additionalInfo", account.getAdditionalInfo());
-        createElementWithText(document, root, "roleType", account.getRole().toString());
         appendPhonesToDocument(document, root, account);
     }
 
@@ -187,6 +184,7 @@ public class XmlDataHandlerImpl implements XmlDataHandler {
         return accountPropertiesMap;
     }
 
+    //TODO: use map methods compute etc. (refactor code)
     @SuppressWarnings("unchecked")
     private Account generateAccount(Map<String, Object> accountPropertiesMap) {
         Account.Builder accountBuilder = new Account.Builder();
