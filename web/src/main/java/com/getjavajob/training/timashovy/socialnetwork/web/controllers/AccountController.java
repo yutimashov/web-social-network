@@ -17,15 +17,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.w3c.dom.Document;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
@@ -33,8 +26,6 @@ import java.util.Optional;
 import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.WORKING;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.UrlStatusParameter.DELETE_ACCOUNT_SUCCESS_STATUS;
-import static javax.xml.transform.OutputKeys.INDENT;
-import static javax.xml.transform.TransformerFactory.newInstance;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
@@ -140,26 +131,14 @@ public class AccountController {
         Optional<Account> maybeAccount = accountService.getById(accountId);
         if (maybeAccount.isPresent()) {
             try {
-                Document document = xmlDataHandler.downloadAccountInfo(maybeAccount.get());
-                DOMSource source = new DOMSource(document);
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                StreamResult result = new StreamResult(outputStream);
-                Transformer transformer = newInstance().newTransformer();
-                transformer.setOutputProperty(INDENT, "yes");
-                transformer.setOutputProperty("{https://xml.apache.org/xslt}indent-amount", "4");
-                transformer.transform(source, result);
+                byte[] accountData = xmlDataHandler.loadAccountData(maybeAccount.get());
                 HttpHeaders headers = new HttpHeaders();
                 headers.add(CONTENT_DISPOSITION, "attachment; filename=account.xml");
                 headers.add(CONTENT_TYPE, "application/xml");
-                return new ResponseEntity<>(outputStream.toByteArray(), headers, OK);
-            } catch (TransformerConfigurationException e) {
-                logger.error("Configuration error composing xml data file for account={}", accountId);
-                throw new WebException("Failed to transform data to xml file. Problem with transformer configuration");
-            } catch (TransformerException e) {
-                logger.error("Unrecoverable error occurs during composing xml data file for account={}", accountId);
-                throw new WebException("Failed to transform data to xml file. Problem with processing data.");
+                return new ResponseEntity<>(accountData, headers, OK);
             } catch (ServiceException e) {
-                throw new WebException("An error occurred while processing the account data. Please try again later.");
+                throw new WebException("An error occurred while processing account data to xml file. "
+                        + "Please try again later.");
             }
         } else {
             return new ResponseEntity<>(NOT_FOUND);

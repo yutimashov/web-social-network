@@ -4,6 +4,7 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.Ac
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
+import com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.XmlDataHandler;
 import com.getjavajob.training.timashovy.socialnetwork.service.util.exceptions.ServiceException;
 import org.slf4j.Logger;
@@ -15,9 +16,14 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -27,6 +33,7 @@ import java.util.*;
 import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.WORKING;
 import static java.util.Optional.ofNullable;
+import static javax.xml.transform.OutputKeys.INDENT;
 
 public class XmlDataHandlerImpl implements XmlDataHandler {
 
@@ -137,18 +144,23 @@ public class XmlDataHandlerImpl implements XmlDataHandler {
         return accountBuilder.build();
     }
 
-
     @Transactional
     @Override
-    public Document downloadAccountInfo(Account account) {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = null;
+    public byte[] loadAccountData(Account account) {
         try {
-            builder = factory.newDocumentBuilder();
+            Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+            populateDocumentWithAccountData(document, account);
+            return transformDocumentToBytes(document);
         } catch (ParserConfigurationException e) {
-            logger.error("Error generating xml file with account info: DocumentBuilder cannot be created", e);
+            logger.error("Error generating XML: DocumentBuilder cannot be created", e);
+            throw new ServiceException("Error generating XML document", e);
+        } catch (TransformerException e) {
+            logger.error("Error transforming document to XML for account={}", account.getId(), e);
+            throw new ServiceException("Error transforming document to XML", e);
         }
-        Document document = builder.newDocument();
+    }
+
+    private void populateDocumentWithAccountData(Document document, Account account) {
         Element root = document.createElement("account");
         document.appendChild(root);
         createElementWithText(document, root, "firstName", account.getFirstName());
@@ -162,30 +174,34 @@ public class XmlDataHandlerImpl implements XmlDataHandler {
         createElementWithText(document, root, "skype", account.getSkype());
         createElementWithText(document, root, "additionalInfo", account.getAdditionalInfo());
         createElementWithText(document, root, "roleType", account.getRole().toString());
+        appendPhonesToDocument(document, root, account);
+    }
+
+    private void appendPhonesToDocument(Document document, Element root, Account account) {
         Element phonesElement = document.createElement("phones");
         root.appendChild(phonesElement);
-        Element personalPhonesElement = document.createElement("personalPhones");
-        Element workingPhonesElement = document.createElement("workingPhones");
-        boolean hasPersonalPhones = false;
-        boolean hasWorkingPhones = false;
+        Map<PhoneType, Element> phoneElements = new HashMap<>();
+        phoneElements.put(PERSONAL, document.createElement("personalPhones"));
+        phoneElements.put(WORKING, document.createElement("workingPhones"));
         for (Phone phone : account.getPhones()) {
             Element phoneElement = document.createElement("number");
             phoneElement.appendChild(document.createTextNode(phone.getNumber()));
-            if (PERSONAL.equals(phone.getPhoneType())) {
-                personalPhonesElement.appendChild(phoneElement);
-                hasPersonalPhones = true;
-            } else if (WORKING.equals(phone.getPhoneType())) {
-                workingPhonesElement.appendChild(phoneElement);
-                hasWorkingPhones = true;
+            phoneElements.get(phone.getPhoneType()).appendChild(phoneElement);
+        }
+        for (Map.Entry<PhoneType, Element> entry : phoneElements.entrySet()) {
+            if (entry.getValue().hasChildNodes()) {
+                phonesElement.appendChild(entry.getValue());
             }
         }
-        if (hasPersonalPhones) {
-            phonesElement.appendChild(personalPhonesElement);
-        }
-        if (hasWorkingPhones) {
-            phonesElement.appendChild(workingPhonesElement);
-        }
-        return document;
+    }
+
+    private byte[] transformDocumentToBytes(Document document) throws TransformerException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+        transformer.setOutputProperty(INDENT, "yes");
+        transformer.setOutputProperty("{https://xml.apache.org/xslt}indent-amount", "4");
+        transformer.transform(new DOMSource(document), new StreamResult(outputStream));
+        return outputStream.toByteArray();
     }
 
     private void createElementWithText(Document document, Element parent, String name, String text) {

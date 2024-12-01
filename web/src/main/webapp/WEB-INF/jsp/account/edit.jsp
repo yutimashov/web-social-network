@@ -210,7 +210,7 @@
                                     xml-file</label>
                                 <input form="xmlFile" class="form-control form-control-sm" name="file"
                                        id="file" type="file"/>
-                                <button type="submit" class="btn btn-dark btn-sm mt-2">Send</button>
+                                <button type="submit" class="btn btn-dark btn-sm mt-2">Update</button>
                             </form>
                         </div>
                     </c:if>
