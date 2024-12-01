@@ -6,8 +6,8 @@ import java.io.InputStream;
 
 public interface XmlDataHandler {
 
-    void updateAccount(InputStream inputStream, Long accountId);
-
     byte[] loadAccountData(Account account);
+
+    void updateAccount(InputStream inputStream, Long accountId);
 
 }

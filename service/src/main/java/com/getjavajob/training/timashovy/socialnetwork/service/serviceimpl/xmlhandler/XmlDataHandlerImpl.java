@@ -46,6 +46,74 @@ public class XmlDataHandlerImpl implements XmlDataHandler {
 
     @Transactional
     @Override
+    public byte[] loadAccountData(Account account) {
+        try {
+            Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+            populateDocumentWithAccountData(document, account);
+            return transformDocumentToBytes(document);
+        } catch (ParserConfigurationException e) {
+            logger.error("Error generating XML: DocumentBuilder cannot be created", e);
+            throw new ServiceException("Error generating XML document", e);
+        } catch (TransformerException e) {
+            logger.error("Error transforming document to XML for account={}", account.getId(), e);
+            throw new ServiceException("Error transforming document to XML", e);
+        }
+    }
+
+    private void populateDocumentWithAccountData(Document document, Account account) {
+        Element root = document.createElement("account");
+        document.appendChild(root);
+        createElementWithText(document, root, "firstName", account.getFirstName());
+        createElementWithText(document, root, "lastName", account.getLastName());
+        createElementWithText(document, root, "middleName", account.getMiddleName());
+        createElementWithText(document, root, "birthDate", account.getBirthDate().toString());
+        createElementWithText(document, root, "personalAddress", account.getPersonalAddress());
+        createElementWithText(document, root, "workAddress", account.getWorkAddress());
+        createElementWithText(document, root, "email", account.getEmail());
+        createElementWithText(document, root, "icq", account.getIcq());
+        createElementWithText(document, root, "skype", account.getSkype());
+        createElementWithText(document, root, "additionalInfo", account.getAdditionalInfo());
+        createElementWithText(document, root, "roleType", account.getRole().toString());
+        appendPhonesToDocument(document, root, account);
+    }
+
+    private void appendPhonesToDocument(Document document, Element root, Account account) {
+        Element phonesElement = document.createElement("phones");
+        root.appendChild(phonesElement);
+        Map<PhoneType, Element> phoneElements = new HashMap<>();
+        phoneElements.put(PERSONAL, document.createElement("personalPhones"));
+        phoneElements.put(WORKING, document.createElement("workingPhones"));
+        for (Phone phone : account.getPhones()) {
+            Element phoneElement = document.createElement("number");
+            phoneElement.appendChild(document.createTextNode(phone.getNumber()));
+            phoneElements.get(phone.getPhoneType()).appendChild(phoneElement);
+        }
+        for (Map.Entry<PhoneType, Element> entry : phoneElements.entrySet()) {
+            if (entry.getValue().hasChildNodes()) {
+                phonesElement.appendChild(entry.getValue());
+            }
+        }
+    }
+
+    private byte[] transformDocumentToBytes(Document document) throws TransformerException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+        transformer.setOutputProperty(INDENT, "yes");
+        transformer.setOutputProperty("{https://xml.apache.org/xslt}indent-amount", "4");
+        transformer.transform(new DOMSource(document), new StreamResult(outputStream));
+        return outputStream.toByteArray();
+    }
+
+    private void createElementWithText(Document document, Element parent, String name, String text) {
+        if (text != null && !text.isEmpty()) {
+            Element element = document.createElement(name);
+            element.appendChild(document.createTextNode(text));
+            parent.appendChild(element);
+        }
+    }
+
+    @Transactional
+    @Override
     public void updateAccount(InputStream inputStream, Long accountId) {
         if (inputStream == null) {
             throw new IllegalArgumentException("InputStream cannot be null");
@@ -142,74 +210,6 @@ public class XmlDataHandlerImpl implements XmlDataHandler {
                 .ifPresent(accountBuilder::avatar);
         ofNullable((List<Phone>) accountPropertiesMap.get("phones")).ifPresent(accountBuilder::phones);
         return accountBuilder.build();
-    }
-
-    @Transactional
-    @Override
-    public byte[] loadAccountData(Account account) {
-        try {
-            Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-            populateDocumentWithAccountData(document, account);
-            return transformDocumentToBytes(document);
-        } catch (ParserConfigurationException e) {
-            logger.error("Error generating XML: DocumentBuilder cannot be created", e);
-            throw new ServiceException("Error generating XML document", e);
-        } catch (TransformerException e) {
-            logger.error("Error transforming document to XML for account={}", account.getId(), e);
-            throw new ServiceException("Error transforming document to XML", e);
-        }
-    }
-
-    private void populateDocumentWithAccountData(Document document, Account account) {
-        Element root = document.createElement("account");
-        document.appendChild(root);
-        createElementWithText(document, root, "firstName", account.getFirstName());
-        createElementWithText(document, root, "lastName", account.getLastName());
-        createElementWithText(document, root, "middleName", account.getMiddleName());
-        createElementWithText(document, root, "birthDate", account.getBirthDate().toString());
-        createElementWithText(document, root, "personalAddress", account.getPersonalAddress());
-        createElementWithText(document, root, "workAddress", account.getWorkAddress());
-        createElementWithText(document, root, "email", account.getEmail());
-        createElementWithText(document, root, "icq", account.getIcq());
-        createElementWithText(document, root, "skype", account.getSkype());
-        createElementWithText(document, root, "additionalInfo", account.getAdditionalInfo());
-        createElementWithText(document, root, "roleType", account.getRole().toString());
-        appendPhonesToDocument(document, root, account);
-    }
-
-    private void appendPhonesToDocument(Document document, Element root, Account account) {
-        Element phonesElement = document.createElement("phones");
-        root.appendChild(phonesElement);
-        Map<PhoneType, Element> phoneElements = new HashMap<>();
-        phoneElements.put(PERSONAL, document.createElement("personalPhones"));
-        phoneElements.put(WORKING, document.createElement("workingPhones"));
-        for (Phone phone : account.getPhones()) {
-            Element phoneElement = document.createElement("number");
-            phoneElement.appendChild(document.createTextNode(phone.getNumber()));
-            phoneElements.get(phone.getPhoneType()).appendChild(phoneElement);
-        }
-        for (Map.Entry<PhoneType, Element> entry : phoneElements.entrySet()) {
-            if (entry.getValue().hasChildNodes()) {
-                phonesElement.appendChild(entry.getValue());
-            }
-        }
-    }
-
-    private byte[] transformDocumentToBytes(Document document) throws TransformerException {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        Transformer transformer = TransformerFactory.newInstance().newTransformer();
-        transformer.setOutputProperty(INDENT, "yes");
-        transformer.setOutputProperty("{https://xml.apache.org/xslt}indent-amount", "4");
-        transformer.transform(new DOMSource(document), new StreamResult(outputStream));
-        return outputStream.toByteArray();
-    }
-
-    private void createElementWithText(Document document, Element parent, String name, String text) {
-        if (text != null && !text.isEmpty()) {
-            Element element = document.createElement(name);
-            element.appendChild(document.createTextNode(text));
-            parent.appendChild(element);
-        }
     }
 
 }
