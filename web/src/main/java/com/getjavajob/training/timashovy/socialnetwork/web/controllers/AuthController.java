@@ -6,13 +6,10 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.LoginS
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
 import com.getjavajob.training.timashovy.socialnetwork.web.dto.AccountDto;
 import com.getjavajob.training.timashovy.socialnetwork.web.mappers.AccountMapper;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +20,7 @@ import java.util.Optional;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.UrlStatusParameter.AUTH_DATA_ERROR;
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.UrlStatusParameter.REG_SUCCESS;
 import static java.util.Objects.isNull;
+import static org.slf4j.LoggerFactory.getLogger;
 
 @SessionAttributes("account")
 @Controller
@@ -33,6 +31,7 @@ public class AuthController {
     private final LoginService loginService;
     private final PasswordService passwordService;
     private final AccountService accountService;
+    private static final Logger logger = getLogger(AuthController.class);
 
     public AuthController(LoginService loginService, PasswordService passwordService, AccountService accountService) {
         this.loginService = loginService;
@@ -58,6 +57,7 @@ public class AuthController {
             if (!isNull(rememberMe)) {
                 createRememberMeCookie(account, resp);
             }
+            logger.info("Account={} logged in successfully", account.getId());
             return "redirect:/account?id=" + account.getId();
         } else {
             return "redirect:/login" + AUTH_DATA_ERROR.getValue();
@@ -88,7 +88,9 @@ public class AuthController {
                                              @RequestParam("password") String password,
                                              @RequestParam("personalPhones") String personalPhones,
                                              @RequestParam("workingPhones") String workingPhones) {
-        accountService.create(new AccountMapper().toAccount(accountDto), password, personalPhones, workingPhones);
+        Account account = accountService.create(new AccountMapper().toAccount(accountDto), password, personalPhones,
+                workingPhones);
+        logger.info("New account={} has been registered", account.getId());
         return "redirect:/login" + REG_SUCCESS.getValue();
     }
 

@@ -48,7 +48,6 @@ public class AccountServiceImpl implements AccountService {
     public Account create(Account account, String password, String personalPhones, String workingPhones) {
         Account createdAccount = accountDao.save(account);
         passwordService.create(account, password);
-        logger.debug("Creating new account. PersonalPhones = {}", personalPhones);
         if (!personalPhones.isEmpty()) {
             phoneService.createPersonalPhones(account, personalPhones);
         }

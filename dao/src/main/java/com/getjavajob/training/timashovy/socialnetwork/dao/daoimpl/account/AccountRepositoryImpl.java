@@ -33,8 +33,7 @@ public class AccountRepositoryImpl implements AccountRepository {
             entityManager.persist(account);
             return account;
         } catch (PersistenceException e) {
-            logger.error("Error persisting account firstName={}, lastName={}", account.getFirstName(),
-                    account.getLastName());
+            logger.error("Error persisting account={}", account.getId());
             throw new DaoException("Cannot save account to persistent storage", e);
         }
     }
@@ -78,8 +77,7 @@ public class AccountRepositoryImpl implements AccountRepository {
             }
             entityManager.merge(updatedAccount);
         } catch (PersistenceException e) {
-            logger.error("Error persisting account firstName={}, lastName={}", account.getFirstName(),
-                    account.getLastName());
+            logger.error("Error persisting account={}", accountId);
             throw new DaoException("Cannot save account to persistent storage", e);
         }
     }
@@ -90,7 +88,7 @@ public class AccountRepositoryImpl implements AccountRepository {
             Account existingAccount = entityManager.find(Account.class, id);
             existingAccount.setRole(role);
         } catch (PersistenceException e) {
-            logger.error("Error changing account role: id={}, role={}", id, role);
+            logger.error("Error changing account role: account={}", role);
             throw new DaoException("Cannot change account role", e);
         }
     }
@@ -103,7 +101,7 @@ public class AccountRepositoryImpl implements AccountRepository {
                 entityManager.remove(deletingAccount);
             }
         } catch (PersistenceException e) {
-            logger.error("Error deleting account with id={}", id);
+            logger.error("Error deleting account={}", id);
             throw new DaoException("Cannot delete account by provided id", e);
         }
     }
@@ -113,7 +111,7 @@ public class AccountRepositoryImpl implements AccountRepository {
         try {
             return ofNullable(entityManager.find(Account.class, id));
         } catch (PersistenceException e) {
-            logger.error("Error getting account by id: id={}", id);
+            logger.error("Error getting account by id: account={}", id);
             throw new DaoException("Cannot get account by provided id", e);
         }
     }
