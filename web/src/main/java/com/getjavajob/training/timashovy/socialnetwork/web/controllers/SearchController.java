@@ -31,7 +31,7 @@ public class SearchController {
         long numberOfPages = 0;
         if (ACCOUNT_SEARCH_TYPE.equals(searchType)) {
             numberOfPages = handleAccountSearch(searchQuery, currentPage, model);
-        } else if ("group".equals(searchType)) {
+        } else if (GROUP_SEARCH_TYPE.equals(searchType)) {
             numberOfPages = handleGroupSearch(searchQuery, currentPage, model);
         }
         model.addAttribute("numberOfPages", numberOfPages);
@@ -58,6 +58,22 @@ public class SearchController {
                                @RequestParam("searchType") String searchType,
                                @RequestParam("currentPage") int currentPage,
                                ModelAndView modelAndView) {
+        modelAndView.setViewName("search/ajaxFragment");
+        if (ACCOUNT_SEARCH_TYPE.equals(searchType)) {
+            modelAndView.addObject("accounts", searchService.findAccounts(searchQuery, currentPage,
+                    TIPS_PER_AJAX_REQUEST));
+        } else if (GROUP_SEARCH_TYPE.equals(searchType)) {
+            modelAndView.addObject("groups", searchService.findGroups(searchQuery, currentPage,
+                    TIPS_PER_AJAX_REQUEST));
+        }
+        return modelAndView;
+    }
+
+    @GetMapping("/search_ajax_pages")
+    public ModelAndView searchAjaxPages(@RequestParam("searchQuery") String searchQuery,
+                                        @RequestParam("searchType") String searchType,
+                                        @RequestParam("currentPage") int currentPage,
+                                        ModelAndView modelAndView) {
         modelAndView.setViewName("search/ajaxFragment");
         if (ACCOUNT_SEARCH_TYPE.equals(searchType)) {
             modelAndView.addObject("accounts", searchService.findAccounts(searchQuery, currentPage,

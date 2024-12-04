@@ -12,40 +12,42 @@
 <body>
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <div class="container-xl mt-4">
-    <c:forEach var="account" items="${requestScope.accounts}">
-        <div class="row">
-            <div class="col-md-2 col-sm-2">
-                <c:if test="${not empty account.avatar}">
-                    <img src="${rootUrl}/account/avatar?id=${account.id}" alt="user" class="profile-photo-lg"
-                         width="100px" height="100px">
-                </c:if>
-                <c:if test="${empty account.avatar}">
-                    <img src="${rootUrl}/static/img/img-coming-soon-placeholder.png" alt="user"
-                         class="profile-photo-lg" width="100px" height="100px">
-                </c:if>
+    <div id="searchResult">
+        <c:forEach var="account" items="${requestScope.accounts}">
+            <div class="row">
+                <div class="col-md-2 col-sm-2">
+                    <c:if test="${not empty account.avatar}">
+                        <img src="${rootUrl}/account/avatar?id=${account.id}" alt="user" class="profile-photo-lg"
+                             width="100px" height="100px">
+                    </c:if>
+                    <c:if test="${empty account.avatar}">
+                        <img src="${rootUrl}/static/img/img-coming-soon-placeholder.png" alt="user"
+                             class="profile-photo-lg" width="100px" height="100px">
+                    </c:if>
+                </div>
+                <div class="col-md-10 col-sm-10">
+                    <h5><a href="${rootUrl}/account?id=${account.id}">${account.firstName} ${account.lastName}</a></h5>
+                </div>
             </div>
-            <div class="col-md-10 col-sm-10">
-                <h5><a href="${rootUrl}/account?id=${account.id}">${account.firstName} ${account.lastName}</a></h5>
+        </c:forEach>
+        <c:forEach var="group" items="${requestScope.groups}">
+            <div class="row">
+                <div class="col-md-2 col-sm-2">
+                    <c:if test="${not empty group.avatar}">
+                        <img src="${rootUrl}/avatar?id=${group.id}" alt="user" class="profile-photo-lg" width="100px"
+                             height="100px">
+                    </c:if>
+                    <c:if test="${empty group.avatar}">
+                        <img src="${rootUrl}/static/img/img-coming-soon-placeholder.png" alt="user"
+                             class="profile-photo-lg" width="100px" height="100px">
+                    </c:if>
+                </div>
+                <div class="col-md-10 col-sm-10">
+                    <h5><a href="${rootUrl}/group?id=${group.id}">${group.name}</a></h5>
+                </div>
             </div>
-        </div>
-    </c:forEach>
-    <c:forEach var="group" items="${requestScope.groups}">
-        <div class="row">
-            <div class="col-md-2 col-sm-2">
-                <c:if test="${not empty group.avatar}">
-                    <img src="${rootUrl}/avatar?id=${group.id}" alt="user" class="profile-photo-lg" width="100px"
-                         height="100px">
-                </c:if>
-                <c:if test="${empty group.avatar}">
-                    <img src="${rootUrl}/static/img/img-coming-soon-placeholder.png" alt="user"
-                         class="profile-photo-lg" width="100px" height="100px">
-                </c:if>
-            </div>
-            <div class="col-md-10 col-sm-10">
-                <h5><a href="${rootUrl}/group?id=${group.id}">${group.name}</a></h5>
-            </div>
-        </div>
-    </c:forEach>
+        </c:forEach>
+    </div>
     <section class="py-5">
         <div class="container">
             <div class="row">
@@ -53,8 +55,10 @@
                     <nav aria-label="BSB Pagination 1 Example">
                         <ul class="pagination bsb-pagination-1 pagination-lg justify-content-center">
                             <c:if test="${requestScope.currentPage != 1}">
-                                <li class="page-item"><a class="page-link"
-                                                         href="${rootUrl}/search?searchType=${requestScope.searchType}&searchQuery=${requestScope.searchQuery}&currentPage=${requestScope.currentPage - 1}">Previous</a>
+                                <li class="page-item">
+                                    <a class="page-link"
+                                       href="${rootUrl}/search_ajax_pages?searchType=${requestScope.searchType}&searchQuery=${requestScope.searchQuery}&currentPage=${requestScope.currentPage - 1}">
+                                        Previous</a>
                                 </li>
                             </c:if>
                             <c:forEach begin="1" end="${requestScope.numberOfPages}" var="i">
@@ -66,7 +70,7 @@
                                     <c:otherwise>
                                         <li class="page-item">
                                             <a class="page-link"
-                                               href="${rootUrl}/search?searchType=${requestScope.searchType}&searchQuery=${requestScope.searchQuery}&currentPage=${i}">
+                                               href="${rootUrl}/search_ajax_pages?searchType=${requestScope.searchType}&searchQuery=${requestScope.searchQuery}&currentPage=${i}">
                                                     ${i}
                                             </a>
                                         </li>
@@ -76,7 +80,7 @@
                             <c:if test="${requestScope.currentPage lt requestScope.numberOfPages}">
                                 <li class="page-item">
                                     <a class="page-link"
-                                       href="${rootUrl}/search?searchType=${requestScope.searchType}&searchQuery=${requestScope.searchQuery}&currentPage=${requestScope.currentPage + 1}">
+                                       href="${rootUrl}/search_ajax_pages?searchType=${requestScope.searchType}&searchQuery=${requestScope.searchQuery}&currentPage=${requestScope.currentPage + 1}">
                                         Next
                                     </a>
                                 </li>
@@ -89,5 +93,6 @@
     </section>
 </div>
 <jsp:include page="/WEB-INF/jsp/include/footer.jsp"/>
+<script src="${rootUrl}/static/js/ajax-search-pages.js"></script>
 </body>
 </html>

@@ -13,6 +13,7 @@
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <div class="container-xl mt-4">
     <div class="row">
+        <button id="btn-ajax-pages">BTN</button>
         <!-- Account info -->
         <div class="col-xl-4">
             <div class="card mb-4 mb-xl-0">
