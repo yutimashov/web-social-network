@@ -60,7 +60,7 @@ function appendSearchResultsDynamically() {
 }
 
 function handleAppendSearchResultsResponse(responseText) {
-    dropdownContainer.insertAdjacentHTML("beforeend", responseText);
+    document.getElementById('account-info').insertAdjacentHTML("beforeend", responseText);
     searchPortion++;
     // check if the latest request was the last needed
     if (document.querySelectorAll('.dropdown-item').length % itemsPerRequest !== 0) {

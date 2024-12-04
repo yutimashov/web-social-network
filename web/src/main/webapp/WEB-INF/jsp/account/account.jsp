@@ -11,9 +11,9 @@
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
-<div class="container-xl mt-4">
+<div class="container-xl mt-4" id="account-info">
     <div class="row">
-        <button id="btn-ajax-pages">BTN</button>
+        <button id="btn-ajax-pages" class="page-link">BTN</button>
         <!-- Account info -->
         <div class="col-xl-4">
             <div class="card mb-4 mb-xl-0">
@@ -206,5 +206,6 @@
 </div>
 <jsp:include page="/WEB-INF/jsp/include/footer.jsp"/>
 <script src="${rootUrl}/static/js/account.js"></script>
+<script src="${rootUrl}/static/js/ajax-search-pages.js"></script>
 </body>
 </html>
