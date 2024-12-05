@@ -26,26 +26,7 @@
                 </ul>
                 <ul class="navbar-nav mb-2 mb-lg-0 profile-menu">
                     <li class="nav-item align-middle">
-                        <div style="display:inline;">
-                                <%---------------- Search form -----------------------%>
-                            <form action="${rootUrl}/search" style="margin:0;">
-                                <input type="hidden" name="currentPage" value="1">
-                                <label for="searchType" class="text-light">Search for:</label>
-                                <select class="form-select-sm" name="searchType" id="searchType">
-                                    <option value="account" selected>Account</option>
-                                    <option value="group">Group</option>
-                                </select>
-                                <label for="searchQuery" class="text-light">
-                                    <input type="text" id="searchQuery" name="searchQuery"
-                                           data-toggle="dropdown" placeholder="Search" aria-label="Search">
-                                        <%-- dynamic search tips  --%>
-                                    <div class="dropdown-menu dropdown-menu-right ml-4 scrollable-menu"
-                                         id="dropdown-container"></div>
-                                </label>
-                                <button type="submit" id="search-button" class="btn-sm btn-outline-secondary">Find
-                                </button>
-                            </form>
-                        </div>
+                        <jsp:include page="/WEB-INF/jsp/include/header-search-form.jsp"/>
                     </li>
                 </ul>
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0 profile-menu">

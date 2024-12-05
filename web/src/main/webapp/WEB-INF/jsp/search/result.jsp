@@ -12,7 +12,9 @@
 <body>
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <div class="container-xl mt-4" id="search-result-container">
-    <jsp:include page="/WEB-INF/jsp/search/search-results.jsp"/>
+    <div id="search-results">
+        <jsp:include page="/WEB-INF/jsp/search/search-results.jsp"/>
+    </div>
     <jsp:include page="/WEB-INF/jsp/search/pagination.jsp"/>
 </div>
 <jsp:include page="/WEB-INF/jsp/include/footer.jsp"/>

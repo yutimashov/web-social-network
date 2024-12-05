@@ -1,27 +1,25 @@
 'use strict';
 
-// all pagination links
-const paginationLinks = document.querySelectorAll('.page-link');
-
-document.addEventListener('DOMContentLoaded', function() {
-    paginationLinks.forEach(function(link) {
-        // for each pagination link add event listener on click event
-        link.addEventListener('click', function(e) {
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.page-link').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+            // remove previously active link
+            let element = document.querySelector('.current-search-link');
+            if (element !== null) {
+                element.classList.remove('current-search-link');
+            }
             e.preventDefault();
-            // get url from href
-            let url = this.getAttribute('href');
-            console.log(url);
-            loadPages(url);
+            e.currentTarget.classList.add('current-search-link');
+            loadPages(this.getAttribute('href'));
         });
     });
 });
 
 function loadPages(url) {
-    // Values for searchType and searchQuery are gotten from header search form
     fetch(url)
         .then(function (result) {
             return result.text();
         }).then(function (data) {
-        document.getElementById('search-result-container').insertAdjacentHTML("beforeend", data);
+        document.getElementById('search-results').innerHTML = data;
     }).catch((err) => alert(err))
 }

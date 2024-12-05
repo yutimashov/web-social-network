@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class SearchController {
 
     private static final int RESULTS_PER_PAGE = 5;
+    private static final int INITIAL_PAGINATION_PAGE = 1;
     private static final int TIPS_PER_AJAX_REQUEST = 10;
     private static final String ACCOUNT_SEARCH_TYPE = "account";
     private static final String GROUP_SEARCH_TYPE = "group";
@@ -22,17 +23,15 @@ public class SearchController {
 
     @GetMapping("/search")
     public String doGet(@RequestParam("searchQuery") String searchQuery,
-                        @RequestParam("currentPage") int currentPage,
                         @RequestParam("searchType") String searchType,
                         Model model) {
         model.addAttribute("searchQuery", searchQuery);
-        model.addAttribute("currentPage", currentPage);
         model.addAttribute("searchType", searchType);
         long numberOfPages = 0;
         if (ACCOUNT_SEARCH_TYPE.equals(searchType)) {
-            numberOfPages = handleAccountSearch(searchQuery, currentPage, model);
+            numberOfPages = handleAccountSearch(searchQuery, INITIAL_PAGINATION_PAGE, model);
         } else if (GROUP_SEARCH_TYPE.equals(searchType)) {
-            numberOfPages = handleGroupSearch(searchQuery, currentPage, model);
+            numberOfPages = handleGroupSearch(searchQuery, INITIAL_PAGINATION_PAGE, model);
         }
         model.addAttribute("numberOfPages", numberOfPages);
         model.addAttribute("recordsPerPage", RESULTS_PER_PAGE);

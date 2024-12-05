@@ -17,13 +17,13 @@
                         <c:forEach begin="1" end="${requestScope.numberOfPages}" var="i">
                             <c:choose>
                                 <c:when test="${requestScope.currentPage eq i}">
-                                    <li class="page-item"><a class="page-link disabled current-search-link"
-                                                             href="#">${i}</a></li>
+                                    <li class="page-item"><a class="page-link disabled current-search-link" href="#" data-current-page="${i}">${i}</a></li>
                                 </c:when>
                                 <c:otherwise>
                                     <li class="page-item">
                                         <a class="page-link"
-                                           href="${rootUrl}/search_ajax_pages?searchType=${requestScope.searchType}&searchQuery=${requestScope.searchQuery}&currentPage=${i}">
+                                           href="${rootUrl}/search_ajax_pages?searchType=${requestScope.searchType}&searchQuery=${requestScope.searchQuery}&currentPage=${i}"
+                                           data-current-page="${i}">
                                                 ${i}
                                         </a>
                                     </li>
