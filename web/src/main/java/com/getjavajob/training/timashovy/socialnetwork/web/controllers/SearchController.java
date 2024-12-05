@@ -74,13 +74,13 @@ public class SearchController {
                                         @RequestParam("searchType") String searchType,
                                         @RequestParam("currentPage") int currentPage,
                                         ModelAndView modelAndView) {
-        modelAndView.setViewName("search/ajaxFragment");
+        modelAndView.setViewName("search/search-results");
         if (ACCOUNT_SEARCH_TYPE.equals(searchType)) {
             modelAndView.addObject("accounts", searchService.findAccounts(searchQuery, currentPage,
-                    TIPS_PER_AJAX_REQUEST));
+                    RESULTS_PER_PAGE));
         } else if (GROUP_SEARCH_TYPE.equals(searchType)) {
             modelAndView.addObject("groups", searchService.findGroups(searchQuery, currentPage,
-                    TIPS_PER_AJAX_REQUEST));
+                    RESULTS_PER_PAGE));
         }
         return modelAndView;
     }

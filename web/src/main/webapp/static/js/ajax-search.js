@@ -1,15 +1,17 @@
 const dropdownContainer = document.getElementById('dropdown-container');
+const searchQueryInputField = document.getElementById('searchQuery');
+
 let searchPortion = 1;
 let allResultsLoaded = false;
 let itemsPerRequest = 0;
 
-document.getElementById('searchQuery').addEventListener('input', loadSearchTips);
+searchQueryInputField.addEventListener('input', loadSearchTips);
 
 function loadSearchTips() {
-    const searchQuery = document.getElementById('searchQuery').value;
-    const searchType = document.getElementById('searchType').value;
-    if (searchQuery.length > 0) {
-        makeRequest(searchQuery, searchType, searchPortion, handleSearchTipsResponse);
+    const searchQueryValue = document.getElementById('searchQuery').value;
+    const searchTypeValue = document.getElementById('searchType').value;
+    if (searchQueryValue.length > 0) {
+        makeRequest(searchQueryValue, searchTypeValue, searchPortion, handleSearchTipsResponse);
     }
 }
 
