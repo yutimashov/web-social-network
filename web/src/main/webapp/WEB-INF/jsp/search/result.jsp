@@ -12,7 +12,7 @@
 <body>
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <div class="container-xl mt-4" id="search-result-container">
-    <div id="search-results">
+    <div id="search-results" data-page-result-amount="${requestScope.numberOfPages}">
         <jsp:include page="/WEB-INF/jsp/search/search-results.jsp"/>
     </div>
     <jsp:include page="/WEB-INF/jsp/search/pagination.jsp"/>
