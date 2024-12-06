@@ -26,7 +26,6 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +34,7 @@ import java.util.Map;
 import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.WORKING;
 import static java.time.LocalDate.parse;
+import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Base64.getDecoder;
 import static javax.xml.transform.OutputKeys.INDENT;
 
@@ -193,15 +193,21 @@ public class XmlDataHandlerImpl implements XmlDataHandler {
         accountPropertiesMap.computeIfPresent("firstName", (key, value) -> accountBuilder.firstName((String) value));
         accountPropertiesMap.computeIfPresent("lastName", (key, value) -> accountBuilder.lastName((String) value));
         accountPropertiesMap.computeIfPresent("middleName", (key, value) -> accountBuilder.middleName((String) value));
-        accountPropertiesMap.computeIfPresent("personalAddress", (key, value) -> accountBuilder.personalAddress((String) value));
-        accountPropertiesMap.computeIfPresent("workAddress", (key, value) -> accountBuilder.personalAddress((String) value));
-        accountPropertiesMap.computeIfPresent("email", (key, value) -> accountBuilder.personalAddress((String) value));
-        accountPropertiesMap.computeIfPresent("icq", (key, value) -> accountBuilder.personalAddress((String) value));
-        accountPropertiesMap.computeIfPresent("skype", (key, value) -> accountBuilder.personalAddress((String) value));
-        accountPropertiesMap.computeIfPresent("additionalInfo", (key, value) -> accountBuilder.personalAddress((String) value));
-        accountPropertiesMap.computeIfPresent("birthDate", (key, value) -> accountBuilder.birthDate(parse((String) value, DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
-        accountPropertiesMap.computeIfPresent("role", (key, value) -> accountBuilder.role(AccountRole.valueOf(((String) value).toUpperCase())));
-        accountPropertiesMap.computeIfPresent("avatar", (key, value) -> accountBuilder.avatar(getDecoder().decode(((String) value).replaceAll("\\s+", ""))));
+        accountPropertiesMap.computeIfPresent("personalAddress", (key, value) -> accountBuilder
+                .personalAddress((String) value));
+        accountPropertiesMap.computeIfPresent("workAddress", (key, value) -> accountBuilder
+                .workAddress((String) value));
+        accountPropertiesMap.computeIfPresent("email", (key, value) -> accountBuilder.email((String) value));
+        accountPropertiesMap.computeIfPresent("icq", (key, value) -> accountBuilder.icq((String) value));
+        accountPropertiesMap.computeIfPresent("skype", (key, value) -> accountBuilder.skype((String) value));
+        accountPropertiesMap.computeIfPresent("additionalInfo", (key, value) -> accountBuilder
+                .additionalInfo((String) value));
+        accountPropertiesMap.computeIfPresent("birthDate", (key, value) -> accountBuilder
+                .birthDate(parse((String) value, ofPattern("yyyy-MM-dd"))));
+        accountPropertiesMap.computeIfPresent("role", (key, value) -> accountBuilder
+                .role(AccountRole.valueOf(((String) value).toUpperCase())));
+        accountPropertiesMap.computeIfPresent("avatar", (key, value) -> accountBuilder.avatar(getDecoder()
+                .decode(((String) value).replaceAll("\\s+", ""))));
         accountPropertiesMap.computeIfPresent("phones", (key, value) -> accountBuilder.phones((List<Phone>) value));
         return accountBuilder.build();
     }
