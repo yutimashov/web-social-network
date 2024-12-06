@@ -31,7 +31,7 @@ public class SearchGroupDaoImpl implements SearchDao<Group> {
     public Long findResultsAmount(String searchQuery) {
         try {
             return entityManager.createQuery(
-                            "select count(*) from Group g where lower(g.name) like lower(:searchQuery)",
+                            "select count(g.id) from Group g where lower(g.name) like lower(:searchQuery)",
                             Long.class)
                     .setParameter("searchQuery", "%" + searchQuery + "%")
                     .getSingleResult();

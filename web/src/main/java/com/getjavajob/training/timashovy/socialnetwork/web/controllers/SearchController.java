@@ -40,11 +40,15 @@ public class SearchController {
 
     private Long handleAccountSearch(String searchQuery, int currentPage, Model model) {
         model.addAttribute("accounts", searchService.findAccounts(searchQuery, currentPage, RESULTS_PER_PAGE));
-        return calculateNumberOfPages(searchService.findAccountResultsAmount(searchQuery));
+        Long totalResultsAmount = searchService.findAccountResultsAmount(searchQuery);
+        model.addAttribute("totalResultsAmount", totalResultsAmount);
+        return calculateNumberOfPages(totalResultsAmount);
     }
 
     private Long handleGroupSearch(String searchQuery, int currentPage, Model model) {
         model.addAttribute("groups", searchService.findGroups(searchQuery, currentPage, RESULTS_PER_PAGE));
+        Long totalResultsAmount = searchService.findGroupResultsAmount(searchQuery);
+        model.addAttribute("totalResultsAmount", totalResultsAmount);
         return calculateNumberOfPages(searchService.findGroupResultsAmount(searchQuery));
     }
 

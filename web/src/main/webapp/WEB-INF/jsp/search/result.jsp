@@ -12,10 +12,17 @@
 <body>
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <div class="container-xl mt-4" id="search-result-container">
-    <div id="search-results" data-page-result-amount="${requestScope.numberOfPages}">
-        <jsp:include page="/WEB-INF/jsp/search/search-results.jsp"/>
-    </div>
-    <jsp:include page="/WEB-INF/jsp/search/pagination.jsp"/>
+    <c:if test="${requestScope.totalResultsAmount != 0}">
+        <div id="search-results" data-page-result-amount="${requestScope.numberOfPages}">
+            <jsp:include page="/WEB-INF/jsp/search/search-results.jsp"/>
+        </div>
+        <jsp:include page="/WEB-INF/jsp/search/pagination.jsp"/>
+    </c:if>
+    <c:if test="${requestScope.totalResultsAmount == 0}">
+        <div class="alert alert-primary text-center" role="alert">
+            No results found!
+        </div>
+    </c:if>
 </div>
 <jsp:include page="/WEB-INF/jsp/include/footer.jsp"/>
 <script src="${rootUrl}/static/js/ajax-search-pages.js"></script>
