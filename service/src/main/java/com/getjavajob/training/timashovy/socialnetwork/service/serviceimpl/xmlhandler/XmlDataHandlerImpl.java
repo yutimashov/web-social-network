@@ -26,16 +26,15 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.WORKING;
 import static java.time.LocalDate.parse;
-import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Base64.getDecoder;
 import static javax.xml.transform.OutputKeys.INDENT;
 
@@ -191,34 +190,24 @@ public class XmlDataHandlerImpl implements XmlDataHandler {
     @SuppressWarnings("unchecked")
     private Account generateAccount(Map<String, Object> accountPropertiesMap) {
         Account.Builder accountBuilder = new Account.Builder();
-        setIfPresent(accountPropertiesMap, "firstName", accountBuilder::firstName);
-        setIfPresent(accountPropertiesMap, "lastName", accountBuilder::lastName);
-        setIfPresent(accountPropertiesMap, "middleName", accountBuilder::middleName);
-        setIfPresent(accountPropertiesMap, "birthDate",
-                date -> accountBuilder.birthDate(parse((String) date, ofPattern("yyyy-MM-dd"))));
-        setIfPresent(accountPropertiesMap, "personalAddress", accountBuilder::personalAddress);
-        setIfPresent(accountPropertiesMap, "workAddress", accountBuilder::workAddress);
-        setIfPresent(accountPropertiesMap, "email", accountBuilder::email);
-        setIfPresent(accountPropertiesMap, "icq", accountBuilder::icq);
-        setIfPresent(accountPropertiesMap, "skype", accountBuilder::skype);
-        setIfPresent(accountPropertiesMap, "additionalInfo", accountBuilder::additionalInfo);
-        setIfPresent(accountPropertiesMap, "role",
-                role -> accountBuilder.role(AccountRole.valueOf(((String) role).toUpperCase())));
-        setIfPresent(accountPropertiesMap, "avatar",
-                avatar -> accountBuilder.avatar(getDecoder().decode(((String) avatar).replaceAll("\\s+", ""))));
-        setIfPresent(accountPropertiesMap, "phones", phones -> accountBuilder.phones((List<Phone>) phones));
+        accountPropertiesMap.computeIfPresent("firstName", (key, value) -> accountBuilder.firstName((String) value));
+        accountPropertiesMap.computeIfPresent("lastName", (key, value) -> accountBuilder.lastName((String) value));
+        accountPropertiesMap.computeIfPresent("middleName", (key, value) -> accountBuilder.middleName((String) value));
+        accountPropertiesMap.computeIfPresent("personalAddress", (key, value) -> accountBuilder.personalAddress((String) value));
+        accountPropertiesMap.computeIfPresent("workAddress", (key, value) -> accountBuilder.personalAddress((String) value));
+        accountPropertiesMap.computeIfPresent("email", (key, value) -> accountBuilder.personalAddress((String) value));
+        accountPropertiesMap.computeIfPresent("icq", (key, value) -> accountBuilder.personalAddress((String) value));
+        accountPropertiesMap.computeIfPresent("skype", (key, value) -> accountBuilder.personalAddress((String) value));
+        accountPropertiesMap.computeIfPresent("additionalInfo", (key, value) -> accountBuilder.personalAddress((String) value));
+        accountPropertiesMap.computeIfPresent("birthDate", (key, value) -> accountBuilder.birthDate(parse((String) value, DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
+        accountPropertiesMap.computeIfPresent("role", (key, value) -> accountBuilder.role(AccountRole.valueOf(((String) value).toUpperCase())));
+        accountPropertiesMap.computeIfPresent("avatar", (key, value) -> accountBuilder.avatar(getDecoder().decode(((String) value).replaceAll("\\s+", ""))));
+        accountPropertiesMap.computeIfPresent("phones", (key, value) -> accountBuilder.phones((List<Phone>) value));
         return accountBuilder.build();
     }
 
-    @SuppressWarnings("unchecked")
-    private static <T> void setIfPresent(Map<String, Object> map, String key, Consumer<T> consumer) {
-        if (map.containsKey(key)) {
-            consumer.accept((T) map.get(key));
-        }
-    }
 //    private Account generateAccount(Map<String, Object> accountPropertiesMap) {
 //        Account.Builder accountBuilder = new Account.Builder();
-//        ofNullable((String) accountPropertiesMap.get("firstName")).ifPresent(accountBuilder::firstName);
 //        ofNullable((String) accountPropertiesMap.get("lastName")).ifPresent(accountBuilder::lastName);
 //        ofNullable((String) accountPropertiesMap.get("middleName")).ifPresent(accountBuilder::middleName);
 //        ofNullable((String) accountPropertiesMap.get("birthDate"))
