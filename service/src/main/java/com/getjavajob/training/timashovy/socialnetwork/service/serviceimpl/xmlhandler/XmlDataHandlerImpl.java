@@ -26,13 +26,17 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 
 import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.WORKING;
-import static java.util.Optional.ofNullable;
+import static java.time.LocalDate.parse;
+import static java.time.format.DateTimeFormatter.ofPattern;
+import static java.util.Base64.getDecoder;
 import static javax.xml.transform.OutputKeys.INDENT;
 
 public class XmlDataHandlerImpl implements XmlDataHandler {
@@ -184,30 +188,56 @@ public class XmlDataHandlerImpl implements XmlDataHandler {
         return accountPropertiesMap;
     }
 
-    //TODO: use map methods compute etc. (refactor code)
     @SuppressWarnings("unchecked")
     private Account generateAccount(Map<String, Object> accountPropertiesMap) {
         Account.Builder accountBuilder = new Account.Builder();
-        ofNullable((String) accountPropertiesMap.get("firstName")).ifPresent(accountBuilder::firstName);
-        ofNullable((String) accountPropertiesMap.get("lastName")).ifPresent(accountBuilder::lastName);
-        ofNullable((String) accountPropertiesMap.get("middleName")).ifPresent(accountBuilder::middleName);
-        ofNullable((String) accountPropertiesMap.get("birthDate"))
-                .map(date -> LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-                .ifPresent(accountBuilder::birthDate);
-        ofNullable((String) accountPropertiesMap.get("personalAddress")).ifPresent(accountBuilder::personalAddress);
-        ofNullable((String) accountPropertiesMap.get("workAddress")).ifPresent(accountBuilder::workAddress);
-        ofNullable((String) accountPropertiesMap.get("email")).ifPresent(accountBuilder::email);
-        ofNullable((String) accountPropertiesMap.get("icq")).ifPresent(accountBuilder::icq);
-        ofNullable((String) accountPropertiesMap.get("skype")).ifPresent(accountBuilder::skype);
-        ofNullable((String) accountPropertiesMap.get("additionalInfo")).ifPresent(accountBuilder::additionalInfo);
-        ofNullable((String) accountPropertiesMap.get("role"))
-                .map(role -> AccountRole.valueOf(role.toUpperCase()))
-                .ifPresent(accountBuilder::role);
-        ofNullable((String) accountPropertiesMap.get("avatar"))
-                .map(avatar -> Base64.getDecoder().decode(avatar.replaceAll("\\s+", "")))
-                .ifPresent(accountBuilder::avatar);
-        ofNullable((List<Phone>) accountPropertiesMap.get("phones")).ifPresent(accountBuilder::phones);
+        setIfPresent(accountPropertiesMap, "firstName", accountBuilder::firstName);
+        setIfPresent(accountPropertiesMap, "lastName", accountBuilder::lastName);
+        setIfPresent(accountPropertiesMap, "middleName", accountBuilder::middleName);
+        setIfPresent(accountPropertiesMap, "birthDate",
+                date -> accountBuilder.birthDate(parse((String) date, ofPattern("yyyy-MM-dd"))));
+        setIfPresent(accountPropertiesMap, "personalAddress", accountBuilder::personalAddress);
+        setIfPresent(accountPropertiesMap, "workAddress", accountBuilder::workAddress);
+        setIfPresent(accountPropertiesMap, "email", accountBuilder::email);
+        setIfPresent(accountPropertiesMap, "icq", accountBuilder::icq);
+        setIfPresent(accountPropertiesMap, "skype", accountBuilder::skype);
+        setIfPresent(accountPropertiesMap, "additionalInfo", accountBuilder::additionalInfo);
+        setIfPresent(accountPropertiesMap, "role",
+                role -> accountBuilder.role(AccountRole.valueOf(((String) role).toUpperCase())));
+        setIfPresent(accountPropertiesMap, "avatar",
+                avatar -> accountBuilder.avatar(getDecoder().decode(((String) avatar).replaceAll("\\s+", ""))));
+        setIfPresent(accountPropertiesMap, "phones", phones -> accountBuilder.phones((List<Phone>) phones));
         return accountBuilder.build();
     }
+
+    @SuppressWarnings("unchecked")
+    private static <T> void setIfPresent(Map<String, Object> map, String key, Consumer<T> consumer) {
+        if (map.containsKey(key)) {
+            consumer.accept((T) map.get(key));
+        }
+    }
+//    private Account generateAccount(Map<String, Object> accountPropertiesMap) {
+//        Account.Builder accountBuilder = new Account.Builder();
+//        ofNullable((String) accountPropertiesMap.get("firstName")).ifPresent(accountBuilder::firstName);
+//        ofNullable((String) accountPropertiesMap.get("lastName")).ifPresent(accountBuilder::lastName);
+//        ofNullable((String) accountPropertiesMap.get("middleName")).ifPresent(accountBuilder::middleName);
+//        ofNullable((String) accountPropertiesMap.get("birthDate"))
+//                .map(date -> LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+//                .ifPresent(accountBuilder::birthDate);
+//        ofNullable((String) accountPropertiesMap.get("personalAddress")).ifPresent(accountBuilder::personalAddress);
+//        ofNullable((String) accountPropertiesMap.get("workAddress")).ifPresent(accountBuilder::workAddress);
+//        ofNullable((String) accountPropertiesMap.get("email")).ifPresent(accountBuilder::email);
+//        ofNullable((String) accountPropertiesMap.get("icq")).ifPresent(accountBuilder::icq);
+//        ofNullable((String) accountPropertiesMap.get("skype")).ifPresent(accountBuilder::skype);
+//        ofNullable((String) accountPropertiesMap.get("additionalInfo")).ifPresent(accountBuilder::additionalInfo);
+//        ofNullable((String) accountPropertiesMap.get("role"))
+//                .map(role -> AccountRole.valueOf(role.toUpperCase()))
+//                .ifPresent(accountBuilder::role);
+//        ofNullable((String) accountPropertiesMap.get("avatar"))
+//                .map(avatar -> Base64.getDecoder().decode(avatar.replaceAll("\\s+", "")))
+//                .ifPresent(accountBuilder::avatar);
+//        ofNullable((List<Phone>) accountPropertiesMap.get("phones")).ifPresent(accountBuilder::phones);
+//        return accountBuilder.build();
+//    }
 
 }
