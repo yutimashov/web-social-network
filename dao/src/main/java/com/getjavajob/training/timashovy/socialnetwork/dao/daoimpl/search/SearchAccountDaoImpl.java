@@ -30,10 +30,10 @@ public class SearchAccountDaoImpl implements SearchDao<Account> {
     public Long findResultsAmount(String searchQuery) {
         try {
             return entityManager.createQuery(
-                            "select count(a.id) from Account a where a.firstName like lower(:searchQuery) "
+                            "select count(a.id) from Account a where lower(a.firstName) like lower(:searchQuery) "
                                     + "or lower(a.lastName) like lower(:searchQuery)",
                             Long.class)
-                    .setParameter("searchQuery", searchQuery)
+                    .setParameter("searchQuery", "%" + searchQuery + "%")
                     .getSingleResult();
         } catch (NonUniqueResultException e) {
             return -1L;
