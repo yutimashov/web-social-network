@@ -42,13 +42,13 @@
         <constructor-arg ref="groupMessageDao"/>
         <constructor-arg ref="personalWallMessageDao"/>
         <constructor-arg ref="personalMessageDao"/>
-        <constructor-arg ref="groupDao"/>
+        <constructor-arg ref="groupRepository"/>
     </bean>
 
     <bean id="groupService"
           class="com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group.GroupServiceImpl">
-        <constructor-arg ref="groupDao"/>
         <constructor-arg ref="groupMembershipService"/>
+        <constructor-arg ref="groupRepository"/>
     </bean>
 
     <bean id="groupMembershipService"

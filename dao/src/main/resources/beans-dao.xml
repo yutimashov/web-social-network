@@ -23,9 +23,6 @@
           class="com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship.FriendshipDaoImpl">
     </bean>
 
-    <bean id="groupDao" class="com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group.GroupRepositoryImpl">
-    </bean>
-
     <bean id="groupMembershipDao"
           class="com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group.GroupMembershipDaoImpl">
     </bean>

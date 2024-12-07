@@ -12,19 +12,20 @@ import java.util.Optional;
 
 public class GroupServiceImpl implements GroupService {
 
-    private final GroupRepository groupDao;
+    private final GroupRepository groupsDao;
     private final GroupMembershipService groupMembershipService;
 
-    public GroupServiceImpl(GroupRepository groupDao, GroupMembershipService groupMembershipService) {
-        this.groupDao = groupDao;
+    public GroupServiceImpl(GroupMembershipService groupMembershipService,
+                            GroupRepository groupsDao) {
         this.groupMembershipService = groupMembershipService;
+        this.groupsDao = groupsDao;
     }
 
     @Transactional
     @Override
     public Group create(Group group, Account account) {
-        groupMembershipService.sendRequest(group, account);
-        Group createdGroup = groupDao.save(group);
+        Group createdGroup = groupsDao.save(group);
+        groupMembershipService.sendRequest(createdGroup, account);
         Long accountId = account.getId();
         groupMembershipService.makeMember(createdGroup.getId(), accountId);
         groupMembershipService.makeAdmin(createdGroup.getId(), accountId);
@@ -32,13 +33,13 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public List<Group> getAll() {
-        return groupDao.getAll();
+    public List<Group> findAll() {
+        return groupsDao.findAll();
     }
 
     @Override
-    public Optional<Group> getById(Long groupId) {
-        return groupDao.getById(groupId);
+    public Optional<Group> findById(Long groupId) {
+        return groupsDao.findById(groupId);
     }
 
 }

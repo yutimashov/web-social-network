@@ -9,12 +9,7 @@ import com.getjavajob.training.timashovy.socialnetwork.web.dto.GroupDto;
 import com.getjavajob.training.timashovy.socialnetwork.web.mappers.GroupMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServlet;
 
@@ -39,8 +34,8 @@ public class GroupController extends HttpServlet {
     public String group(@RequestParam("id") Long groupId,
                         @SessionAttribute("account") Account account,
                         Model model) {
-        if (groupService.getById(groupId).isPresent()) {
-            model.addAttribute("group", groupService.getById(groupId).get());
+        if (groupService.findById(groupId).isPresent()) {
+            model.addAttribute("group", groupService.findById(groupId).get());
             Long accountId = account.getId();
             model.addAttribute("isAdmin", groupMembershipService.isAdmin(groupId, accountId));
             model.addAttribute("isSubscriber", groupMembershipService.isSubscriber(groupId, accountId));
@@ -82,8 +77,8 @@ public class GroupController extends HttpServlet {
     @GetMapping("/members")
     public String groupMembers(@RequestParam("id") Long groupId,
                                Model model) {
-        if (groupService.getById(groupId).isPresent()) {
-            model.addAttribute("group", groupService.getById(groupId).get());
+        if (groupService.findById(groupId).isPresent()) {
+            model.addAttribute("group", groupService.findById(groupId).get());
             model.addAttribute("groupMembers", groupMembershipService.getRegularMembers(groupId));
             model.addAttribute("groupAdmins", groupMembershipService.getAdmins(groupId));
         }
@@ -100,7 +95,7 @@ public class GroupController extends HttpServlet {
 
     @GetMapping("/all")
     public String allGroups(Model model) {
-        model.addAttribute("groups", groupService.getAll());
+        model.addAttribute("groups", groupService.findAll());
         return "group/groups";
     }
 
@@ -114,8 +109,8 @@ public class GroupController extends HttpServlet {
     @GetMapping("/send-request")
     public String sendRequest(@RequestParam("id") Long groupId,
                               @SessionAttribute("account") Account account) {
-        if (groupService.getById(groupId).isPresent()) {
-            groupMembershipService.sendRequest(groupService.getById(groupId).get(), account);
+        if (groupService.findById(groupId).isPresent()) {
+            groupMembershipService.sendRequest(groupService.findById(groupId).get(), account);
             return "redirect:/account?id=" + account.getId();
         } else {
             return "error/404";

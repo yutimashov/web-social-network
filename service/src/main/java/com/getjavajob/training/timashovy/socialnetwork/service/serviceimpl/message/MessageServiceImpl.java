@@ -22,21 +22,21 @@ public class MessageServiceImpl implements MessageService {
     private final GroupMessageRepository groupMessageDao;
     private final PersonalWallMessageRepository accountWallMessageDao;
     private final PersonalMessageRepository personalMessageDao;
-    private final GroupRepository groupDao;
+    private final GroupRepository groupRepository;
     private static final Logger logger = getLogger(MessageService.class);
 
     public MessageServiceImpl(GroupMessageRepository groupMessageDao, PersonalWallMessageRepository accountWallMessageDao,
-                              PersonalMessageRepository personalMessageDao, GroupRepository groupDao) {
+                              PersonalMessageRepository personalMessageDao, GroupRepository groupRepository) {
         this.groupMessageDao = groupMessageDao;
         this.accountWallMessageDao = accountWallMessageDao;
         this.personalMessageDao = personalMessageDao;
-        this.groupDao = groupDao;
+        this.groupRepository = groupRepository;
     }
 
     @Transactional
     @Override
     public void createGroupMessage(GroupMessage groupMessage, Long groupId) {
-        groupMessage.setGroup(groupDao.getById(groupId).get());
+        groupMessage.setGroup(groupRepository.findById(groupId).get());
         groupMessageDao.save(groupMessage);
     }
 

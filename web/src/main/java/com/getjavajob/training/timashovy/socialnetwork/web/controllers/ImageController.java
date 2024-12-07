@@ -48,7 +48,7 @@ public class ImageController {
 
     @GetMapping("/group/avatar")
     public ResponseEntity<InputStreamSource> groupAvatar(@RequestParam("id") Long id) {
-        Optional<Group> groupOptional = groupService.getById(id);
+        Optional<Group> groupOptional = groupService.findById(id);
         if (groupOptional.isPresent()) {
             InputStream avatar = new ByteArrayInputStream(groupOptional.get().getAvatar());
             return createImageResponse(avatar);
