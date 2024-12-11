@@ -36,6 +36,7 @@ import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone
 import static java.time.LocalDate.parse;
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Base64.getDecoder;
+import static java.util.Optional.ofNullable;
 import static javax.xml.transform.OutputKeys.INDENT;
 
 public class XmlDataHandlerImpl implements XmlDataHandler {
@@ -190,49 +191,22 @@ public class XmlDataHandlerImpl implements XmlDataHandler {
     @SuppressWarnings("unchecked")
     private Account generateAccount(Map<String, Object> accountPropertiesMap) {
         Account.Builder accountBuilder = new Account.Builder();
-        accountPropertiesMap.computeIfPresent("firstName", (key, value) -> accountBuilder.firstName((String) value));
-        accountPropertiesMap.computeIfPresent("lastName", (key, value) -> accountBuilder.lastName((String) value));
-        accountPropertiesMap.computeIfPresent("middleName", (key, value) -> accountBuilder.middleName((String) value));
-        accountPropertiesMap.computeIfPresent("personalAddress", (key, value) -> accountBuilder
-                .personalAddress((String) value));
-        accountPropertiesMap.computeIfPresent("workAddress", (key, value) -> accountBuilder
-                .workAddress((String) value));
-        accountPropertiesMap.computeIfPresent("email", (key, value) -> accountBuilder.email((String) value));
-        accountPropertiesMap.computeIfPresent("icq", (key, value) -> accountBuilder.icq((String) value));
-        accountPropertiesMap.computeIfPresent("skype", (key, value) -> accountBuilder.skype((String) value));
-        accountPropertiesMap.computeIfPresent("additionalInfo", (key, value) -> accountBuilder
-                .additionalInfo((String) value));
-        accountPropertiesMap.computeIfPresent("birthDate", (key, value) -> accountBuilder
-                .birthDate(parse((String) value, ofPattern("yyyy-MM-dd"))));
-        accountPropertiesMap.computeIfPresent("role", (key, value) -> accountBuilder
-                .role(AccountRole.valueOf(((String) value).toUpperCase())));
-        accountPropertiesMap.computeIfPresent("avatar", (key, value) -> accountBuilder.avatar(getDecoder()
-                .decode(((String) value).replaceAll("\\s+", ""))));
-        accountPropertiesMap.computeIfPresent("phones", (key, value) -> accountBuilder.phones((List<Phone>) value));
+        ofNullable((String) accountPropertiesMap.get("lastName")).ifPresent(accountBuilder::lastName);
+        ofNullable((String) accountPropertiesMap.get("middleName")).ifPresent(accountBuilder::middleName);
+        ofNullable((String) accountPropertiesMap.get("birthDate")).map(date -> parse(date, ofPattern("yyyy-MM-dd")))
+                .ifPresent(accountBuilder::birthDate);
+        ofNullable((String) accountPropertiesMap.get("personalAddress")).ifPresent(accountBuilder::personalAddress);
+        ofNullable((String) accountPropertiesMap.get("workAddress")).ifPresent(accountBuilder::workAddress);
+        ofNullable((String) accountPropertiesMap.get("email")).ifPresent(accountBuilder::email);
+        ofNullable((String) accountPropertiesMap.get("icq")).ifPresent(accountBuilder::icq);
+        ofNullable((String) accountPropertiesMap.get("skype")).ifPresent(accountBuilder::skype);
+        ofNullable((String) accountPropertiesMap.get("additionalInfo")).ifPresent(accountBuilder::additionalInfo);
+        ofNullable((String) accountPropertiesMap.get("role")).map(role -> AccountRole.valueOf(role.toUpperCase()))
+                .ifPresent(accountBuilder::role);
+        ofNullable((String) accountPropertiesMap.get("avatar")).map(avatar -> getDecoder()
+                .decode(avatar.replaceAll("\\s+", ""))).ifPresent(accountBuilder::avatar);
+        ofNullable((List<Phone>) accountPropertiesMap.get("phones")).ifPresent(accountBuilder::phones);
         return accountBuilder.build();
     }
-
-//    private Account generateAccount(Map<String, Object> accountPropertiesMap) {
-//        Account.Builder accountBuilder = new Account.Builder();
-//        ofNullable((String) accountPropertiesMap.get("lastName")).ifPresent(accountBuilder::lastName);
-//        ofNullable((String) accountPropertiesMap.get("middleName")).ifPresent(accountBuilder::middleName);
-//        ofNullable((String) accountPropertiesMap.get("birthDate"))
-//                .map(date -> LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-//                .ifPresent(accountBuilder::birthDate);
-//        ofNullable((String) accountPropertiesMap.get("personalAddress")).ifPresent(accountBuilder::personalAddress);
-//        ofNullable((String) accountPropertiesMap.get("workAddress")).ifPresent(accountBuilder::workAddress);
-//        ofNullable((String) accountPropertiesMap.get("email")).ifPresent(accountBuilder::email);
-//        ofNullable((String) accountPropertiesMap.get("icq")).ifPresent(accountBuilder::icq);
-//        ofNullable((String) accountPropertiesMap.get("skype")).ifPresent(accountBuilder::skype);
-//        ofNullable((String) accountPropertiesMap.get("additionalInfo")).ifPresent(accountBuilder::additionalInfo);
-//        ofNullable((String) accountPropertiesMap.get("role"))
-//                .map(role -> AccountRole.valueOf(role.toUpperCase()))
-//                .ifPresent(accountBuilder::role);
-//        ofNullable((String) accountPropertiesMap.get("avatar"))
-//                .map(avatar -> Base64.getDecoder().decode(avatar.replaceAll("\\s+", "")))
-//                .ifPresent(accountBuilder::avatar);
-//        ofNullable((List<Phone>) accountPropertiesMap.get("phones")).ifPresent(accountBuilder::phones);
-//        return accountBuilder.build();
-//    }
 
 }
