@@ -2,11 +2,13 @@ package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.acco
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.AccountRepository;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AdminService;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole.ADMIN;
 import static java.util.Objects.isNull;
 
+@Service
 public class AdminServiceImpl implements AdminService {
 
     private final AccountRepository accountDao;

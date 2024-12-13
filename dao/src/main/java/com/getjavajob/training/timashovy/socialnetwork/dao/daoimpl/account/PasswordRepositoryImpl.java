@@ -4,6 +4,7 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.exception.DaoExceptio
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PasswordRepository;
 import com.getjavajob.training.timashovy.socialnetwork.domain.password.Password;
 import org.slf4j.Logger;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -20,6 +21,7 @@ import static org.slf4j.LoggerFactory.getLogger;
  * Singleton class responsible for working with `account_data.passwords` table.
  * It provides safe multithreading approach for creating singleton object using synchronization mechanism.
  */
+@Repository
 public class PasswordRepositoryImpl implements PasswordRepository {
 
     private static final Logger logger = getLogger(PasswordRepositoryImpl.class);

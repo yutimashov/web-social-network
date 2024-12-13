@@ -3,6 +3,7 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship;
 import com.getjavajob.training.timashovy.socialnetwork.dao.exception.DaoException;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipCheckerDao;
 import org.slf4j.Logger;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -14,6 +15,7 @@ import static org.slf4j.LoggerFactory.getLogger;
  * Singleton class responsible for working with `account_data.friendship` table in DB.
  * It provides safe multithreading approach for creating singleton object using synchronization mechanism.
  */
+@Repository
 public class FriendshipCheckerDaoImpl implements FriendshipCheckerDao {
 
     private static final Logger logger = getLogger(FriendshipCheckerDaoImpl.class);

@@ -4,6 +4,7 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.Pa
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.password.Password;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -11,6 +12,7 @@ import java.util.Optional;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.PasswordUtil.generateSalt;
 import static com.getjavajob.training.timashovy.socialnetwork.service.util.PasswordUtil.hashCredentialData;
 
+@Service
 public class PasswordServiceImpl implements PasswordService {
 
     private final PasswordRepository passwordRepository;

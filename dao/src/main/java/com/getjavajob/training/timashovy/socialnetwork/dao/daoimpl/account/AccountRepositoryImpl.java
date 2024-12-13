@@ -6,6 +6,7 @@ import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
 import org.slf4j.Logger;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -20,6 +21,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 /**
  * Provides functionality for working with data inside `account_data.accounts` table.
  */
+@Repository
 public class AccountRepositoryImpl implements AccountRepository {
 
     private static final Logger logger = getLogger(AccountRepositoryImpl.class);

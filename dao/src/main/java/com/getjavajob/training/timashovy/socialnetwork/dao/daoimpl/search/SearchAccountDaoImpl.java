@@ -2,6 +2,7 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.search;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.search.SearchDao;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NonUniqueResultException;
@@ -11,6 +12,7 @@ import java.util.List;
 /**
  * Class provides functionality for searching accounts.
  */
+@Repository
 public class SearchAccountDaoImpl implements SearchDao<Account> {
 
     @PersistenceContext

@@ -7,6 +7,7 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.LoginS
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
@@ -14,6 +15,7 @@ import static com.getjavajob.training.timashovy.socialnetwork.service.util.Passw
 import static java.util.Objects.isNull;
 import static java.util.Optional.empty;
 
+@Service
 public class LoginServiceImpl implements LoginService {
 
     private final AccountService accountService;

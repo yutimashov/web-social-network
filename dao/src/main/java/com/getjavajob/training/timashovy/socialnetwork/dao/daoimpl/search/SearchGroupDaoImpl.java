@@ -2,6 +2,7 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.search;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.search.SearchDao;
 import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NonUniqueResultException;
@@ -11,6 +12,7 @@ import java.util.List;
 /**
  * Class provides functionality for searching groups.
  */
+@Repository
 public class SearchGroupDaoImpl implements SearchDao<Group> {
 
     @PersistenceContext

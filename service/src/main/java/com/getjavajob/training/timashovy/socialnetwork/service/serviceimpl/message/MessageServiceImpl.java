@@ -11,12 +11,14 @@ import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalMe
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalWallMessage;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
 import org.slf4j.Logger;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+@Service
 public class MessageServiceImpl implements MessageService {
 
     private final GroupMessageRepository groupMessageDao;

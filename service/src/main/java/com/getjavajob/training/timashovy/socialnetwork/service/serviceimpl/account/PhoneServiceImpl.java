@@ -5,6 +5,7 @@ import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneService;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
 import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.PERSONAL;
 import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.WORKING;
 
+@Service
 public class PhoneServiceImpl implements PhoneService {
 
     private final PhoneRepository phoneRepository;

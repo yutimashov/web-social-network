@@ -11,6 +11,7 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneS
 import com.getjavajob.training.timashovy.socialnetwork.service.util.exceptions.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import static java.util.Objects.isNull;
 /**
  * Singleton class for working with methods, managing Account functionality.
  */
+@Service
 public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountDao;

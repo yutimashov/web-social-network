@@ -2,6 +2,7 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.message.PersonalWallMessageRepository;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalWallMessage;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -17,6 +18,7 @@ import static java.util.Optional.ofNullable;
  * Singleton class responsible for working with `message_data.personal_messages`.
  * It provides safe multithreading approach for creating singleton object using synchronization mechanism.
  */
+@Repository
 public class PersonalWallMessageRepositoryImpl implements PersonalWallMessageRepository {
 
     @PersistenceContext

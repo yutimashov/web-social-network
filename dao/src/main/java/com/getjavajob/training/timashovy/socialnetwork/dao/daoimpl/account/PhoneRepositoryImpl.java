@@ -5,6 +5,7 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.Ph
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType;
 import org.slf4j.Logger;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -20,6 +21,7 @@ import static org.slf4j.LoggerFactory.getLogger;
  * Singleton class responsible for working with `account_data.phones` table in DB.
  * It provides safe multithreading approach for creating singleton object using synchronization mechanism.
  */
+@Repository
 public class PhoneRepositoryImpl implements PhoneRepository {
 
     private static final Logger logger = getLogger(PhoneRepositoryImpl.class);

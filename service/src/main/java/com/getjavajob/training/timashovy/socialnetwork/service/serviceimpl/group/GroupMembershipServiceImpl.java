@@ -5,9 +5,11 @@ import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupMembershipService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class GroupMembershipServiceImpl implements GroupMembershipService {
 
     private final AccountService accountService;

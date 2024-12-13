@@ -9,6 +9,7 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.XmlDat
 import com.getjavajob.training.timashovy.socialnetwork.service.util.exceptions.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -39,6 +40,7 @@ import static java.util.Base64.getDecoder;
 import static java.util.Optional.ofNullable;
 import static javax.xml.transform.OutputKeys.INDENT;
 
+@Service
 public class XmlDataHandlerImpl implements XmlDataHandler {
 
     private final AccountRepository accountDao;

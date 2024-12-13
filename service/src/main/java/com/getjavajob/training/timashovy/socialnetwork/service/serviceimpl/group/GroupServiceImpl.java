@@ -5,11 +5,13 @@ import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupMembershipService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupService;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class GroupServiceImpl implements GroupService {
 
     private final GroupRepository groupsDao;

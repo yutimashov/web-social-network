@@ -4,12 +4,14 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.group.Grou
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 import com.getjavajob.training.timashovy.socialnetwork.domain.group.GroupMember;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
+@Repository
 public class GroupMembershipDaoImpl implements GroupMembershipDao {
 
     @PersistenceContext

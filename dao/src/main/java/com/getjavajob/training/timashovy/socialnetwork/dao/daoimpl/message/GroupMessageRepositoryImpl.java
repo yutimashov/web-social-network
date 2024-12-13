@@ -2,6 +2,7 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.message.GroupMessageRepository;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.GroupMessage;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -13,6 +14,7 @@ import static java.util.Objects.isNull;
 import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 
+@Repository
 public class GroupMessageRepositoryImpl implements GroupMessageRepository {
 
     @PersistenceContext

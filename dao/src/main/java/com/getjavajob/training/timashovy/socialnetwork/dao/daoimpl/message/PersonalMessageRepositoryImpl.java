@@ -3,6 +3,7 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.message.PersonalMessageRepository;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalMessage;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -12,6 +13,7 @@ import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
+@Repository
 public class PersonalMessageRepositoryImpl implements PersonalMessageRepository {
 
     @PersistenceContext
