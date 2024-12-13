@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.dao;
+package com.getjavajob.training.timashovy.socialnetwork.dao.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,6 +1,6 @@
-package com.getjavajob.training.timashovy.socialnetwork.web;
+package com.getjavajob.training.timashovy.socialnetwork.web.config;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.PersistenceConfig;
+import com.getjavajob.training.timashovy.socialnetwork.dao.config.PersistenceConfig;
 import org.springframework.lang.NonNull;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;

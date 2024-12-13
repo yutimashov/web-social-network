@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.web;
+package com.getjavajob.training.timashovy.socialnetwork.web.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
