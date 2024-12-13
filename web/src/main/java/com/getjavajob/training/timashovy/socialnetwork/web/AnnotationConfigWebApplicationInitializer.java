@@ -1,5 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.web;
 
+import com.getjavajob.training.timashovy.socialnetwork.dao.PersistenceConfig;
 import org.springframework.lang.NonNull;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
@@ -15,10 +16,10 @@ public class AnnotationConfigWebApplicationInitializer implements WebApplication
     public void onStartup(@NonNull ServletContext servletContext) throws ServletException {
         AnnotationConfigWebApplicationContext ctx = new AnnotationConfigWebApplicationContext();
         ctx.setServletContext(servletContext);
-        ctx.register(ApplicationConfig.class);
+        ctx.register(ApplicationConfig.class, PersistenceConfig.class);
         ctx.refresh();
         ServletRegistration.Dynamic dispatcher = servletContext.addServlet("dispatcher",
-                new DispatcherServlet());
+                new DispatcherServlet(ctx));
         dispatcher.setLoadOnStartup(1);
         dispatcher.addMapping("/");
     }

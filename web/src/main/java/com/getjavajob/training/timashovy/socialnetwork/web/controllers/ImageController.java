@@ -1,9 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.controllers;
 
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
-import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.InputStreamSource;
@@ -26,13 +24,14 @@ import static org.springframework.http.ResponseEntity.status;
 public class ImageController {
 
     private final AccountService accountService;
-    private final GroupService groupService;
+    //private final GroupService groupService;
     private final MessageService messageService;
 
-    public ImageController(AccountService accountService, GroupService groupService,
+    public ImageController(AccountService accountService,
+                           //GroupService groupService,
                            MessageService messageService) {
         this.accountService = accountService;
-        this.groupService = groupService;
+        //this.groupService = groupService;
         this.messageService = messageService;
     }
 
@@ -46,15 +45,15 @@ public class ImageController {
         return status(NOT_FOUND).build();
     }
 
-    @GetMapping("/group/avatar")
-    public ResponseEntity<InputStreamSource> groupAvatar(@RequestParam("id") Long id) {
-        Optional<Group> groupOptional = groupService.findById(id);
-        if (groupOptional.isPresent()) {
-            InputStream avatar = new ByteArrayInputStream(groupOptional.get().getAvatar());
-            return createImageResponse(avatar);
-        }
-        return status(NOT_FOUND).build();
-    }
+//    @GetMapping("/group/avatar")
+//    public ResponseEntity<InputStreamSource> groupAvatar(@RequestParam("id") Long id) {
+//        Optional<Group> groupOptional = groupService.findById(id);
+//        if (groupOptional.isPresent()) {
+//            InputStream avatar = new ByteArrayInputStream(groupOptional.get().getAvatar());
+//            return createImageResponse(avatar);
+//        }
+//        return status(NOT_FOUND).build();
+//    }
 
     @GetMapping("/group-message/image")
     public ResponseEntity<InputStreamSource> groupPostImage(@RequestParam("id") Long id) {

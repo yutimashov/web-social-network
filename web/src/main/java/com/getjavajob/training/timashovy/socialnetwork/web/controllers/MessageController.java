@@ -48,13 +48,13 @@ public class MessageController {
         return "account/messages";
     }
 
-    @PostMapping("/group/message/create")
-    public String createGroupMessage(@ModelAttribute MessageDto messageDto,
-                                     @RequestParam("groupId") long groupId,
-                                     @SessionAttribute("account") Account account) {
-        messageService.createGroupMessage(new MessageMapper().toGroupMessage(messageDto, account.getId()), groupId);
-        return "redirect:/group?id=" + groupId;
-    }
+//    @PostMapping("/group/message/create")
+//    public String createGroupMessage(@ModelAttribute MessageDto messageDto,
+//                                     @RequestParam("groupId") long groupId,
+//                                     @SessionAttribute("account") Account account) {
+//        messageService.createGroupMessage(new MessageMapper().toGroupMessage(messageDto, account.getId()), groupId);
+//        return "redirect:/group?id=" + groupId;
+//    }
 
     @PostMapping("/account-wall/message/create")
     public String createAccountWallMessage(@ModelAttribute MessageDto messageDto,
