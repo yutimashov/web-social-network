@@ -10,26 +10,26 @@
             http://www.springframework.org/schema/aop
             https://www.springframework.org/schema/aop/spring-aop.xsd">
 
-    <import resource="datasource-config.xml"/>
-    <import resource="beans-service.xml"/>
+<!--    <import resource="datasource-config.xml"/>-->
+<!--    <import resource="beans-service.xml"/>-->
 
-    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSource"/>
-    </bean>
+<!--    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">-->
+<!--        <property name="dataSource" ref="dataSource"/>-->
+<!--    </bean>-->
 
-    <tx:advice id="txAdvice" transaction-manager="txManager">
-        <tx:attributes>
-            <tx:method name="create"/>
-            <tx:method name="update"/>
-        </tx:attributes>
-    </tx:advice>
+<!--    <tx:advice id="txAdvice" transaction-manager="txManager">-->
+<!--        <tx:attributes>-->
+<!--            <tx:method name="create"/>-->
+<!--            <tx:method name="update"/>-->
+<!--        </tx:attributes>-->
+<!--    </tx:advice>-->
 
-    <aop:config proxy-target-class="true">
-        <aop:pointcut id="accountServiceOperations"
-                      expression="execution(void com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountServiceImpl.create(..))
-                                  or execution(void com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountServiceImpl.update(..))
-                                    or execution(void com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group.GroupServiceImpl.create(..))"/>
-        <aop:advisor advice-ref="txAdvice" pointcut-ref="accountServiceOperations"/>
-    </aop:config>
+<!--    <aop:config proxy-target-class="true">-->
+<!--        <aop:pointcut id="accountServiceOperations"-->
+<!--                      expression="execution(void com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountServiceImpl.create(..))-->
+<!--                                  or execution(void com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account.AccountServiceImpl.update(..))-->
+<!--                                    or execution(void com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.group.GroupServiceImpl.create(..))"/>-->
+<!--        <aop:advisor advice-ref="txAdvice" pointcut-ref="accountServiceOperations"/>-->
+<!--    </aop:config>-->
 
 </beans>
