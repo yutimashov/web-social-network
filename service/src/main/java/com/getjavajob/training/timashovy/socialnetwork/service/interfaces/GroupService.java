@@ -10,8 +10,12 @@ public interface GroupService {
 
     Group create(Group group, Account account);
 
-    Optional<Group> findById(Long groupId);
+    Optional<Group> getById(Long id);
 
-    List<Group> findAll();
+    List<Group> getAll();
+
+    boolean updateById(Long id, Group group);
+
+    boolean deleteById(Long id);
 
 }

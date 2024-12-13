@@ -1,18 +1,22 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.group;
 
-import org.springframework.stereotype.Repository;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 
-@Repository
+import java.util.List;
+import java.util.Optional;
+
 public interface GroupRepository {
 
-//    @NonNull
-//    List<Group> findAll();
-//
-//    @NonNull
-//    Optional<Group> findById(@NonNull Long id);
-//
-//    @NonNull
-//    @SuppressWarnings("unchecked")
-//    Group save(@NonNull Group group);
+    Group create(Group group, Account account);
+
+    Optional<Group> getById(Long id);
+
+    List<Group> getAll();
+
+    boolean updateById(Long id, Group group);
+
+    boolean deleteById(Long id);
+
 
 }

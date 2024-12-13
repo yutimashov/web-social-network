@@ -1,5 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.message;
 
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.group.GroupRepository;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.message.GroupMessageRepository;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.message.PersonalMessageRepository;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.message.PersonalWallMessageRepository;
@@ -23,25 +24,24 @@ public class MessageServiceImpl implements MessageService {
     private final GroupMessageRepository groupMessageDao;
     private final PersonalWallMessageRepository accountWallMessageDao;
     private final PersonalMessageRepository personalMessageDao;
-//    private final GroupRepository groupRepository;
+    private final GroupRepository groupRepository;
     private static final Logger logger = getLogger(MessageService.class);
 
     public MessageServiceImpl(GroupMessageRepository groupMessageDao, PersonalWallMessageRepository accountWallMessageDao,
-                              PersonalMessageRepository personalMessageDao
-//                              GroupRepository groupRepository
-    ) {
+                              PersonalMessageRepository personalMessageDao,
+                              GroupRepository groupRepository) {
         this.groupMessageDao = groupMessageDao;
         this.accountWallMessageDao = accountWallMessageDao;
         this.personalMessageDao = personalMessageDao;
-//        this.groupRepository = groupRepository;
+        this.groupRepository = groupRepository;
     }
 
-//    @Transactional
-//    @Override
-//    public void createGroupMessage(GroupMessage groupMessage, Long groupId) {
-//        groupMessage.setGroup(groupRepository.findById(groupId).get());
-//        groupMessageDao.save(groupMessage);
-//    }
+    @Transactional
+    @Override
+    public void createGroupMessage(GroupMessage groupMessage, Long groupId) {
+        groupMessage.setGroup(groupRepository.getById(groupId).get());
+        groupMessageDao.save(groupMessage);
+    }
 
     @Transactional
     @Override

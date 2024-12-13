@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface MessageService {
 
-//    void createGroupMessage(GroupMessage groupMessage, Long groupId);
+    void createGroupMessage(GroupMessage groupMessage, Long groupId);
 
     void createPersonalWallMessage(PersonalWallMessage personalWallMessage);
 
