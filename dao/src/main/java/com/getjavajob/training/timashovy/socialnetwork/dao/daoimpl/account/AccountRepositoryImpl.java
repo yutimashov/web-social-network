@@ -85,6 +85,21 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
+    public Optional<Account> findByEmail(String email) {
+        try {
+            return ofNullable(entityManager.createQuery(
+                            "select a from Account a where a.email = :email",
+                            Account.class)
+                    .setParameter("email", email)
+                    .getSingleResult()
+            );
+        } catch (PersistenceException e) {
+            logger.error("Error getting account by email: email={}", email);
+            throw new DaoException("Cannot get account by provided email", e);
+        }
+    }
+
+    @Override
     public void changeRole(Long id, AccountRole role) {
         try {
             Account existingAccount = entityManager.find(Account.class, id);
