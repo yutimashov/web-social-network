@@ -37,7 +37,7 @@ class PasswordRepositoryImplImplTest {
     @BeforeEach
     public void setUp() {
         openMocks(this);
-        password = new Password("test", "test");
+        password = new Password("test");
     }
 
     @Nested

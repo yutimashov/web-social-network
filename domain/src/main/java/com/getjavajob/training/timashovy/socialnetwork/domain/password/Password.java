@@ -33,11 +33,8 @@ public class Password implements BaseEntity<Long> {
     @Column(name = "hash_password")
     private String passwordValue;
 
-    private String salt;
-
-    public Password(String passwordValue, String salt) {
+    public Password(String passwordValue) {
         this.passwordValue = passwordValue;
-        this.salt = salt;
     }
 
     protected Password() {
@@ -59,14 +56,6 @@ public class Password implements BaseEntity<Long> {
         this.passwordValue = password;
     }
 
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
-    }
-
     public Account getAccount() {
         return account;
     }
@@ -81,17 +70,17 @@ public class Password implements BaseEntity<Long> {
         if (o == null || getClass() != o.getClass()) return false;
         Password password1 = (Password) o;
         return Objects.equals(id, password1.id) && Objects.equals(account, password1.account)
-                & Objects.equals(passwordValue, password1.passwordValue) && Objects.equals(salt, password1.salt);
+                & Objects.equals(passwordValue, password1.passwordValue);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, account, passwordValue, salt);
+        return Objects.hash(id, account, passwordValue);
     }
 
     @Override
     public String toString() {
-        return "Password{id=" + id + ", account=" + account + ", password=" + passwordValue + ", salt=" + salt + "}";
+        return "Password{id=" + id + ", account=" + account + ", password=" + passwordValue + "}";
     }
 
 }
