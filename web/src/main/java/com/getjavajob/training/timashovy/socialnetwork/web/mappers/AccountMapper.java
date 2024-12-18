@@ -6,6 +6,7 @@ import com.getjavajob.training.timashovy.socialnetwork.web.util.exceptions.WebEx
 
 import java.io.IOException;
 
+import static com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole.REGULAR;
 import static java.time.LocalDate.parse;
 import static java.util.Objects.isNull;
 
@@ -24,6 +25,7 @@ public class AccountMapper {
                             ? accountDto.getAvatar().getBytes() : null)
                     .birthDate(!isNull(accountDto.getBirthDate()) && !accountDto.getBirthDate().isEmpty()
                             ? parse(accountDto.getBirthDate()) : null)
+                    .role(REGULAR)
                     .build();
         } catch (IOException e) {
             throw new WebException(e.getMessage(), e.getCause());
