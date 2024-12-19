@@ -1,5 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.security.config;
 
+import com.getjavajob.training.timashovy.socialnetwork.web.filters.AccountSessionFilter;
 import com.getjavajob.training.timashovy.socialnetwork.web.filters.SetEncodingFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter;
 
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.UrlStatusParameter.AUTH_DATA_ERROR;
 
@@ -34,11 +36,10 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .addFilterBefore(new SetEncodingFilter(), WebAsyncManagerIntegrationFilter.class)
+                .addFilterAfter(new AccountSessionFilter(), SecurityContextHolderAwareRequestFilter.class)
                 .authorizeHttpRequests(
                         registry -> {
-                            registry.requestMatchers("/account/all", "/register").permitAll();
-                            registry.requestMatchers("/group/**").hasRole("ADMIN");
-                            registry.requestMatchers("/account/**").hasRole("REGULAR");
+                            registry.requestMatchers("/register").permitAll();
                             registry.anyRequest().authenticated();
                         }
                 )
