@@ -7,6 +7,7 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.Passwo
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,12 +21,12 @@ public class PasswordServiceImpl implements PasswordService {
 
     private final PasswordRepository passwordRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public PasswordServiceImpl(PasswordRepository passwordRepository) {
+    public PasswordServiceImpl(PasswordRepository passwordRepository, @Lazy PasswordEncoder passwordEncoder) {
         this.passwordRepository = passwordRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
@@ -46,6 +47,11 @@ public class PasswordServiceImpl implements PasswordService {
     @Override
     public Optional<Password> findPasswordByEmail(String email) {
         return passwordRepository.findByEmail(email);
+    }
+
+    @Override
+    public void delete(Long id) {
+        passwordRepository.delete(id);
     }
 
 }

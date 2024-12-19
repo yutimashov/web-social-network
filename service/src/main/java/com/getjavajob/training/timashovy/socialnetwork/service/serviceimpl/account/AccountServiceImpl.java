@@ -1,7 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.AccountRepository;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PasswordRepository;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipCheckerDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipDao;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
@@ -31,18 +30,16 @@ public class AccountServiceImpl implements AccountService {
     private final FriendshipCheckerDao friendshipCheckerDao;
     private final PhoneService phoneService;
     private final PasswordService passwordService;
-    private final PasswordRepository passwordRepository;
     private static final Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class);
 
     public AccountServiceImpl(AccountRepository accountDao, FriendshipDao friendshipDao,
                               FriendshipCheckerDao friendshipCheckerDao, PhoneService phoneService,
-                              PasswordService passwordService, PasswordRepository passwordRepository) {
+                              PasswordService passwordService) {
         this.accountDao = accountDao;
         this.friendshipDao = friendshipDao;
         this.friendshipCheckerDao = friendshipCheckerDao;
         this.phoneService = phoneService;
         this.passwordService = passwordService;
-        this.passwordRepository = passwordRepository;
     }
 
     @Transactional
@@ -90,7 +87,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void delete(Long accountId) {
         validateAccountId(accountId);
-        passwordRepository.delete(accountId);
+        passwordService.delete(accountId);
         accountDao.delete(accountId);
     }
 

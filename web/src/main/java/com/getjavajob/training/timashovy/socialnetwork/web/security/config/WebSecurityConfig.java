@@ -1,6 +1,5 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.security.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -12,13 +11,20 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 public class WebSecurityConfig {
 
-    @Autowired
-    private UserDetailsService accountDetailsService;
+    private final UserDetailsService accountDetailsService;
+
+    private final AuthenticationSuccessHandler successHandler;
+
+    public WebSecurityConfig(UserDetailsService accountDetailsService, AuthenticationSuccessHandler successHandler) {
+        this.accountDetailsService = accountDetailsService;
+        this.successHandler = successHandler;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -27,14 +33,14 @@ public class WebSecurityConfig {
                         registry -> {
                             registry.requestMatchers("/account/all", "/register").permitAll();
                             registry.requestMatchers("/group/**").hasRole("ADMIN");
-                            registry.requestMatchers("/account/**").hasRole("USER");
+                            registry.requestMatchers("/account/**").hasRole("REGULAR");
                             registry.anyRequest().authenticated();
                         }
                 )
                 .formLogin(httpSecurityFormLoginConfigurer -> {
                     httpSecurityFormLoginConfigurer
                             .loginPage("/login")
-                            .successHandler(new CustomAuthenticationSuccessHandler())
+                            .successHandler(successHandler)
                             .permitAll();
                 })
                 .logout(LogoutConfigurer::permitAll)

@@ -13,4 +13,10 @@
         </Logger>
     </Loggers>
 
+    <Loggers>
+        <Logger name="org.springframework.security" level="DEBUG" additivity="false">
+            <AppenderRef ref="File"/>
+        </Logger>
+    </Loggers>
+
 </Configuration>

@@ -27,13 +27,10 @@ public class AuthController {
 
     private static final int EXPIRATION_COOKIE_LIFE_TIME = 0;
     private static final int REMEMBER_ME_COOKIE_LIFE_TIME = 3600;
-//    private final LoginService loginService;
-    private final PasswordService passwordService;
     private final AccountService accountService;
     private static final Logger logger = getLogger(AuthController.class);
 
-    public AuthController(PasswordService passwordService, AccountService accountService) {
-        this.passwordService = passwordService;
+    public AuthController(AccountService accountService) {
         this.accountService = accountService;
     }
 

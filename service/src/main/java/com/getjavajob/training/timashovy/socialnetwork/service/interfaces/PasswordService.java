@@ -13,4 +13,6 @@ public interface PasswordService {
 
     Optional<Password> findPasswordByEmail(String email);
 
+    void delete(Long id);
+
 }
