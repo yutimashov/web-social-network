@@ -19,7 +19,7 @@ import org.springframework.security.web.servletapi.SecurityContextHolderAwareReq
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.UrlStatusParameter.AUTH_DATA_ERROR;
 
 @Configuration
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 public class WebSecurityConfig {
 
     private final UserDetailsService accountDetailsService;
