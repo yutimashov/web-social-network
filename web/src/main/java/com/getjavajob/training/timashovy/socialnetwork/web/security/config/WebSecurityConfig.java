@@ -15,6 +15,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter;
 
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.UrlStatusParameter.AUTH_DATA_ERROR;
+
 @Configuration
 @EnableWebSecurity(debug = true)
 public class WebSecurityConfig {
@@ -44,6 +46,7 @@ public class WebSecurityConfig {
                     httpSecurityFormLoginConfigurer
                             .loginPage("/login")
                             .successHandler(successHandler)
+                            .failureUrl("/login" + AUTH_DATA_ERROR.getValue())
                             .permitAll();
                 })
                 .logout(LogoutConfigurer::permitAll)
