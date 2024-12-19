@@ -61,20 +61,20 @@ public class AuthController {
 //            return "redirect:/login" + AUTH_DATA_ERROR.getValue();
 //        }
 //    }
-
-    private void createRememberMeCookie(Account account, HttpServletResponse resp) {
-        resp.addCookie(createCookie("login", account.getEmail()));
-        if (passwordService.get(account.getId()).isPresent()) {
-            resp.addCookie(createCookie("password", passwordService.get(account.getId()).get()
-                    .getPasswordValue()));
-        }
-    }
-
-    private Cookie createCookie(String cookieName, String cookieValue) {
-        Cookie cookie = new Cookie(cookieName, cookieValue);
-        cookie.setMaxAge(REMEMBER_ME_COOKIE_LIFE_TIME);
-        return cookie;
-    }
+//
+//    private void createRememberMeCookie(Account account, HttpServletResponse resp) {
+//        resp.addCookie(createCookie("login", account.getEmail()));
+//        if (passwordService.get(account.getId()).isPresent()) {
+//            resp.addCookie(createCookie("password", passwordService.get(account.getId()).get()
+//                    .getPasswordValue()));
+//        }
+//    }
+//
+//    private Cookie createCookie(String cookieName, String cookieValue) {
+//        Cookie cookie = new Cookie(cookieName, cookieValue);
+//        cookie.setMaxAge(REMEMBER_ME_COOKIE_LIFE_TIME);
+//        return cookie;
+//    }
 
     @GetMapping("/register")
     public String getRegisterPage() {
