@@ -13,8 +13,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter;
 import org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter;
-import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter;
 
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.UrlStatusParameter.AUTH_DATA_ERROR;
 
@@ -35,7 +35,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .addFilterBefore(new SetEncodingFilter(), WebAsyncManagerIntegrationFilter.class)
-                .addFilterAfter(new AccountSessionFilter(), SecurityContextHolderAwareRequestFilter.class)
+                .addFilterAfter(new AccountSessionFilter(), RememberMeAuthenticationFilter.class)
                 .authorizeHttpRequests(
                         registry -> {
                             registry.requestMatchers("/register").permitAll();
@@ -50,14 +50,14 @@ public class WebSecurityConfig {
                             .permitAll();
                 })
                 .logout()
-                    .invalidateHttpSession(true)
-                    .deleteCookies("JSESSIONID")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
                 .and()
                 .csrf()
-                    .disable()
+                .disable()
                 .rememberMe()
-                    .userDetailsService(accountDetailsService)
-                    .tokenValiditySeconds(86400)
+                .userDetailsService(accountDetailsService)
+                .tokenValiditySeconds(86400)
                 .and()
                 .build();
     }

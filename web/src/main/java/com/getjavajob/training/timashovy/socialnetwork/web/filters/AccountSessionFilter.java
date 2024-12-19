@@ -15,6 +15,11 @@ import java.io.IOException;
 
 import static java.util.Objects.isNull;
 
+/**
+ * Filter check storing authenticated Account object when Account has been authenticated.
+ * If sessionId cookie expired or deleted, there should be Account object in session when client
+ * has authenticated using remember-me cookie.
+ */
 public class AccountSessionFilter implements Filter {
 
     @Override

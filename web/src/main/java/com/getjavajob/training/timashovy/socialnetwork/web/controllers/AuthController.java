@@ -10,12 +10,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.UrlStatusParameter.REG_SUCCESS;
 import static org.slf4j.LoggerFactory.getLogger;
 
-@SessionAttributes("account")
 @Controller
 public class AuthController {
 
@@ -27,12 +25,12 @@ public class AuthController {
     }
 
     @GetMapping("/login")
-    public String loginPage() {
+    public String handleLoginPage() {
         return "auth/login";
     }
 
     @GetMapping("/register")
-    public String getRegisterPage() {
+    public String handleRegisterPage() {
         return "auth/register";
     }
 
