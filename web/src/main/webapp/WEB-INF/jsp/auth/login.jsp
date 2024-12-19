@@ -72,8 +72,8 @@
                                     </div>
                                 </div>
                                 <div class="form-check" style="padding-left: 40px;">
-                                    <input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe">
-                                    <label class="form-check-label" for="rememberMe">Remember me</label>
+                                    <input type="checkbox" class="form-check-input" id="remember-me" name="remember-me">
+                                    <label class="form-check-label" for="remember-me">Remember me</label>
                                 </div>
                                 <div class="col-12">
                                     <div class="d-grid my-3">

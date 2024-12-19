@@ -51,6 +51,8 @@ public class WebSecurityConfig {
                 })
                 .logout(LogoutConfigurer::permitAll)
                 .csrf().disable()
+                .rememberMe().userDetailsService(accountDetailsService).tokenValiditySeconds(86400)
+                .and()
                 .build();
     }
 
