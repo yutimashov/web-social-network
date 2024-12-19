@@ -1,6 +1,5 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.security.config;
 
-import com.getjavajob.training.timashovy.socialnetwork.web.security.config.service.AccountDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class WebSecurityConfig {
 
     @Autowired
-    private AccountDetailsService accountDetailsService;
+    private UserDetailsService accountDetailsService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -33,7 +32,10 @@ public class WebSecurityConfig {
                         }
                 )
                 .formLogin(httpSecurityFormLoginConfigurer -> {
-                    httpSecurityFormLoginConfigurer.loginPage("/login").permitAll();
+                    httpSecurityFormLoginConfigurer
+                            .loginPage("/login")
+                            .successHandler(new CustomAuthenticationSuccessHandler())
+                            .permitAll();
                 })
                 .logout(LogoutConfigurer::permitAll)
                 .csrf().disable()

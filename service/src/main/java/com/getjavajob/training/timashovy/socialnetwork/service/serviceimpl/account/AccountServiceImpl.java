@@ -193,4 +193,9 @@ public class AccountServiceImpl implements AccountService {
         return friendshipCheckerDao.checkFriendshipRecordExistence(requesterId, accepterId);
     }
 
+    @Override
+    public Optional<Account> findByEmail(String email) {
+        return accountDao.findByEmail(email);
+    }
+
 }

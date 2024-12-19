@@ -32,4 +32,6 @@ public interface AccountService {
 
     boolean checkFriendshipRecordExistence(Long requesterId, Long accepterId);
 
+    Optional<Account> findByEmail(String email);
+
 }
