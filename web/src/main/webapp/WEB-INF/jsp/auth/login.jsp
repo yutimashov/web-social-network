@@ -59,9 +59,9 @@
                             <div class="row gy-2 overflow-hidden">
                                 <div class="col-12">
                                     <div class="form-floating mb-3">
-                                        <input type="email" id="email" name="email" class="form-control"
+                                        <input type="email" id="username" name="username" class="form-control"
                                                placeholder="name@example.com" required>
-                                        <label for="email" class="form-label">Email</label>
+                                        <label for="username" class="form-label">Email</label>
                                     </div>
                                 </div>
                                 <div class="col-12">
