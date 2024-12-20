@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,32 +34,37 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        final int tokenValiditySeconds = 60 * 60 * 24;
+        final String sessionCookieName = "JSESSIONID";
+        final String loginPath = "/login";
+        final String registerPath = "/register";
         return http
                 .addFilterBefore(new SetEncodingFilter(), WebAsyncManagerIntegrationFilter.class)
                 .addFilterAfter(new AccountSessionFilter(), RememberMeAuthenticationFilter.class)
                 .authorizeHttpRequests(
                         registry -> {
-                            registry.requestMatchers("/register").permitAll();
+                            registry.requestMatchers(registerPath).permitAll();
                             registry.anyRequest().authenticated();
                         }
                 )
                 .formLogin(httpSecurityFormLoginConfigurer -> {
                     httpSecurityFormLoginConfigurer
-                            .loginPage("/login")
+                            .loginPage(loginPath)
                             .successHandler(successHandler)
-                            .failureUrl("/login" + AUTH_DATA_ERROR.getValue())
+                            .failureUrl(loginPath + AUTH_DATA_ERROR.getValue())
                             .permitAll();
                 })
-                .logout()
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
-                .and()
-                .csrf()
-                .disable()
-                .rememberMe()
-                .userDetailsService(accountDetailsService)
-                .tokenValiditySeconds(86400)
-                .and()
+                .logout(httpSecurityLogoutConfigurer -> {
+                    httpSecurityLogoutConfigurer
+                            .deleteCookies(sessionCookieName)
+                            .invalidateHttpSession(true);
+                })
+                .csrf(AbstractHttpConfigurer::disable)
+                .rememberMe(httpSecurityRememberMeConfigurer -> {
+                    httpSecurityRememberMeConfigurer
+                            .userDetailsService(accountDetailsService)
+                            .tokenValiditySeconds(tokenValiditySeconds);
+                })
                 .build();
     }
 

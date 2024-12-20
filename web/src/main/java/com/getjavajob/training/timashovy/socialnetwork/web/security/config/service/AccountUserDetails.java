@@ -6,6 +6,9 @@ import org.springframework.security.core.userdetails.User;
 
 import java.util.Collection;
 
+/**
+ * Extends User with additional field of Account instance, which represents authenticated account.
+ */
 public class AccountUserDetails extends User {
 
     private final Account account;

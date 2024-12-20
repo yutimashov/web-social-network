@@ -28,9 +28,8 @@ public class AccountDetailsService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("cannot find account with provided email"));
         Password password = passwordService.get(account.getId())
                 .orElseThrow(() -> new UsernameNotFoundException("cannot find password for account with provided email"));
-        String passwordValue = password.getPasswordValue();
-        return new AccountUserDetails(account.getEmail(), passwordValue, createAuthorityList(account.getRole().name()),
-                account);
+        return new AccountUserDetails(account.getEmail(), password.getPasswordValue(),
+                createAuthorityList(account.getRole().name()), account);
     }
 
 }
