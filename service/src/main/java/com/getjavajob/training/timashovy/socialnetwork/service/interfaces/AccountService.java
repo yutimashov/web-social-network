@@ -1,6 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.interfaces;
 
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +15,7 @@ public interface AccountService {
 
     void update(Long accountId, Account updatedAccount);
 
+    @PreAuthorize("hasAuthority('ADMIN') or isAuthenticated()")
     void delete(Long accountId);
 
     Optional<Account> getById(Long accountId);
