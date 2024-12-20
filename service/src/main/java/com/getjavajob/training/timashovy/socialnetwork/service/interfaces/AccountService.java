@@ -15,7 +15,7 @@ public interface AccountService {
 
     void update(Long accountId, Account updatedAccount);
 
-    @PreAuthorize("hasAuthority('ADMIN') or isAuthenticated()")
+    @PreAuthorize("hasAuthority('ADMIN')")
     void delete(Long accountId);
 
     Optional<Account> getById(Long accountId);
