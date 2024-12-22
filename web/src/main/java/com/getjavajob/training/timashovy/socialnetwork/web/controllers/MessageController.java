@@ -34,9 +34,9 @@ public class MessageController {
                                 @SessionAttribute("account") Account account,
                                 Model model) {
         if (accountService.getById(id).isPresent()) {
-            model.addAttribute("account", accountService.getById(id));
+            model.addAttribute("accountReceiver", accountService.getById(id).get());
         }
-        model.addAttribute("accountService", accountService);
+        model.addAttribute("accountSender", account);
         model.addAttribute("messages", messageService.getAllPersonalMessagesWithAccount(account.getId(), id));
         return "account/dialog";
     }
