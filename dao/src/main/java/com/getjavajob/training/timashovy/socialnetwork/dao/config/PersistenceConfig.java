@@ -17,27 +17,6 @@ import javax.sql.DataSource;
 @EnableJpaRepositories(basePackages = "com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.group")
 public class PersistenceConfig {
 
-//    @Bean
-//    public DataSource dataSource() {
-//        JndiObjectFactoryBean jndiObjectFactoryBean = new JndiObjectFactoryBean();
-//        jndiObjectFactoryBean.setJndiName("java:/comp/env/jdbc/socialNetwork");
-//        jndiObjectFactoryBean.setResourceRef(true);
-//        jndiObjectFactoryBean.setExpectedType(javax.sql.DataSource.class);
-//        jndiObjectFactoryBean.setProxyInterface(DataSource.class);
-//        try {
-//            // Необходимо для правильной инициализации
-//            jndiObjectFactoryBean.afterPropertiesSet();
-//        } catch (Exception e) {
-//            throw new RuntimeException("Failed to initialize JNDI DataSource", e);
-//        }
-//        Object object = jndiObjectFactoryBean.getObject();
-//        if (object instanceof DataSource) {
-//            return (DataSource) object;
-//        } else {
-//            throw new RuntimeException("JNDI resource is not a DataSource");
-//        }
-//    }
-
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -45,7 +24,8 @@ public class PersistenceConfig {
         dataSource.setUrl("jdbc:postgresql://localhost:5432/social_network");
         dataSource.setUsername("postgres");
         dataSource.setPassword("21122012loliwe+");
-        return dataSource;}
+        return dataSource;
+    }
 
 
     @Bean

@@ -140,11 +140,13 @@
                 </c:if>
                 <!-- Account management buttons -->
                 <div class="m-2">
-                    <c:if test="${sessionAccountId eq param.id or sessionScope.account.role eq 'ADMIN'}">
-                        <a href="${rootUrl}/account/edit?id=${pageAccountId}" class="btn btn-warning"
-                           role="button">Edit account</a>&nbsp;&nbsp;
+                    <c:if test="${sessionScope.account.role eq 'ADMIN'}">
                         <a href="${rootUrl}/account/delete?id=${pageAccountId}" class="btn btn-danger"
                            role="button">Delete account</a>
+                    </c:if>
+                    <c:if test="${sessionAccountId eq param.id or sessionScope.account.role eq 'ADMIN'}">
+                        <a href="${rootUrl}/account/edit?id=${pageAccountId}" class="btn btn-warning"
+                           role="button">Edit account</a>&nbsp;&nbsp
                     </c:if>
                     <c:if test="${sessionScope.account.role eq 'ADMIN' and requestScope.account.role eq 'REGULAR'}">
                         <a href="${rootUrl}/account/make-admin?id=${pageAccountId}">

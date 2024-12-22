@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+//TODO: all to spring data framework
+
 @Repository
 public class GroupDaoImpl implements GroupRepository {
 

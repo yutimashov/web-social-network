@@ -2,7 +2,7 @@ package com.getjavajob.training.timashovy.socialnetwork.web.security.config;
 
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
-import com.getjavajob.training.timashovy.socialnetwork.web.security.config.service.AccountUserDetails;
+import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.security.AccountUserDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;

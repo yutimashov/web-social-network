@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.filters;
 
-import com.getjavajob.training.timashovy.socialnetwork.web.security.config.service.AccountUserDetails;
+import com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.security.AccountUserDetails;
 import org.springframework.security.core.Authentication;
 
 import javax.servlet.Filter;

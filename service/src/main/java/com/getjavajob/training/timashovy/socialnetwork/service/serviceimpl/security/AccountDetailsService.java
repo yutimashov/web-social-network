@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.web.security.config.service;
+package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.security;
 
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.password.Password;
