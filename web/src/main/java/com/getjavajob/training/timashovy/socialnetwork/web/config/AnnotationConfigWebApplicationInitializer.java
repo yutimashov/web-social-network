@@ -7,13 +7,17 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
 
 public class AnnotationConfigWebApplicationInitializer implements WebApplicationInitializer {
 
+    private static final int SESSION_LIFETIME = 10 * 60;
+
     @Override
-    public void onStartup(@NonNull ServletContext servletContext) throws ServletException {
+    public void onStartup(@NonNull ServletContext servletContext) {
+        servletContext.addListener(new SessionListener());
         AnnotationConfigWebApplicationContext ctx = new AnnotationConfigWebApplicationContext();
         ctx.setServletContext(servletContext);
         ctx.register(ApplicationConfig.class, PersistenceConfig.class);
@@ -22,6 +26,15 @@ public class AnnotationConfigWebApplicationInitializer implements WebApplication
                 new DispatcherServlet(ctx));
         dispatcher.setLoadOnStartup(1);
         dispatcher.addMapping("/");
+    }
+
+    private static class SessionListener implements HttpSessionListener {
+
+        @Override
+        public void sessionCreated(HttpSessionEvent event) {
+            event.getSession().setMaxInactiveInterval(SESSION_LIFETIME);
+        }
+
     }
 
 }
