@@ -28,9 +28,6 @@ import static javax.persistence.GenerationType.IDENTITY;
  * Model of Group entity in application.
  * Contains all relevant information about Group.
  * Each group belongs to a certain account and also has some meta information.
- *
- * @author Yuriy Timashov
- * @since 10.01.2024
  */
 @Entity
 @Table(name = "groups", schema = "group_data")

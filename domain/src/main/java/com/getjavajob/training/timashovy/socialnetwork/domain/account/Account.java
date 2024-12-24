@@ -15,11 +15,11 @@ import static com.getjavajob.training.timashovy.socialnetwork.domain.account.Acc
 import static java.util.Objects.hash;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 
 /**
- * Model of Account entity in application.
- * Contains all relevant information about Account.
+ * Model of Account entity. Contains all relevant information about Account.
  */
 @Table(name = "accounts", schema = "account_data")
 @Entity
@@ -62,7 +62,7 @@ public class Account implements BaseEntity<Long> {
     @Type(type = "org.hibernate.type.BinaryType")
     private byte[] avatar;
 
-    @OneToMany(mappedBy = "account", cascade = ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "account", cascade = ALL, orphanRemoval = true, fetch = EAGER)
     private List<Phone> phones = new ArrayList<>();
 
     public Account() {

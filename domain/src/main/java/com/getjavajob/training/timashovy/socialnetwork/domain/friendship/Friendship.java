@@ -22,9 +22,6 @@ import static javax.persistence.FetchType.LAZY;
  * Every friendship has its own status: by default the status is false. Which means that
  * requester sent friendship request to receiver, but receiver has not accepted it yet.
  * When receiver accepts request from requester, the status becomes `true`.
- *
- * @author Yuriy Timashov
- * @since 13.01.2024
  */
 @Entity
 @IdClass(Friendship.FriendshipId.class)
