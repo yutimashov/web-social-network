@@ -11,7 +11,7 @@
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
-<div class="container-xl mt-4">
+<div class="container-xl mt-4" id="account-info">
     <div class="row">
         <!-- Account info -->
         <div class="col-xl-4">
@@ -33,11 +33,11 @@
                     <div class="card-header">${requestScope.account.firstName} ${requestScope.account.lastName}</div>
                     <c:if test="${sessionAccountId ne pageAccountId and empty(requestScope.alreadySentFriendRequest)}">
                         <a href="${rootUrl}/friends/send-request?id=${pageAccountId}" role="button"
-                           class="btn btn-primary bg-danger">Send friend request</a>
+                           class="btn btn-warning">Send friend request</a>
                     </c:if>
                     <c:if test="${sessionAccountId ne pageAccountId}">
                         <a href="${rootUrl}account/messages/dialog?id=${pageAccountId}" role="button"
-                           class="btn btn-primary bg-danger">Send message</a>
+                           class="btn btn-primary">Send message</a>
                     </c:if>
                     <div class="card-body">
                         <div>
@@ -85,20 +85,20 @@
                         <!-- Phones -->
                         <div class="row gx-3">
                             <!-- Personal phones -->
-                            <c:if test="${not empty requestScope.account.personalPhoneNumber}">
+                            <c:if test="${not empty requestScope.personalPhones}">
                                 <div class="col-md-6">
                                     <p>Personal phones:</p>
-                                    <c:forEach var="phone" items="${requestScope.account.personalPhoneNumber}">
-                                        <p><i class="fa-solid fa-phone"></i>&nbsp;&nbsp;${phone.number}</p>
+                                    <c:forEach var="phone" items="${requestScope.personalPhones}">
+                                        <p><i class="fa-solid fa-phone"></i>&nbsp;&nbsp;${phone}</p>
                                     </c:forEach>
                                 </div>
                             </c:if>
                             <!-- Working phones -->
-                            <c:if test="${not empty requestScope.account.workPhoneNumber}">
+                            <c:if test="${not empty requestScope.workingPhones}">
                                 <div class="col-md-6">
                                     <p>Working phones:</p>
-                                    <c:forEach var="phone" items="${requestScope.account.workPhoneNumber}">
-                                        <p><i class="fa-solid fa-phone"></i>&nbsp;&nbsp;${phone.number}</p>
+                                    <c:forEach var="phone" items="${requestScope.workingPhones}">
+                                        <p><i class="fa-solid fa-phone"></i>&nbsp;&nbsp;${phone}</p>
                                     </c:forEach>
                                 </div>
                             </c:if>
@@ -109,11 +109,11 @@
                 <div class="card mb-1">
                     <div class="card-header">Friends</div>
                     <div class="card-body row gx-3">
-                        <div>
+                        <div class="col-md-6">
                             <a class="link-underline-dark" href="${rootUrl}/friends?id=${pageAccountId}"><i
                                     class="fa-solid fa-user-group"></i>&nbsp;Friends</a>
                         </div>
-                        <div>
+                        <div class="col-md-6">
                             <c:if test="${sessionAccountId eq pageAccountId}">
                                 <a class="link-underline-dark" href="${rootUrl}/friends/requests"><i
                                         class="fa-solid fa-bell"></i>&nbsp;Requests</a><br>
@@ -139,17 +139,18 @@
                     </div>
                 </c:if>
                 <!-- Account management buttons -->
-                <div class="mb-2">
-                    <c:if test="${sessionAccountId eq param.id or sessionScope.account.role eq 'ADMIN'}">
-                        <hr class="hr"/>
-                        <a href="${rootUrl}/account/edit?id=${pageAccountId}" class="btn btn-warning"
-                           role="button">Edit account</a>&nbsp;&nbsp;
+                <div class="m-2">
+                    <c:if test="${sessionScope.account.role eq 'ADMIN'}">
                         <a href="${rootUrl}/account/delete?id=${pageAccountId}" class="btn btn-danger"
                            role="button">Delete account</a>
                     </c:if>
+                    <c:if test="${sessionAccountId eq param.id or sessionScope.account.role eq 'ADMIN'}">
+                        <a href="${rootUrl}/account/edit?id=${pageAccountId}" class="btn btn-warning"
+                           role="button">Edit account</a>&nbsp;&nbsp
+                    </c:if>
                     <c:if test="${sessionScope.account.role eq 'ADMIN' and requestScope.account.role eq 'REGULAR'}">
                         <a href="${rootUrl}/account/make-admin?id=${pageAccountId}">
-                            <button>Make admin</button>
+                            <button type="button" class="btn btn-info">Make admin</button>
                         </a><br>
                     </c:if>
                 </div>
@@ -176,20 +177,28 @@
             <c:if test="${requestScope.wallPosts ne null}">
                 <div>
                     <c:forEach items="${requestScope.wallPosts}" var="post">
-                        <hr>
-                        <span>Created: ${post.creationDate}</span><br>
-                        <p>Author:
-                            <a href="${rootUrl}/account?id=${post.accountAuthorId}">
-                                    ${requestScope.accountService.getById(post.accountAuthorId).get().firstName}
-                                    ${requestScope.accountService.getById(post.accountAuthorId).get().lastName}
-                            </a>
-                        </p>
-                        <p>${post.text}</p>
-                        <c:if test="${post.photo ne null}">
-                            <img src="${rootUrl}/account-wall/image?id=${post.id}" alt="Message photo" width="150px"
-                                 height="150px">
-                        </c:if>
-                        <hr>
+                        <div class="account-wall-msg">
+                            <hr>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span>Created: ${post.creationDate}</span>
+                                <button type="button" class="close btn-delete-account-wall-msg" aria-label="Close"
+                                        style="background: none; border: none; cursor: pointer;">
+                                    <span aria-hidden="true" style="font-size: 20px;">&times;</span>
+                                </button>
+                            </div>
+                            <p>Author:
+                                <a href="${rootUrl}/account?id=${post.accountAuthorId}">
+                                        ${requestScope.accountService.getById(post.accountAuthorId).get().firstName}
+                                        ${requestScope.accountService.getById(post.accountAuthorId).get().lastName}
+                                </a>
+                            </p>
+                            <p>${post.text}</p>
+                            <c:if test="${post.photo ne null}">
+                                <img src="${rootUrl}/account-wall/image?id=${post.id}" alt="Message photo" width="150px"
+                                     height="150px">
+                            </c:if>
+                            <hr>
+                        </div>
                     </c:forEach>
                 </div>
             </c:if>
@@ -197,5 +206,6 @@
     </div>
 </div>
 <jsp:include page="/WEB-INF/jsp/include/footer.jsp"/>
+<script src="${rootUrl}/static/js/account.js"></script>
 </body>
 </html>

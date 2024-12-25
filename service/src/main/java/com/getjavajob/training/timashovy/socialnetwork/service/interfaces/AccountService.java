@@ -1,31 +1,30 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.interfaces;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.common.account.AccountRole;
-import com.getjavajob.training.timashovy.socialnetwork.common.util.AccountRegistrationData;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 import java.util.Optional;
 
 /**
  * Interface contains all methods for organizing logic in communication with {@link Account} entity in application.
- *
  */
 public interface AccountService {
 
-    void create(AccountRegistrationData accountRegisterData);
+    Account create(Account account, String password, String personalPhones, String workingPhones);
 
     void update(Long accountId, Account updatedAccount);
 
-    boolean delete(Long accountId);
+    @PreAuthorize("hasAuthority('ADMIN')")
+    void delete(Long accountId);
 
     Optional<Account> getById(Long accountId);
 
     List<Account> getAll();
 
-    boolean addFriend(Long accountId, Long friendId);
+    void addFriend(Long accountId, Long friendId);
 
-    boolean deleteFriend(Long accountId, Long friendId);
+    void deleteFriend(Long accountId, Long friendId);
 
     List<Account> getFriends(Long accountId);
 
@@ -33,8 +32,8 @@ public interface AccountService {
 
     List<Account> getOutgoingFriendRequests(Long accountId);
 
-    void updateRole(Long accountId, AccountRole role);
-
     boolean checkFriendshipRecordExistence(Long requesterId, Long accepterId);
+
+    Optional<Account> findByEmail(String email);
 
 }

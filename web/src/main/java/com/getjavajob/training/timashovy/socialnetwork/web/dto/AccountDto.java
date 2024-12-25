@@ -2,8 +2,6 @@ package com.getjavajob.training.timashovy.socialnetwork.web.dto;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
-
 public class AccountDto {
 
     private String firstName;

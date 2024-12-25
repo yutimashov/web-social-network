@@ -12,8 +12,8 @@
     <p>Enter necessary data:</p>
     <form action="${pageContext.request.contextPath}/group/create" method="POST" enctype="multipart/form-data">
         <hr>
-        <label for="groupName">Group name<span style="color:red;">*</span> :
-            <input type="text" name="groupName" id="groupName" required>
+        <label for="name">Group name<span style="color:red;">*</span> :
+            <input type="text" name="name" id="name" required>
         </label>
         <br>
         <hr>

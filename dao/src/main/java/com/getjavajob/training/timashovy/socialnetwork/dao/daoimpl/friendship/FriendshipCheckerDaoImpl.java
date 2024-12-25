@@ -1,39 +1,43 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship;
 
+import com.getjavajob.training.timashovy.socialnetwork.dao.exception.DaoException;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipCheckerDao;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.slf4j.Logger;
+import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.FRIENDSHIP_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.FriendshipTableFields.*;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Singleton class responsible for working with `account_data.friendship` table in DB.
  * It provides safe multithreading approach for creating singleton object using synchronization mechanism.
  */
+@Repository
 public class FriendshipCheckerDaoImpl implements FriendshipCheckerDao {
 
-    private static final String FRIENDSHIP_RECORD_EXISTENCE = "SELECT 1 FROM " + FRIENDSHIP_TABLE + " WHERE "
-            + FRIENDSHIP_ACCOUNT_ID_1 + " = ? AND " + FRIENDSHIP_ACCOUNT_ID_2 + " = ?;";
-    private static final String ARE_USERS_FRIENDS = "SELECT 1 FROM " + FRIENDSHIP_TABLE + " WHERE "
-            + FRIENDSHIP_ACCOUNT_ID_1 + " = ? AND " + FRIENDSHIP_ACCOUNT_ID_2 + " = ? AND " + FRIENDSHIP_STATUS
-            + " = TRUE;";
-    private JdbcTemplate jdbcTemplate;
+    private static final Logger logger = getLogger(FriendshipCheckerDaoImpl.class);
 
-    public void setDataSource(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public boolean checkFriendshipRecordExistence(Long requesterId, Long accepterId) {
         try {
-            Boolean isFriends = jdbcTemplate.queryForObject(FRIENDSHIP_RECORD_EXISTENCE, Boolean.class,
-                    getFirstId(requesterId, accepterId), getSecondId(requesterId, accepterId));
-            return isFriends != null && isFriends;
-        } catch (EmptyResultDataAccessException e) {
-            return false;
+            return entityManager.createQuery(
+                            "select 1 from Friendship f where f.initiatorAccountId = :requesterId "
+                                    + "and f.friendAccountId = :accepterId"
+                    )
+                    .setParameter("requesterId", getFirstId(requesterId, accepterId))
+                    .setParameter("accepterId", getSecondId(requesterId, accepterId))
+                    .getResultList()
+                    .size() > 0;
+        } catch (PersistenceException e) {
+            logger.error("Error checking if friendship record already exists: requesterId={}, accepterId={}",
+                    requesterId, accepterId);
+            throw new DaoException("Cannot check if friendship record already exists", e);
         }
     }
 
@@ -47,15 +51,14 @@ public class FriendshipCheckerDaoImpl implements FriendshipCheckerDao {
 
     @Override
     public boolean checkUsersAreFriends(Long requesterId, Long accepterId) {
-        try {
-            Boolean isFriends = jdbcTemplate.queryForObject(
-                    ARE_USERS_FRIENDS, Boolean.class,
-                    getFirstId(requesterId, accepterId), getSecondId(requesterId, accepterId)
-            );
-            return isFriends != null && isFriends;
-        } catch (EmptyResultDataAccessException e) {
-            return false;
-        }
+        return entityManager.createQuery(
+                        "select 1 from Friendship f where f.initiatorAccountId = :requesterId "
+                                + "and f.friendAccountId = :accepterId and f.friendshipStatus = true"
+                )
+                .setParameter("requesterId", getFirstId(requesterId, accepterId))
+                .setParameter("accepterId", getSecondId(requesterId, accepterId))
+                .getResultList()
+                .size() > 0;
     }
 
 }

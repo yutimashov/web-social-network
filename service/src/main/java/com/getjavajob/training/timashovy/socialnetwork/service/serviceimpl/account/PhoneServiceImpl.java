@@ -1,67 +1,71 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneRepository;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
+import com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
-import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
-import static java.util.stream.Collectors.toList;
+import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.PERSONAL;
+import static com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType.WORKING;
 
+@Service
 public class PhoneServiceImpl implements PhoneService {
 
-    private final PhoneDao phoneDao;
+    private final PhoneRepository phoneRepository;
 
-    public PhoneServiceImpl(PhoneDao phoneDao) {
-        this.phoneDao = phoneDao;
+    public PhoneServiceImpl(PhoneRepository phoneRepository) {
+        this.phoneRepository = phoneRepository;
     }
 
+    @Transactional
     @Override
-    public List<Phone> createPersonalPhones(Long accountId, String phoneNumbers) {
-        List<Phone> phones = new ArrayList<>();
+    public void createPersonalPhones(Account account, String phoneNumbers) {
         String[] phoneNumbersSeparated = phoneNumbers.split(",");
         for (String phoneNumberSeparated : phoneNumbersSeparated) {
-            phones.add(new Phone(PERSONAL, phoneNumberSeparated, accountId));
+            phoneRepository.save(new Phone(PERSONAL, phoneNumberSeparated, account));
         }
-        return phones;
     }
 
+    @Transactional
     @Override
-    public List<Phone> createWorkingPhones(Long accountId, String phoneNumbers) {
-        List<Phone> phones = new ArrayList<>();
+    public void createWorkingPhones(Account account, String phoneNumbers) {
         String[] phoneNumbersSeparated = phoneNumbers.split(",");
         for (String phoneNumberSeparated : phoneNumbersSeparated) {
-            phones.add(new Phone(WORKING, phoneNumberSeparated, accountId));
+            phoneRepository.save(new Phone(WORKING, phoneNumberSeparated, account));
         }
-        return phones;
     }
 
     @Override
-    public List<Phone> getPersonalPhoneNumbers(Long accountId) {
-        return phoneDao.getAll(accountId).stream().filter(phone -> phone.getPhoneType() == PERSONAL).collect(toList());
+    public List<Phone> getPhones(Long accountId, PhoneType phoneType) {
+        return phoneRepository.getPhones(accountId, phoneType);
     }
 
     @Override
-    public List<Phone> getWorkPhoneNumbers(Long accountId) {
-        return phoneDao.getAll(accountId).stream().filter(phone -> phone.getPhoneType() == WORKING).collect(toList());
+    public List<String> getPhoneNumbers(Long accountId, PhoneType phoneType) {
+        return phoneRepository.getPhoneNumbers(accountId, phoneType);
     }
 
+    @Transactional
     @Override
-    public boolean update(Long phoneId, String newPhoneNumber) {
-        return phoneDao.update(phoneId, newPhoneNumber);
+    public void update(Long phoneId, String newPhoneNumber) {
+        phoneRepository.updateNumber(phoneId, newPhoneNumber);
     }
 
+    @Transactional
     @Override
-    public Long create(Phone phone) {
-        return phoneDao.create(phone);
+    public Phone create(Phone phone) {
+        return phoneRepository.save(phone);
     }
 
+    @Transactional
     @Override
-    public void deleteById(Long phoneId) {
-        phoneDao.deleteById(phoneId);
+    public void delete(Long phoneId) {
+        phoneRepository.delete(phoneId);
     }
 
 }

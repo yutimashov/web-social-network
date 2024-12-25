@@ -4,18 +4,19 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class GroupDto {
 
-    private String groupName;
+    private String name;
     private String description;
     private MultipartFile avatar;
 
-    public GroupDto() {}
-
-    public String getGroupName() {
-        return groupName;
+    public GroupDto() {
     }
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
@@ -32,6 +33,15 @@ public class GroupDto {
 
     public void setAvatar(MultipartFile avatar) {
         this.avatar = avatar;
+    }
+
+    @Override
+    public String toString() {
+        return "GroupDto{" +
+                "groupName='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", avatar=" + avatar +
+                '}';
     }
 
 }

@@ -1,103 +1,136 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship;
 
+import com.getjavajob.training.timashovy.socialnetwork.dao.exception.DaoException;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipDao;
-import org.springframework.jdbc.core.JdbcTemplate;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.friendship.Friendship;
+import org.slf4j.Logger;
+import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import java.util.List;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.FRIENDSHIP_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.FriendshipTableFields.*;
+import static java.util.Objects.isNull;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Singleton class responsible for working with `account_data.friendship` table in DB.
  * It provides safe multithreading approach for creating singleton object using synchronization mechanism.
  */
+@Repository
 public class FriendshipDaoImpl implements FriendshipDao {
 
-    private static final String ACCEPT_REQUEST = "UPDATE " + FRIENDSHIP_TABLE + " SET " + FRIENDSHIP_STATUS + " = "
-            + "TRUE WHERE " + FRIENDSHIP_ACCEPTER_ID + " = ? AND " + FRIENDSHIP_REQUESTER_ID + " = ?;";
-    private static final String GET_FRIENDS_IDS = "SELECT " + FRIENDSHIP_ACCOUNT_ID_1 + " FROM " + FRIENDSHIP_TABLE
-            + " WHERE " + FRIENDSHIP_ACCOUNT_ID_2 + " = ? AND " + FRIENDSHIP_STATUS + " = TRUE UNION SELECT "
-            + FRIENDSHIP_ACCOUNT_ID_2 + " FROM " + FRIENDSHIP_TABLE + " WHERE " + FRIENDSHIP_ACCOUNT_ID_1 + " = ? AND "
-            + FRIENDSHIP_STATUS + " = TRUE;";
-    private static final String DELETE_FRIEND = "DELETE FROM " + FRIENDSHIP_TABLE + " WHERE " + FRIENDSHIP_ACCOUNT_ID_1
-            + " = ? AND " + FRIENDSHIP_ACCOUNT_ID_2 + " = ?;";
-    private static final String SEND_REQUEST = "INSERT INTO " + FRIENDSHIP_TABLE + " (" + FRIENDSHIP_ACCOUNT_ID_1
-            + ", " + FRIENDSHIP_ACCOUNT_ID_2 + ", " + FRIENDSHIP_REQUESTER_ID + ", " + FRIENDSHIP_ACCEPTER_ID + ") "
-            + "VALUES(?, ?, ?, ?);";
-    private static final String GET_INCOMING_REQUESTS = "SELECT " + FRIENDSHIP_REQUESTER_ID + " FROM "
-            + FRIENDSHIP_TABLE + " WHERE " + FRIENDSHIP_STATUS + " = FALSE AND " + FRIENDSHIP_ACCEPTER_ID + " = ?;";
-    private static final String GET_OUTGOING_REQUESTS = "SELECT " + FRIENDSHIP_ACCEPTER_ID + " FROM "
-            + FRIENDSHIP_TABLE + " WHERE " + FRIENDSHIP_STATUS + " = FALSE AND " + FRIENDSHIP_REQUESTER_ID + " = ?;";
+    private static final Logger logger = getLogger(FriendshipDaoImpl.class);
 
-    private JdbcTemplate jdbcTemplate;
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    public void setDataSource(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
-
-    /**
-     * Add a new record to `friend_data.friendship` table
-     * with default status of friendship (false)
-     * Note: there is a constraint on db level:
-     * account cannot send friend request to themselves
-     *
-     * @param requesterId id of account, who send request
-     * @param accepterId  id of account, who gets request
-     * @return status of friend request delivery
-     */
     @Override
-    public boolean sendRequest(Long requesterId, Long accepterId) {
-        return jdbcTemplate.update(SEND_REQUEST, getFriendshipRequestParams(requesterId, accepterId)) > 0;
+    public void sendRequest(Account requester, Account accepter) {
+        try {
+            entityManager.persist(new Friendship(
+                    getFirstAccount(requester, accepter).getId(),
+                    getSecondAccount(requester, accepter).getId(),
+                    requester,
+                    accepter,
+                    false
+            ));
+        } catch (PersistenceException e) {
+            logger.error("Error sending friend request from id={} to id={}", requester.getId(), accepter.getId());
+            throw new DaoException("Cannot send friend request to persistent storage", e);
+        }
     }
 
-    private Object[] getFriendshipRequestParams(Long requesterId, Long accepterId) {
-        return requesterId < accepterId ? new Long[]{requesterId, accepterId, requesterId, accepterId}
-                : new Long[]{accepterId, requesterId, requesterId, accepterId};
+    private Account getFirstAccount(Account requester, Account accepter) {
+        return requester.getId() < accepter.getId() ? requester : accepter;
+    }
+
+    private Account getSecondAccount(Account requester, Account accepter) {
+        return getFirstAccount(requester, accepter).equals(requester) ? accepter : requester;
     }
 
     @Override
     public boolean acceptRequest(Long requesterId, Long accepterId) {
-        return jdbcTemplate.update(ACCEPT_REQUEST, accepterId, requesterId) > 0;
+        try {
+            return entityManager.createQuery(
+                            "update Friendship f set f.friendshipStatus = true where f.requester.id = :requester "
+                                    + "and f.receiver.id = :accepter"
+                    )
+                    .setParameter("requester", requesterId)
+                    .setParameter("accepter", accepterId)
+                    .executeUpdate() > 0;
+        } catch (PersistenceException e) {
+            logger.error("Error accepting friend request from id={} to id={}", requesterId, accepterId);
+            throw new DaoException("Cannot accept friend request in persistent storage", e);
+        }
     }
 
-    /**
-     * Return ArrayList with ids of account's friends
-     *
-     * @param accountId id of account we want to get friends
-     * @return list of account friends' ids
-     */
     @Override
     public List<Long> getFriendsIds(Long accountId) {
-        return jdbcTemplate.queryForList(GET_FRIENDS_IDS, Long.class, accountId, accountId);
+        try {
+            return entityManager.createQuery(
+                            "select case when f.initiatorAccountId = :accountId "
+                                    + "then f.friendAccountId else f.initiatorAccountId end from Friendship f "
+                                    + "where (f.initiatorAccountId = :accountId or f.friendAccountId = :accountId) "
+                                    + "and f.friendshipStatus = true",
+                            Long.class
+                    )
+                    .setParameter("accountId", accountId)
+                    .getResultList();
+        } catch (PersistenceException e) {
+            logger.error("Error getting friend ids id={}", accountId);
+            throw new DaoException("Cannot get friend ids from persistent storage", e);
+        }
     }
 
     @Override
     public List<Long> getIncomingRequests(Long accountId) {
-        return jdbcTemplate.query(GET_INCOMING_REQUESTS, (rs, rowNum) -> rs.getLong(1), accountId);
+        try {
+            return entityManager.createQuery(
+                            "select f.requester.id from Friendship f where f.friendshipStatus = false "
+                                    + "and f.receiver.id = :accountId",
+                            Long.class
+                    )
+                    .setParameter("accountId", accountId)
+                    .getResultList();
+        } catch (PersistenceException e) {
+            logger.error("Error getting incoming requests for account id={}", accountId);
+            throw new DaoException("Cannot get incoming friend requests from persistent storage", e);
+        }
     }
 
     @Override
     public List<Long> getOutgoingRequests(Long accountId) {
-        return jdbcTemplate.query(GET_OUTGOING_REQUESTS, (rs, rowNum) -> rs.getLong(1), accountId);
+        try {
+            return entityManager.createQuery(
+                            "select f.receiver.id from Friendship f where f.friendshipStatus = false "
+                                    + "and f.requester.id = :accountId",
+                            Long.class
+                    )
+                    .setParameter("accountId", accountId)
+                    .getResultList();
+        } catch (PersistenceException e) {
+            logger.error("Error getting outgoing requests for account id={}", accountId);
+            throw new DaoException("Cannot get outgoing friend requests from persistent storage", e);
+        }
     }
 
-    /**
-     * Remove a corresponding record from `friend_data.friendship` table
-     *
-     * @param accountId        id of account who will delete friend
-     * @param deletingFriendId id of friend account who will be deleted
-     * @return status of friend deletion
-     */
     @Override
-    public boolean deleteFriend(Long accountId, Long deletingFriendId) {
-        return jdbcTemplate.update(DELETE_FRIEND, getDeletingFriendIds(accountId, deletingFriendId)) > 0;
-    }
-
-    private Object[] getDeletingFriendIds(Long firstAccountId, Long secondAccountId) {
-        return firstAccountId < secondAccountId ? new Long[]{firstAccountId, secondAccountId}
-                : new Long[]{secondAccountId, firstAccountId};
+    public void deleteFriend(Long accountId, Long deletingFriendId) {
+        try {
+            Friendship.FriendshipId friendshipId = accountId < deletingFriendId
+                    ? new Friendship.FriendshipId(accountId, deletingFriendId)
+                    : new Friendship.FriendshipId(deletingFriendId, accountId);
+            Friendship friendship = entityManager.find(Friendship.class, friendshipId);
+            if (!isNull(friendship)) {
+                entityManager.remove(friendship);
+            }
+        } catch (PersistenceException e) {
+            logger.error("Error deleting friend from id={}, to be deleted id={}", accountId, deletingFriendId);
+            throw new DaoException("Cannot get delete friendship from persistent storage", e);
+        }
     }
 
 }

@@ -1,6 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="rootUrl" value="${pageContext.request.contextPath}"/>
+<c:set var="sessionAccountId" value="${sessionScope.account.id}"/>
+<c:set var="account" value="${requestScope.account}"/>
 <html>
 <head>
     <title>Edit account</title>
@@ -14,10 +16,10 @@
         <div class="col-xl-4">
             <!-- Account picture -->
             <div class="card mb-4 mb-xl-0">
-                <div class="card-header">${requestScope.account.firstName} ${requestScope.account.lastName}</div>
+                <div class="card-header">${account.firstName} ${account.lastName}</div>
                 <div class="card-body text-center">
                     <c:if test="${not empty requestScope.avatarInputStream}">
-                        <img src="${rootUrl}/account/avatar?id=${requestScope.account.id}" alt="Account avatar"
+                        <img src="${rootUrl}/account/avatar?id=${account.id}" alt="Account avatar"
                              width="250px" height="250px">
                     </c:if>
                     <c:if test="${empty requestScope.avatarInputStream}">
@@ -27,6 +29,13 @@
                     <label for="avatar" class="form-label">Upload new avatar</label>
                     <input form="editAccountForm" class="form-control form-control-sm" name="avatar" id="avatar"
                            type="file"/>
+                    <!-- Download account info to xml file -->
+                    <c:if test="${sessionAccountId eq param.id or sessionScope.account.role eq 'ADMIN'}">
+                        <div align="left">
+                            <a href="${rootUrl}/account/xml-download?id=${requestScope.account.id}"
+                               class="btn btn-dark btn-sm mt-2">Download info as xml-file</a>
+                        </div>
+                    </c:if>
                 </div>
             </div>
         </div>
@@ -45,20 +54,20 @@
                             <div class="col-md-6">
                                 <label class="small mb-1" for="firstName">First name</label>
                                 <input class="form-control" id="firstName" name="firstName" type="text"
-                                       placeholder="Enter your first name" value="${requestScope.account.firstName}">
+                                       placeholder="Enter your first name" value="${account.firstName}">
                             </div>
                             <!-- Form Group (last name)-->
                             <div class="col-md-6">
                                 <label class="small mb-1" for="lastName">Last name</label>
                                 <input class="form-control" id="lastName" name="lastName" type="text"
-                                       placeholder="Enter your last name" value="${requestScope.account.lastName}">
+                                       placeholder="Enter your last name" value="${account.lastName}">
                             </div>
                         </div>
                         <!-- Form Row -->
                         <div class="row gx-3 mb-3">
                             <!-- Form Group (middle name)-->
                             <div class="col-md-6">
-                                <label class="small mb-1" for="middleName">Last name</label>
+                                <label class="small mb-1" for="middleName">Middle name</label>
                                 <input class="form-control" id="middleName" name="middleName" type="text"
                                        placeholder="Enter your middle name" value="${requestScope.account.middleName}">
                             </div>
@@ -75,16 +84,16 @@
                             <div class="col-md-6">
                                 <label class="small mb-1" for="skype">Skype</label>
                                 <input class="form-control" id="skype" name="skype" type="text"
-                                       placeholder="Enter your skype name" value="${requestScope.account.skype}">
+                                       placeholder="Enter your skype" value="${requestScope.account.skype}">
                             </div>
                             <!-- Form Group (ICQ)-->
                             <div class="col-md-6">
                                 <label class="small mb-1" for="icq">ICQ</label>
                                 <input class="form-control" id="icq" name="icq" type="text"
-                                       placeholder="Enter your ICQ name" value="${requestScope.account.icq}">
+                                       placeholder="Enter your ICQ" value="${requestScope.account.icq}">
                             </div>
                         </div>
-                        <!-- Form Row email and password -->
+                        <!-- Form Row email and address -->
                         <div class="row gx-3 mb-3">
                             <!-- Form Group (email)-->
                             <div class="col-md-6">
@@ -92,15 +101,15 @@
                                 <input class="form-control" id="email" name="email" type="email"
                                        placeholder="Enter your email" value="${requestScope.account.email}">
                             </div>
-                            <!-- Form Group (password)-->
+                            <!-- Personal address-->
                             <div class="col-md-6">
-                                <label class="small mb-1" for="password">Password</label>
-                                <input class="form-control" id="password" name="password" type="password"
-                                       placeholder="Enter new password">
+                                <label class="small mb-1" for="address">Address</label>
+                                <input class="form-control" id="address" name="address" type="text"
+                                       placeholder="Enter new address" value="${requestScope.account.personalAddress}">
                             </div>
                         </div>
                         <!-- Form Row phones -->
-                        <div class="row gx-3 mb-3">
+                        <div class="row gx-3 mb-2">
                             <input type="hidden" id="phoneData" name="phoneData">
                             <!-- Form Group (phone number)-->
                             <div class="col-md-6" id="personalPhones">
@@ -190,6 +199,21 @@
                             </div>
                         </div>
                     </form>
+                    <hr class="hr"/>
+                    <!-- edit using xml file -->
+                    <c:if test="${sessionAccountId eq param.id or sessionScope.account.role eq 'ADMIN'}">
+                        <!-- Update account through uploading xml file -->
+                        <div class="row gx-3 mb-3">
+                            <form action="${rootUrl}/account/xml-update?id=${requestScope.account.id}"
+                                  method="POST" enctype="multipart/form-data" id="xmlFile">
+                                <label for="xmlFile" class="form-label text-primary">Update account using
+                                    xml-file</label>
+                                <input form="xmlFile" class="form-control form-control-sm" name="file"
+                                       id="file" type="file"/>
+                                <button type="submit" class="btn btn-dark btn-sm mt-2">Update</button>
+                            </form>
+                        </div>
+                    </c:if>
                 </div>
             </div>
         </div>

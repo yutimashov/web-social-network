@@ -1,12 +1,14 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.search;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.Group;
-import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.SearchDao;
+import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.search.SearchDao;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.SearchService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class SearchServiceImpl implements SearchService {
 
     private final SearchDao<Account> searchAccountDao;
@@ -19,22 +21,22 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public List<Account> findAccounts(String searchQuery, int currentPage, int numOfRecords) {
-        return searchAccountDao.searchAccounts(searchQuery, currentPage, numOfRecords);
+        return searchAccountDao.findResults(searchQuery, currentPage, numOfRecords);
     }
 
     @Override
-    public int findAccountResultsAmount(String searchQuery) {
+    public Long findAccountResultsAmount(String searchQuery) {
         return searchAccountDao.findResultsAmount(searchQuery);
     }
 
     @Override
-    public int findGroupResultsAmount(String searchQuery) {
+    public Long findGroupResultsAmount(String searchQuery) {
         return searchGroupDao.findResultsAmount(searchQuery);
     }
 
     @Override
     public List<Group> findGroups(String searchQuery, int currentPage, int numOfRecords) {
-        return searchGroupDao.searchAccounts(searchQuery, currentPage, numOfRecords);
+        return searchGroupDao.findResults(searchQuery, currentPage, numOfRecords);
     }
 
 }

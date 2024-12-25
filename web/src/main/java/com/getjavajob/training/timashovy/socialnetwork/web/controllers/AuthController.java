@@ -1,79 +1,36 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.controllers;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.common.util.AccountRegistrationData;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
-import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.LoginService;
-import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
 import com.getjavajob.training.timashovy.socialnetwork.web.dto.AccountDto;
 import com.getjavajob.training.timashovy.socialnetwork.web.mappers.AccountMapper;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.util.Optional;
+import static com.getjavajob.training.timashovy.socialnetwork.web.util.UrlStatusParameter.REG_SUCCESS;
+import static org.slf4j.LoggerFactory.getLogger;
 
-import static com.getjavajob.training.timashovy.socialnetwork.web.util.StatusTypes.AUTH_DATA_ERROR;
-import static com.getjavajob.training.timashovy.socialnetwork.web.util.StatusTypes.REG_SUCCESS;
-import static java.util.concurrent.TimeUnit.HOURS;
-
-@SessionAttributes("account")
 @Controller
 public class AuthController {
 
-    private static final int EXPIRATION_COOKIE_LIFE_TIME = 0;
-    private final static int REMEMBER_ME_COOKIE_LIFE_TIME = (int) HOURS.toSeconds(1);
-    private final LoginService loginService;
-    private final PasswordService passwordService;
     private final AccountService accountService;
+    private static final Logger logger = getLogger(AuthController.class);
 
-    public AuthController(LoginService loginService, PasswordService passwordService, AccountService accountService) {
-        this.loginService = loginService;
-        this.passwordService = passwordService;
+    public AuthController(AccountService accountService) {
         this.accountService = accountService;
     }
 
     @GetMapping("/login")
-    public String loginPage() {
+    public String handleLoginPage() {
         return "auth/login";
     }
 
-    @PostMapping("/login")
-    public String login(@RequestParam String email, @RequestParam String password,
-                        @RequestParam Optional<String> rememberMe, Model model,
-                        HttpServletResponse resp) {
-        Optional<Account> loggedInAccount = loginService.getLoggedInAccount(email, password);
-        if (loggedInAccount.isPresent()) {
-            Account account = loggedInAccount.get();
-            model.addAttribute("account", account);
-            if (rememberMe.isPresent()) {
-                createRememberMeCookies(account, resp);
-            }
-            return "redirect:/account?id=" + account.getId();
-        } else {
-            return "redirect:/login" + AUTH_DATA_ERROR;
-        }
-    }
-
-    private void createRememberMeCookies(Account account, HttpServletResponse resp) {
-        prepareCookie(resp, "login", account.getEmail());
-        if (passwordService.get(account.getId()).isPresent()) {
-            prepareCookie(resp, "password", passwordService.get(account.getId()).get().getPassword());
-        }
-    }
-
-    private void prepareCookie(HttpServletResponse resp, String cookieName, String cookieValue) {
-        Cookie cookie = new Cookie(cookieName, cookieValue);
-        cookie.setMaxAge(REMEMBER_ME_COOKIE_LIFE_TIME);
-        resp.addCookie(cookie);
-    }
-
     @GetMapping("/register")
-    public String getRegisterPage() {
+    public String handleRegisterPage() {
         return "auth/register";
     }
 
@@ -82,33 +39,10 @@ public class AuthController {
                                              @RequestParam("password") String password,
                                              @RequestParam("personalPhones") String personalPhones,
                                              @RequestParam("workingPhones") String workingPhones) {
-        accountService.create(new AccountRegistrationData.Builder()
-                .account(new AccountMapper().toAccount(accountDto))
-                .password(password)
-                .personalPhoneNumber(personalPhones)
-                .workPhoneNumber(workingPhones)
-                .build()
-        );
-        return "redirect:/login" + REG_SUCCESS;
-    }
-
-    @GetMapping("/logout")
-    public String logoutPage(HttpSession session, HttpServletRequest req, HttpServletResponse resp) {
-        session.invalidate();
-        clearCookies(req, resp);
-        return "redirect:/login";
-    }
-
-    private void clearCookies(HttpServletRequest req, HttpServletResponse resp) {
-        Cookie[] cookies = req.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                cookie.setMaxAge(EXPIRATION_COOKIE_LIFE_TIME);
-                cookie.setValue(null);
-                cookie.setPath("/");
-                resp.addCookie(cookie);
-            }
-        }
+        Account account = accountService.create(new AccountMapper().toAccount(accountDto), password, personalPhones,
+                workingPhones);
+        logger.info("New account={} has been registered", account.getId());
+        return "redirect:/login" + REG_SUCCESS.getValue();
     }
 
 }

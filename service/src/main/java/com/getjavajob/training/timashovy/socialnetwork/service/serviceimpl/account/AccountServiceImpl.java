@@ -1,109 +1,69 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.common.account.AccountRole;
-import com.getjavajob.training.timashovy.socialnetwork.common.account.Phone;
-import com.getjavajob.training.timashovy.socialnetwork.common.util.AccountRegistrationData;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.BaseDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PasswordDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.AccountRepository;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipCheckerDao;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipDao;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneService;
 import com.getjavajob.training.timashovy.socialnetwork.service.util.exceptions.ServiceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.PERSONAL;
-import static com.getjavajob.training.timashovy.socialnetwork.common.account.PhoneType.WORKING;
 import static java.util.Objects.isNull;
-import static java.util.stream.Collectors.toList;
 
 /**
  * Singleton class for working with methods, managing Account functionality.
  */
+@Service
 public class AccountServiceImpl implements AccountService {
 
-    private final BaseDao<Account> accountDao;
+    private final AccountRepository accountDao;
     private final FriendshipDao friendshipDao;
     private final FriendshipCheckerDao friendshipCheckerDao;
     private final PhoneService phoneService;
-    private final PhoneDao phoneDao;
     private final PasswordService passwordService;
-    private final PasswordDao passwordDao;
+    private static final Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class);
 
-    public AccountServiceImpl(BaseDao<Account> accountDao, FriendshipDao friendshipDao,
-                              FriendshipCheckerDao friendshipCheckerDao, PhoneService phoneService, PhoneDao phoneDao,
-                              PasswordService passwordService, PasswordDao passwordDao) {
+    public AccountServiceImpl(AccountRepository accountDao, FriendshipDao friendshipDao,
+                              FriendshipCheckerDao friendshipCheckerDao, PhoneService phoneService,
+                              PasswordService passwordService) {
         this.accountDao = accountDao;
         this.friendshipDao = friendshipDao;
         this.friendshipCheckerDao = friendshipCheckerDao;
         this.phoneService = phoneService;
-        this.phoneDao = phoneDao;
         this.passwordService = passwordService;
-        this.passwordDao = passwordDao;
     }
 
-    /**
-     * Create new account inserting it in database with auto generated incremented key
-     *
-     * @param accountRegisterData object which data will be inserted in db as new account
-     */
+    @Transactional
     @Override
-    public void create(AccountRegistrationData accountRegisterData) {
-        Long accountId = accountDao.create(accountRegisterData.getAccount());
-        passwordDao.create(passwordService.create(accountId, accountRegisterData.getPassword()));
-        if (!accountRegisterData.getPersonalPhoneNumbers().isEmpty()) {
-            List<Phone> personalPhones = phoneService.createPersonalPhones(accountId,
-                    accountRegisterData.getPersonalPhoneNumbers());
-            for (Phone personalPhone : personalPhones) {
-                phoneDao.create(personalPhone);
-            }
+    public Account create(Account account, String password, String personalPhones, String workingPhones) {
+        Account createdAccount = accountDao.save(account);
+        passwordService.create(account, password);
+        if (!personalPhones.isEmpty()) {
+            phoneService.createPersonalPhones(account, personalPhones);
         }
-        if (!accountRegisterData.getWorkingPhoneNumbers().isEmpty()) {
-            List<Phone> workingPhones = phoneService.createWorkingPhones(accountId,
-                    accountRegisterData.getWorkingPhoneNumbers());
-            for (Phone workingPhone : workingPhones) {
-                phoneDao.create(workingPhone);
-            }
+        if (!workingPhones.isEmpty()) {
+            phoneService.createWorkingPhones(account, workingPhones);
         }
+        return createdAccount;
     }
 
+    @Transactional
     @Override
     public void update(Long accountId, Account updatedAccount) {
         Account newAccount = accountDao.getById(accountId).isPresent() ? accountDao.getById(accountId).get() : null;
-        if (newAccount == null) {
+        if (isNull(newAccount)) {
             throw new ServiceException("updating non-existing account");
         }
-        if (updatedAccount.getAvatar() != null) {
-            newAccount.setAvatar(updatedAccount.getAvatar());
-        }
-        if (updatedAccount.getFirstName() != null && !updatedAccount.getFirstName().isEmpty()) {
-            newAccount.setFirstName(updatedAccount.getFirstName());
-        }
-        if (updatedAccount.getLastName() != null && !updatedAccount.getLastName().isEmpty()) {
-            newAccount.setLastName(updatedAccount.getLastName());
-        }
-        if (updatedAccount.getMiddleName() != null && !updatedAccount.getMiddleName().isEmpty()) {
-            newAccount.setMiddleName(updatedAccount.getMiddleName());
-        }
-        if (updatedAccount.getBirthDate() != null) {
-            newAccount.setBirthDate(updatedAccount.getBirthDate());
-        }
-        if (updatedAccount.getSkype() != null && !updatedAccount.getSkype().isEmpty()) {
-            newAccount.setSkype(updatedAccount.getSkype());
-        }
-        if (updatedAccount.getIcq() != null && !updatedAccount.getIcq().isEmpty()) {
-            newAccount.setIcq(updatedAccount.getIcq());
-        }
-        if (updatedAccount.getEmail() != null && !updatedAccount.getEmail().isEmpty()) {
-            newAccount.setEmail(updatedAccount.getEmail());
-        }
-        accountDao.updateById(accountId, newAccount);
+        accountDao.updateById(updatedAccount, accountId);
     }
 
     /**
@@ -123,20 +83,12 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
+    @Transactional
     @Override
-    public void updateRole(Long accountId, AccountRole role) {
+    public void delete(Long accountId) {
         validateAccountId(accountId);
-        validateAccountFieldNotNull(role);
-        if (accountDao.getById(accountId).isPresent()) {
-            accountDao.updateById(accountId,
-                    new Account.Builder(accountDao.getById(accountId).get()).role(role).build());
-        }
-    }
-
-    @Override
-    public boolean delete(Long accountId) {
-        validateAccountId(accountId);
-        return accountDao.deleteById(accountId);
+        passwordService.delete(accountId);
+        accountDao.delete(accountId);
     }
 
     @Override
@@ -146,17 +98,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public List<Account> getAll() {
-        List<Account> accounts = accountDao.getAll();
-        for (Account account : accounts) {
-            List<Phone> accountPhones = phoneDao.getAll(account.getId());
-            if (!accountPhones.isEmpty()) {
-                account.setPersonalPhoneNumber(accountPhones.stream().filter(phone -> phone.getPhoneType() == PERSONAL)
-                        .collect(toList()));
-                account.setWorkPhoneNumber(accountPhones.stream().filter(phone -> phone.getPhoneType() == WORKING)
-                        .collect(toList()));
-            }
-        }
-        return accounts;
+        return accountDao.getAll();
     }
 
     /**
@@ -170,29 +112,36 @@ public class AccountServiceImpl implements AccountService {
      *
      * @param requesterId id of account, who has initiated friendship request
      * @param accepterId  if of account, who is addresses of friendship request
-     * @return whether two account becomes friends
      */
+    @Transactional
     @Override
-    public boolean addFriend(Long requesterId, Long accepterId) {
+    public void addFriend(Long requesterId, Long accepterId) {
         validateAccountId(requesterId);
         validateAccountId(accepterId);
         if (requesterId.equals(accepterId)) {
+            logger.error("account with id = {} is going to accept friend request with itself", requesterId);
             throw new IllegalArgumentException("Account cannot send friend request to themselves");
         }
         if (!friendshipCheckerDao.checkFriendshipRecordExistence(requesterId, accepterId)) {
-            return friendshipDao.sendRequest(requesterId, accepterId);
+            friendshipDao.sendRequest(accountDao.getById(requesterId).get(), accountDao.getById(accepterId).get());
+            return;
         }
         if (friendshipCheckerDao.checkUsersAreFriends(requesterId, accepterId)) {
-            return false;
+            logger.error("account with id = {} is going to make friendship with account with id = {}. " +
+                    "But friendship already existed", requesterId, accepterId);
+            return;
         }
-        return friendshipDao.acceptRequest(requesterId, accepterId);
+        logger.info("going to make friendship: requester with id = {} and accepter with id = {}", requesterId,
+                accepterId);
+        friendshipDao.acceptRequest(requesterId, accepterId);
     }
 
+    @Transactional
     @Override
-    public boolean deleteFriend(Long accountId, Long deletingFriendId) {
+    public void deleteFriend(Long accountId, Long deletingFriendId) {
         validateAccountId(accountId);
         validateAccountId(deletingFriendId);
-        return friendshipDao.deleteFriend(accountId, deletingFriendId);
+        friendshipDao.deleteFriend(accountId, deletingFriendId);
     }
 
     @Override
@@ -239,6 +188,11 @@ public class AccountServiceImpl implements AccountService {
         validateAccountId(requesterId);
         validateAccountId(accepterId);
         return friendshipCheckerDao.checkFriendshipRecordExistence(requesterId, accepterId);
+    }
+
+    @Override
+    public Optional<Account> findByEmail(String email) {
+        return accountDao.findByEmail(email);
     }
 
 }

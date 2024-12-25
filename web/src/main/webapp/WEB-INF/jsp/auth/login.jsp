@@ -4,6 +4,7 @@
 <html>
 <head>
     <title>Login</title>
+    <link rel="shortcut icon" type="image/x-icon" href="${pageContext.request.contextPath}/static/img/favicon.ico"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
@@ -58,9 +59,9 @@
                             <div class="row gy-2 overflow-hidden">
                                 <div class="col-12">
                                     <div class="form-floating mb-3">
-                                        <input type="email" id="email" name="email" class="form-control"
+                                        <input type="email" id="username" name="username" class="form-control"
                                                placeholder="name@example.com" required>
-                                        <label for="email" class="form-label">Email</label>
+                                        <label for="username" class="form-label">Email</label>
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -69,6 +70,10 @@
                                                required value="" placeholder="Password">
                                         <label for="password" class="form-label">Password</label>
                                     </div>
+                                </div>
+                                <div class="form-check" style="padding-left: 40px;">
+                                    <input type="checkbox" class="form-check-input" id="remember-me" name="remember-me">
+                                    <label class="form-check-label" for="remember-me">Remember me</label>
                                 </div>
                                 <div class="col-12">
                                     <div class="d-grid my-3">

@@ -1,50 +1,45 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.search;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.SearchDao;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.search.SearchDao;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
+import javax.persistence.EntityManager;
+import javax.persistence.NonUniqueResultException;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames.ACCOUNTS_TABLE;
-import static com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.fieldsnames.AccountTableFields.*;
-import static java.util.Objects.isNull;
-
 /**
- * Singleton class responsible for working with {@link com.getjavajob.training.timashovy.socialnetwork.dao.util.dbutils.TableNames#ACCOUNTS_TABLE accounts table}.
- * It provides safe multithreading approach for creating singleton object using synchronization mechanism.
+ * Class provides functionality for searching accounts.
  */
+@Repository
 public class SearchAccountDaoImpl implements SearchDao<Account> {
 
-    private static final String FIND_ACCOUNTS = "SELECT " + ACCOUNT_ID + ", " + ACCOUNT_FIRST_NAME + ", "
-            + ACCOUNT_LAST_NAME + " FROM " + ACCOUNTS_TABLE + " WHERE " + ACCOUNT_FIRST_NAME + " ILIKE ? OR "
-            + ACCOUNT_LAST_NAME + " ILIKE ? OFFSET ? LIMIT ?;";
-    private static final String FIND_ACCOUNTS_AMOUNT = "SELECT COUNT(*) AS " + TOTAL_ACCOUNTS_AMOUNT_ALIAS + " FROM "
-            + ACCOUNTS_TABLE + " WHERE " + ACCOUNT_FIRST_NAME + " ILIKE ? OR " + ACCOUNT_LAST_NAME + " ILIKE ?;";
-    private JdbcTemplate jdbcTemplate;
-    private final RowMapper<Account> searchAccountRowMapper = (rs, rowNumber) -> new Account.Builder()
-            .id(rs.getLong(ACCOUNT_ID))
-            .firstName(rs.getString(ACCOUNT_FIRST_NAME))
-            .lastName(rs.getString(ACCOUNT_LAST_NAME))
-            .build();
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    public void setDataSource(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    @Override
+    public List<Account> findResults(String searchQuery, int currentPage, int recordsPerPage) {
+        return entityManager.createQuery("SELECT a FROM Account a WHERE LOWER(a.firstName) "
+                        + "LIKE LOWER(:searchQuery) OR LOWER(a.lastName) LIKE LOWER(:searchQuery)", Account.class)
+                .setParameter("searchQuery", "%" + searchQuery + "%")
+                .setFirstResult(currentPage * recordsPerPage - recordsPerPage)
+                .setMaxResults(recordsPerPage)
+                .getResultList();
     }
 
     @Override
-    public List<Account> searchAccounts(String searchQuery, int currentPage, int recordsPerPage) {
-        return jdbcTemplate.query(FIND_ACCOUNTS, searchAccountRowMapper, "%" + searchQuery + "%",
-                "%" + searchQuery + "%", currentPage * recordsPerPage - recordsPerPage, recordsPerPage);
-    }
-
-    public int findResultsAmount(String searchQuery) {
-        Integer total = jdbcTemplate.queryForObject(FIND_ACCOUNTS_AMOUNT, Integer.class, "%" + searchQuery + "%",
-                "%" + searchQuery + "%");
-        return (total != null) ? total : -1;
+    public Long findResultsAmount(String searchQuery) {
+        try {
+            return entityManager.createQuery(
+                            "select count(a.id) from Account a where lower(a.firstName) like lower(:searchQuery) "
+                                    + "or lower(a.lastName) like lower(:searchQuery)",
+                            Long.class)
+                    .setParameter("searchQuery", "%" + searchQuery + "%")
+                    .getSingleResult();
+        } catch (NonUniqueResultException e) {
+            return -1L;
+        }
     }
 
 }

@@ -1,40 +1,38 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipCheckerDao;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import java.util.List;
+
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
-import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.openMocks;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration("classpath:test-config.xml")
-@Sql(
-        scripts = {
-                "classpath:scripts/friendship/create.sql",
-                "classpath:scripts/friendship/load.sql"
-        },
-        executionPhase = BEFORE_TEST_METHOD
-)
-@Sql(
-        scripts = {
-                "classpath:scripts/friendship/clear.sql",
-                "classpath:scripts/friendship/drop.sql"
-        },
-        executionPhase = AFTER_TEST_METHOD
-)
 class FriendshipCheckerDaoImplTest {
 
-    @Autowired
-    private FriendshipCheckerDao FRIENDSHIP_CHECKER_DAO;
+    @Mock
+    private EntityManager entityManager;
+
+    @Mock
+    private TypedQuery<Boolean> query;
+
+    @InjectMocks
+    private FriendshipCheckerDaoImpl friendshipCheckerDao;
+
+    @BeforeEach
+    void setup() {
+        openMocks(this);
+    }
 
     @Nested
     @DisplayName("boolean checkFriendshipRecordExistence(Long requesterId, Long accepterId)")
@@ -42,17 +40,28 @@ class FriendshipCheckerDaoImplTest {
 
         @Test
         void shouldReturnTrueWhenRecordExistsAndRequestedIdLessThanAccepterId() {
-            assertTrue(FRIENDSHIP_CHECKER_DAO.checkFriendshipRecordExistence(1L, 2L));
-        }
-
-        @Test
-        void shouldReturnTrueWhenRecordExistsAndRequestedIdGreaterThanAccepterId() {
-            assertTrue(FRIENDSHIP_CHECKER_DAO.checkFriendshipRecordExistence(2L, 1L));
+            Long requesterId = 1L;
+            Long accepterId = 2L;
+            List<Boolean> result = singletonList(true);
+            when(entityManager.createQuery("select 1 from Friendship f where f.initiatorAccountId = :requesterId "
+                    + "and f.friendAccountId = :accepterId")).thenReturn(query);
+            when(query.setParameter("requesterId", requesterId)).thenReturn(query);
+            when(query.setParameter("accepterId", accepterId)).thenReturn(query);
+            when(query.getResultList()).thenReturn(result);
+            assertTrue(friendshipCheckerDao.checkFriendshipRecordExistence(1L, 2L));
         }
 
         @Test
         void shouldReturnFalseWhenRecordIsNotExisted() {
-            assertFalse(FRIENDSHIP_CHECKER_DAO.checkFriendshipRecordExistence(-1L, 2L));
+            Long requesterId = 1L;
+            Long accepterId = 2L;
+            List<Boolean> result = emptyList();
+            when(entityManager.createQuery("select 1 from Friendship f where f.initiatorAccountId = :requesterId "
+                    + "and f.friendAccountId = :accepterId")).thenReturn(query);
+            when(query.setParameter("requesterId", requesterId)).thenReturn(query);
+            when(query.setParameter("accepterId", accepterId)).thenReturn(query);
+            when(query.getResultList()).thenReturn(result);
+            assertFalse(friendshipCheckerDao.checkFriendshipRecordExistence(1L, 2L));
         }
 
     }
@@ -62,18 +71,31 @@ class FriendshipCheckerDaoImplTest {
     class TestCheckUsersAreFriends {
 
         @Test
-        void shouldReturnTrueWhenUsersAreFriendsAndRequestedIdLessThanAccepterId() {
-            assertTrue(FRIENDSHIP_CHECKER_DAO.checkUsersAreFriends(1L, 2L));
-        }
-
-        @Test
-        void shouldReturnTrueWhenUsersAreFriendsAndRequestedIdGreaterThanAccepterId() {
-            assertTrue(FRIENDSHIP_CHECKER_DAO.checkUsersAreFriends(2L, 1L));
+        void shouldReturnTrueWhenUsersAreFriends() {
+            Long requesterId = 1L;
+            Long accepterId = 2L;
+            List<Boolean> result = singletonList(true);
+            when(entityManager.createQuery(
+                    "select 1 from Friendship f where f.initiatorAccountId = :requesterId "
+                            + "and f.friendAccountId = :accepterId and f.friendshipStatus = true"
+            )).thenReturn(query);
+            when(query.setParameter("requesterId", requesterId)).thenReturn(query);
+            when(query.setParameter("accepterId", accepterId)).thenReturn(query);
+            when(query.getResultList()).thenReturn(result);
+            assertTrue(friendshipCheckerDao.checkUsersAreFriends(1L, 2L));
         }
 
         @Test
         void shouldReturnFalseWhenUsersAreNotFriends() {
-            assertFalse(FRIENDSHIP_CHECKER_DAO.checkUsersAreFriends(-1L, 1L));
+            Long requesterId = 1L;
+            Long accepterId = 2L;
+            List<Boolean> result = emptyList();
+            when(entityManager.createQuery("select 1 from Friendship f where f.initiatorAccountId = :requesterId "
+                    + "and f.friendAccountId = :accepterId and f.friendshipStatus = true")).thenReturn(query);
+            when(query.setParameter("requesterId", requesterId)).thenReturn(query);
+            when(query.setParameter("accepterId", accepterId)).thenReturn(query);
+            when(query.getResultList()).thenReturn(result);
+            assertFalse(friendshipCheckerDao.checkUsersAreFriends(1L, 2L));
         }
 
     }

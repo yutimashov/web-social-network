@@ -123,3 +123,11 @@ a.disabled {
     pointer-events: none;
     cursor: default;
 }
+
+a.page-link#prevPageLink:focus , a.page-link#nextPageLink:focus {
+    z-index: auto!important;
+    color: #0D6EF0!important;
+    background-color: #fff!important;
+    outline: none!important;
+    box-shadow: none!important;
+}

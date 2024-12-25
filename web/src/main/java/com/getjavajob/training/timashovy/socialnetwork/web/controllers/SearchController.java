@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class SearchController {
 
     private static final int RESULTS_PER_PAGE = 5;
+    private static final int INITIAL_PAGINATION_PAGE = 1;
     private static final int TIPS_PER_AJAX_REQUEST = 10;
     private static final String ACCOUNT_SEARCH_TYPE = "account";
     private static final String GROUP_SEARCH_TYPE = "group";
@@ -22,35 +23,37 @@ public class SearchController {
 
     @GetMapping("/search")
     public String doGet(@RequestParam("searchQuery") String searchQuery,
-                        @RequestParam("currentPage") int currentPage,
                         @RequestParam("searchType") String searchType,
                         Model model) {
         model.addAttribute("searchQuery", searchQuery);
-        model.addAttribute("currentPage", currentPage);
         model.addAttribute("searchType", searchType);
-        int numberOfPages = 0;
+        long numberOfPages = 0;
         if (ACCOUNT_SEARCH_TYPE.equals(searchType)) {
-            numberOfPages = handleAccountSearch(searchQuery, currentPage, model);
-        } else if ("group".equals(searchType)) {
-            numberOfPages = handleGroupSearch(searchQuery, currentPage, model);
+            numberOfPages = handleAccountSearch(searchQuery, INITIAL_PAGINATION_PAGE, model);
+        } else if (GROUP_SEARCH_TYPE.equals(searchType)) {
+            numberOfPages = handleGroupSearch(searchQuery, INITIAL_PAGINATION_PAGE, model);
         }
         model.addAttribute("numberOfPages", numberOfPages);
         model.addAttribute("recordsPerPage", RESULTS_PER_PAGE);
         return "/search/result";
     }
 
-    private int handleAccountSearch(String searchQuery, int currentPage, Model model) {
+    private Long handleAccountSearch(String searchQuery, int currentPage, Model model) {
         model.addAttribute("accounts", searchService.findAccounts(searchQuery, currentPage, RESULTS_PER_PAGE));
-        return calculateNumberOfPages(searchService.findAccountResultsAmount(searchQuery));
+        Long totalResultsAmount = searchService.findAccountResultsAmount(searchQuery);
+        model.addAttribute("totalResultsAmount", totalResultsAmount);
+        return calculateNumberOfPages(totalResultsAmount);
     }
 
-    private int handleGroupSearch(String searchQuery, int currentPage, Model model) {
+    private Long handleGroupSearch(String searchQuery, int currentPage, Model model) {
         model.addAttribute("groups", searchService.findGroups(searchQuery, currentPage, RESULTS_PER_PAGE));
+        Long totalResultsAmount = searchService.findGroupResultsAmount(searchQuery);
+        model.addAttribute("totalResultsAmount", totalResultsAmount);
         return calculateNumberOfPages(searchService.findGroupResultsAmount(searchQuery));
     }
 
-    private int calculateNumberOfPages(int totalResults) {
-        return (int) Math.ceil((double) totalResults / RESULTS_PER_PAGE);
+    private Long calculateNumberOfPages(long totalResults) {
+        return (long) Math.ceil((double) totalResults / RESULTS_PER_PAGE);
     }
 
     @GetMapping("/search_ajax")
@@ -65,6 +68,22 @@ public class SearchController {
         } else if (GROUP_SEARCH_TYPE.equals(searchType)) {
             modelAndView.addObject("groups", searchService.findGroups(searchQuery, currentPage,
                     TIPS_PER_AJAX_REQUEST));
+        }
+        return modelAndView;
+    }
+
+    @GetMapping("/search_ajax_pages")
+    public ModelAndView searchAjaxPages(@RequestParam("searchQuery") String searchQuery,
+                                        @RequestParam("searchType") String searchType,
+                                        @RequestParam("currentPage") int currentPage,
+                                        ModelAndView modelAndView) {
+        modelAndView.setViewName("search/search-results");
+        if (ACCOUNT_SEARCH_TYPE.equals(searchType)) {
+            modelAndView.addObject("accounts", searchService.findAccounts(searchQuery, currentPage,
+                    RESULTS_PER_PAGE));
+        } else if (GROUP_SEARCH_TYPE.equals(searchType)) {
+            modelAndView.addObject("groups", searchService.findGroups(searchQuery, currentPage,
+                    RESULTS_PER_PAGE));
         }
         return modelAndView;
     }

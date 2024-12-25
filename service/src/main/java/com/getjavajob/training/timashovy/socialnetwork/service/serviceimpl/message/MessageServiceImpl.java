@@ -1,43 +1,59 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.message;
 
-import com.getjavajob.training.timashovy.socialnetwork.common.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.common.message.Message;
-import com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message.PersonalMessageDaoImpl;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.MessageDao;
-import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.group.GroupRepository;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.message.GroupMessageRepository;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.message.PersonalMessageRepository;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.message.PersonalWallMessageRepository;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.message.GroupMessage;
+import com.getjavajob.training.timashovy.socialnetwork.domain.message.Message;
+import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalMessage;
+import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalWallMessage;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
+import org.slf4j.Logger;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
+@Service
 public class MessageServiceImpl implements MessageService {
 
-    private final MessageDao groupMessageDao;
-    private final MessageDao accountWallMessageDao;
-    private final PersonalMessageDaoImpl personalMessageDao;
-    private final AccountService accountService;
+    private final GroupMessageRepository groupMessageDao;
+    private final PersonalWallMessageRepository accountWallMessageDao;
+    private final PersonalMessageRepository personalMessageDao;
+    private final GroupRepository groupRepository;
+    private static final Logger logger = getLogger(MessageService.class);
 
-    public MessageServiceImpl(MessageDao groupMessageDao, MessageDao accountWallMessageDao,
-                              PersonalMessageDaoImpl personalMessageDao, AccountService accountService) {
+    public MessageServiceImpl(GroupMessageRepository groupMessageDao, PersonalWallMessageRepository accountWallMessageDao,
+                              PersonalMessageRepository personalMessageDao,
+                              GroupRepository groupRepository) {
         this.groupMessageDao = groupMessageDao;
         this.accountWallMessageDao = accountWallMessageDao;
         this.personalMessageDao = personalMessageDao;
-        this.accountService = accountService;
+        this.groupRepository = groupRepository;
     }
 
+    @Transactional
     @Override
-    public Long createGroupMessage(Message message) {
-        return groupMessageDao.create(message);
+    public void createGroupMessage(GroupMessage groupMessage, Long groupId) {
+        groupMessage.setGroup(groupRepository.getById(groupId).get());
+        groupMessageDao.save(groupMessage);
     }
 
+    @Transactional
     @Override
-    public Long createPersonalWallMessage(Message message) {
-        return accountWallMessageDao.create(message);
+    public void createPersonalWallMessage(PersonalWallMessage personalWallMessage) {
+        logger.info("creating personal wall message in the wall of account with id = {}", personalWallMessage.getId());
+        accountWallMessageDao.save(personalWallMessage);
     }
 
+    @Transactional
     @Override
-    public Long createPersonalMessage(Message message) {
-        return personalMessageDao.create(message);
+    public void createPersonalMessage(PersonalMessage personalMessage) {
+        personalMessageDao.save(personalMessage);
     }
 
     @Override
@@ -70,29 +86,22 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<Message> getAllGroupMessages(Long groupId) {
-        return groupMessageDao.getAll(groupId);
+    public List<GroupMessage> getMessagesByGroupId(Long groupId) {
+        return groupMessageDao.getMessagesByGroupId(groupId);
     }
 
     @Override
-    public List<Message> getAllAccountWallMessages(Long destinationId) {
+    public List<PersonalWallMessage> getAllAccountWallMessages(Long destinationId) {
         return accountWallMessageDao.getAll(destinationId);
     }
 
     @Override
     public List<Account> getAllAccountsWithPersonalMessages(Long accountId) {
-        List<Long> personalMessageAccountsIds = personalMessageDao.getAllAccountsIds(accountId);
-        List<Account> accounts = new ArrayList<>();
-        for (Long personalMessageAccountsId : personalMessageAccountsIds) {
-            if (accountService.getById(personalMessageAccountsId).isPresent()) {
-                accounts.add(accountService.getById(personalMessageAccountsId).get());
-            }
-        }
-        return accounts;
+        return personalMessageDao.getAllAccounts(accountId);
     }
 
     @Override
-    public List<Message> getAllPersonalMessagesWithAccount(Long authorId, Long receiverId) {
+    public List<PersonalMessage> getAllPersonalMessagesWithAccount(Long authorId, Long receiverId) {
         return personalMessageDao.getAllPersonalMessagesWithAccount(authorId, receiverId);
     }
 
