@@ -26,13 +26,6 @@ public class ApplicationConfig implements WebMvcConfigurer {
         return internalResourceViewResolver;
     }
 
-/*    @Bean
-    public CommonsMultipartResolver multipartResolver() {
-        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-        multipartResolver.setMaxUploadSize(10485760);
-        return multipartResolver;
-    }*/
-
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/img/**").addResourceLocations("/static/img/");

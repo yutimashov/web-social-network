@@ -49,24 +49,18 @@ public class WebSecurityConfig {
                             registry.anyRequest().authenticated();
                         }
                 )
-                .formLogin(httpSecurityFormLoginConfigurer -> {
-                    httpSecurityFormLoginConfigurer
-                            .loginPage(loginPath)
-                            .successHandler(successHandler)
-                            .failureUrl(loginPath + AUTH_DATA_ERROR.getValue())
-                            .permitAll();
-                })
-                .logout(httpSecurityLogoutConfigurer -> {
-                    httpSecurityLogoutConfigurer
-                            .deleteCookies(sessionCookieName)
-                            .invalidateHttpSession(true);
-                })
+                .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer
+                        .loginPage(loginPath)
+                        .successHandler(successHandler)
+                        .failureUrl(loginPath + AUTH_DATA_ERROR.getValue())
+                        .permitAll())
+                .logout(httpSecurityLogoutConfigurer -> httpSecurityLogoutConfigurer
+                        .deleteCookies(sessionCookieName)
+                        .invalidateHttpSession(true))
                 .csrf(AbstractHttpConfigurer::disable)
-                .rememberMe(httpSecurityRememberMeConfigurer -> {
-                    httpSecurityRememberMeConfigurer
-                            .userDetailsService(accountDetailsService)
-                            .tokenValiditySeconds(tokenValiditySeconds);
-                })
+                .rememberMe(httpSecurityRememberMeConfigurer -> httpSecurityRememberMeConfigurer
+                        .userDetailsService(accountDetailsService)
+                        .tokenValiditySeconds(tokenValiditySeconds))
                 .build();
     }
 
