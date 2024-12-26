@@ -30,7 +30,7 @@
         <commons-fileupload.version>1.5</commons-fileupload.version>
         <jstl.version>1.2</jstl.version>
         <h2database.version>2.2.224</h2database.version>
-        <logging.version>2.24.1</logging.version>
+<!--        <logging.version>2.24.3</logging.version>-->
         <postgresql.version>42.7.2</postgresql.version>
         <spring-orm.version>6.0.7</spring-orm.version>
         <!-- plugins versions -->
@@ -53,12 +53,6 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-data-jpa</artifactId>
-                <exclusions>
-                    <exclusion>
-                        <groupId>ch.qos.logback</groupId>
-                        <artifactId>logback-classic</artifactId>
-                    </exclusion>
-                </exclusions>
                 <version>3.4.1</version>
             </dependency>
             <dependency>
@@ -80,6 +74,10 @@
                     <exclusion>
                         <groupId>ch.qos.logback</groupId>
                         <artifactId>logback-classic</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-starter-logging</artifactId>
                     </exclusion>
                 </exclusions>
                 <version>3.4.0</version>
@@ -110,6 +108,11 @@
             </dependency>
             <!--Logging-->
             <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-log4j2</artifactId>
+                <version>3.4.1</version>
+            </dependency>
+            <!--<dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-api</artifactId>
                 <version>${logging.version}</version>
@@ -123,7 +126,7 @@
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-slf4j-impl</artifactId>
                 <version>${logging.version}</version>
-            </dependency>
+            </dependency>-->
             <!--Util-->
             <dependency>
                 <groupId>commons-fileupload</groupId>
