@@ -2,9 +2,17 @@ package com.getjavajob.training.timashovy.socialnetwork.domain.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.domain.BaseEntity;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
-import org.hibernate.annotations.Type;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import org.hibernate.annotations.JdbcTypeCode;
 
-import javax.persistence.*;
+import java.sql.Types;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,11 +20,11 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole.REGULAR;
+import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.EnumType.STRING;
+import static jakarta.persistence.FetchType.EAGER;
+import static jakarta.persistence.GenerationType.IDENTITY;
 import static java.util.Objects.hash;
-import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.EnumType.STRING;
-import static javax.persistence.FetchType.EAGER;
-import static javax.persistence.GenerationType.IDENTITY;
 
 /**
  * Model of Account entity. Contains all relevant information about Account.
@@ -59,7 +67,7 @@ public class Account implements BaseEntity<Long> {
     private AccountRole role = REGULAR;
 
     @Lob
-    @Type(type = "org.hibernate.type.BinaryType")
+    @JdbcTypeCode(Types.VARBINARY)
     private byte[] avatar;
 
     @OneToMany(mappedBy = "account", cascade = ALL, orphanRemoval = true, fetch = EAGER)

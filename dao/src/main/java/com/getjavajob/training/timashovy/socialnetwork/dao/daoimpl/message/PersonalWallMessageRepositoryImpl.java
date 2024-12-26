@@ -4,9 +4,9 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.message.Pe
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalWallMessage;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 

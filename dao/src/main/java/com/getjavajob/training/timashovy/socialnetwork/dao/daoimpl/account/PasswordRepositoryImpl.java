@@ -6,10 +6,10 @@ import com.getjavajob.training.timashovy.socialnetwork.domain.password.Password;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.PersistenceException;
 import java.util.Optional;
 
 import static java.util.Objects.isNull;

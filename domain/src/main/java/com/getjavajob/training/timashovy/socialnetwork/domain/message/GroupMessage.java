@@ -2,13 +2,13 @@ package com.getjavajob.training.timashovy.socialnetwork.domain.message;
 
 import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import java.time.LocalDate;
 
-import static javax.persistence.FetchType.LAZY;
+import static jakarta.persistence.FetchType.LAZY;
 
 @Table(name = "group_messages", schema = "message_data")
 @Entity

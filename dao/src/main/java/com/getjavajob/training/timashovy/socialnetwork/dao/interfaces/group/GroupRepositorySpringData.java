@@ -1,8 +1,8 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.group;
 
 import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 
-public interface GroupRepositorySpringData extends JpaRepository<Group, Long> {
+public interface GroupRepositorySpringData extends CrudRepository<Group, Long> {
 
 }

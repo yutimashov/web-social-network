@@ -32,7 +32,7 @@ public class GroupDaoImpl implements GroupRepository {
 
     @Override
     public List<Group> getAll() {
-        return groupRepositorySpringData.findAll();
+        return (List<Group>) groupRepositorySpringData.findAll();
     }
 
     @Override

@@ -4,9 +4,9 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.search.Sea
 import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NonUniqueResultException;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NonUniqueResultException;
+import jakarta.persistence.PersistenceContext;
 import java.util.List;
 
 /**

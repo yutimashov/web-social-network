@@ -27,20 +27,19 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- dependencies versions -->
-        <postgresql.version>42.7.2</postgresql.version>
+        <commons-fileupload.version>1.5</commons-fileupload.version>
         <junit-jupiter-engine.version>5.9.2</junit-jupiter-engine.version>
+        <javaxservlet-api.version>4.0.1</javaxservlet-api.version>
+        <jstl.version>1.2</jstl.version>
         <h2database.version>2.2.224</h2database.version>
+        <log4j2.version>2.24.1</log4j2.version>
         <mockito-core.version>3.12.4</mockito-core.version>
         <mockito-junit-jupiter.version>3.12.4</mockito-junit-jupiter.version>
         <mockito-inline.version>3.12.4</mockito-inline.version>
-        <javaxservlet-api.version>4.0.1</javaxservlet-api.version>
-        <jstl.version>1.2</jstl.version>
+        <postgresql.version>42.7.2</postgresql.version>
         <spring.version>5.3.37</spring.version>
         <spring-security.version>5.8.13</spring-security.version>
-        <commons-fileupload.version>1.5</commons-fileupload.version>
-        <hibernate-core.version>5.3.36.Final</hibernate-core.version>
-        <javax-persistence.version>2.2</javax-persistence.version>
-        <log4j2.version>2.24.1</log4j2.version>
+        <spring-orm.version>6.0.7</spring-orm.version>
         <!-- plugins versions -->
         <maven-clean-plugin.version>3.3.2</maven-clean-plugin.version>
         <maven-compiler-plugin.version>3.12.1</maven-compiler-plugin.version>
@@ -50,6 +49,23 @@
 
     <dependencyManagement>
         <dependencies>
+            <!--Data-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-jpa</artifactId>
+                <version>3.4.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-orm</artifactId>
+                <version>${spring-orm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgresql.version}</version>
+                <scope>runtime</scope>
+            </dependency>
             <!--Spring-->
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -103,28 +119,6 @@
                 <groupId>javax.servlet</groupId>
                 <artifactId>jstl</artifactId>
                 <version>${jstl.version}</version>
-            </dependency>
-            <!--Data-->
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-core</artifactId>
-                <version>${hibernate-core.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.persistence</groupId>
-                <artifactId>javax.persistence-api</artifactId>
-                <version>${javax-persistence.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-orm</artifactId>
-                <version>5.3.24</version>
-            </dependency>
-            <dependency>
-                <groupId>org.postgresql</groupId>
-                <artifactId>postgresql</artifactId>
-                <version>${postgresql.version}</version>
-                <scope>runtime</scope>
             </dependency>
             <!--Security-->
             <dependency>
