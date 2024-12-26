@@ -3,7 +3,7 @@ package com.getjavajob.training.timashovy.socialnetwork.web.util;
 import com.getjavajob.training.timashovy.socialnetwork.web.util.exceptions.WebException;
 import org.springframework.context.ApplicationContext;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import static org.springframework.web.context.support.WebApplicationContextUtils.getWebApplicationContext;
 
