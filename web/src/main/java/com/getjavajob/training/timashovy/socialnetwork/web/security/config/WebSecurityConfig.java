@@ -2,6 +2,7 @@ package com.getjavajob.training.timashovy.socialnetwork.web.security.config;
 
 import com.getjavajob.training.timashovy.socialnetwork.web.filters.AccountSessionFilter;
 import com.getjavajob.training.timashovy.socialnetwork.web.filters.SetEncodingFilter;
+import org.slf4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -9,7 +10,6 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +19,7 @@ import org.springframework.security.web.authentication.rememberme.RememberMeAuth
 import org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter;
 
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.UrlStatusParameter.AUTH_DATA_ERROR;
+import static org.slf4j.LoggerFactory.getLogger;
 
 @Configuration
 @EnableWebSecurity
@@ -28,6 +29,7 @@ public class WebSecurityConfig {
     private final UserDetailsService accountDetailsService;
 
     private final AuthenticationSuccessHandler successHandler;
+    private static final Logger logger = getLogger(WebSecurityConfig.class);
 
     public WebSecurityConfig(UserDetailsService accountDetailsService, AuthenticationSuccessHandler successHandler) {
         this.accountDetailsService = accountDetailsService;
@@ -40,16 +42,19 @@ public class WebSecurityConfig {
         final String sessionCookieName = "JSESSIONID";
         final String loginPath = "/login";
         final String registerPath = "/register";
+        logger.info("Came to securityFilterChain");
         return http
                 .addFilterBefore(new SetEncodingFilter(), WebAsyncManagerIntegrationFilter.class)
                 .addFilterAfter(new AccountSessionFilter(), RememberMeAuthenticationFilter.class)
                 .authorizeHttpRequests(
                         registry -> {
-                            registry.requestMatchers(registerPath).permitAll();
+                            logger.info("Configuring request matchers");
+                            registry.requestMatchers(registerPath, loginPath).permitAll();
                             registry.anyRequest().authenticated();
                         }
                 )
                 .formLogin(httpSecurityFormLoginConfigurer -> {
+                    logger.info("Configuring form login");
                     httpSecurityFormLoginConfigurer
                             .loginPage(loginPath)
                             .successHandler(successHandler)
@@ -57,12 +62,17 @@ public class WebSecurityConfig {
                             .permitAll();
                 })
                 .logout(httpSecurityLogoutConfigurer -> {
+                    logger.info("Configuring logout");
                     httpSecurityLogoutConfigurer
                             .deleteCookies(sessionCookieName)
                             .invalidateHttpSession(true);
                 })
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf(csrfConfigurer -> {
+                    logger.info("Disabling CSRF protection");
+                    csrfConfigurer.disable();
+                })
                 .rememberMe(httpSecurityRememberMeConfigurer -> {
+                    logger.info("Configuring remember me");
                     httpSecurityRememberMeConfigurer
                             .userDetailsService(accountDetailsService)
                             .tokenValiditySeconds(tokenValiditySeconds);

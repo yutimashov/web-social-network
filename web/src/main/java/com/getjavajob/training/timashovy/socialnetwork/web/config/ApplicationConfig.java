@@ -1,5 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.config;
 
+import org.slf4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +9,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 @Configuration
 @ComponentScan(basePackages = {
@@ -18,8 +21,11 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @EnableWebMvc
 public class ApplicationConfig implements WebMvcConfigurer {
 
+    private static final Logger logger = getLogger(ApplicationConfig.class);
+
     @Bean
     public ViewResolver viewResolver() {
+        logger.info("Configuring InternalResourceViewResolver with prefix /WEB-INF/jsp/ and suffix .jsp");
         InternalResourceViewResolver internalResourceViewResolver = new InternalResourceViewResolver();
         internalResourceViewResolver.setPrefix("/WEB-INF/jsp/");
         internalResourceViewResolver.setSuffix(".jsp");
@@ -28,6 +34,7 @@ public class ApplicationConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        logger.info("Adding resource handlers for static content");
         registry.addResourceHandler("/static/img/**").addResourceLocations("/static/img/");
         registry.addResourceHandler("/static/js/**").addResourceLocations("/static/js/");
         registry.addResourceHandler("/static/css/**").addResourceLocations("/static/css/");
