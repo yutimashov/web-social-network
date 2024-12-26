@@ -36,7 +36,7 @@ public class PersistenceConfig {
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         vendorAdapter.setShowSql(true);
         vendorAdapter.setGenerateDdl(false);
-        vendorAdapter.setDatabasePlatform("org.hibernate.dialect.PostgreSQL95Dialect");
+        vendorAdapter.setDatabasePlatform("org.hibernate.dialect.PostgreSQLDialect");
         entityManagerFactory.setJpaVendorAdapter(vendorAdapter);
         return entityManagerFactory;
     }

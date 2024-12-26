@@ -14,9 +14,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter;
+import org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter;
 
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.UrlStatusParameter.AUTH_DATA_ERROR;
 
@@ -41,7 +41,7 @@ public class WebSecurityConfig {
         final String loginPath = "/login";
         final String registerPath = "/register";
         return http
-                .addFilterBefore(new SetEncodingFilter(), ChannelProcessingFilter.class)
+                .addFilterBefore(new SetEncodingFilter(), WebAsyncManagerIntegrationFilter.class)
                 .addFilterAfter(new AccountSessionFilter(), RememberMeAuthenticationFilter.class)
                 .authorizeHttpRequests(
                         registry -> {
@@ -49,18 +49,24 @@ public class WebSecurityConfig {
                             registry.anyRequest().authenticated();
                         }
                 )
-                .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer
-                        .loginPage(loginPath)
-                        .successHandler(successHandler)
-                        .failureUrl(loginPath + AUTH_DATA_ERROR.getValue())
-                        .permitAll())
-                .logout(httpSecurityLogoutConfigurer -> httpSecurityLogoutConfigurer
-                        .deleteCookies(sessionCookieName)
-                        .invalidateHttpSession(true))
+                .formLogin(httpSecurityFormLoginConfigurer -> {
+                    httpSecurityFormLoginConfigurer
+                            .loginPage(loginPath)
+                            .successHandler(successHandler)
+                            .failureUrl(loginPath + AUTH_DATA_ERROR.getValue())
+                            .permitAll();
+                })
+                .logout(httpSecurityLogoutConfigurer -> {
+                    httpSecurityLogoutConfigurer
+                            .deleteCookies(sessionCookieName)
+                            .invalidateHttpSession(true);
+                })
                 .csrf(AbstractHttpConfigurer::disable)
-                .rememberMe(httpSecurityRememberMeConfigurer -> httpSecurityRememberMeConfigurer
-                        .userDetailsService(accountDetailsService)
-                        .tokenValiditySeconds(tokenValiditySeconds))
+                .rememberMe(httpSecurityRememberMeConfigurer -> {
+                    httpSecurityRememberMeConfigurer
+                            .userDetailsService(accountDetailsService)
+                            .tokenValiditySeconds(tokenValiditySeconds);
+                })
                 .build();
     }
 
