@@ -1,7 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.AccountRepository;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipCheckerDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipCheckerRepository;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipDao;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
@@ -27,13 +27,13 @@ public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountDao;
     private final FriendshipDao friendshipDao;
-    private final FriendshipCheckerDao friendshipCheckerDao;
+    private final FriendshipCheckerRepository friendshipCheckerDao;
     private final PhoneService phoneService;
     private final PasswordService passwordService;
     private static final Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class);
 
     public AccountServiceImpl(AccountRepository accountDao, FriendshipDao friendshipDao,
-                              FriendshipCheckerDao friendshipCheckerDao, PhoneService phoneService,
+                              FriendshipCheckerRepository friendshipCheckerDao, PhoneService phoneService,
                               PasswordService passwordService) {
         this.accountDao = accountDao;
         this.friendshipDao = friendshipDao;
