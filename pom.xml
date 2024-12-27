@@ -28,7 +28,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- dependencies versions -->
         <commons-fileupload.version>1.5</commons-fileupload.version>
-        <jstl.version>1.2</jstl.version>
+<!--        <jstl.version>1.2</jstl.version>-->
         <h2database.version>2.2.224</h2database.version>
 <!--        <logging.version>2.24.3</logging.version>-->
         <postgresql.version>42.7.2</postgresql.version>
@@ -135,14 +135,14 @@
             </dependency>
             <!-- JSP -->
             <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>jstl</artifactId>
-                <version>${jstl.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.tomcat.embed</groupId>
                 <artifactId>tomcat-embed-jasper</artifactId>
-                <version>11.0.2</version>
+                <version>11.0.1</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>jstl</artifactId>
+                <version>1.2</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
