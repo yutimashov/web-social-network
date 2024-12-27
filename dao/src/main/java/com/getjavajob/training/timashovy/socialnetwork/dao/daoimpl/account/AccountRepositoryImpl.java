@@ -2,20 +2,17 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.exception.DaoException;
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.AccountRepository;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.AccountRepositorySpringData;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
+import jakarta.persistence.PersistenceException;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Repository;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.PersistenceException;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Objects.isNull;
-import static java.util.Optional.ofNullable;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
@@ -26,16 +23,19 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     private static final Logger logger = getLogger(AccountRepositoryImpl.class);
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    private final AccountRepositorySpringData accountRepositorySpringData;
+
+    public AccountRepositoryImpl(AccountRepositorySpringData accountRepositorySpringData) {
+        this.accountRepositorySpringData = accountRepositorySpringData;
+    }
 
     @Override
     public Account save(Account account) {
         try {
-            entityManager.persist(account);
+            accountRepositorySpringData.save(account);
             return account;
-        } catch (PersistenceException e) {
-            logger.error("Error persisting account={}", account.getId());
+        } catch (DaoException e) {
+            logger.error("Error persisting account={}", account.getId(), e);
             throw new DaoException("Cannot save account to persistent storage", e);
         }
     }
@@ -43,41 +43,44 @@ public class AccountRepositoryImpl implements AccountRepository {
     @Override
     public void updateById(Account account, Long accountId) {
         try {
-            Account updatedAccount = entityManager.find(Account.class, accountId);
-            if (account.getAvatar() != null) {
-                updatedAccount.setAvatar(account.getAvatar());
-            }
-            if (account.getFirstName() != null && !account.getFirstName().isEmpty()) {
-                updatedAccount.setFirstName(account.getFirstName());
-            }
-            if (account.getLastName() != null && !account.getLastName().isEmpty()) {
-                updatedAccount.setLastName(account.getLastName());
-            }
-            if (account.getMiddleName() != null && !account.getMiddleName().isEmpty()) {
-                updatedAccount.setMiddleName(account.getMiddleName());
-            }
-            if (account.getBirthDate() != null) {
-                updatedAccount.setBirthDate(account.getBirthDate());
-            }
-            if (account.getSkype() != null && !account.getSkype().isEmpty()) {
-                updatedAccount.setSkype(account.getSkype());
-            }
-            if (account.getIcq() != null && !account.getIcq().isEmpty()) {
-                updatedAccount.setIcq(account.getIcq());
-            }
-            if (account.getEmail() != null && !account.getEmail().isEmpty()) {
-                updatedAccount.setEmail(account.getEmail());
-            }
-            if (account.getPersonalAddress() != null && !account.getPersonalAddress().isEmpty()) {
-                updatedAccount.setPersonalAddress(account.getPersonalAddress());
-            }
-            if (account.getPhones() != null && !account.getPhones().isEmpty()) {
-                for (Phone phone : account.getPhones()) {
-                    phone.setAccount(updatedAccount);
+            Optional<Account> maybeUpdatedAccount = accountRepositorySpringData.findById(accountId);
+            if (maybeUpdatedAccount.isPresent()) {
+                Account updatedAccount = maybeUpdatedAccount.get();
+                if (account.getAvatar() != null) {
+                    updatedAccount.setAvatar(account.getAvatar());
                 }
-                updatedAccount.getPhones().addAll(account.getPhones());
+                if (account.getFirstName() != null && !account.getFirstName().isEmpty()) {
+                    updatedAccount.setFirstName(account.getFirstName());
+                }
+                if (account.getLastName() != null && !account.getLastName().isEmpty()) {
+                    updatedAccount.setLastName(account.getLastName());
+                }
+                if (account.getMiddleName() != null && !account.getMiddleName().isEmpty()) {
+                    updatedAccount.setMiddleName(account.getMiddleName());
+                }
+                if (account.getBirthDate() != null) {
+                    updatedAccount.setBirthDate(account.getBirthDate());
+                }
+                if (account.getSkype() != null && !account.getSkype().isEmpty()) {
+                    updatedAccount.setSkype(account.getSkype());
+                }
+                if (account.getIcq() != null && !account.getIcq().isEmpty()) {
+                    updatedAccount.setIcq(account.getIcq());
+                }
+                if (account.getEmail() != null && !account.getEmail().isEmpty()) {
+                    updatedAccount.setEmail(account.getEmail());
+                }
+                if (account.getPersonalAddress() != null && !account.getPersonalAddress().isEmpty()) {
+                    updatedAccount.setPersonalAddress(account.getPersonalAddress());
+                }
+                if (account.getPhones() != null && !account.getPhones().isEmpty()) {
+                    for (Phone phone : account.getPhones()) {
+                        phone.setAccount(updatedAccount);
+                    }
+                    updatedAccount.getPhones().addAll(account.getPhones());
+                }
+                accountRepositorySpringData.save(updatedAccount);
             }
-            entityManager.merge(updatedAccount);
         } catch (PersistenceException e) {
             logger.error("Error persisting account={}", accountId);
             throw new DaoException("Cannot save account to persistent storage", e);
@@ -86,61 +89,33 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     @Override
     public Optional<Account> findByEmail(String email) {
-        try {
-            return ofNullable(entityManager.createQuery(
-                            "select a from Account a where a.email = :email",
-                            Account.class)
-                    .setParameter("email", email)
-                    .getSingleResult()
-            );
-        } catch (PersistenceException e) {
-            logger.error("Error getting account by email: email={}", email);
-            throw new DaoException("Cannot get account by provided email", e);
-        }
+        return accountRepositorySpringData.findByEmail(email);
     }
 
     @Override
     public void changeRole(Long id, AccountRole role) {
-        try {
-            Account existingAccount = entityManager.find(Account.class, id);
-            existingAccount.setRole(role);
-        } catch (PersistenceException e) {
-            logger.error("Error changing account role: account={}", role);
-            throw new DaoException("Cannot change account role", e);
+        Optional<Account> existingAccount = accountRepositorySpringData.findById(id);
+        if (existingAccount.isPresent()) {
+            Account account = existingAccount.get();
+            account.setRole(role);
         }
     }
 
     @Override
     public void delete(Long id) {
-        try {
-            Account deletingAccount = entityManager.find(Account.class, id);
-            if (!isNull(deletingAccount)) {
-                entityManager.remove(deletingAccount);
-            }
-        } catch (PersistenceException e) {
-            logger.error("Error deleting account={}", id);
-            throw new DaoException("Cannot delete account by provided id", e);
+        if (accountRepositorySpringData.existsById(id)) {
+            accountRepositorySpringData.deleteById(id);
         }
     }
 
     @Override
     public Optional<Account> getById(Long id) {
-        try {
-            return ofNullable(entityManager.find(Account.class, id));
-        } catch (PersistenceException e) {
-            logger.error("Error getting account by id: account={}", id);
-            throw new DaoException("Cannot get account by provided id", e);
-        }
+        return accountRepositorySpringData.findById(id);
     }
 
     @Override
     public List<Account> getAll() {
-        try {
-            return entityManager.createQuery("select a from Account a", Account.class).getResultList();
-        } catch (PersistenceException e) {
-            logger.error("Error getting all accounts");
-            throw new DaoException("Cannot get accounts", e);
-        }
+        return (List<Account>) accountRepositorySpringData.findAll();
     }
 
 }

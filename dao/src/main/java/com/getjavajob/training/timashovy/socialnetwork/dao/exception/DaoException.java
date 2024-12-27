@@ -14,4 +14,6 @@ public class DaoException extends RuntimeException {
         super(cause);
     }
 
+    public DaoException() {}
+
 }
