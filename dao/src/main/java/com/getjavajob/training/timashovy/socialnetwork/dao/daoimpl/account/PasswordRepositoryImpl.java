@@ -43,7 +43,9 @@ public class PasswordRepositoryImpl implements PasswordRepository {
 
     @Override
     public void delete(Long id) {
-        passwordRepositorySpringData.deleteById(id);
+        if (passwordRepositorySpringData.existsById(id)) {
+            passwordRepositorySpringData.deleteById(id);
+        }
     }
 
 }

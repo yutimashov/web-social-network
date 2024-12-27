@@ -4,7 +4,6 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.exception.DaoExceptio
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.AccountRepositorySpringData;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole;
-import jakarta.persistence.TypedQuery;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -29,9 +28,6 @@ class AccountRepositoryImplImplTest {
 
     @Mock
     private AccountRepositorySpringData accountRepositorySpringData;
-
-    @Mock
-    private TypedQuery<Account> query;
 
     @InjectMocks
     private AccountRepositoryImpl accountRepositoryImpl;

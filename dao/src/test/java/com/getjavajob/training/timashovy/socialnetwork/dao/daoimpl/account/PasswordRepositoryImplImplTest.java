@@ -2,7 +2,6 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PasswordRepositorySpringData;
 import com.getjavajob.training.timashovy.socialnetwork.domain.password.Password;
-import jakarta.persistence.TypedQuery;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -23,9 +22,6 @@ class PasswordRepositoryImplImplTest {
 
     @Mock
     private PasswordRepositorySpringData passwordRepositorySpringData;
-
-    @Mock
-    private TypedQuery<Password> query;
 
     @InjectMocks
     private PasswordRepositoryImpl passwordRepositoryImpl;
@@ -90,7 +86,8 @@ class PasswordRepositoryImplImplTest {
         @Test
         void shouldSuccessfullyDeletePasswordIfPossible() {
             Long id = 1L;
-            passwordRepositoryImpl.delete(id);
+            when(passwordRepositorySpringData.existsById(id)).thenReturn(true);
+            passwordRepositorySpringData.deleteById(id);
             verify(passwordRepositorySpringData).deleteById(id);
         }
 
