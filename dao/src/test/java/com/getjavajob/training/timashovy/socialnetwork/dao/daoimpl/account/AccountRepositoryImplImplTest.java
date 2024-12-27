@@ -12,9 +12,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole.ADMIN;
+import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -94,20 +96,12 @@ class AccountRepositoryImplImplTest {
     @DisplayName("List<Account> getAll()")
     class TestGetAll {
 
-        /*@Test
+        @Test
         void shouldReturnActualListWhenTableIsNotEmpty() {
             List<Account> expectedAccounts = asList(account, account);
-            when(accountRepositorySpringData.createQuery("select a from Account a", Account.class)).thenReturn(query);
-            when(query.getResultList()).thenReturn(expectedAccounts);
+            when(accountRepositorySpringData.findAll()).thenReturn(expectedAccounts);
             assertEquals(expectedAccounts, accountRepositoryImpl.getAll());
-        }*/
-
-        /*@Test
-        void shouldThrowDaoExceptionWhenCanNotGetAllAccounts() {
-            when(entityManager.createQuery("select a from Account a", Account.class)).thenReturn(query);
-            when(query.getResultList()).thenThrow(new PersistenceException());
-            assertThrows(DaoException.class, () -> accountRepositoryImpl.getAll());
-        }*/
+        }
 
     }
 
@@ -127,13 +121,6 @@ class AccountRepositoryImplImplTest {
             when(accountRepositorySpringData.findById(id)).thenReturn(null);
             accountRepositoryImpl.delete(id);
         }
-
- /*       @Test
-        public void shouldThrowDaoExceptionIfAccountCannotBeDeleted() {
-            when(entityManager.find(Account.class, id)).thenThrow(new PersistenceException());
-            assertThrows(DaoException.class, () -> accountRepositoryImpl.delete(id));
-            verify(entityManager, never()).remove(any(Account.class));
-        }*/
 
     }
 

@@ -6,7 +6,6 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.Ac
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
-import jakarta.persistence.PersistenceException;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Repository;
 
@@ -31,13 +30,8 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     @Override
     public Account save(Account account) {
-        try {
-            accountRepositorySpringData.save(account);
-            return account;
-        } catch (DaoException e) {
-            logger.error("Error persisting account={}", account.getId(), e);
-            throw new DaoException("Cannot save account to persistent storage", e);
-        }
+        accountRepositorySpringData.save(account);
+        return account;
     }
 
     @Override
@@ -81,7 +75,7 @@ public class AccountRepositoryImpl implements AccountRepository {
                 }
                 accountRepositorySpringData.save(updatedAccount);
             }
-        } catch (PersistenceException e) {
+        } catch (DaoException e) {
             logger.error("Error persisting account={}", accountId);
             throw new DaoException("Cannot save account to persistent storage", e);
         }
