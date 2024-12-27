@@ -4,7 +4,11 @@ import org.slf4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -38,6 +42,20 @@ public class ApplicationConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/static/img/**").addResourceLocations("/static/img/");
         registry.addResourceHandler("/static/js/**").addResourceLocations("/static/js/");
         registry.addResourceHandler("/static/css/**").addResourceLocations("/static/css/");
+    }
+
+    @Override
+    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+        configurer.ignoreAcceptHeader(false)
+                .useRegisteredExtensionsOnly(true)
+                .defaultContentType(MediaType.TEXT_HTML)
+                .mediaType("jsp", MediaType.TEXT_HTML);
+    }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring()
+                .requestMatchers(new AntPathRequestMatcher("/**"));
     }
 
 }

@@ -14,7 +14,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = "com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.group")
+@EnableJpaRepositories(basePackages = "com.getjavajob.training.timashovy.socialnetwork.dao.interfaces")
 public class PersistenceConfig {
 
     @Bean

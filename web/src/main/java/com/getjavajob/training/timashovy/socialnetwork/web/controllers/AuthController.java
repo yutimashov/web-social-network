@@ -24,7 +24,7 @@ public class AuthController {
         this.accountService = accountService;
     }
 
-    @GetMapping("/login")
+    @GetMapping("/login.jsp")
     public String handleLoginPage() {
         logger.info("Got request to render login page");
         return "auth/login";
@@ -32,6 +32,7 @@ public class AuthController {
 
     @GetMapping("/register")
     public String handleRegisterPage() {
+        logger.info("Got request to render register page");
         return "auth/register";
     }
 
