@@ -27,7 +27,8 @@ public class PasswordRepositoryImpl implements PasswordRepository {
 
     @Override
     public Password save(Password password) {
-        return passwordRepositorySpringData.save(password);
+        passwordRepositorySpringData.save(password);
+        return password;
     }
 
     @Override
