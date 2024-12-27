@@ -12,18 +12,18 @@
 
     <artifactId>dao</artifactId>
 
-    <dependencies>
+    <!--<dependencies>
         <dependency>
             <groupId>com.getjavajob</groupId>
             <artifactId>domain</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
-        <!-- spring -->
-        <dependency>
+        &lt;!&ndash; spring &ndash;&gt;
+&lt;!&ndash;        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
+        </dependency>&ndash;&gt;
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -33,7 +33,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j2</artifactId>
         </dependency>
-        <!--&lt;!&ndash; logging &ndash;&gt;
+        &lt;!&ndash;&lt;!&ndash; logging &ndash;&gt;
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
@@ -45,8 +45,8 @@
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j-impl</artifactId>
-        </dependency>-->
-        <!-- testing -->
+        </dependency>&ndash;&gt;
+        &lt;!&ndash; testing &ndash;&gt;
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -64,6 +64,6 @@
                 <filtering>true</filtering>
             </resource>
         </resources>
-    </build>
+    </build>-->
 
 </project>

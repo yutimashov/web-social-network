@@ -3,57 +3,57 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.4.1</version>
+        <relativePath/>
     </parent>
-
     <groupId>com.getjavajob</groupId>
     <artifactId>web-social-network</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
+    <properties>
+        <java.version>17</java.version>
+    </properties>
     <modules>
         <module>dao</module>
         <module>domain</module>
         <module>service</module>
         <module>web</module>
     </modules>
-
-    <properties>
+<!--    <properties>
         <java.version>17</java.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!-- dependencies versions -->
+        &lt;!&ndash; dependencies versions &ndash;&gt;
         <commons-fileupload.version>1.5</commons-fileupload.version>
-<!--        <jstl.version>1.2</jstl.version>-->
+        &lt;!&ndash;        <jstl.version>1.2</jstl.version>&ndash;&gt;
         <h2database.version>2.2.224</h2database.version>
-<!--        <logging.version>2.24.3</logging.version>-->
+        &lt;!&ndash;        <logging.version>2.24.3</logging.version>&ndash;&gt;
         <postgresql.version>42.7.2</postgresql.version>
         <spring-orm.version>6.0.7</spring-orm.version>
-        <!-- plugins versions -->
+        &lt;!&ndash; plugins versions &ndash;&gt;
         <maven-clean-plugin.version>3.3.2</maven-clean-plugin.version>
         <maven-compiler-plugin.version>3.12.1</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
         <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
-    </properties>
+    </properties>-->
 
-    <dependencyManagement>
+    <!--<dependencyManagement>
         <dependencies>
-            <!--Project module-->
+            &lt;!&ndash;Project module
             <dependency>
                 <groupId>com.getjavajob</groupId>
                 <artifactId>domain</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
                 <scope>compile</scope>
-            </dependency>
-            <!--Data-->
-            <dependency>
+            </dependency>&ndash;&gt;
+            &lt;!&ndash;Data&ndash;&gt;
+            &lt;!&ndash;<dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-data-jpa</artifactId>
-                <version>3.4.1</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -66,7 +66,7 @@
                 <version>${postgresql.version}</version>
                 <scope>runtime</scope>
             </dependency>
-            <!--Security-->
+            &lt;!&ndash;Security&ndash;&gt;
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-security</artifactId>
@@ -82,13 +82,13 @@
                 </exclusions>
                 <version>3.4.0</version>
             </dependency>
-            <!--Web-->
+            &lt;!&ndash;Web&ndash;&gt;
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-web</artifactId>
                 <version>3.4.0</version>
             </dependency>
-            <!--Tests-->
+            &lt;!&ndash;Tests&ndash;&gt;
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-test</artifactId>
@@ -100,19 +100,19 @@
                 <version>${h2database.version}</version>
                 <scope>test</scope>
             </dependency>
-            <!--Websockets-->
+            &lt;!&ndash;Websockets&ndash;&gt;
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-websocket</artifactId>
                 <version>3.4.1</version>
             </dependency>
-            <!--Logging-->
+            &lt;!&ndash;Logging&ndash;&gt;
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-log4j2</artifactId>
                 <version>3.4.1</version>
-            </dependency>
-            <!--<dependency>
+            </dependency>&ndash;&gt;
+            &lt;!&ndash;<dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-api</artifactId>
                 <version>${logging.version}</version>
@@ -126,15 +126,26 @@
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-slf4j-impl</artifactId>
                 <version>${logging.version}</version>
-            </dependency>-->
-            <!--Util-->
-            <dependency>
+            </dependency>&ndash;&gt;
+            &lt;!&ndash;Util&ndash;&gt;
+           &lt;!&ndash; <dependency>
                 <groupId>commons-fileupload</groupId>
                 <artifactId>commons-fileupload</artifactId>
                 <version>${commons-fileupload.version}</version>
             </dependency>
-            <!-- JSP -->
+            &lt;!&ndash; JSP &ndash;&gt;
             <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>jstl</artifactId>
+                <version>1.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-jasper</artifactId>
+                <version>10.1.34</version>
+                <scope>provided</scope>
+            </dependency>&ndash;&gt;
+            &lt;!&ndash;<dependency>
                 <groupId>org.apache.tomcat.embed</groupId>
                 <artifactId>tomcat-embed-jasper</artifactId>
                 <version>11.0.1</version>
@@ -150,34 +161,52 @@
                 <artifactId>jakarta.servlet.jsp.jstl</artifactId>
                 <version>3.0.1</version>
             </dependency>
+            <dependency>
+                <groupId>jakarta.el</groupId>
+                <artifactId>jakarta.el-api</artifactId>
+                <version>4.0.0</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish</groupId>
+                <artifactId>jakarta.el</artifactId>
+                <version>4.0.0</version>
+            </dependency>&ndash;&gt;
         </dependencies>
-    </dependencyManagement>
+    </dependencyManagement>-->
 
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-clean-plugin</artifactId>
-                    <version>${maven-clean-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${maven-compiler-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>${maven-surefire-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-war-plugin</artifactId>
-                    <version>${maven-war-plugin.version}</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
+    <!--    <build>
+            <pluginManagement>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <version>${maven-clean-plugin.version}</version>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>${maven-compiler-plugin.version}</version>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${maven-surefire-plugin.version}</version>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <version>${maven-war-plugin.version}</version>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </pluginManagement>
+        </build>-->
 
 </project>
