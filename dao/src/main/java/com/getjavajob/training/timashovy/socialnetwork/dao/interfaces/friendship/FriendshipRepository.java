@@ -4,7 +4,7 @@ import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 
 import java.util.List;
 
-public interface FriendshipDao {
+public interface FriendshipRepository {
 
     void sendRequest(Account requester, Account receiver);
 
