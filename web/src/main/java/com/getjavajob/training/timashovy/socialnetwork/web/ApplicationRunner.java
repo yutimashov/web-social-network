@@ -5,8 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {
@@ -14,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
         "com.getjavajob.training.timashovy.socialnetwork.service",
         "com.getjavajob.training.timashovy.socialnetwork.dao"
 })
-public class ApplicationRunner extends SpringBootServletInitializer implements WebMvcConfigurer {
+public class ApplicationRunner extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
         SpringApplication.run(ApplicationRunner.class, args);
@@ -23,11 +21,6 @@ public class ApplicationRunner extends SpringBootServletInitializer implements W
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
         return builder.sources(ApplicationRunner.class);
-    }
-
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/static/**").addResourceLocations("/static/");
     }
 
 }
