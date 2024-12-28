@@ -2,7 +2,6 @@ package com.getjavajob.training.timashovy.socialnetwork.web.security.config;
 
 import com.getjavajob.training.timashovy.socialnetwork.web.filters.AccountSessionFilter;
 import com.getjavajob.training.timashovy.socialnetwork.web.filters.SetEncodingFilter;
-import org.slf4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -18,7 +17,6 @@ import org.springframework.security.web.authentication.rememberme.RememberMeAuth
 import org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter;
 
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.UrlStatusParameter.AUTH_DATA_ERROR;
-import static org.slf4j.LoggerFactory.getLogger;
 
 @Configuration
 public class WebSecurityConfig {
@@ -26,7 +24,6 @@ public class WebSecurityConfig {
     private final UserDetailsService accountDetailsService;
 
     private final AuthenticationSuccessHandler successHandler;
-    private static final Logger logger = getLogger(WebSecurityConfig.class);
 
     public WebSecurityConfig(UserDetailsService accountDetailsService, AuthenticationSuccessHandler successHandler) {
         this.accountDetailsService = accountDetailsService;
