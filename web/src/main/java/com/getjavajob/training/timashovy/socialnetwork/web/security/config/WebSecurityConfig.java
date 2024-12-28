@@ -43,7 +43,8 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(
                         registry -> {
                             registry.requestMatchers("/login", "/register").permitAll();
-                            registry.requestMatchers("/WEB-INF/jsp/auth/login.jsp").permitAll();
+                            registry.requestMatchers("/WEB-INF/jsp/auth/login.jsp",
+                                    "/WEB-INF/jsp/auth/register.jsp").permitAll();
                             registry.requestMatchers("/images/**", "/css/**", "/js/**").permitAll();
                             registry.anyRequest().authenticated();
                         }
