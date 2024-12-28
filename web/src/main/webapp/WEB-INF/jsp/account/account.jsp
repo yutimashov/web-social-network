@@ -206,6 +206,6 @@
     </div>
 </div>
 <jsp:include page="/WEB-INF/jsp/include/footer.jsp"/>
-<script src="${rootUrl}/static/js/account.js"></script>
+<script src="<c:url value="/static/js/account.js" />"></script>
 </body>
 </html>

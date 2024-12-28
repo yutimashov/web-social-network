@@ -25,7 +25,6 @@ public class ApplicationConfig implements WebMvcConfigurer {
 
     @Bean
     public ViewResolver viewResolver() {
-        logger.info("Configuring InternalResourceViewResolver with prefix /WEB-INF/jsp/ and suffix .jsp");
         InternalResourceViewResolver internalResourceViewResolver = new InternalResourceViewResolver();
         internalResourceViewResolver.setPrefix("/WEB-INF/jsp/");
         internalResourceViewResolver.setSuffix(".jsp");
@@ -34,10 +33,7 @@ public class ApplicationConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        logger.info("Adding resource handlers for static content");
-        registry.addResourceHandler("/img/**").addResourceLocations("/WEB-INF/static/img/");
-        registry.addResourceHandler("/js/**").addResourceLocations("/WEB-INF/static/js/");
-        registry.addResourceHandler("/css/**").addResourceLocations("/WEB-INF/static/css/");
+        registry.addResourceHandler("/static/**").addResourceLocations("/static/");
     }
 
 }

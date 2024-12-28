@@ -10,6 +10,9 @@
     </parent>
     <artifactId>web</artifactId>
     <packaging>war</packaging>
+    <properties>
+        <build.name>ROOT</build.name>
+    </properties>
     <dependencies>
         <!-- project modules -->
         <dependency>
@@ -80,4 +83,7 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+    <build>
+        <finalName>${build.name}</finalName>
+    </build>
 </project>
