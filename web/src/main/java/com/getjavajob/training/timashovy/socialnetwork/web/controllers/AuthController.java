@@ -24,7 +24,7 @@ public class AuthController {
         this.accountService = accountService;
     }
 
-    @GetMapping("/login.jsp")
+    @GetMapping("/login")
     public String handleLoginPage() {
         logger.info("Got request to render login page");
         return "auth/login";

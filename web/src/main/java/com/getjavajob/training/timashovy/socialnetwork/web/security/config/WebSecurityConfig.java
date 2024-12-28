@@ -57,6 +57,7 @@ public class WebSecurityConfig {
                     logger.info("Configuring form login");
                     httpSecurityFormLoginConfigurer
                             .loginPage(loginPath)
+                            .permitAll()
                             .successHandler(successHandler)
                             .failureUrl(loginPath + AUTH_DATA_ERROR.getValue())
                             .permitAll();
