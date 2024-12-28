@@ -34,36 +34,32 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         final int tokenValiditySeconds = 60 * 60 * 24;
         final String sessionCookieName = "JSESSIONID";
+        final String loginUrl = "/login";
+        final String loginPage = "/WEB-INF/jsp/auth/login.jsp";
+        final String registerUrl = "/register";
+        final String registerPage = "/WEB-INF/jsp/auth/register.jsp";
         return http
                 .addFilterBefore(new SetEncodingFilter(), WebAsyncManagerIntegrationFilter.class)
                 .addFilterAfter(new AccountSessionFilter(), RememberMeAuthenticationFilter.class)
                 .authorizeHttpRequests(
                         registry -> {
-                            registry.requestMatchers("/login", "/register").permitAll();
-                            registry.requestMatchers("/WEB-INF/jsp/auth/login.jsp",
-                                    "/WEB-INF/jsp/auth/register.jsp").permitAll();
-                            registry.requestMatchers("/images/**", "/css/**", "/js/**").permitAll();
+                            registry.requestMatchers(loginUrl, registerUrl).permitAll();
+                            registry.requestMatchers(loginPage, registerPage).permitAll();
                             registry.anyRequest().authenticated();
                         }
                 )
-                .formLogin(httpSecurityFormLoginConfigurer -> {
-                    httpSecurityFormLoginConfigurer
-                            .loginPage("/login")
-                            .successHandler(successHandler)
-                            .failureUrl("/login" + AUTH_DATA_ERROR.getValue())
-                            .permitAll();
-                })
-                .logout(httpSecurityLogoutConfigurer -> {
-                    httpSecurityLogoutConfigurer
-                            .deleteCookies(sessionCookieName)
-                            .invalidateHttpSession(true);
-                })
+                .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer
+                        .loginPage(loginUrl)
+                        .successHandler(successHandler)
+                        .failureUrl(loginUrl + AUTH_DATA_ERROR.getValue())
+                        .permitAll())
+                .logout(httpSecurityLogoutConfigurer -> httpSecurityLogoutConfigurer
+                        .deleteCookies(sessionCookieName)
+                        .invalidateHttpSession(true))
                 .csrf(AbstractHttpConfigurer::disable)
-                .rememberMe(httpSecurityRememberMeConfigurer -> {
-                    httpSecurityRememberMeConfigurer
-                            .userDetailsService(accountDetailsService)
-                            .tokenValiditySeconds(tokenValiditySeconds);
-                })
+                .rememberMe(httpSecurityRememberMeConfigurer -> httpSecurityRememberMeConfigurer
+                        .userDetailsService(accountDetailsService)
+                        .tokenValiditySeconds(tokenValiditySeconds))
                 .build();
     }
 
