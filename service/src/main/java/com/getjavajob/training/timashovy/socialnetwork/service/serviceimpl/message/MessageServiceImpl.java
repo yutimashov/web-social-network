@@ -10,13 +10,10 @@ import com.getjavajob.training.timashovy.socialnetwork.domain.message.Message;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalMessage;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalWallMessage;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
-import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
-import static org.slf4j.LoggerFactory.getLogger;
 
 @Service
 public class MessageServiceImpl implements MessageService {
@@ -25,7 +22,6 @@ public class MessageServiceImpl implements MessageService {
     private final PersonalWallMessageRepository accountWallMessageDao;
     private final PersonalMessageRepository personalMessageDao;
     private final GroupRepository groupRepository;
-    private static final Logger logger = getLogger(MessageService.class);
 
     public MessageServiceImpl(GroupMessageRepository groupMessageDao, PersonalWallMessageRepository accountWallMessageDao,
                               PersonalMessageRepository personalMessageDao,
@@ -46,7 +42,6 @@ public class MessageServiceImpl implements MessageService {
     @Transactional
     @Override
     public void createPersonalWallMessage(PersonalWallMessage personalWallMessage) {
-        logger.info("creating personal wall message in the wall of account with id = {}", personalWallMessage.getId());
         accountWallMessageDao.save(personalWallMessage);
     }
 

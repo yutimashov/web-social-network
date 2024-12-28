@@ -1,5 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.websockets;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -11,9 +12,14 @@ import org.springframework.web.socket.config.annotation.WebSocketTransportRegist
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    private static final int MESSAGE_SIZE_LIMIT = 200 * 1024;
-    private static final int SEND_BUFFER_SIZE_LIMIT = 512 * 1024;
-    private static final int TIME_LIMIT = 10 * 1000;
+    @Value("${websocket.message-size-limit}")
+    private int messageSizeLimit;
+
+    @Value("${websocket.send-buffer-size-limit}")
+    private int sendBufferSizeLimit;
+
+    @Value("${websocket.send-time-limit}")
+    private int sendTimeLimit;
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
@@ -30,9 +36,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureWebSocketTransport(WebSocketTransportRegistration registration) {
-        registration.setMessageSizeLimit(MESSAGE_SIZE_LIMIT);
-        registration.setSendBufferSizeLimit(SEND_BUFFER_SIZE_LIMIT);
-        registration.setSendTimeLimit(TIME_LIMIT);
+        registration.setMessageSizeLimit(messageSizeLimit);
+        registration.setSendBufferSizeLimit(sendBufferSizeLimit);
+        registration.setSendTimeLimit(sendTimeLimit);
     }
 
 }

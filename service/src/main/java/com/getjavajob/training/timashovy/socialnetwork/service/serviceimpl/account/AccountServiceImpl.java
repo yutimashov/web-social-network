@@ -19,9 +19,6 @@ import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
-/**
- * Singleton class for working with methods, managing Account functionality.
- */
 @Service
 public class AccountServiceImpl implements AccountService {
 
