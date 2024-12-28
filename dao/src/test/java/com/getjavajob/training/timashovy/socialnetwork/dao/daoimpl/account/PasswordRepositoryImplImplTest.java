@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PasswordRepositorySpringData;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.springdatarepositories.PasswordRepositorySpringData;
 import com.getjavajob.training.timashovy.socialnetwork.domain.password.Password;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

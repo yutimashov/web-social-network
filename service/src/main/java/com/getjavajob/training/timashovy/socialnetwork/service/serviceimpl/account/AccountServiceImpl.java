@@ -1,8 +1,8 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.AccountRepository;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipCheckerRepository;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipRepository;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.repositories.account.AccountRepository;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.repositories.friendship.FriendshipCheckerRepository;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.repositories.friendship.FriendshipRepository;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;

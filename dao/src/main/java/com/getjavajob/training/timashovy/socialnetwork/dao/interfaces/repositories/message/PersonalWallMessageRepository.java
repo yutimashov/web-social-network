@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.message;
+package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.repositories.message;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.Repository;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalWallMessage;

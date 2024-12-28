@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship;
+package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.springdatarepositories;
 
 import com.getjavajob.training.timashovy.socialnetwork.domain.friendship.Friendship;
 import org.springframework.data.jpa.repository.Query;

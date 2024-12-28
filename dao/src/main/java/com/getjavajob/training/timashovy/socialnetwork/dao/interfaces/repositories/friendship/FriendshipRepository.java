@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship;
+package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.repositories.friendship;
 
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 

@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.group.GroupMembershipDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.repositories.group.GroupMembershipRepository;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 import com.getjavajob.training.timashovy.socialnetwork.domain.group.GroupMember;
@@ -12,7 +12,7 @@ import jakarta.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository
-public class GroupMembershipDaoImpl implements GroupMembershipDao {
+public class GroupMembershipRepositoryImpl implements GroupMembershipRepository {
 
     @PersistenceContext
     private EntityManager entityManager;

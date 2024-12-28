@@ -1,9 +1,9 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.message;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.group.GroupRepository;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.message.GroupMessageRepository;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.message.PersonalMessageRepository;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.message.PersonalWallMessageRepository;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.repositories.group.GroupRepository;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.repositories.message.GroupMessageRepository;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.repositories.message.PersonalMessageRepository;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.repositories.message.PersonalWallMessageRepository;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.GroupMessage;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.Message;

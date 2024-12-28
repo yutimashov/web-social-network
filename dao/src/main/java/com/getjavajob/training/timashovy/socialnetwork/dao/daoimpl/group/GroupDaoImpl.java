@@ -1,7 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.group;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.group.GroupRepository;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.group.GroupRepositorySpringData;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.repositories.group.GroupRepository;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.springdatarepositories.GroupRepositorySpringData;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 import org.springframework.stereotype.Repository;

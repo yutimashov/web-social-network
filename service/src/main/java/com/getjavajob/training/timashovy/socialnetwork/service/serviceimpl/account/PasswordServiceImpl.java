@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PasswordRepository;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.repositories.account.PasswordRepository;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.password.Password;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;

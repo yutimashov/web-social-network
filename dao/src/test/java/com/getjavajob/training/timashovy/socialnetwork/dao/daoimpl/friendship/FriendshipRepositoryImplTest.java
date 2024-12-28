@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipRepositorySpringData;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.springdatarepositories.FriendshipRepositorySpringData;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.friendship.Friendship;
 import org.junit.jupiter.api.BeforeEach;

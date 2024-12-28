@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.AccountRepository;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.repositories.account.AccountRepository;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AdminService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

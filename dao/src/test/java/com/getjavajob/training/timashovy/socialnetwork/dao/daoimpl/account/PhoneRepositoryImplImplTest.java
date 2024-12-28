@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.PhoneRepositorySpringData;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.springdatarepositories.PhoneRepositorySpringData;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType;

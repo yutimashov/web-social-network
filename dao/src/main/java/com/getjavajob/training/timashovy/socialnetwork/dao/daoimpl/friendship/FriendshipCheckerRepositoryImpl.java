@@ -1,7 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.friendship;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipCheckerRepository;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipCheckerRepositorySpringData;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.repositories.friendship.FriendshipCheckerRepository;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.springdatarepositories.FriendshipCheckerRepositorySpringData;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Repository;
 

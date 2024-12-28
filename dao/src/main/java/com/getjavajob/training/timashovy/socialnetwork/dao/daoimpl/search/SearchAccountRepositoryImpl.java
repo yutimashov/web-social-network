@@ -1,7 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.search;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.search.SearchDao;
-import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.repositories.search.SearchRepository;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import org.springframework.stereotype.Repository;
 
 import jakarta.persistence.EntityManager;
@@ -10,19 +10,18 @@ import jakarta.persistence.PersistenceContext;
 import java.util.List;
 
 /**
- * Class provides functionality for searching groups.
+ * Class provides functionality for searching accounts.
  */
 @Repository
-public class SearchGroupDaoImpl implements SearchDao<Group> {
+public class SearchAccountRepositoryImpl implements SearchRepository<Account> {
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
-    public List<Group> findResults(String searchQuery, int currentPage, int recordsPerPage) {
-        return entityManager.createQuery(
-                        "select g from Group g where lower(g.name) like lower(:searchQuery)", Group.class
-                )
+    public List<Account> findResults(String searchQuery, int currentPage, int recordsPerPage) {
+        return entityManager.createQuery("SELECT a FROM Account a WHERE LOWER(a.firstName) "
+                        + "LIKE LOWER(:searchQuery) OR LOWER(a.lastName) LIKE LOWER(:searchQuery)", Account.class)
                 .setParameter("searchQuery", "%" + searchQuery + "%")
                 .setFirstResult(currentPage * recordsPerPage - recordsPerPage)
                 .setMaxResults(recordsPerPage)
@@ -33,7 +32,8 @@ public class SearchGroupDaoImpl implements SearchDao<Group> {
     public Long findResultsAmount(String searchQuery) {
         try {
             return entityManager.createQuery(
-                            "select count(g.id) from Group g where lower(g.name) like lower(:searchQuery)",
+                            "select count(a.id) from Account a where lower(a.firstName) like lower(:searchQuery) "
+                                    + "or lower(a.lastName) like lower(:searchQuery)",
                             Long.class)
                     .setParameter("searchQuery", "%" + searchQuery + "%")
                     .getSingleResult();

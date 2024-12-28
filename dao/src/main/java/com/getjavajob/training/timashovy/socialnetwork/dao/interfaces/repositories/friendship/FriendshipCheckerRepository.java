@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship;
+package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.repositories.friendship;
 
 public interface FriendshipCheckerRepository {
 
