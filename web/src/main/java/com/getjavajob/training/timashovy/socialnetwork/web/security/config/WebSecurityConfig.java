@@ -10,6 +10,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -40,40 +41,31 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         final int tokenValiditySeconds = 60 * 60 * 24;
         final String sessionCookieName = "JSESSIONID";
-        final String loginPath = "/login";
-        final String registerPath = "/register";
-        logger.info("Came to securityFilterChain");
         return http
                 .addFilterBefore(new SetEncodingFilter(), WebAsyncManagerIntegrationFilter.class)
                 .addFilterAfter(new AccountSessionFilter(), RememberMeAuthenticationFilter.class)
                 .authorizeHttpRequests(
                         registry -> {
-                            logger.info("Configuring request matchers");
-                            registry.requestMatchers(registerPath, loginPath).permitAll();
+                            registry.requestMatchers("/login", "/register").permitAll();
+                            registry.requestMatchers("/WEB-INF/jsp/auth/login.jsp").permitAll();
+                            registry.requestMatchers("/images/**", "/css/**", "/js/**").permitAll();
                             registry.anyRequest().authenticated();
                         }
                 )
                 .formLogin(httpSecurityFormLoginConfigurer -> {
-                    logger.info("Configuring form login");
                     httpSecurityFormLoginConfigurer
-                            .loginPage(loginPath)
-                            .permitAll()
+                            .loginPage("/login")
                             .successHandler(successHandler)
-                            .failureUrl(loginPath + AUTH_DATA_ERROR.getValue())
+                            .failureUrl("/login" + AUTH_DATA_ERROR.getValue())
                             .permitAll();
                 })
                 .logout(httpSecurityLogoutConfigurer -> {
-                    logger.info("Configuring logout");
                     httpSecurityLogoutConfigurer
                             .deleteCookies(sessionCookieName)
                             .invalidateHttpSession(true);
                 })
-                .csrf(csrfConfigurer -> {
-                    logger.info("Disabling CSRF protection");
-                    csrfConfigurer.disable();
-                })
+                .csrf(AbstractHttpConfigurer::disable)
                 .rememberMe(httpSecurityRememberMeConfigurer -> {
-                    logger.info("Configuring remember me");
                     httpSecurityRememberMeConfigurer
                             .userDetailsService(accountDetailsService)
                             .tokenValiditySeconds(tokenValiditySeconds);

@@ -13,10 +13,4 @@
         </Logger>
     </Loggers>
 
-    <Loggers>
-        <Logger name="org.springframework.security" level="trace" additivity="false">
-            <AppenderRef ref="File"/>
-        </Logger>
-    </Loggers>
-
 </Configuration>
