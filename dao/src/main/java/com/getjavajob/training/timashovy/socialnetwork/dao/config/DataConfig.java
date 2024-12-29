@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Configuration
 @EnableJpaRepositories(basePackages = {"com.getjavajob.training.timashovy.socialnetwork.dao.interfaces"})
 @EntityScan(basePackages = {"com.getjavajob.training.timashovy.socialnetwork.domain"})
-public class PersistenceConfig {
+public class DataConfig {
 }

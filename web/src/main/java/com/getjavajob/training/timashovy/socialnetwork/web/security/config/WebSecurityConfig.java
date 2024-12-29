@@ -2,6 +2,7 @@ package com.getjavajob.training.timashovy.socialnetwork.web.security.config;
 
 import com.getjavajob.training.timashovy.socialnetwork.web.filters.AccountSessionFilter;
 import com.getjavajob.training.timashovy.socialnetwork.web.filters.SetEncodingFilter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -25,6 +26,9 @@ public class WebSecurityConfig {
 
     private final AuthenticationSuccessHandler successHandler;
 
+    @Value("${security.token-validity-duration}")
+    private int tokenValidityDurationSec;
+
     public WebSecurityConfig(UserDetailsService accountDetailsService, AuthenticationSuccessHandler successHandler) {
         this.accountDetailsService = accountDetailsService;
         this.successHandler = successHandler;
@@ -32,7 +36,6 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        final int tokenValiditySeconds = 60 * 60 * 24;
         final String sessionCookieName = "JSESSIONID";
         final String loginUrl = "/login";
         final String loginPage = "/WEB-INF/jsp/auth/login.jsp";
@@ -59,7 +62,7 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .rememberMe(httpSecurityRememberMeConfigurer -> httpSecurityRememberMeConfigurer
                         .userDetailsService(accountDetailsService)
-                        .tokenValiditySeconds(tokenValiditySeconds))
+                        .tokenValiditySeconds(tokenValidityDurationSec))
                 .build();
     }
 
