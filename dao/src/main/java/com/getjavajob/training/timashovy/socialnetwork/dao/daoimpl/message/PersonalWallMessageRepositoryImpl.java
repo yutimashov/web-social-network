@@ -14,10 +14,6 @@ import static java.util.Objects.isNull;
 import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 
-/**
- * Singleton class responsible for working with `message_data.personal_messages`.
- * It provides safe multithreading approach for creating singleton object using synchronization mechanism.
- */
 @Repository
 public class PersonalWallMessageRepositoryImpl implements PersonalWallMessageRepository {
 
