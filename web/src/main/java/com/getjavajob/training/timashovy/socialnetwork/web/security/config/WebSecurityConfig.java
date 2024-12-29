@@ -34,6 +34,7 @@ public class WebSecurityConfig {
         this.successHandler = successHandler;
     }
 
+    //TODO: all conventions review
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         final String sessionCookieName = "JSESSIONID";
