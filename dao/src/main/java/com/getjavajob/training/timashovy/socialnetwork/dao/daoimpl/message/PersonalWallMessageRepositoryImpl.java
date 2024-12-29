@@ -1,7 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.repositories.message.PersonalWallMessageRepository;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.springdatarepositories.PersonalWallMessageRepositorySpringData;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.springdatarepositories.message.PersonalWallMessageRepositorySpringData;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalWallMessage;
 import org.springframework.stereotype.Repository;
 

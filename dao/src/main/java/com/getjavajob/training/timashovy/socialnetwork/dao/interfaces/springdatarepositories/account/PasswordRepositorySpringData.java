@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.springdatarepositories;
+package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.springdatarepositories.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.domain.password.Password;
 import org.springframework.data.repository.CrudRepository;

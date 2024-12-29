@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.springdatarepositories;
+package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.springdatarepositories.message;
 
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.GroupMessage;
 import org.springframework.data.repository.CrudRepository;

@@ -1,7 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.repositories.account.PasswordRepository;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.springdatarepositories.PasswordRepositorySpringData;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.springdatarepositories.account.PasswordRepositorySpringData;
 import com.getjavajob.training.timashovy.socialnetwork.domain.password.Password;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Repository;
