@@ -9,14 +9,12 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-//TODO: all to spring data framework
-
 @Repository
-public class GroupDaoImpl implements GroupRepository {
+public class GroupRepositoryImpl implements GroupRepository {
 
     private final GroupRepositorySpringData groupRepositorySpringData;
 
-    public GroupDaoImpl(GroupRepositorySpringData groupRepositorySpringData) {
+    public GroupRepositoryImpl(GroupRepositorySpringData groupRepositorySpringData) {
         this.groupRepositorySpringData = groupRepositorySpringData;
     }
 
