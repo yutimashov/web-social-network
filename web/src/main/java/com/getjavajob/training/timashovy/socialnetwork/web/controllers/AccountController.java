@@ -83,7 +83,7 @@ public class AccountController {
 
     @GetMapping("/all")
     public String allAccounts(Model model) {
-        model.addAttribute("accounts", accountService.getAll());
+        model.addAttribute("accounts", accountService.getAccounts( 0, 10));
         return "account/all";
     }
 

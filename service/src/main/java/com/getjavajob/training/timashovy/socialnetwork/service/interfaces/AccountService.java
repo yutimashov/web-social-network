@@ -20,7 +20,7 @@ public interface AccountService {
 
     Optional<Account> getById(Long accountId);
 
-    List<Account> getAll();
+    List<Account> getAccounts(int pageNumber, int pageSize);
 
     void addFriend(Long accountId, Long friendId);
 

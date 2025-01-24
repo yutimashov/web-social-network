@@ -3,6 +3,7 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.repositor
 import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.Repository;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +13,7 @@ import java.util.Optional;
  */
 public interface AccountRepository extends Repository<Long, Account> {
 
-    List<Account> getAll();
+    List<Account> getAccounts(Pageable pageable);
 
     void changeRole(Long id, AccountRole role);
 
