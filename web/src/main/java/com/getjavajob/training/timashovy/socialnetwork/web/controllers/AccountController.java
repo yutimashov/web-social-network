@@ -91,7 +91,7 @@ public class AccountController {
 
     @GetMapping("/all-accounts")
     public ModelAndView allAccountsAjax(@RequestParam("pageNumber") Integer pageNumber, ModelAndView modelAndView) {
-        modelAndView.setViewName("search/ajaxFragment");
+        modelAndView.setViewName("account/ajaxFragment");
         modelAndView.addObject("accounts", accountService.getAccounts(pageNumber, 40));
         return modelAndView;
     }
