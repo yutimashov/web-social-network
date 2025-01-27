@@ -28,6 +28,8 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
+
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
@@ -83,8 +85,15 @@ public class AccountController {
 
     @GetMapping("/all")
     public String allAccounts(Model model) {
-        model.addAttribute("accounts", accountService.getAccounts( 0, 10));
+        model.addAttribute("accounts", accountService.getAccounts( 0, 40));
         return "account/all";
+    }
+
+    @GetMapping("/all-accounts")
+    public ModelAndView allAccountsAjax(@RequestParam("pageNumber") Integer pageNumber, ModelAndView modelAndView) {
+        modelAndView.setViewName("search/ajaxFragment");
+        modelAndView.addObject("accounts", accountService.getAccounts(pageNumber, 40));
+        return modelAndView;
     }
 
     @GetMapping("/delete")
