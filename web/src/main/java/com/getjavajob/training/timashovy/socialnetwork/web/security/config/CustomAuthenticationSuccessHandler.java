@@ -24,6 +24,15 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         this.accountService = accountService;
     }
 
+    /**
+     * Add authenticated account to session and redirect account to home page.
+     *
+     * @param request        the request which caused the successful authentication
+     * @param response       the response
+     * @param authentication the <tt>Authentication</tt> object which was created during
+     *                       the authentication process.
+     * @throws IOException when cannot form response for sending redirect
+     */
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
