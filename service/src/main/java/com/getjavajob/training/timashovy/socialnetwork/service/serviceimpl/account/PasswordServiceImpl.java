@@ -45,11 +45,6 @@ public class PasswordServiceImpl implements PasswordService {
     }
 
     @Override
-    public Optional<Password> findPasswordByEmail(String email) {
-        return passwordRepository.findByEmail(email);
-    }
-
-    @Override
     public void delete(Long id) {
         passwordRepository.delete(id);
     }

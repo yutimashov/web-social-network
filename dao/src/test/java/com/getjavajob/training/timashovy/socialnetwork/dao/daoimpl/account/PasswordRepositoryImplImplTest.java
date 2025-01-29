@@ -66,20 +66,6 @@ class PasswordRepositoryImplImplTest {
     }
 
     @Nested
-    @DisplayName("Optional<Password> findByEmail(String email)")
-    class TestGetPasswordByEmail {
-
-        @Test
-        void shouldReturnOptionalWithPasswordWhenPasswordExists() {
-            String email = "test@example.com";
-            when(passwordRepositorySpringData.findByAccountEmail(email)).thenReturn(Optional.ofNullable(password));
-            Optional<Password> result = passwordRepositoryImpl.findByEmail(email);
-            assertEquals(Optional.of(password), result);
-        }
-
-    }
-
-    @Nested
     @DisplayName("void delete(Long id)")
     class TestDelete {
 

@@ -37,11 +37,6 @@ public class PasswordRepositoryImpl implements PasswordRepository {
     }
 
     @Override
-    public Optional<Password> findByEmail(String email) {
-        return passwordRepositorySpringData.findByAccountEmail(email);
-    }
-
-    @Override
     public void delete(Long id) {
         if (passwordRepositorySpringData.existsById(id)) {
             passwordRepositorySpringData.deleteById(id);
