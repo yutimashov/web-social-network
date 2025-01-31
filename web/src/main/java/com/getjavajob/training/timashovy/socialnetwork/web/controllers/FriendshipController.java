@@ -58,11 +58,6 @@ public class FriendshipController {
         return modelAndView;
     }
 
-    @GetMapping("/requests")
-    protected String showAllRequests() {
-        return "friendship/requests/requests";
-    }
-
     @GetMapping("/requests/incoming")
     public String showIncomingRequests(@SessionAttribute("account") Account account,
                                        Model model) {
