@@ -21,6 +21,9 @@ import org.springframework.security.web.firewall.StrictHttpFirewall;
 
 import static com.getjavajob.training.timashovy.socialnetwork.web.util.UrlStatusParameter.AUTH_DATA_ERROR;
 
+/**
+ * Configuration for Spring Security module
+ */
 @Configuration
 public class WebSecurityConfig {
 
@@ -31,19 +34,28 @@ public class WebSecurityConfig {
     @Value("${security.token-validity-duration}")
     private int tokenValidityDurationSec;
 
+    @Value("JSESSIONID")
+    private String sessionCookieName;
+
+    @Value("/login")
+    private String loginUrl;
+
+    @Value("/WEB-INF/jsp/auth/login.jsp")
+    private String loginPage;
+
+    @Value("/register")
+    private String registerUrl;
+
+    @Value("/WEB-INF/jsp/auth/register.jsp")
+    private String registerPage;
+
     public WebSecurityConfig(UserDetailsService accountDetailsService, AuthenticationSuccessHandler successHandler) {
         this.accountDetailsService = accountDetailsService;
         this.successHandler = successHandler;
     }
 
-    //TODO: all conventions review
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        final String sessionCookieName = "JSESSIONID";
-        final String loginUrl = "/login";
-        final String loginPage = "/WEB-INF/jsp/auth/login.jsp";
-        final String registerUrl = "/register";
-        final String registerPage = "/WEB-INF/jsp/auth/register.jsp";
         return http
                 .addFilterBefore(new SetEncodingFilter(), WebAsyncManagerIntegrationFilter.class)
                 .addFilterAfter(new AccountSessionFilter(), RememberMeAuthenticationFilter.class)
@@ -76,10 +88,10 @@ public class WebSecurityConfig {
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService());
-        provider.setPasswordEncoder(passwordEncoder());
-        return provider;
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService());
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        return authenticationProvider;
     }
 
     @Bean
