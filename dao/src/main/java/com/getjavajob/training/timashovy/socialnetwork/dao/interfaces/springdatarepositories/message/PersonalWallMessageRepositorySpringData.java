@@ -10,7 +10,14 @@ import java.util.List;
 public interface PersonalWallMessageRepositorySpringData extends CrudRepository<PersonalWallMessage, Long> {
 
     @Query("""
-            select pm from PersonalWallMessage pm where pm.accountReceiverId = :accountId order by pm.creationDate desc
+            select
+                pm
+            from
+                PersonalWallMessage pm
+            where
+                pm.accountReceiverId = :accountId
+            order by
+                pm.creationDate desc
             """)
     List<PersonalWallMessage> findAllByAccountReceiverIdOrderByCreationDateDesc(@Param("accountId") Long accountId);
 

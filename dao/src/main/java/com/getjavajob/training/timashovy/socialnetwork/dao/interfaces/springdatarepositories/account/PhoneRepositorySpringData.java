@@ -10,7 +10,15 @@ import java.util.List;
 
 public interface PhoneRepositorySpringData extends CrudRepository<Phone, Long> {
 
-    @Query("select p.number from Phone p where p.account.id = :accountId and p.phoneType = :phoneType")
+    @Query("""
+                select
+                    p.number
+                from
+                    Phone p
+                where
+                    p.account.id = :accountId
+                    and p.phoneType = :phoneType
+            """)
     List<String> findPhoneNumbersByAccountIdAndPhoneType(@Param("accountId") Long accountId,
                                                          @Param("phoneType") PhoneType phoneType);
 

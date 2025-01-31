@@ -10,8 +10,19 @@ import java.util.List;
 public interface PersonalMessageRepositorySpringData extends CrudRepository<PersonalMessage, Long> {
 
     @Query("""
-            select pm from PersonalMessage pm where (pm.accountAuthorId = :authorId and pm.destinationId = :receiverId)
-            or (pm.accountAuthorId = :receiverId and pm.destinationId = :authorId)
+            select
+                pm
+            from
+                PersonalMessage pm
+            where
+                (
+                    pm.accountAuthorId = :authorId
+                    and pm.destinationId = :receiverId
+                )
+                or (
+                    pm.accountAuthorId = :receiverId
+                    and pm.destinationId = :authorId
+                )
             """)
     List<PersonalMessage> findAllPersonalMessagesBetweenAccounts(@Param("authorId") Long authorId,
                                                                  @Param("receiverId") Long receiverId);
