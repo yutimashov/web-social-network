@@ -9,7 +9,7 @@
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
-<div class="container-xl mt-4">
+<div class="container-xl mt-4" id="friends">
     <c:choose>
         <c:when test="${requestScope.friends.size() == 0}">
             <div class="alert alert-primary" role="alert">
@@ -51,5 +51,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
+<script src="<c:url value="/static/js/ajax-friends.js" />"></script>
 </body>
 </html>

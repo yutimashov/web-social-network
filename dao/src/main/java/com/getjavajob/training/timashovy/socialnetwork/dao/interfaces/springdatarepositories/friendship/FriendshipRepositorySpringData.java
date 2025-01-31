@@ -1,6 +1,9 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.springdatarepositories.friendship;
 
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.friendship.Friendship;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -20,12 +23,14 @@ public interface FriendshipRepositorySpringData extends CrudRepository<Friendshi
     int acceptRequest(@Param("requester") Long requesterId, @Param("accepter") Long accepterId);
 
     @Query("""
-            select
-                case when f.initiatorAccountId = :accountId then f.friendAccountId else f.initiatorAccountId end
-                from Friendship f where (f.initiatorAccountId = :accountId or f.friendAccountId = :accountId)
+            select a
+                from Account a
+                join Friendship f on (f.initiatorAccountId = a.id or f.friendAccountId = a.id)
+                where (f.initiatorAccountId = :accountId OR f.friendAccountId = :accountId)
+                and a.id != :accountId
                 and f.friendshipStatus = true
             """)
-    List<Long> getFriendsIds(@Param("accountId") Long accountId);
+    Page<Account> getFriends(@Param("accountId") Long accountId, Pageable page);
 
     @Query("""
             select f.requester.id from Friendship f where f.friendshipStatus = false and f.receiver.id = :accountId

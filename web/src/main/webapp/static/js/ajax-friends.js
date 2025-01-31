@@ -1,5 +1,6 @@
-const accountsContainer = document.getElementById('accounts');
+const accountsContainer = document.getElementById('friends');
 let pageNumber = 1;
+const id = new URLSearchParams(new URL(window.location.href).search).get('id');
 
 window.addEventListener('scroll', () => {
     if (Math.ceil(window.scrollY + window.innerHeight) >= document.documentElement.scrollHeight) {
@@ -18,7 +19,7 @@ function handleAppendSearchResultsResponse(responseText) {
 
 function makeRequest(pageNumber, callback) {
     const xhr = new XMLHttpRequest();
-    xhr.open("GET", `/account/all-accounts?pageNumber=${pageNumber}`, true);
+    xhr.open("GET", `/friends/all-friends?id=${id}&pageNumber=${pageNumber}`, true);
     xhr.timeout = 6000;
     xhr.onload = function () {
         if (xhr.status === 200) {

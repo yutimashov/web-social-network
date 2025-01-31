@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/friends")
@@ -45,8 +46,16 @@ public class FriendshipController {
     @GetMapping()
     public String showAllFriends(Model model,
                                  @RequestParam("id") Long id) {
-        model.addAttribute("friends", accountService.getFriends(id));
+        model.addAttribute("friends", accountService.getFriends(id, 0, 40));
         return "friendship/friends";
+    }
+
+    @GetMapping("/all-friends")
+    public ModelAndView showAllFriendsAjax(ModelAndView modelAndView,
+                                           @RequestParam("id") Long id, @RequestParam("pageNumber") Integer pageNumber) {
+        modelAndView.setViewName("friendship/ajaxFragment");
+        modelAndView.addObject("friends", accountService.getFriends(id, pageNumber, 40));
+        return modelAndView;
     }
 
     @GetMapping("/requests")
