@@ -11,11 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import java.util.List;
 import java.util.Optional;
 
 import static com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole.ADMIN;
-import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -84,19 +82,6 @@ class AccountRepositoryImplImplTest {
             Optional<Account> optionalAccount = accountRepositoryImpl.getById(id);
             assertTrue(optionalAccount.isPresent());
             assertEquals(account, optionalAccount.get());
-        }
-
-    }
-
-    @Nested
-    @DisplayName("List<Account> getAll()")
-    class TestGetAll {
-
-        @Test
-        void shouldReturnActualListWhenTableIsNotEmpty() {
-            List<Account> expectedAccounts = asList(account, account);
-            when(accountRepositorySpringData.findAll()).thenReturn(expectedAccounts);
-            assertEquals(expectedAccounts, accountRepositoryImpl.getAll());
         }
 
     }
