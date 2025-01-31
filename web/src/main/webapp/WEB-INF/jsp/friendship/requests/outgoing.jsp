@@ -20,7 +20,7 @@
                 <a href="${pageContext.request.contextPath}/account?id=${account.id}">${account.firstName} ${account.lastName}</a>
                 <span>&nbsp;&nbsp;</span>
                 <a href="${pageContext.request.contextPath}/friends/delete?id=${account.id}">
-                    <button class="btn btn-danger">Revoke request</button>
+                    <button class="btn btn-danger btn-sm">Revoke request</button>
                 </a>
                 <br />
             </c:forEach>

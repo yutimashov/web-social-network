@@ -24,7 +24,7 @@
                 </a>
                 <span>&nbsp;&nbsp;</span>
                 <a href="${pageContext.request.contextPath}/friends/delete?id=${account.id}">
-                    <button class="btn btn-danger">Decline request</button>
+                    <button class="btn btn-danger btn-sm">Decline request</button>
                 </a>
             </c:forEach>
         </c:otherwise>

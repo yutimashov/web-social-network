@@ -40,7 +40,7 @@
                             <a href="${pageContext.request.contextPath}/account?id=${friend.id}">${friend.firstName} ${friend.lastName}</a>
                         </h5>
                         <a href="${pageContext.request.contextPath}/friends/delete?id=${friend.id}"
-                           class="btn btn-danger"
+                           class="btn btn-danger btn-sm"
                            role="button">Delete friend</a>
                     </div>
                 </div>
