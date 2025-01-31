@@ -34,19 +34,19 @@ public class WebSecurityConfig {
     @Value("${security.token-validity-duration}")
     private int tokenValidityDurationSec;
 
-    @Value("JSESSIONID")
+    @Value("${security.session-cookie-name}")
     private String sessionCookieName;
 
-    @Value("/login")
+    @Value("${security.login-url}")
     private String loginUrl;
 
-    @Value("/WEB-INF/jsp/auth/login.jsp")
+    @Value("${security.login-page}")
     private String loginPage;
 
-    @Value("/register")
+    @Value("${security.register-url}")
     private String registerUrl;
 
-    @Value("/WEB-INF/jsp/auth/register.jsp")
+    @Value("${security.register-page}")
     private String registerPage;
 
     public WebSecurityConfig(UserDetailsService accountDetailsService, AuthenticationSuccessHandler successHandler) {
