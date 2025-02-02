@@ -5,29 +5,19 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
-import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
-import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AdminService;
-import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
-import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneService;
-import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.XmlDataHandler;
+import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.*;
 import com.getjavajob.training.timashovy.socialnetwork.service.util.exceptions.ServiceException;
 import com.getjavajob.training.timashovy.socialnetwork.web.dto.AccountDto;
 import com.getjavajob.training.timashovy.socialnetwork.web.mappers.AccountMapper;
 import com.getjavajob.training.timashovy.socialnetwork.web.util.exceptions.WebException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
@@ -52,6 +42,8 @@ public class AccountController {
     private final PhoneService phoneService;
     private final AdminService adminService;
     private final XmlDataHandler xmlDataHandler;
+    private final int accountPageSize = 40;
+    private final int accountPageInitialNumber = 0;
     private static final Logger logger = getLogger(AccountController.class);
 
     public AccountController(AccountService accountService, MessageService messageService, PhoneService phoneService,
@@ -85,14 +77,15 @@ public class AccountController {
 
     @GetMapping("/all")
     public String allAccounts(Model model) {
-        model.addAttribute("accounts", accountService.getAccounts( 0, 40));
+        model.addAttribute("accounts", accountService.getAccounts(accountPageInitialNumber,
+                accountPageSize));
         return "account/all";
     }
 
     @GetMapping("/all-accounts")
     public ModelAndView allAccountsAjax(@RequestParam("pageNumber") Integer pageNumber, ModelAndView modelAndView) {
         modelAndView.setViewName("account/ajaxFragment");
-        modelAndView.addObject("accounts", accountService.getAccounts(pageNumber, 40));
+        modelAndView.addObject("accounts", accountService.getAccounts(pageNumber, accountPageSize));
         return modelAndView;
     }
 
