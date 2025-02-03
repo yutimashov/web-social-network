@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.account;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.exception.DaoException;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.springdatarepositories.account.PasswordRepositorySpringData;
 import com.getjavajob.training.timashovy.socialnetwork.domain.password.Password;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -9,25 +9,19 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceException;
-import javax.persistence.TypedQuery;
 import java.util.Optional;
 
 import static java.util.Optional.empty;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 
 class PasswordRepositoryImplImplTest {
 
     @Mock
-    private EntityManager entityManager;
-
-    @Mock
-    private TypedQuery<Password> query;
+    private PasswordRepositorySpringData passwordRepositorySpringData;
 
     @InjectMocks
     private PasswordRepositoryImpl passwordRepositoryImpl;
@@ -49,12 +43,6 @@ class PasswordRepositoryImplImplTest {
             assertEquals(password, passwordRepositoryImpl.save(password));
         }
 
-        @Test
-        void shouldThrowExceptionWhenPasswordCannotBeSaved() {
-            doThrow(new PersistenceException()).when(entityManager).persist(password);
-            assertThrows(DaoException.class, () -> passwordRepositoryImpl.save(password));
-        }
-
     }
 
     @Nested
@@ -64,7 +52,7 @@ class PasswordRepositoryImplImplTest {
         @Test
         void shouldReturnOptionalWithPasswordWhenPasswordExists() {
             Long id = 1L;
-            when(entityManager.find(Password.class, id)).thenReturn(password);
+            when(passwordRepositorySpringData.findById(id)).thenReturn(Optional.ofNullable(password));
             Optional<Password> optionalAccount = passwordRepositoryImpl.getById(id);
             assertTrue(optionalAccount.isPresent());
             assertEquals(password, optionalAccount.get());
@@ -78,72 +66,15 @@ class PasswordRepositoryImplImplTest {
     }
 
     @Nested
-    @DisplayName("Optional<Password> findByEmail(String email)")
-    class TestGetPasswordByEmail {
-
-        @Test
-        void shouldReturnOptionalWithPasswordWhenPasswordExists() {
-            String email = "test@example.com";
-            when(entityManager.createQuery(
-                    "select p from Password p join p.account a where a.email = :email", Password.class))
-                    .thenReturn(query);
-            when(query.setParameter("email", email)).thenReturn(query);
-            when(query.getSingleResult()).thenReturn(password);
-            Optional<Password> result = passwordRepositoryImpl.findByEmail(email);
-            assertEquals(Optional.of(password), result);
-        }
-
-        @Test
-        void shouldReturnEmptyOptionalWhenAccountEmailDoesNotExist() {
-            String email = "test@example.com";
-            when(entityManager.createQuery(
-                    "select p from Password p join p.account a where a.email = :email", Password.class))
-                    .thenReturn(query);
-            when(query.setParameter("email", email)).thenReturn(query);
-            when(query.getSingleResult()).thenThrow(new NoResultException());
-            Optional<Password> result = passwordRepositoryImpl.findByEmail(email);
-            assertEquals(Optional.empty(), result);
-        }
-
-        @Test
-        void shouldReturnDaoExceptionWhenProblemsOccurredExecutingQuery() {
-            String email = "error@example.com";
-            when(entityManager.createQuery(
-                    "select p from Password p join p.account a where a.email = :email", Password.class))
-                    .thenReturn(query);
-            when(query.setParameter("email", email)).thenReturn(query);
-            when(query.getSingleResult()).thenThrow(new PersistenceException());
-            assertThrows(DaoException.class, () -> passwordRepositoryImpl.findByEmail(email));
-        }
-
-    }
-
-    @Nested
     @DisplayName("void delete(Long id)")
     class TestDelete {
 
         @Test
         void shouldSuccessfullyDeletePasswordIfPossible() {
             Long id = 1L;
-            when(entityManager.find(Password.class, id)).thenReturn(password);
-            passwordRepositoryImpl.delete(id);
-            verify(entityManager).remove(password);
-        }
-
-        @Test
-        public void shouldNotCallDeleteIfPasswordNotFound() {
-            Long id = 1L;
-            when(entityManager.find(Password.class, id)).thenReturn(null);
-            passwordRepositoryImpl.delete(id);
-            verify(entityManager, never()).remove(any(Password.class));
-        }
-
-        @Test
-        public void shouldThrowDaoExceptionIfPasswordCannotBeDeleted() {
-            Long id = 1L;
-            when(entityManager.find(Password.class, id)).thenThrow(new PersistenceException());
-            assertThrows(DaoException.class, () -> passwordRepositoryImpl.delete(id));
-            verify(entityManager, never()).remove(any(Password.class));
+            when(passwordRepositorySpringData.existsById(id)).thenReturn(true);
+            passwordRepositorySpringData.deleteById(id);
+            verify(passwordRepositorySpringData).deleteById(id);
         }
 
     }

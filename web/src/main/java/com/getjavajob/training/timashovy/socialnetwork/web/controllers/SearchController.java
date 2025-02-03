@@ -1,11 +1,14 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.controllers;
 
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.SearchService;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 @Controller
 public class SearchController {
@@ -16,6 +19,7 @@ public class SearchController {
     private static final String ACCOUNT_SEARCH_TYPE = "account";
     private static final String GROUP_SEARCH_TYPE = "group";
     private final SearchService searchService;
+    private static final Logger logger = getLogger(SearchController.class);
 
     public SearchController(SearchService searchService) {
         this.searchService = searchService;
@@ -25,6 +29,7 @@ public class SearchController {
     public String doGet(@RequestParam("searchQuery") String searchQuery,
                         @RequestParam("searchType") String searchType,
                         Model model) {
+        logger.info("SearchQuery: {}, searchType: {}", searchQuery, searchType);
         model.addAttribute("searchQuery", searchQuery);
         model.addAttribute("searchType", searchType);
         long numberOfPages = 0;

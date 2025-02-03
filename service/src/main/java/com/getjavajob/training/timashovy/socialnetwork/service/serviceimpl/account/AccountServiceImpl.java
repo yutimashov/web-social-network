@@ -1,8 +1,8 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.account;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.AccountRepository;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipCheckerDao;
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.friendship.FriendshipDao;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.repositories.account.AccountRepository;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.repositories.friendship.FriendshipCheckerRepository;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.repositories.friendship.FriendshipRepository;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PasswordService;
@@ -10,6 +10,8 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneS
 import com.getjavajob.training.timashovy.socialnetwork.service.util.exceptions.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,24 +21,21 @@ import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
-/**
- * Singleton class for working with methods, managing Account functionality.
- */
 @Service
 public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountDao;
-    private final FriendshipDao friendshipDao;
-    private final FriendshipCheckerDao friendshipCheckerDao;
+    private final FriendshipRepository friendshipRepository;
+    private final FriendshipCheckerRepository friendshipCheckerDao;
     private final PhoneService phoneService;
     private final PasswordService passwordService;
     private static final Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class);
 
-    public AccountServiceImpl(AccountRepository accountDao, FriendshipDao friendshipDao,
-                              FriendshipCheckerDao friendshipCheckerDao, PhoneService phoneService,
+    public AccountServiceImpl(AccountRepository accountDao, FriendshipRepository friendshipRepository,
+                              FriendshipCheckerRepository friendshipCheckerDao, PhoneService phoneService,
                               PasswordService passwordService) {
         this.accountDao = accountDao;
-        this.friendshipDao = friendshipDao;
+        this.friendshipRepository = friendshipRepository;
         this.friendshipCheckerDao = friendshipCheckerDao;
         this.phoneService = phoneService;
         this.passwordService = passwordService;
@@ -97,8 +96,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<Account> getAll() {
-        return accountDao.getAll();
+    public List<Account> getAccounts(int pageNumber, int pageSize) {
+        return accountDao.getAccounts(PageRequest.of(pageNumber, pageSize));
     }
 
     /**
@@ -123,7 +122,7 @@ public class AccountServiceImpl implements AccountService {
             throw new IllegalArgumentException("Account cannot send friend request to themselves");
         }
         if (!friendshipCheckerDao.checkFriendshipRecordExistence(requesterId, accepterId)) {
-            friendshipDao.sendRequest(accountDao.getById(requesterId).get(), accountDao.getById(accepterId).get());
+            friendshipRepository.sendRequest(accountDao.getById(requesterId).get(), accountDao.getById(accepterId).get());
             return;
         }
         if (friendshipCheckerDao.checkUsersAreFriends(requesterId, accepterId)) {
@@ -133,7 +132,7 @@ public class AccountServiceImpl implements AccountService {
         }
         logger.info("going to make friendship: requester with id = {} and accepter with id = {}", requesterId,
                 accepterId);
-        friendshipDao.acceptRequest(requesterId, accepterId);
+        friendshipRepository.acceptRequest(requesterId, accepterId);
     }
 
     @Transactional
@@ -141,26 +140,19 @@ public class AccountServiceImpl implements AccountService {
     public void deleteFriend(Long accountId, Long deletingFriendId) {
         validateAccountId(accountId);
         validateAccountId(deletingFriendId);
-        friendshipDao.deleteFriend(accountId, deletingFriendId);
+        friendshipRepository.deleteFriend(accountId, deletingFriendId);
     }
 
-    @Override
-    public List<Account> getFriends(Long accountId) {
+    public List<Account> getFriends(Long accountId, int page, int size) {
         validateAccountId(accountId);
-        List<Long> friendsId = friendshipDao.getFriendsIds(accountId);
-        List<Account> friends = new ArrayList<>();
-        for (Long friendId : friendsId) {
-            if (accountDao.getById(friendId).isPresent()) {
-                friends.add(accountDao.getById(friendId).get());
-            }
-        }
-        return friends;
+        Page<Account> friendsPage = friendshipRepository.getFriends(accountId, PageRequest.of(page, size));
+        return friendsPage.getContent();
     }
 
     @Override
     public List<Account> getIncomingFriendRequests(Long accountId) {
         validateAccountId(accountId);
-        List<Long> friendRequestsId = friendshipDao.getIncomingRequests(accountId);
+        List<Long> friendRequestsId = friendshipRepository.getIncomingRequests(accountId);
         List<Account> followers = new ArrayList<>();
         for (Long followerId : friendRequestsId) {
             if (accountDao.getById(followerId).isPresent()) {
@@ -173,7 +165,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public List<Account> getOutgoingFriendRequests(Long accountId) {
         validateAccountId(accountId);
-        List<Long> friendRequestsId = friendshipDao.getOutgoingRequests(accountId);
+        List<Long> friendRequestsId = friendshipRepository.getOutgoingRequests(accountId);
         List<Account> followers = new ArrayList<>();
         for (Long followerId : friendRequestsId) {
             if (accountDao.getById(followerId).isPresent()) {

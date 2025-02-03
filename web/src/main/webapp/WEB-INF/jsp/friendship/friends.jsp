@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <c:set var="rootUrl" value="${pageContext.request.contextPath}"/>
 <html>
 <head>
@@ -9,7 +9,7 @@
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
-<div class="container-xl mt-4">
+<div class="container-xl mt-4" id="friends">
     <c:choose>
         <c:when test="${requestScope.friends.size() == 0}">
             <div class="alert alert-primary" role="alert">
@@ -40,7 +40,7 @@
                             <a href="${pageContext.request.contextPath}/account?id=${friend.id}">${friend.firstName} ${friend.lastName}</a>
                         </h5>
                         <a href="${pageContext.request.contextPath}/friends/delete?id=${friend.id}"
-                           class="btn btn-danger"
+                           class="btn btn-danger btn-sm"
                            role="button">Delete friend</a>
                     </div>
                 </div>
@@ -51,5 +51,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
+<script src="<c:url value="/static/js/ajax-friends.js" />"></script>
 </body>
 </html>

@@ -1,6 +1,11 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.filters;
 
-import javax.servlet.*;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+
 import java.io.IOException;
 
 public class SetEncodingFilter implements Filter {

@@ -24,11 +24,9 @@ import static org.springframework.http.ResponseEntity.status;
 public class ImageController {
 
     private final AccountService accountService;
-    //private final GroupService groupService;
     private final MessageService messageService;
 
     public ImageController(AccountService accountService,
-                           //GroupService groupService,
                            MessageService messageService) {
         this.accountService = accountService;
         //this.groupService = groupService;
@@ -44,16 +42,6 @@ public class ImageController {
         }
         return status(NOT_FOUND).build();
     }
-
-//    @GetMapping("/group/avatar")
-//    public ResponseEntity<InputStreamSource> groupAvatar(@RequestParam("id") Long id) {
-//        Optional<Group> groupOptional = groupService.findById(id);
-//        if (groupOptional.isPresent()) {
-//            InputStream avatar = new ByteArrayInputStream(groupOptional.get().getAvatar());
-//            return createImageResponse(avatar);
-//        }
-//        return status(NOT_FOUND).build();
-//    }
 
     @GetMapping("/group-message/image")
     public ResponseEntity<InputStreamSource> groupPostImage(@RequestParam("id") Long id) {

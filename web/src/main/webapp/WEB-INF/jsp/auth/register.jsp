@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="rootUrl" value="${pageContext.request.contextPath}"/>
 <html>
 <head>
@@ -8,7 +7,6 @@
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
-<jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <section class="bg-light py-3 py-md-5 d-flex justify-content-center align-items-center min-vh-100">
     <div class="container">
         <div class="row justify-content-center">

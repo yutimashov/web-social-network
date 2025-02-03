@@ -1,4 +1,4 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <div id="searchResult">
     <c:set var="rootUrl" value="${pageContext.request.contextPath}"/>
     <c:forEach var="account" items="${requestScope.accounts}">

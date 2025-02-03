@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <c:set var="rootUrl" value="${pageContext.request.contextPath}"/>
 <c:set var="sessionAccountId" value="${sessionScope.account.id}"/>
 <c:set var="pageAccountId" value="${param.id}"/>
@@ -109,14 +109,22 @@
                 <div class="card mb-1">
                     <div class="card-header">Friends</div>
                     <div class="card-body row gx-3">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <a class="link-underline-dark" href="${rootUrl}/friends?id=${pageAccountId}"><i
                                     class="fa-solid fa-user-group"></i>&nbsp;Friends</a>
                         </div>
                         <div class="col-md-6">
                             <c:if test="${sessionAccountId eq pageAccountId}">
-                                <a class="link-underline-dark" href="${rootUrl}/friends/requests"><i
-                                        class="fa-solid fa-bell"></i>&nbsp;Requests</a><br>
+                                <a class="link-underline-dark"
+                                   href="${pageContext.request.contextPath}/friends/requests/outgoing"><i
+                                        class="fa-solid fa-arrow-up"></i>&nbsp;Outgoing requests</a><br>
+                            </c:if>
+                        </div>
+                        <div class="col-md-6">
+                            <c:if test="${sessionAccountId eq pageAccountId}">
+                                <a class="link-underline-dark"
+                                   href="${pageContext.request.contextPath}/friends/requests/incoming"><i
+                                        class="fa-solid fa-arrow-down"></i>&nbsp;Incoming requests</a><br>
                             </c:if>
                         </div>
                     </div>
@@ -206,6 +214,6 @@
     </div>
 </div>
 <jsp:include page="/WEB-INF/jsp/include/footer.jsp"/>
-<script src="${rootUrl}/static/js/account.js"></script>
+<script src="<c:url value="/static/js/account.js" />"></script>
 </body>
 </html>

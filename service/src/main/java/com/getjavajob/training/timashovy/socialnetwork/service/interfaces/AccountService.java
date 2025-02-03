@@ -20,13 +20,13 @@ public interface AccountService {
 
     Optional<Account> getById(Long accountId);
 
-    List<Account> getAll();
+    List<Account> getAccounts(int pageNumber, int pageSize);
 
     void addFriend(Long accountId, Long friendId);
 
     void deleteFriend(Long accountId, Long friendId);
 
-    List<Account> getFriends(Long accountId);
+    List<Account> getFriends(Long accountId, int page, int size);
 
     List<Account> getIncomingFriendRequests(Long accountId);
 
