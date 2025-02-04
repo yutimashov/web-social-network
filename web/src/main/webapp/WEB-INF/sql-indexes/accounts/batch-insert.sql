@@ -41,42 +41,36 @@ DO
 $$
     DECLARE
         batch_size INT := 100000;
-        total_rows INT := 100000000;
+        total_rows INT := 25000000;
         iterations INT := total_rows / batch_size;
     BEGIN
         FOR i IN 1..iterations
             LOOP
                 BEGIN
-                    -- insert data into accounts tables and returning inserted email and id
-                    WITH inserted_accounts AS (
-                        INSERT INTO account_data.accounts (first_name, last_name, email, birth_date,
-                                                           skype, role_type, registration_date)
-                            SELECT random_first_name()                                       AS first_name,
-                                   random_last_name()                                        AS last_name,
-                                   LOWER(random_first_name() || '.' || random_last_name() || '.' || s ||
-                                         '@gmail.com')                                       AS email,
-                                   DATE '1960-01-01' +
-                                   (random() * (DATE '2010-12-31' - DATE '1960-01-01'))::int AS birth_date,
-                                   LOWER(random_first_name() || '.' || random_last_name())   AS skype,
-                                   CASE WHEN random() < 0.2 THEN 'ADMIN' ELSE 'REGULAR' END  AS role_type,
-                                   CURRENT_TIMESTAMP - (random() * INTERVAL '365 days')      AS registration_date
-                            FROM generate_series(1, batch_size) AS s
-                            RETURNING id, email),
-                         -- insert data into password table
+                    WITH generated_names AS (SELECT s,
+                                                    random_first_name() AS first_name,
+                                                    random_last_name()  AS last_name
+                                             FROM generate_series(1, batch_size) AS s),
+                         inserted_accounts AS (
+                             INSERT INTO account_data.accounts (first_name, last_name, email,
+                                                                registration_date)
+                                 SELECT gn.first_name,
+                                        gn.last_name,
+                                        LOWER(gn.first_name || '.' || gn.last_name || '.' || s || '@gmail.com') AS email,
+                                        CURRENT_TIMESTAMP - (random() * INTERVAL '365 days')                    AS registration_date
+                                 FROM generated_names gn
+                                 RETURNING id, email),
                          inserted_passwords AS (
                              INSERT INTO account_data.account_passwords (id, hash_password)
                                  SELECT id, md5(email)
                                  FROM inserted_accounts
                                  RETURNING id)
-                         -- insert data into phones table
                     INSERT
                     INTO account_data.account_phones (account_id, phone_type, phone_number)
                     SELECT id,
                            CASE WHEN random() < 0.5 THEN 'PERSONAL' ELSE 'WORKING' END AS phone_type,
                            generate_phone_number()                                     AS phone_number
                     FROM inserted_passwords;
-
-                    -- printing progress of inserting batches
                     RAISE NOTICE 'Inserted % rows (batch % of %)', batch_size, i, iterations;
                 END;
             END LOOP;
