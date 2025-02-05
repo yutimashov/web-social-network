@@ -5,7 +5,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
-import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.*;
+import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
+import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AdminService;
+import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
+import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneService;
+import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.XmlDataHandler;
 import com.getjavajob.training.timashovy.socialnetwork.service.util.exceptions.ServiceException;
 import com.getjavajob.training.timashovy.socialnetwork.web.dto.AccountDto;
 import com.getjavajob.training.timashovy.socialnetwork.web.mappers.AccountMapper;
@@ -16,7 +20,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -59,9 +68,10 @@ public class AccountController {
     public String account(@RequestParam("id") Long accountId,
                           @SessionAttribute Account account,
                           Model model) {
-        Optional<Account> maybeAccount = accountService.getById(accountId);
+        Optional<Account> maybeAccount = Objects.equals(accountId, account.getId()) ? Optional.of(account)
+                : accountService.getById(accountId);
         if (maybeAccount.isPresent()) {
-            if (accountService.checkFriendshipRecordExistence(account.getId(), accountId)) {
+            if (accountService.checkFriendshipRecordExistence(maybeAccount.get().getId(), accountId)) {
                 model.addAttribute("alreadySentFriendRequest", true);
             }
             model.addAttribute("account", maybeAccount.get());
