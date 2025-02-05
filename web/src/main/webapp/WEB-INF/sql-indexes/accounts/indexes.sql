@@ -1,4 +1,5 @@
 -- 1. optimizing 'login' logic
+
 -- 1.1 getting account by provided email
 EXPLAIN (ANALYZE)
 SELECT *
@@ -7,27 +8,23 @@ WHERE email = 'www@gmail.com';
 
 CREATE INDEX ON account_data.accounts (email);
 /*
- Cost of query:
-    | before | 1548.653 ms |
-    | after  | 0.113    ms |
- _______________________
- index creation time: 1 min 4 secs.
- boost:               13 704.9 times
+  | before | 1548.653 ms    |
+  | after  | 0.113    ms    |
+  | boost  | 13 704.9 times |
  */
 
--- 2. optimizing 'getting account info after login' logic
--- 2.1 getting account phone numbers
+-- 1.2 getting account phone numbers
 EXPLAIN (ANALYZE)
 SELECT *
 FROM account_data.account_phones
 WHERE account_id = 100000001
   AND phone_type = 'PERSONAL';
 
-CREATE INDEX ON account_data.account_phones (id, phone_type);
+CREATE INDEX ON account_data.account_phones (account_id, phone_type);
 /*
- | before | 4967.146 ms |
- | after  | 0.026    ms |
- _______________________
- index creation time: 5 min 12 secs
- boost:               130 724.8 times
+  | before | 4967.146 ms    |
+  | after  | 0.067    ms    |
+  | boost  | 74 136.5 times |
  */
+
+ -- Total improvements 'login logic': before: 2.52 s.; after all optimization:
