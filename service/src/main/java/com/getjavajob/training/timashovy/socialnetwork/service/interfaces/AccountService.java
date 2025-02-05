@@ -26,7 +26,7 @@ public interface AccountService {
 
     void deleteFriend(Long accountId, Long friendId);
 
-    List<Account> getFriends(Long accountId, int page, int size);
+    List<Account> getFriends(Long accountId, Long lastId, int pageSize);
 
     List<Account> getIncomingFriendRequests(Long accountId);
 

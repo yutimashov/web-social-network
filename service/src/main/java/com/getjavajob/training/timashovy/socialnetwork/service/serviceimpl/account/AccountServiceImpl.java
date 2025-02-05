@@ -10,7 +10,6 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneS
 import com.getjavajob.training.timashovy.socialnetwork.service.util.exceptions.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -143,10 +142,9 @@ public class AccountServiceImpl implements AccountService {
         friendshipRepository.deleteFriend(accountId, deletingFriendId);
     }
 
-    public List<Account> getFriends(Long accountId, int page, int size) {
+    public List<Account> getFriends(Long accountId, Long lastId, int pageSize) {
         validateAccountId(accountId);
-        Page<Account> friendsPage = friendshipRepository.getFriends(accountId, PageRequest.of(page, size));
-        return friendsPage.getContent();
+        return friendshipRepository.getFriends(accountId, lastId, pageSize);
     }
 
     @Override

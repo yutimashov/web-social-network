@@ -5,8 +5,6 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.springdata
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.friendship.Friendship;
 import org.slf4j.Logger;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -63,8 +61,8 @@ public class FriendshipRepositoryImpl implements FriendshipRepository {
     }
 
     @Override
-    public Page<Account> getFriends(Long accountId, Pageable page) {
-        return friendshipRepositorySpringData.getFriends(accountId, page);
+    public List<Account> getFriends(Long accountId, Long lastId, int pageSize) {
+        return friendshipRepositorySpringData.findFriendsByAccountId(accountId, lastId, pageSize);
     }
 
 }

@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
-import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Collections;
+import java.util.List;
 
 @Controller
 @RequestMapping("/friends")
@@ -45,17 +47,24 @@ public class FriendshipController {
 
     @GetMapping()
     public String showAllFriends(Model model,
-                                 @RequestParam("id") Long id) {
-        model.addAttribute("friends", accountService.getFriends(id, 0, 40));
+                                 @RequestParam("id") Long id,
+                                 @RequestParam(required = false, defaultValue = "0") Long lastId,
+                                 @RequestParam(defaultValue = "100") int limit) {
+        List<Account> friendsBatch = accountService.getFriends(id, lastId, limit);
+        if (!friendsBatch.isEmpty()) {
+            Long newLastId = friendsBatch.stream()
+                    .map(Account::getId)
+                    .max(Long::compareTo)
+                    .orElse(lastId);
+            model.addAttribute("friends", friendsBatch);
+            model.addAttribute("lastId", newLastId);
+            model.addAttribute("limit", limit);
+            model.addAttribute("accountId", id);
+        } else {
+            model.addAttribute("friends", Collections.emptyList());
+            model.addAttribute("hasMore", false);
+        }
         return "friendship/friends";
-    }
-
-    @GetMapping("/all-friends")
-    public ModelAndView showAllFriendsAjax(ModelAndView modelAndView,
-                                           @RequestParam("id") Long id, @RequestParam("pageNumber") Integer pageNumber) {
-        modelAndView.setViewName("friendship/ajaxFragment");
-        modelAndView.addObject("friends", accountService.getFriends(id, pageNumber, 40));
-        return modelAndView;
     }
 
     @GetMapping("/requests/incoming")
