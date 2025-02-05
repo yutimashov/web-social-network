@@ -7,11 +7,12 @@ WHERE email = 'www@gmail.com';
 
 CREATE INDEX ON account_data.accounts (email);
 /*
- | before | 6308.520 ms |
- | after  | 0.101    ms |
+ Cost of query:
+    | before | 1548.653 ms |
+    | after  | 0.113    ms |
  _______________________
- index creation time: 2 min 58 secs
- boost:               62 460.6 times
+ index creation time: 1 min 4 secs.
+ boost:               13 704.9 times
  */
 
 -- 2. optimizing 'getting account info after login' logic
@@ -24,7 +25,7 @@ WHERE account_id = 100000001
 
 CREATE INDEX ON account_data.account_phones (id, phone_type);
 /*
- | before | 3398.844 ms |
+ | before | 4967.146 ms |
  | after  | 0.026    ms |
  _______________________
  index creation time: 5 min 12 secs
