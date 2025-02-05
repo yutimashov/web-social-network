@@ -27,4 +27,9 @@ CREATE INDEX ON account_data.account_phones (account_id, phone_type);
   | boost  | 74 136.5 times |
  */
 
- -- Total improvements 'login logic': before: 2.52 s.; after all optimization:
+/*
+    Total improvements 'login logic':
+    | before | 2.52 s.     |
+    | after  | 0.281 s.    |
+    | boost  | 8.9 times   |
+ */
