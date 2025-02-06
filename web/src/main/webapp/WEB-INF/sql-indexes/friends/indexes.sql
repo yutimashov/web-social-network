@@ -24,8 +24,8 @@ CREATE INDEX ON friend_data.friendship (id_2, status, id_1);
  */
 
 /*
-    Total improvements 'all accounts':
-    | before | 13.83 s.     |
-    | after  | 8.37 s.    |
-    | boost  |  times   |
+    Total improvements 'friends' (inc. key-set pagination):
+    | before | 13.83 s.   |
+    | after  | 440 ms.    |
+    | boost  | 31.4 times |
  */

@@ -39,7 +39,7 @@ public class FriendshipController {
 
     @GetMapping("/send-request")
     public String sendRequest(@SessionAttribute("account") Account account,
-                                 @RequestParam("id") Long id) {
+                              @RequestParam("id") Long id) {
         Long requesterAccountId = account.getId();
         accountService.addFriend(requesterAccountId, id);
         return "redirect:/account?id=" + requesterAccountId;
