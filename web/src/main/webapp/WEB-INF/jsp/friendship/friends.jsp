@@ -1,7 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <c:set var="rootUrl" value="${pageContext.request.contextPath}"/>
-<input type="hidden" id="last-id" value="${lastId}">
 <html>
 <head>
     <title>Friends</title>
@@ -11,6 +10,8 @@
 <body>
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <div class="container-xl mt-4" id="friends">
+    <!-- hidden field for storing lastId for ajax-queries -->
+    <input type="hidden" id="last-id" value="${lastId}">
     <c:choose>
         <c:when test="${requestScope.friends.size() == 0}">
             <div class="alert alert-primary" role="alert">

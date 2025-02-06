@@ -15,6 +15,13 @@ function appendSearchResultsDynamically() {
 
 function handleAppendSearchResultsResponse(responseText) {
     accountsContainer.insertAdjacentHTML("beforeend", responseText);
+    // update lastId
+    const newLastIdElement = document.getElementById('new-last-id');
+    if (newLastIdElement) {
+        document.getElementById('last-id').value = newLastIdElement.getAttribute('data-last-id');
+        // remove temp element
+        newLastIdElement.remove();
+    }
 }
 
 function makeRequest(callback) {
