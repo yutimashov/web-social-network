@@ -77,10 +77,25 @@ public class FriendshipController {
 
     @GetMapping("/requests/outgoing")
     public String showOutgoingRequests(@SessionAttribute("account") Account account,
-                                       Model model) {
-        model.addAttribute("outgoingFriendRequests", accountService
-                .getOutgoingFriendRequests(account.getId()));
-        return "friendship/requests/outgoing";
+                                       Model model,
+                                       @RequestParam(required = false, defaultValue = "0") Long lastId,
+                                       @RequestParam(defaultValue = "100") int limit,
+                                       @RequestParam(required = false, defaultValue = "false") boolean isAjax) {
+        List<Account> friendsBatch = accountService.getFollowingAccounts(account.getId(), lastId, limit);
+        if (!friendsBatch.isEmpty()) {
+            Long newLastId = friendsBatch.stream()
+                    .map(Account::getId)
+                    .max(Long::compareTo)
+                    .orElse(lastId);
+            model.addAttribute("outgoingFriendRequests", friendsBatch);
+            model.addAttribute("lastId", newLastId);
+            model.addAttribute("limit", limit);
+            model.addAttribute("accountId", account.getId());
+        } else {
+            model.addAttribute("outgoingFriendRequests", Collections.emptyList());
+            model.addAttribute("hasMore", false);
+        }
+        return !isAjax ? "friendship/requests/outgoing" : "friendship/requests/outgoing-ajaxFragment";
     }
 
 }

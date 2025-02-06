@@ -14,7 +14,7 @@ public interface FriendshipRepository {
 
     List<Long> getIncomingRequests(Long accountId);
 
-    List<Long> getOutgoingRequests(Long accountId);
+    List<Account> getFollowingAccounts(Long accountId, Long lastId, int pageSize);
 
     List<Account> getFriends(Long accountId, Long lastId, int pageSize);
 

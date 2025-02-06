@@ -30,7 +30,7 @@ public interface AccountService {
 
     List<Account> getIncomingFriendRequests(Long accountId);
 
-    List<Account> getOutgoingFriendRequests(Long accountId);
+    List<Account> getFollowingAccounts(Long accountId, Long lastId, int pageSize);
 
     boolean checkFriendshipRecordExistence(Long requesterId, Long accepterId);
 

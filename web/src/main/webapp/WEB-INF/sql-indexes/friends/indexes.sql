@@ -23,9 +23,19 @@ CREATE INDEX ON friend_data.friendship (id_2, status, id_1);
   | boost  | 9.56 times    |
  */
 
+-- 2. optimizing 'outgoing requests' logic
+EXPLAIN (ANALYZE)
+SELECT *
+FROM account_data.accounts a
+         JOIN (SELECT accepter_id AS acc_id
+               FROM friend_data.friendship
+               WHERE status = false
+                 AND requester_id = 1) f ON a.id = f.acc_id;
+
+CREATE INDEX ON friend_data.friendship (requester_id, status);
+
 /*
-    Total improvements 'friends' (inc. key-set pagination):
-    | before | 13.83 s.   |
-    | after  | 440 ms.    |
-    | boost  | 31.4 times |
+  | before | 29321.349 ms  |
+  | after  | 127 ms        |
+  | boost  | 230.8 times   |
  */

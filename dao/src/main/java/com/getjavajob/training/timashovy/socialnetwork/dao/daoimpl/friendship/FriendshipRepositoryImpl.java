@@ -51,8 +51,8 @@ public class FriendshipRepositoryImpl implements FriendshipRepository {
     }
 
     @Override
-    public List<Long> getOutgoingRequests(Long accountId) {
-        return friendshipRepositorySpringData.getOutgoingRequests(accountId);
+    public List<Account> getFollowingAccounts(Long accountId, Long lastId, int pageSize) {
+        return friendshipRepositorySpringData.findFollowingAccountsById(accountId, lastId, pageSize);
     }
 
     @Override

@@ -40,16 +40,20 @@ public interface FriendshipRepositorySpringData extends CrudRepository<Friendshi
             """)
     List<Long> getIncomingRequests(@Param("accountId") Long accountId);
 
-    @Query("""
-                select
-                    f.receiver.id
-                from
-                    Friendship f
-                where
-                    f.friendshipStatus = false
-                    and f.requester.id = :accountId
-            """)
-    List<Long> getOutgoingRequests(@Param("accountId") Long accountId);
+    @Query(value = """
+            SELECT a.*
+                        FROM account_data.accounts a
+                                 JOIN (SELECT accepter_id AS acc_id
+                                       FROM friend_data.friendship
+                                       WHERE status = false
+                                         AND requester_id = 1) f ON a.id = f.acc_id
+                                         WHERE a.id > :lastId
+            ORDER BY a.id
+            LIMIT :limit
+            """, nativeQuery = true)
+    List<Account> findFollowingAccountsById(@Param("accountId") Long accountId,
+                                            @Param("lastId") Long lastId,
+                                            @Param("limit") int limit);
 
     @Transactional
     @Modifying
