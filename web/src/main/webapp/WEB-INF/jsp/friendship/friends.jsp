@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <c:set var="rootUrl" value="${pageContext.request.contextPath}"/>
+<input type="hidden" id="last-id" value="${lastId}">
 <html>
 <head>
     <title>Friends</title>

@@ -49,7 +49,8 @@ public class FriendshipController {
     public String showAllFriends(Model model,
                                  @RequestParam("id") Long id,
                                  @RequestParam(required = false, defaultValue = "0") Long lastId,
-                                 @RequestParam(defaultValue = "100") int limit) {
+                                 @RequestParam(defaultValue = "100") int limit,
+                                 @RequestParam(required = false, defaultValue = "false") boolean isAjax) {
         List<Account> friendsBatch = accountService.getFriends(id, lastId, limit);
         if (!friendsBatch.isEmpty()) {
             Long newLastId = friendsBatch.stream()
@@ -64,7 +65,7 @@ public class FriendshipController {
             model.addAttribute("friends", Collections.emptyList());
             model.addAttribute("hasMore", false);
         }
-        return "friendship/friends";
+        return !isAjax ? "friendship/friends" : "friendship/ajaxFragment";
     }
 
     @GetMapping("/requests/incoming")

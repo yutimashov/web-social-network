@@ -1,6 +1,6 @@
 const accountsContainer = document.getElementById('friends');
-let pageNumber = 1;
 const id = new URLSearchParams(new URL(window.location.href).search).get('id');
+let lastFriendId;
 
 window.addEventListener('scroll', () => {
     if (Math.ceil(window.scrollY + window.innerHeight) >= document.documentElement.scrollHeight) {
@@ -9,17 +9,17 @@ window.addEventListener('scroll', () => {
 });
 
 function appendSearchResultsDynamically() {
-    makeRequest(pageNumber, handleAppendSearchResultsResponse);
+    lastFriendId = document.getElementById('last-id').value;
+    makeRequest(handleAppendSearchResultsResponse);
 }
 
 function handleAppendSearchResultsResponse(responseText) {
     accountsContainer.insertAdjacentHTML("beforeend", responseText);
-    pageNumber++;
 }
 
-function makeRequest(pageNumber, callback) {
+function makeRequest(callback) {
     const xhr = new XMLHttpRequest();
-    xhr.open("GET", `/friends/all-friends?id=${id}&pageNumber=${pageNumber}`, true);
+    xhr.open("GET", `/friends?id=${id}&lastId=${lastFriendId}&isAjax=true`, true);
     xhr.timeout = 6000;
     xhr.onload = function () {
         if (xhr.status === 200) {

@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<input type="hidden" id="last-id" value="${lastId}">
 <c:forEach items="${requestScope.friends}" var="friend">
   <div class="row">
     <div class="col-md-2 col-sm-2">
