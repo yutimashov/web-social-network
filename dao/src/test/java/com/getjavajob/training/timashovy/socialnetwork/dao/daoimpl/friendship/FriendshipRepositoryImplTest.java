@@ -77,14 +77,14 @@ class FriendshipRepositoryImplTest {
         @Test
         void shouldReturnListWithOneRecordWhenOneFriendExists() {
             List<Long> friendsId = singletonList(1L);
-            when(friendshipRepositorySpringData.getIncomingRequests(1L)).thenReturn(friendsId);
+            when(friendshipRepositorySpringData.findFollowerAccountsById(1L)).thenReturn(friendsId);
             assertEquals(friendsId, friendshipDao.getIncomingRequests(1L));
         }
 
         @Test
         void shouldReturnEmptyListWhenAccountHasNoFriends() {
             List<Long> friendsId = emptyList();
-            when(friendshipRepositorySpringData.getIncomingRequests(1L)).thenReturn(friendsId);
+            when(friendshipRepositorySpringData.findFollowerAccountsById(1L)).thenReturn(friendsId);
             assertEquals(friendsId, friendshipDao.getIncomingRequests(1L));
         }
 
@@ -98,14 +98,14 @@ class FriendshipRepositoryImplTest {
         void shouldReturnListWithOneRecordWhenOneFriendExists() {
             List<Long> friendsId = singletonList(1L);
             when(friendshipRepositorySpringData.getOutgoingRequests(1L)).thenReturn(friendsId);
-            assertEquals(friendsId, friendshipDao.getFollowingAccounts(1L));
+            assertEquals(friendsId, friendshipDao.getFollowerAccounts(1L));
         }
 
         @Test
         void shouldReturnEmptyListWhenAccountHasNoFriends() {
             List<Long> friendsId = emptyList();
             when(friendshipRepositorySpringData.getOutgoingRequests(1L)).thenReturn(friendsId);
-            assertEquals(friendsId, friendshipDao.getFollowingAccounts(1L));
+            assertEquals(friendsId, friendshipDao.getFollowerAccounts(1L));
         }
 
     }

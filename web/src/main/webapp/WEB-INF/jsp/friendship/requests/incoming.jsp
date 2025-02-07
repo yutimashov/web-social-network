@@ -9,6 +9,8 @@
 <body>
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <div class="container-xl mt-4">
+    <!-- hidden field for storing lastId for ajax-queries -->
+    <input type="hidden" id="last-id" value="${lastId}">
     <c:choose>
         <c:when test="${empty requestScope.friendRequests}">
             <div class="alert alert-warning" role="alert">

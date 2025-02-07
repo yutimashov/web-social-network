@@ -12,7 +12,7 @@ public interface FriendshipRepository {
 
     void deleteFriend(Long accountId, Long deletingFriendId);
 
-    List<Long> getIncomingRequests(Long accountId);
+    List<Account> getFollowerAccounts(Long accountId, Long lastId, int pageSize);
 
     List<Account> getFollowingAccounts(Long accountId, Long lastId, int pageSize);
 
