@@ -8,7 +8,7 @@
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
-<div class="container-xl mt-4">
+<div class="container-xl mt-4" id="followers">
     <!-- hidden field for storing lastId for ajax-queries -->
     <input type="hidden" id="last-id" value="${lastId}">
     <c:choose>
@@ -32,5 +32,6 @@
         </c:otherwise>
     </c:choose>
 </div>
+<script src="<c:url value="/static/js/ajax-follower-accounts.js" />"></script>
 </body>
 </html>
