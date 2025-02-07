@@ -130,11 +130,15 @@ public class AccountController {
     @GetMapping("/edit")
     public String edit(Model model,
                        @RequestParam("id") Long accountId) {
-        if (accountService.getById(accountId).isPresent()) {
-            model.addAttribute("account", accountService.getById(accountId).get());
-            model.addAttribute("avatarInputStream", accountService.getById(accountId).get().getAvatar());
-            model.addAttribute("personalPhones", phoneService.getPhones(accountId, PERSONAL));
-            model.addAttribute("workingPhones", phoneService.getPhones(accountId, WORKING));
+        Optional<Account> maybeAccount = accountService.getById(accountId);
+        if (maybeAccount.isPresent()) {
+            model.addAttribute("account", maybeAccount.get());
+            model.addAttribute("avatarInputStream", maybeAccount.get().getAvatar());
+            logger.info("trying get phones for account id: {}", accountId);
+            logger.info("personal phones: {}", phoneService.getPhoneNumbers(accountId, PERSONAL));
+            logger.info("working phones: {}", phoneService.getPhoneNumbers(accountId, WORKING));
+            model.addAttribute("personalPhones", phoneService.getPhoneNumbers(accountId, PERSONAL));
+            model.addAttribute("workingPhones", phoneService.getPhoneNumbers(accountId, WORKING));
             return "account/edit";
         } else {
             return "error/404";
