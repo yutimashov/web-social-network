@@ -39,3 +39,19 @@ CREATE INDEX ON friend_data.friendship (requester_id, status);
   | after  | 127 ms        |
   | boost  | 230.8 times   |
  */
+
+-- 3. optimizing 'incoming requests' logic
+EXPLAIN (ANALYZE)
+SELECT *
+FROM account_data.accounts a
+         JOIN (SELECT requester_id AS req_id
+               FROM friend_data.friendship
+               WHERE status = false
+                 AND accepter_id = 1) f ON a.id = f.req_id;
+
+CREATE INDEX ON friend_data.friendship (accepter_id, status);
+/*
+  | before | 6886.111 ms  |
+  | after  | 1910.262 ms  |
+  | boost  | 3.6  times   |
+ */
