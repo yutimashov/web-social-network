@@ -76,16 +76,16 @@ class FriendshipRepositoryImplTest {
 
         @Test
         void shouldReturnListWithOneRecordWhenOneFriendExists() {
-            List<Long> friendsId = singletonList(1L);
-            when(friendshipRepositorySpringData.findFollowerAccountsById(1L)).thenReturn(friendsId);
-            assertEquals(friendsId, friendshipDao.getIncomingRequests(1L));
+            List<Account> friendsId = singletonList(new Account());
+            when(friendshipRepositorySpringData.findFollowerAccountsById(1L, 100L, 50)).thenReturn(friendsId);
+            assertEquals(friendsId, friendshipDao.getFollowerAccounts(1L, 100L, 50));
         }
 
         @Test
         void shouldReturnEmptyListWhenAccountHasNoFriends() {
-            List<Long> friendsId = emptyList();
-            when(friendshipRepositorySpringData.findFollowerAccountsById(1L)).thenReturn(friendsId);
-            assertEquals(friendsId, friendshipDao.getIncomingRequests(1L));
+            List<Account> friendsId = emptyList();
+            when(friendshipRepositorySpringData.findFollowerAccountsById(1L, 100L, 50)).thenReturn(friendsId);
+            assertEquals(friendsId, friendshipDao.getFollowerAccounts(1L, 100L, 50));
         }
 
     }
@@ -96,16 +96,16 @@ class FriendshipRepositoryImplTest {
 
         @Test
         void shouldReturnListWithOneRecordWhenOneFriendExists() {
-            List<Long> friendsId = singletonList(1L);
-            when(friendshipRepositorySpringData.getOutgoingRequests(1L)).thenReturn(friendsId);
-            assertEquals(friendsId, friendshipDao.getFollowerAccounts(1L));
+            List<Account> friendsId = singletonList(new Account());
+            when(friendshipRepositorySpringData.findFollowingAccountsById(1L, 100L, 50)).thenReturn(friendsId);
+            assertEquals(friendsId, friendshipDao.getFollowingAccounts(1L, 100L, 50));
         }
 
         @Test
         void shouldReturnEmptyListWhenAccountHasNoFriends() {
-            List<Long> friendsId = emptyList();
-            when(friendshipRepositorySpringData.getOutgoingRequests(1L)).thenReturn(friendsId);
-            assertEquals(friendsId, friendshipDao.getFollowerAccounts(1L));
+            List<Account> friendsId = emptyList();
+            when(friendshipRepositorySpringData.findFollowingAccountsById(1L, 100L, 50)).thenReturn(friendsId);
+            assertEquals(friendsId, friendshipDao.getFollowingAccounts(1L, 100L, 50));
         }
 
     }
