@@ -27,9 +27,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -86,17 +87,25 @@ public class AccountController {
     }
 
     @GetMapping("/all")
-    public String allAccounts(Model model) {
-        model.addAttribute("accounts", accountService.getAccounts(accountPageInitialNumber,
-                accountPageSize));
-        return "account/all";
-    }
-
-    @GetMapping("/all-accounts")
-    public ModelAndView allAccountsAjax(@RequestParam("pageNumber") Integer pageNumber, ModelAndView modelAndView) {
-        modelAndView.setViewName("account/ajaxFragment");
-        modelAndView.addObject("accounts", accountService.getAccounts(pageNumber, accountPageSize));
-        return modelAndView;
+    public String allAccounts(Model model,
+                              @SessionAttribute Account account,
+                              @RequestParam(required = false, defaultValue = "0") Long lastId,
+                              @RequestParam(defaultValue = "100") int limit,
+                              @RequestParam(required = false, defaultValue = "false") boolean isAjax) {
+        List<Account> accountsBatch = accountService.getAccounts(account.getId(), lastId, limit);
+        if (!accountsBatch.isEmpty()) {
+            Long newLastId = accountsBatch.stream()
+                    .map(Account::getId)
+                    .max(Long::compareTo)
+                    .orElse(lastId);
+            model.addAttribute("accounts", accountsBatch);
+            model.addAttribute("lastId", newLastId);
+            model.addAttribute("limit", limit);
+        } else {
+            model.addAttribute("accounts", Collections.emptyList());
+            model.addAttribute("hasMore", false);
+        }
+        return !isAjax ? "account/all" : "account/ajaxFragment";
     }
 
     @GetMapping("/delete")

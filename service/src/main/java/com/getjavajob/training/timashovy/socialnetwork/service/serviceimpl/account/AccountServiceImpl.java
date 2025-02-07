@@ -10,7 +10,6 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneS
 import com.getjavajob.training.timashovy.socialnetwork.service.util.exceptions.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -94,8 +93,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<Account> getAccounts(int pageNumber, int pageSize) {
-        return accountDao.getAccounts(PageRequest.of(pageNumber, pageSize));
+    public List<Account> getAccounts(Long accountId, Long lastId, int limit) {
+        return accountDao.getAccounts(accountId, lastId, limit);
     }
 
     /**

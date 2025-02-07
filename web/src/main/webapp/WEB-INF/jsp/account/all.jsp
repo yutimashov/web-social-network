@@ -10,6 +10,8 @@
 <body>
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <div class="container-xl mt-4" id="accounts">
+    <!-- hidden field for storing lastId for ajax-queries -->
+    <input type="hidden" id="last-id" value="${lastId}">
     <c:forEach items="${requestScope.accounts}" var="account">
         <div class="row">
             <div class="col-md-1 col-sm-2">

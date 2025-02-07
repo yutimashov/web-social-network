@@ -16,3 +16,5 @@
     </div>
   </div>
 </c:forEach>
+<!-- new value of lastId -->
+<div id="new-last-id" data-last-id="${lastId}" style="display: none;"></div>

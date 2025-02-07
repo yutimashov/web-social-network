@@ -1,5 +1,5 @@
 const accountsContainer = document.getElementById('accounts');
-let pageNumber = 1;
+let accountId;
 
 window.addEventListener('scroll', () => {
     if (Math.ceil(window.scrollY + window.innerHeight) >= document.documentElement.scrollHeight) {
@@ -8,17 +8,24 @@ window.addEventListener('scroll', () => {
 });
 
 function appendSearchResultsDynamically() {
-    makeRequest(pageNumber, handleAppendSearchResultsResponse);
+    accountId = document.getElementById('last-id').value;
+    makeRequest(handleAppendSearchResultsResponse);
 }
 
 function handleAppendSearchResultsResponse(responseText) {
     accountsContainer.insertAdjacentHTML("beforeend", responseText);
-    pageNumber++;
+    // update lastId
+    const newLastIdElement = document.getElementById('new-last-id');
+    if (newLastIdElement) {
+        document.getElementById('last-id').value = newLastIdElement.getAttribute('data-last-id');
+        // remove temp element
+        newLastIdElement.remove();
+    }
 }
 
-function makeRequest(pageNumber, callback) {
+function makeRequest(callback) {
     const xhr = new XMLHttpRequest();
-    xhr.open("GET", `/account/all-accounts?pageNumber=${pageNumber}`, true);
+    xhr.open("GET", `/account/all?lastId=${accountId}&isAjax=true`, true);
     xhr.timeout = 6000;
     xhr.onload = function () {
         if (xhr.status === 200) {
