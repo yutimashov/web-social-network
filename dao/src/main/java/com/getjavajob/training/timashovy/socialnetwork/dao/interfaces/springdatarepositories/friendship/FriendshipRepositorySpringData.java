@@ -72,7 +72,6 @@ public interface FriendshipRepositorySpringData extends CrudRepository<Friendshi
             """)
     int acceptRequest(@Param("requester") Long requesterId, @Param("accepter") Long accepterId);
 
-    @Transactional
     @Modifying
     @Query("""
                 delete from
