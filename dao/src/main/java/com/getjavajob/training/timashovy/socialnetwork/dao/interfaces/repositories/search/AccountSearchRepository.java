@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface AccountSearchRepository {
 
-    List<Account> findResults(String searchQuery, String lastFirstName, String lastLastName, int limit);
+    List<Account> findResults(String searchQuery, Long lastId, int limit);
 
 }

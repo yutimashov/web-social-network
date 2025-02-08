@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface AccountSearchService {
 
-    List<Account> findAccounts(String searchQuery, String lastFirstName, String lastLastName, int limit);
+    List<Account> findAccounts(String searchQuery, Long lastId, int limit);
 
 }

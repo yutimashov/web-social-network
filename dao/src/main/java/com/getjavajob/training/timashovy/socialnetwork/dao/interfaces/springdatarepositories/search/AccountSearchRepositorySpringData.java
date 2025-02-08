@@ -12,16 +12,14 @@ public interface AccountSearchRepositorySpringData extends CrudRepository<Accoun
     @Query(value = """
             SELECT a.*
             FROM account_data.accounts a
-            WHERE (a.first_name ILIKE '%' || :searchQuery || '%'
-                OR a.last_name ILIKE '%' || :searchQuery || '%')
-                AND (a.first_name, a.last_name) > (:lastFirstName, :lastLastName)
-            ORDER BY a.first_name
+            WHERE account_data.similarity(a.fullname, :searchQuery :: text) > 0.3
+                AND id > :lastId
+            ORDER BY id
             LIMIT :limit
             """, nativeQuery = true)
     List<Account> findAccountsSearchResult(
             @Param("searchQuery") String searchQuery,
-            @Param("lastFirstName") String lastFirstName,
-            @Param("lastLastName") String lastLastName,
+            @Param("lastId") Long lastId,
             @Param("limit") int limit);
 
 }

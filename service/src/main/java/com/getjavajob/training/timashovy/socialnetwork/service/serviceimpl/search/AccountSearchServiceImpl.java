@@ -17,8 +17,8 @@ public class AccountSearchServiceImpl implements AccountSearchService {
     }
 
     @Override
-    public List<Account> findAccounts(String searchQuery, String lastFirstName, String lastLastName, int limit) {
-        return searchAccountRepository.findResults(searchQuery, lastFirstName, lastLastName, limit);
+    public List<Account> findAccounts(String searchQuery, Long lastId, int limit) {
+        return searchAccountRepository.findResults(searchQuery, lastId, limit);
     }
 
 }

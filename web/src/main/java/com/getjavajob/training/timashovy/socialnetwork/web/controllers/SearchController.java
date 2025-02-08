@@ -33,34 +33,27 @@ public class SearchController {
                         @RequestParam("searchType") String searchType,
                         @RequestParam(required = false, defaultValue = "false") boolean isAjax,
                         @RequestParam(defaultValue = "100") int limit,
-                        @RequestParam(required = false, defaultValue = "0") String lastFirstName,
-                        @RequestParam(required = false, defaultValue = "0") String lastLastName,
+                        @RequestParam(required = false, defaultValue = "0") Long lastId,
                         @RequestParam(required = false, defaultValue = "0") String lastGroupName,
                         Model model) {
         model.addAttribute("searchQuery", searchQuery);
         model.addAttribute("searchType", searchType);
         if (ACCOUNT_SEARCH_TYPE.equals(searchType)) {
-            return handleAccountSearch(model, searchQuery, lastFirstName, lastLastName, limit, isAjax);
+            return handleAccountSearch(model, lastId, searchQuery, limit, isAjax);
         } else {
             return handleGroupSearch(model, searchQuery, lastGroupName, limit, isAjax);
         }
     }
 
-    private String handleAccountSearch(Model model, String searchQuery, String lastFirstName, String lastLastName,
-                                       int limit, boolean isAjax) {
-        List<Account> accountsBatch = accountSearchService.findAccounts(searchQuery, lastFirstName, lastLastName, limit);
+    private String handleAccountSearch(Model model, Long lastId, String searchQuery, int limit, boolean isAjax) {
+        List<Account> accountsBatch = accountSearchService.findAccounts(searchQuery, lastId, limit);
         if (!accountsBatch.isEmpty()) {
-            String newLastFirstName = accountsBatch.stream()
-                    .map(Account::getFirstName)
-                    .max(String::compareTo)
-                    .orElse(lastFirstName);
-            String newLastLastName = accountsBatch.stream()
-                    .map(Account::getLastName)
-                    .max(String::compareTo)
-                    .orElse(lastLastName);
+            Long newLastId = accountsBatch.stream()
+                    .map(Account::getId)
+                    .max(Long::compareTo)
+                    .orElse(lastId);
             model.addAttribute("accounts", accountsBatch);
-            model.addAttribute("lastFirstName", newLastFirstName);
-            model.addAttribute("lastLastName", newLastLastName);
+            model.addAttribute("lastId", newLastId);
             model.addAttribute("limit", limit);
         } else {
             model.addAttribute("searchResults", Collections.emptyList());
