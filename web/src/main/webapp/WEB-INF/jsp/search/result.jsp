@@ -33,8 +33,6 @@
     </c:if>
 </div>
 <jsp:include page="/WEB-INF/jsp/include/footer.jsp"/>
-<script src="${rootUrl}/static/js/ajax-search-accounts.js"></script>
-<script src="${rootUrl}/static/js/ajax-search-groups.js"></script>
 <%--<script src="${rootUrl}/static/js/ajax-search-pages.js"></script>--%>
 </body>
 </html>
