@@ -13,7 +13,7 @@ ALTER TABLE account_data.accounts
 
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
 
-CREATE INDEX idx_accounts_full_name_trgm ON account_data.accounts USING GIN (fullname gin_trgm_ops);
+CREATE INDEX idx_accounts_full_name_trgm ON account_data.accounts USING GIN (fullname account_data.gin_trgm_ops);
 
 SELECT *
 FROM account_data.accounts a

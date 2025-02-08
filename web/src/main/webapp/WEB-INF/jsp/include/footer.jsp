@@ -4,5 +4,3 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 <%--<script src="<c:url value="/static/js/ajax-search.js" />"></script>--%>
-<script src="${rootUrl}/static/js/ajax-search-accounts.js"></script>
-<script src="${rootUrl}/static/js/ajax-search-groups.js"></script>
