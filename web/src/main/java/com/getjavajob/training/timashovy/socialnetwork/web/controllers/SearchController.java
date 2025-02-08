@@ -1,14 +1,16 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.controllers;
 
-import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.SearchService;
-import org.slf4j.Logger;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
+import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountSearchService;
+import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.GroupSearchService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 
-import static org.slf4j.LoggerFactory.getLogger;
+import java.util.Collections;
+import java.util.List;
 
 @Controller
 public class SearchController {
@@ -18,60 +20,83 @@ public class SearchController {
     private static final int TIPS_PER_AJAX_REQUEST = 10;
     private static final String ACCOUNT_SEARCH_TYPE = "account";
     private static final String GROUP_SEARCH_TYPE = "group";
-    private final SearchService searchService;
-    private static final Logger logger = getLogger(SearchController.class);
+    private final AccountSearchService accountSearchService;
+    private final GroupSearchService groupSearchService;
 
-    public SearchController(SearchService searchService) {
-        this.searchService = searchService;
+    public SearchController(AccountSearchService accountSearchService, GroupSearchService groupSearchService) {
+        this.accountSearchService = accountSearchService;
+        this.groupSearchService = groupSearchService;
     }
 
     @GetMapping("/search")
     public String doGet(@RequestParam("searchQuery") String searchQuery,
                         @RequestParam("searchType") String searchType,
+                        @RequestParam(required = false, defaultValue = "false") boolean isAjax,
+                        @RequestParam(defaultValue = "100") int limit,
+                        @RequestParam(required = false, defaultValue = "0") String lastFirstName,
+                        @RequestParam(required = false, defaultValue = "0") String lastLastName,
+                        @RequestParam(required = false, defaultValue = "0") String lastGroupName,
                         Model model) {
-        logger.info("SearchQuery: {}, searchType: {}", searchQuery, searchType);
         model.addAttribute("searchQuery", searchQuery);
         model.addAttribute("searchType", searchType);
-        long numberOfPages = 0;
         if (ACCOUNT_SEARCH_TYPE.equals(searchType)) {
-            numberOfPages = handleAccountSearch(searchQuery, INITIAL_PAGINATION_PAGE, model);
-        } else if (GROUP_SEARCH_TYPE.equals(searchType)) {
-            numberOfPages = handleGroupSearch(searchQuery, INITIAL_PAGINATION_PAGE, model);
+            return handleAccountSearch(model, searchQuery, lastFirstName, lastLastName, limit, isAjax);
+        } else {
+            return handleGroupSearch(model, searchQuery, lastGroupName, limit, isAjax);
         }
-        model.addAttribute("numberOfPages", numberOfPages);
-        model.addAttribute("recordsPerPage", RESULTS_PER_PAGE);
-        return "/search/result";
     }
 
-    private Long handleAccountSearch(String searchQuery, int currentPage, Model model) {
-        model.addAttribute("accounts", searchService.findAccounts(searchQuery, currentPage, RESULTS_PER_PAGE));
-        Long totalResultsAmount = searchService.findAccountResultsAmount(searchQuery);
-        model.addAttribute("totalResultsAmount", totalResultsAmount);
-        return calculateNumberOfPages(totalResultsAmount);
+    private String handleAccountSearch(Model model, String searchQuery, String lastFirstName, String lastLastName,
+                                       int limit, boolean isAjax) {
+        List<Account> accountsBatch = accountSearchService.findAccounts(searchQuery, lastFirstName, lastLastName, limit);
+        if (!accountsBatch.isEmpty()) {
+            String newLastFirstName = accountsBatch.stream()
+                    .map(Account::getFirstName)
+                    .max(String::compareTo)
+                    .orElse(lastFirstName);
+            String newLastLastName = accountsBatch.stream()
+                    .map(Account::getLastName)
+                    .max(String::compareTo)
+                    .orElse(lastLastName);
+            model.addAttribute("accounts", accountsBatch);
+            model.addAttribute("lastFirstName", newLastFirstName);
+            model.addAttribute("lastLastName", newLastLastName);
+            model.addAttribute("limit", limit);
+        } else {
+            model.addAttribute("searchResults", Collections.emptyList());
+            model.addAttribute("hasMore", false);
+        }
+        return !isAjax ? "search/result" : "search/search-results-accounts";
     }
 
-    private Long handleGroupSearch(String searchQuery, int currentPage, Model model) {
-        model.addAttribute("groups", searchService.findGroups(searchQuery, currentPage, RESULTS_PER_PAGE));
-        Long totalResultsAmount = searchService.findGroupResultsAmount(searchQuery);
-        model.addAttribute("totalResultsAmount", totalResultsAmount);
-        return calculateNumberOfPages(searchService.findGroupResultsAmount(searchQuery));
+    private String handleGroupSearch(Model model, String searchQuery, String lastName, int limit, boolean isAjax) {
+        List<Group> groupsBatch = groupSearchService.findAccounts(searchQuery, lastName, limit);
+        if (!groupsBatch.isEmpty()) {
+            String newLastName = groupsBatch.stream()
+                    .map(Group::getName)
+                    .max(String::compareTo)
+                    .orElse(lastName);
+            model.addAttribute("searchResults", groupsBatch);
+            model.addAttribute("lastGroupName", newLastName);
+            model.addAttribute("limit", limit);
+        } else {
+            model.addAttribute("searchResults", Collections.emptyList());
+            model.addAttribute("hasMore", false);
+        }
+        return !isAjax ? "search/result" : "search/result-account-ajaxFragment";
     }
 
-    private Long calculateNumberOfPages(long totalResults) {
-        return (long) Math.ceil((double) totalResults / RESULTS_PER_PAGE);
-    }
-
-    @GetMapping("/search_ajax")
+    /*@GetMapping("/search_ajax")
     public ModelAndView search(@RequestParam("searchQuery") String searchQuery,
                                @RequestParam("searchType") String searchType,
                                @RequestParam("currentPage") int currentPage,
                                ModelAndView modelAndView) {
         modelAndView.setViewName("search/ajaxFragment");
         if (ACCOUNT_SEARCH_TYPE.equals(searchType)) {
-            modelAndView.addObject("accounts", searchService.findAccounts(searchQuery, currentPage,
+            modelAndView.addObject("accounts", accountSearchService.findAccounts(searchQuery, currentPage,
                     TIPS_PER_AJAX_REQUEST));
         } else if (GROUP_SEARCH_TYPE.equals(searchType)) {
-            modelAndView.addObject("groups", searchService.findGroups(searchQuery, currentPage,
+            modelAndView.addObject("groups", accountSearchService.findGroups(searchQuery, currentPage,
                     TIPS_PER_AJAX_REQUEST));
         }
         return modelAndView;
@@ -84,13 +109,13 @@ public class SearchController {
                                         ModelAndView modelAndView) {
         modelAndView.setViewName("search/search-results");
         if (ACCOUNT_SEARCH_TYPE.equals(searchType)) {
-            modelAndView.addObject("accounts", searchService.findAccounts(searchQuery, currentPage,
+            modelAndView.addObject("accounts", accountSearchService.findAccounts(searchQuery, currentPage,
                     RESULTS_PER_PAGE));
         } else if (GROUP_SEARCH_TYPE.equals(searchType)) {
-            modelAndView.addObject("groups", searchService.findGroups(searchQuery, currentPage,
+            modelAndView.addObject("groups", accountSearchService.findGroups(searchQuery, currentPage,
                     RESULTS_PER_PAGE));
         }
         return modelAndView;
-    }
+    }*/
 
 }
