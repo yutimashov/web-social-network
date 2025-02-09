@@ -48,6 +48,6 @@
         </c:otherwise>
     </c:choose>
 </div>
-<script src="<c:url value="/static/js/ajax-follower-accounts.js" />"></script>
+<script src="<c:url value="/static/js/friendship/followers-ajax.js" />"></script>
 </body>
 </html>
