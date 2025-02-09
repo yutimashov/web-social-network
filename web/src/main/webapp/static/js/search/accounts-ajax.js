@@ -10,14 +10,14 @@ window.addEventListener('scroll', () => {
 });
 
 function appendSearchResultsDynamically() {
-    lasAccountId = document.getElementById('last-account-id').value;
+    lastAccountId = document.getElementById('last-account-id').value;
     makeRequest(handleAppendSearchResultsResponse);
 }
 
 function handleAppendSearchResultsResponse(responseText) {
     accountsContainer.insertAdjacentHTML("beforeend", responseText);
     // update lastId
-    const newLastAccountId = document.getElementById('new-last-id');
+    const newLastAccountId = document.getElementById('new-last-account-id');
     if (newLastAccountId) {
         document.getElementById('last-account-id').value = newLastAccountId.getAttribute('data-last-account-id');
         // remove temp element

@@ -28,13 +28,13 @@ public class SearchController {
                         @RequestParam("searchType") String searchType,
                         @RequestParam(required = false, defaultValue = "false") boolean isAjax,
                         @RequestParam(defaultValue = "100") int limit,
-                        @RequestParam(required = false, defaultValue = "0") Long lastId,
+                        @RequestParam(required = false, defaultValue = "0") Long lastAccountId,
                         @RequestParam(required = false, defaultValue = "0") String lastGroupName,
                         Model model) {
         model.addAttribute("searchQuery", searchQuery);
         model.addAttribute("searchType", searchType);
         if ("account".equals(searchType)) {
-            return handleAccountSearch(model, lastId, searchQuery, limit, isAjax);
+            return handleAccountSearch(model, lastAccountId, searchQuery, limit, isAjax);
         } else {
             return handleGroupSearch(model, searchQuery, lastGroupName, limit, isAjax);
         }
@@ -48,7 +48,7 @@ public class SearchController {
                     .max(Long::compareTo)
                     .orElse(lastId);
             model.addAttribute("accounts", accountsBatch);
-            model.addAttribute("lastId", newLastId);
+            model.addAttribute("lastAccountId", newLastId);
             model.addAttribute("limit", limit);
         } else {
             model.addAttribute("searchResults", Collections.emptyList());
