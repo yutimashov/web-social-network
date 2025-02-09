@@ -15,11 +15,6 @@ import java.util.List;
 @Controller
 public class SearchController {
 
-    private static final int RESULTS_PER_PAGE = 5;
-    private static final int INITIAL_PAGINATION_PAGE = 1;
-    private static final int TIPS_PER_AJAX_REQUEST = 10;
-    private static final String ACCOUNT_SEARCH_TYPE = "account";
-    private static final String GROUP_SEARCH_TYPE = "group";
     private final AccountSearchService accountSearchService;
     private final GroupSearchService groupSearchService;
 
@@ -38,7 +33,7 @@ public class SearchController {
                         Model model) {
         model.addAttribute("searchQuery", searchQuery);
         model.addAttribute("searchType", searchType);
-        if (ACCOUNT_SEARCH_TYPE.equals(searchType)) {
+        if ("account".equals(searchType)) {
             return handleAccountSearch(model, lastId, searchQuery, limit, isAjax);
         } else {
             return handleGroupSearch(model, searchQuery, lastGroupName, limit, isAjax);
