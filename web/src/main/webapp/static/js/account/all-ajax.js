@@ -31,14 +31,19 @@ function makeRequest(callback) {
         if (xhr.status === 200) {
             callback(xhr.responseText);
         } else {
-            console.log("ERROR:", xhr.statusText);
+            displayError(xhr);
         }
     };
     xhr.ontimeout = function () {
-        console.log("ERROR: Request timed out");
+        displayError(xhr);
     };
     xhr.onerror = function () {
-        console.log("ERROR: Network error");
+        displayError(xhr);
     };
     xhr.send();
+}
+
+function displayError(xhr) {
+    console.error("ERROR:", xhr.statusText);
+    alert('An error occurred while loading the page. Please try again later.');
 }
