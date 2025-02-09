@@ -79,36 +79,4 @@ public class SearchController {
         return !isAjax ? "search/result" : "search/result-account-ajaxFragment";
     }
 
-    /*@GetMapping("/search_ajax")
-    public ModelAndView search(@RequestParam("searchQuery") String searchQuery,
-                               @RequestParam("searchType") String searchType,
-                               @RequestParam("currentPage") int currentPage,
-                               ModelAndView modelAndView) {
-        modelAndView.setViewName("search/ajaxFragment");
-        if (ACCOUNT_SEARCH_TYPE.equals(searchType)) {
-            modelAndView.addObject("accounts", accountSearchService.findAccounts(searchQuery, currentPage,
-                    TIPS_PER_AJAX_REQUEST));
-        } else if (GROUP_SEARCH_TYPE.equals(searchType)) {
-            modelAndView.addObject("groups", accountSearchService.findGroups(searchQuery, currentPage,
-                    TIPS_PER_AJAX_REQUEST));
-        }
-        return modelAndView;
-    }
-
-    @GetMapping("/search_ajax_pages")
-    public ModelAndView searchAjaxPages(@RequestParam("searchQuery") String searchQuery,
-                                        @RequestParam("searchType") String searchType,
-                                        @RequestParam("currentPage") int currentPage,
-                                        ModelAndView modelAndView) {
-        modelAndView.setViewName("search/search-results");
-        if (ACCOUNT_SEARCH_TYPE.equals(searchType)) {
-            modelAndView.addObject("accounts", accountSearchService.findAccounts(searchQuery, currentPage,
-                    RESULTS_PER_PAGE));
-        } else if (GROUP_SEARCH_TYPE.equals(searchType)) {
-            modelAndView.addObject("groups", accountSearchService.findGroups(searchQuery, currentPage,
-                    RESULTS_PER_PAGE));
-        }
-        return modelAndView;
-    }*/
-
 }
