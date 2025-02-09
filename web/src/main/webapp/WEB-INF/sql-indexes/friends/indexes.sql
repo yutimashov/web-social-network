@@ -32,7 +32,7 @@ FROM account_data.accounts a
                WHERE status = false
                  AND requester_id = 1) f ON a.id = f.acc_id;
 
-CREATE INDEX ON friend_data.friendship (requester_id, status);
+CREATE INDEX ON friend_data.friendship (requester_id, status, accepter_id);
 
 /*
   | before | 29321.349 ms  |
@@ -49,7 +49,7 @@ FROM account_data.accounts a
                WHERE status = false
                  AND accepter_id = 1) f ON a.id = f.req_id;
 
-CREATE INDEX ON friend_data.friendship (accepter_id, status);
+CREATE INDEX ON friend_data.friendship (accepter_id, status, requester_id);
 /*
   | before | 6886.111 ms  |
   | after  | 1910.262 ms  |
