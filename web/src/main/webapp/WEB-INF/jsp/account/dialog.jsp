@@ -5,8 +5,6 @@
 <head>
     <title>Dialog</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/style.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body data-current-user-id="${accountSender.id}" data-receiver-user-id="${accountReceiver.id}">
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
@@ -80,9 +78,7 @@
         </div>
     </div>
 </section>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
+<jsp:include page="/WEB-INF/jsp/include/footer.jsp"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"
         integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
