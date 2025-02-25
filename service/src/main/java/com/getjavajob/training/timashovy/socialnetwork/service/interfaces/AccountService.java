@@ -20,17 +20,17 @@ public interface AccountService {
 
     Optional<Account> getById(Long accountId);
 
-    List<Account> getAccounts(int pageNumber, int pageSize);
+    List<Account> getAccounts(Long accountId, Long lastId, int limit);
 
     void addFriend(Long accountId, Long friendId);
 
     void deleteFriend(Long accountId, Long friendId);
 
-    List<Account> getFriends(Long accountId, int page, int size);
+    List<Account> getFriends(Long accountId, Long lastId, int pageSize);
 
-    List<Account> getIncomingFriendRequests(Long accountId);
+    List<Account> getFollowerAccounts(Long accountId, Long lastId, int pageSize);
 
-    List<Account> getOutgoingFriendRequests(Long accountId);
+    List<Account> getFollowingAccounts(Long accountId, Long lastId, int pageSize);
 
     boolean checkFriendshipRecordExistence(Long requesterId, Long accepterId);
 

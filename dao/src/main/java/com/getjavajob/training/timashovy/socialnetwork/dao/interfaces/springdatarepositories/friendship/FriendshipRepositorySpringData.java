@@ -2,60 +2,62 @@ package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.springdat
 
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.friendship.Friendship;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 public interface FriendshipRepositorySpringData extends CrudRepository<Friendship, Long> {
 
-    @Query("""
-                select
-                    a
-                from
-                    Account a
-                join Friendship f on (
-                    f.initiatorAccountId = a.id
-                    or f.friendAccountId = a.id
-                )
-                where
-                    (
-                        f.initiatorAccountId = :accountId
-                        or f.friendAccountId = :accountId
-                    )
-                and a.id != :accountId
-                and f.friendshipStatus = true
-            """)
-    Page<Account> getFriends(@Param("accountId") Long accountId, Pageable page);
+    @Query(value = """
+            SELECT a.*
+            FROM account_data.accounts a
+            JOIN (
+                SELECT id_2 AS friend_id FROM friend_data.friendship WHERE id_1 = :accountId AND status = true
+                UNION ALL
+                SELECT id_1 AS friend_id FROM friend_data.friendship WHERE id_2 = :accountId AND status = true
+            ) f ON a.id = f.friend_id
+            WHERE a.id > :lastId
+            ORDER BY a.id
+            LIMIT :limit
+            """, nativeQuery = true)
+    List<Account> findFriendsByAccountId(
+            @Param("accountId") Long accountId,
+            @Param("lastId") Long lastId,
+            @Param("limit") int limit);
 
-    @Query("""
-                select
-                    f.requester.id
-                from
-                    Friendship f
-                where
-                    f.friendshipStatus = false
-                    and f.receiver.id = :accountId
-            """)
-    List<Long> getIncomingRequests(@Param("accountId") Long accountId);
+    @Query(value = """
+            SELECT a.*
+                        FROM account_data.accounts a
+                                 JOIN (SELECT requester_id AS req_id
+                                        FROM friend_data.friendship
+                                        WHERE accepter_id = :accountId
+                                            AND status = false) f ON a.id = f.req_id
+                                            WHERE a.id > :lastId
+            ORDER BY a.id
+            LIMIT :limit
+            """, nativeQuery = true)
+    List<Account> findFollowerAccountsById(@Param("accountId") Long accountId,
+                                           @Param("lastId") Long lastId,
+                                           @Param("limit") int limit);
 
-    @Query("""
-                select
-                    f.receiver.id
-                from
-                    Friendship f
-                where
-                    f.friendshipStatus = false
-                    and f.requester.id = :accountId
-            """)
-    List<Long> getOutgoingRequests(@Param("accountId") Long accountId);
+    @Query(value = """
+            SELECT a.*
+                        FROM account_data.accounts a
+                                 JOIN (SELECT accepter_id AS acc_id
+                                       FROM friend_data.friendship
+                                       WHERE requester_id = :accountId
+                                         AND status = false) f ON a.id = f.acc_id
+                                         WHERE a.id > :lastId
+            ORDER BY a.id
+            LIMIT :limit
+            """, nativeQuery = true)
+    List<Account> findFollowingAccountsById(@Param("accountId") Long accountId,
+                                            @Param("lastId") Long lastId,
+                                            @Param("limit") int limit);
 
-    @Transactional
     @Modifying
     @Query("""
                 update
@@ -68,7 +70,6 @@ public interface FriendshipRepositorySpringData extends CrudRepository<Friendshi
             """)
     int acceptRequest(@Param("requester") Long requesterId, @Param("accepter") Long accepterId);
 
-    @Transactional
     @Modifying
     @Query("""
                 delete from

@@ -10,12 +10,9 @@ import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.PhoneS
 import com.getjavajob.training.timashovy.socialnetwork.service.util.exceptions.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -96,8 +93,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<Account> getAccounts(int pageNumber, int pageSize) {
-        return accountDao.getAccounts(PageRequest.of(pageNumber, pageSize));
+    public List<Account> getAccounts(Long accountId, Long lastId, int limit) {
+        return accountDao.getAccounts(accountId, lastId, limit);
     }
 
     /**
@@ -143,36 +140,21 @@ public class AccountServiceImpl implements AccountService {
         friendshipRepository.deleteFriend(accountId, deletingFriendId);
     }
 
-    public List<Account> getFriends(Long accountId, int page, int size) {
+    public List<Account> getFriends(Long accountId, Long lastId, int pageSize) {
         validateAccountId(accountId);
-        Page<Account> friendsPage = friendshipRepository.getFriends(accountId, PageRequest.of(page, size));
-        return friendsPage.getContent();
+        return friendshipRepository.getFriends(accountId, lastId, pageSize);
     }
 
     @Override
-    public List<Account> getIncomingFriendRequests(Long accountId) {
+    public List<Account> getFollowerAccounts(Long accountId, Long lastId, int pageSize) {
         validateAccountId(accountId);
-        List<Long> friendRequestsId = friendshipRepository.getIncomingRequests(accountId);
-        List<Account> followers = new ArrayList<>();
-        for (Long followerId : friendRequestsId) {
-            if (accountDao.getById(followerId).isPresent()) {
-                followers.add(accountDao.getById(followerId).get());
-            }
-        }
-        return followers;
+        return friendshipRepository.getFollowerAccounts(accountId, lastId, pageSize);
     }
 
     @Override
-    public List<Account> getOutgoingFriendRequests(Long accountId) {
+    public List<Account> getFollowingAccounts(Long accountId, Long lastId, int pageSize) {
         validateAccountId(accountId);
-        List<Long> friendRequestsId = friendshipRepository.getOutgoingRequests(accountId);
-        List<Account> followers = new ArrayList<>();
-        for (Long followerId : friendRequestsId) {
-            if (accountDao.getById(followerId).isPresent()) {
-                followers.add(accountDao.getById(followerId).get());
-            }
-        }
-        return followers;
+        return friendshipRepository.getFollowingAccounts(accountId, lastId, pageSize);
     }
 
     @Override

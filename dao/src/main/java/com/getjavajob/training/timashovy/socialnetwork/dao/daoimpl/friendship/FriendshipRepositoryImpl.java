@@ -5,8 +5,6 @@ import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.springdata
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.friendship.Friendship;
 import org.slf4j.Logger;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -48,13 +46,13 @@ public class FriendshipRepositoryImpl implements FriendshipRepository {
     }
 
     @Override
-    public List<Long> getIncomingRequests(Long accountId) {
-        return friendshipRepositorySpringData.getIncomingRequests(accountId);
+    public List<Account> getFollowerAccounts(Long accountId, Long lastId, int pageSize) {
+        return friendshipRepositorySpringData.findFollowerAccountsById(accountId, lastId, pageSize);
     }
 
     @Override
-    public List<Long> getOutgoingRequests(Long accountId) {
-        return friendshipRepositorySpringData.getOutgoingRequests(accountId);
+    public List<Account> getFollowingAccounts(Long accountId, Long lastId, int pageSize) {
+        return friendshipRepositorySpringData.findFollowingAccountsById(accountId, lastId, pageSize);
     }
 
     @Override
@@ -63,8 +61,8 @@ public class FriendshipRepositoryImpl implements FriendshipRepository {
     }
 
     @Override
-    public Page<Account> getFriends(Long accountId, Pageable page) {
-        return friendshipRepositorySpringData.getFriends(accountId, page);
+    public List<Account> getFriends(Long accountId, Long lastId, int pageSize) {
+        return friendshipRepositorySpringData.findFriendsByAccountId(accountId, lastId, pageSize);
     }
 
 }

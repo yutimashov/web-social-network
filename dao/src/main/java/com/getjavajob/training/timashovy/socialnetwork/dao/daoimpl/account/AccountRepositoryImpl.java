@@ -7,7 +7,6 @@ import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
 import org.slf4j.Logger;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -109,8 +108,8 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public List<Account> getAccounts(Pageable pageable) {
-        return accountRepositorySpringData.findAll(pageable).getContent();
+    public List<Account> getAccounts(Long accountId, Long lastId, int limit) {
+        return accountRepositorySpringData.getAccountsById(accountId, lastId, limit);
     }
 
 }
