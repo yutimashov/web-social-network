@@ -4,11 +4,11 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AccountWallPostNotification implements EventProducer {
+public class NotificationService implements EventProducer {
 
     private final RabbitTemplate rabbitTemplate;
 
-    public AccountWallPostNotification(RabbitTemplate rabbitTemplate) {
+    public NotificationService(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
     }
 
