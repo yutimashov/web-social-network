@@ -33,3 +33,9 @@ CREATE INDEX ON account_data.account_phones (account_id, phone_type);
     | after  | 0.281 s.    |
     | boost  | 8.9 times   |
  */
+
+-- 1.3 Add index for efficient getting accounts whose birthday is today (for rabbitmq task)
+CREATE INDEX idx_birth_month_day ON account_data.accounts (
+                                                           EXTRACT(MONTH FROM birth_date),
+                                                           EXTRACT(DAY FROM birth_date)
+    );
