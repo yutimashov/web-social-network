@@ -25,4 +25,13 @@ public interface AccountRepositorySpringData extends CrudRepository<Account, Lon
             @Param("lastId") Long lastId,
             @Param("limit") int limit);
 
+    @Query(value = """
+            SELECT a.*
+            FROM account_data.accounts a
+            WHERE EXTRACT(MONTH FROM a.birth_date) = :month
+            AND EXTRACT(DAY FROM a.birth_date) =  :day
+            """, nativeQuery = true)
+    List<Account> getAccountsWithBirthdayToday(@Param("month") int month,
+                                               @Param("day") int day);
+
 }

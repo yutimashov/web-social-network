@@ -112,4 +112,9 @@ public class AccountRepositoryImpl implements AccountRepository {
         return accountRepositorySpringData.getAccountsById(accountId, lastId, limit);
     }
 
+    @Override
+    public List<Account> getAccountWithBirthdayToday(int month, int day) {
+        return accountRepositorySpringData.getAccountsWithBirthdayToday(month, day);
+    }
+
 }

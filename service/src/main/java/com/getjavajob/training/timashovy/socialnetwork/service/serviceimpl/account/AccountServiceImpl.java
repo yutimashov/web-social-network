@@ -97,6 +97,11 @@ public class AccountServiceImpl implements AccountService {
         return accountDao.getAccounts(accountId, lastId, limit);
     }
 
+    @Override
+    public List<Account> getAccountWithBirthdayToday(int month, int day) {
+        return accountDao.getAccountWithBirthdayToday(month, day);
+    }
+
     /**
      * If there is no record in friendship table, it means that no friendship connection exist.
      * Make a record - requester becomes follower of accepter.

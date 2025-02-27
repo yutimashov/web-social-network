@@ -20,4 +20,6 @@ public interface AccountRepository extends Repository<Long, Account> {
 
     Optional<Account> findByEmail(String email);
 
+    List<Account> getAccountWithBirthdayToday(int month, int day);
+
 }

@@ -3,12 +3,16 @@ package com.getjavajob.training.timashovy.socialnetwork.web.controllers;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
-import com.getjavajob.training.timashovy.socialnetwork.service.rabbitmq.AccountWallPostNotificationService;
 import com.getjavajob.training.timashovy.socialnetwork.web.dto.MessageDto;
 import com.getjavajob.training.timashovy.socialnetwork.web.mappers.MessageMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 @Controller
 @RequestMapping
@@ -16,13 +20,10 @@ public class MessageController {
 
     private final AccountService accountService;
     private final MessageService messageService;
-    private final AccountWallPostNotificationService accountWallPostNotificationService;
 
-    public MessageController(AccountService accountService, MessageService messageService,
-                             AccountWallPostNotificationService accountWallPostNotificationService) {
+    public MessageController(AccountService accountService, MessageService messageService) {
         this.accountService = accountService;
         this.messageService = messageService;
-        this.accountWallPostNotificationService = accountWallPostNotificationService;
     }
 
     @GetMapping("/account/messages/dialog")
@@ -58,7 +59,6 @@ public class MessageController {
                                            @SessionAttribute("account") Account account) {
         messageService.createPersonalWallMessage(new MessageMapper().toPersonalWallMessage(messageDto, account.getId(),
                 accountReceiverId));
-        accountWallPostNotificationService.notifyFriends(accountService.getById(accountReceiverId).get());
         return "redirect:/account?id=" + accountReceiverId;
     }
 
