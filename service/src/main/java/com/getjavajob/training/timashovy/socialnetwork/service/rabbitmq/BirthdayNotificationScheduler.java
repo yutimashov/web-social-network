@@ -2,6 +2,7 @@ package com.getjavajob.training.timashovy.socialnetwork.service.rabbitmq;
 
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
+import com.getjavajob.training.timashovy.socialnetwork.service.rabbitmq.dto.BirthdayNotification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -24,7 +25,7 @@ public class BirthdayNotificationScheduler {
         this.accountService = accountService;
     }
 
-    @Scheduled(cron = "0 31 14 * * ?", zone = "Europe/Minsk")
+    @Scheduled(cron = "0 1 16 * * ?", zone = "Europe/Minsk")
     public void checkBirthdays() {
         LocalDate today = LocalDate.now();
         logger.info("Start getting accounts with today`s birthday");
@@ -59,9 +60,9 @@ public class BirthdayNotificationScheduler {
     }
 
     private void sendNotification(Account user, Account friend) {
-        String message = "Hey, " + user.getFirstName() + ", your friend " + friend.getFirstName() + " "
-                + friend.getLastName() + " celebrate birthday!";
-        eventProducer.sendEvent(message);
+        BirthdayNotification birthdayNotification = new BirthdayNotification(user.getId(), user.getFirstName(),
+                friend.getFirstName(), friend.getEmail(), friend.getId());
+        eventProducer.sendEvent(birthdayNotification);
     }
 
 }
