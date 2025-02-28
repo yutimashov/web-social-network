@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.service.rabbitmq;
+package com.getjavajob.training.timashovy.socialnetwork.messaging.producer;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;

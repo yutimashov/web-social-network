@@ -21,5 +21,6 @@
         <module>domain</module>
         <module>service</module>
         <module>web</module>
+        <module>messaging</module>
     </modules>
 </project>

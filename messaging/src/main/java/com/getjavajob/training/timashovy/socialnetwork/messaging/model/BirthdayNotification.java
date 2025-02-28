@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.service.rabbitmq.dto;
+package com.getjavajob.training.timashovy.socialnetwork.messaging.model;
 
 import java.time.LocalDateTime;
 

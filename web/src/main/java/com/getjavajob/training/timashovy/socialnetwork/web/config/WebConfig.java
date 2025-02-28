@@ -8,7 +8,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @ComponentScan(basePackages = {
         "com.getjavajob.training.timashovy.socialnetwork.service",
-        "com.getjavajob.training.timashovy.socialnetwork.dao"
+        "com.getjavajob.training.timashovy.socialnetwork.dao",
+        "com.getjavajob.training.timashovy.socialnetwork.messaging"
 })
 public class WebConfig implements WebMvcConfigurer {
 

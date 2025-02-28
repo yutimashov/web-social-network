@@ -1,8 +1,9 @@
-package com.getjavajob.training.timashovy.socialnetwork.service.rabbitmq;
+package com.getjavajob.training.timashovy.socialnetwork.messaging.scheduler;
 
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.messaging.model.BirthdayNotification;
+import com.getjavajob.training.timashovy.socialnetwork.messaging.producer.EventProducer;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
-import com.getjavajob.training.timashovy.socialnetwork.service.rabbitmq.dto.BirthdayNotification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -22,8 +23,9 @@ public class BirthdayNotificationScheduler {
         this.accountService = accountService;
     }
 
-    @Scheduled(cron = "0 20 16 * * ?", zone = "Europe/Minsk")
+    @Scheduled(cron = "0 38 20 * * ?", zone = "Europe/Minsk")
     public void checkBirthdays() {
+        System.out.println("Starting connection to rabbit");
         sendNotification(accountService.getById(1L).get(), accountService.getById(2L).get());
         /*LocalDate today = LocalDate.now();
         List<Account> birthdayAccounts = accountService.getAccountWithBirthdayToday(today.getMonthValue(),
