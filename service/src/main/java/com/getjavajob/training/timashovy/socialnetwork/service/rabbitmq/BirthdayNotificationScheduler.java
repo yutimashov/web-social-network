@@ -22,7 +22,7 @@ public class BirthdayNotificationScheduler {
         this.accountService = accountService;
     }
 
-    @Scheduled(cron = "0 51 15 * * ?", zone = "Europe/Minsk")
+    @Scheduled(cron = "0 20 16 * * ?", zone = "Europe/Minsk")
     public void checkBirthdays() {
         sendNotification(accountService.getById(1L).get(), accountService.getById(2L).get());
         /*LocalDate today = LocalDate.now();
@@ -54,8 +54,8 @@ public class BirthdayNotificationScheduler {
     }
 
     private void sendNotification(Account user, Account friend) {
-        eventProducer.sendEvent(new BirthdayNotification(user.getId(), user.getFirstName(), friend.getFirstName(),
-                friend.getEmail(), friend.getId()));
+        eventProducer.sendEvent(new BirthdayNotification(user.getId(), user.getFirstName(), user.getLastName(),
+                friend.getFirstName(), friend.getLastName(), friend.getEmail(), friend.getId()));
     }
 
 }
