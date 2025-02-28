@@ -16,7 +16,7 @@ public class NotificationService implements EventProducer {
 
     @Override
     public void sendEvent(Object message) {
-        rabbitTemplate.convertAndSend("social-network-exchange", "social.network.events", message);
+        rabbitTemplate.convertAndSend("gjj-exchange", "notifications.birthday", message);
     }
 
 }

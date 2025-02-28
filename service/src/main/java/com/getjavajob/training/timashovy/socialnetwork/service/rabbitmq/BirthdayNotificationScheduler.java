@@ -8,9 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
-import java.time.Instant;
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -25,18 +22,15 @@ public class BirthdayNotificationScheduler {
         this.accountService = accountService;
     }
 
-    @Scheduled(cron = "0 1 16 * * ?", zone = "Europe/Minsk")
+    @Scheduled(cron = "0 51 15 * * ?", zone = "Europe/Minsk")
     public void checkBirthdays() {
-        LocalDate today = LocalDate.now();
-        logger.info("Start getting accounts with today`s birthday");
-        Instant start = Instant.now();
+        sendNotification(accountService.getById(1L).get(), accountService.getById(2L).get());
+        /*LocalDate today = LocalDate.now();
         List<Account> birthdayAccounts = accountService.getAccountWithBirthdayToday(today.getMonthValue(),
                 today.getDayOfMonth());
         for (Account account : birthdayAccounts) {
             notifyFriends(account);
-        }
-        Duration timeElapsed = Duration.between(start, Instant.now());
-        logger.info("Finish job of sending event of users birthdays: " + timeElapsed.toMillis() + " ms");
+        }*/
     }
 
     public void notifyFriends(Account user) {
@@ -60,9 +54,8 @@ public class BirthdayNotificationScheduler {
     }
 
     private void sendNotification(Account user, Account friend) {
-        BirthdayNotification birthdayNotification = new BirthdayNotification(user.getId(), user.getFirstName(),
-                friend.getFirstName(), friend.getEmail(), friend.getId());
-        eventProducer.sendEvent(birthdayNotification);
+        eventProducer.sendEvent(new BirthdayNotification(user.getId(), user.getFirstName(), friend.getFirstName(),
+                friend.getEmail(), friend.getId()));
     }
 
 }

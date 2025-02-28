@@ -1,5 +1,7 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.rabbitmq.dto;
 
+import java.time.LocalDateTime;
+
 public class BirthdayNotification {
 
     private Long userId;
@@ -7,13 +9,16 @@ public class BirthdayNotification {
     private String userLastName;
     private String friendEmail;
     private Long friendId;
+    private LocalDateTime creationDateTime;
 
-    public BirthdayNotification(Long userId, String userFirstName, String userLastName, String friendEmail, Long friendId) {
+    public BirthdayNotification(Long userId, String userFirstName, String userLastName, String friendEmail,
+                                Long friendId) {
         this.userId = userId;
         this.userFirstName = userFirstName;
         this.userLastName = userLastName;
         this.friendEmail = friendEmail;
         this.friendId = friendId;
+        this.creationDateTime = LocalDateTime.now();
     }
 
     public Long getUserId() {
@@ -54,6 +59,14 @@ public class BirthdayNotification {
 
     public void setFriendId(Long friendId) {
         this.friendId = friendId;
+    }
+
+    public LocalDateTime getCreationDateTime() {
+        return creationDateTime;
+    }
+
+    public void setCreationDateTime(LocalDateTime creationDateTime) {
+        this.creationDateTime = creationDateTime;
     }
 
 }
