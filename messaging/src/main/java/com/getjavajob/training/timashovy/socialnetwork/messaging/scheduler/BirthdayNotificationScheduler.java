@@ -9,7 +9,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
+
+import static java.time.LocalDate.now;
 
 @Service
 public class BirthdayNotificationScheduler {
@@ -23,16 +26,14 @@ public class BirthdayNotificationScheduler {
         this.accountService = accountService;
     }
 
-    @Scheduled(cron = "0 38 20 * * ?", zone = "Europe/Minsk")
+    @Scheduled(cron = "0 48 18 * * ?", zone = "Europe/Minsk")
     public void checkBirthdays() {
-        System.out.println("Starting connection to rabbit");
-        sendNotification(accountService.getById(1L).get(), accountService.getById(2L).get());
-        /*LocalDate today = LocalDate.now();
+        LocalDate today = now();
         List<Account> birthdayAccounts = accountService.getAccountWithBirthdayToday(today.getMonthValue(),
                 today.getDayOfMonth());
         for (Account account : birthdayAccounts) {
             notifyFriends(account);
-        }*/
+        }
     }
 
     public void notifyFriends(Account user) {
@@ -42,7 +43,6 @@ public class BirthdayNotificationScheduler {
         while (hasMoreFriends) {
             List<Account> friendsPage = accountService.getFriends(user.getId(), lastFriendId, pageSize);
             if (friendsPage.isEmpty()) {
-                hasMoreFriends = false;
                 break;
             }
             for (Account friend : friendsPage) {
@@ -56,8 +56,9 @@ public class BirthdayNotificationScheduler {
     }
 
     private void sendNotification(Account user, Account friend) {
-        eventProducer.sendEvent(new BirthdayNotification(user.getId(), user.getFirstName(), user.getLastName(),
-                friend.getFirstName(), friend.getLastName(), friend.getEmail(), friend.getId()));
+        eventProducer.sendEvent("gjj-exchange", "notifications.birthday",
+                new BirthdayNotification(user.getId(), user.getFirstName(), user.getLastName(),
+                        friend.getFirstName(), friend.getLastName(), friend.getEmail(), friend.getId()));
     }
 
 }
