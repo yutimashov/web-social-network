@@ -56,7 +56,7 @@ public class BirthdayNotificationScheduler {
     }
 
     private void sendNotification(Account user, Account friend) {
-        eventProducer.sendEvent("gjj-exchange", "notifications.birthday",
+        eventProducer.sendEvent("gjj", "notifications.birthday",
                 new BirthdayNotification(user.getId(), user.getFirstName(), user.getLastName(),
                         friend.getFirstName(), friend.getLastName(), friend.getEmail(), friend.getId()));
     }
