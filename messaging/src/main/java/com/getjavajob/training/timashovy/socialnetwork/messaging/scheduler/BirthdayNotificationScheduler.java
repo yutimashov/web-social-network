@@ -4,7 +4,6 @@ import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.messaging.model.BirthdayNotification;
 import com.getjavajob.training.timashovy.socialnetwork.messaging.producer.EventProducer;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
-import org.slf4j.Logger;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -12,14 +11,12 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static java.time.LocalDate.now;
-import static org.slf4j.LoggerFactory.getLogger;
 
 @Service
 public class BirthdayNotificationScheduler {
 
     private final EventProducer eventProducer;
     private final AccountService accountService;
-    private static final Logger logger = getLogger(BirthdayNotificationScheduler.class);
 
     public BirthdayNotificationScheduler(EventProducer eventProducer, AccountService accountService) {
         this.eventProducer = eventProducer;
