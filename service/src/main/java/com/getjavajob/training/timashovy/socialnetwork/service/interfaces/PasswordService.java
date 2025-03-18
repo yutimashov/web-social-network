@@ -11,8 +11,6 @@ public interface PasswordService {
 
     Optional<Password> get(Long accountId);
 
-    Optional<Password> findPasswordByEmail(String email);
-
     void delete(Long id);
 
 }

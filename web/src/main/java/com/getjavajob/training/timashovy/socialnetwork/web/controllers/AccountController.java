@@ -14,6 +14,7 @@ import com.getjavajob.training.timashovy.socialnetwork.service.util.exceptions.S
 import com.getjavajob.training.timashovy.socialnetwork.web.dto.AccountDto;
 import com.getjavajob.training.timashovy.socialnetwork.web.mappers.AccountMapper;
 import com.getjavajob.training.timashovy.socialnetwork.web.util.exceptions.WebException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +28,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -50,6 +52,8 @@ public class AccountController {
     private final PhoneService phoneService;
     private final AdminService adminService;
     private final XmlDataHandler xmlDataHandler;
+    private final int accountPageSize = 40;
+    private final int accountPageInitialNumber = 0;
     private static final Logger logger = getLogger(AccountController.class);
 
     public AccountController(AccountService accountService, MessageService messageService, PhoneService phoneService,
@@ -65,9 +69,10 @@ public class AccountController {
     public String account(@RequestParam("id") Long accountId,
                           @SessionAttribute Account account,
                           Model model) {
-        Optional<Account> maybeAccount = accountService.getById(accountId);
+        Optional<Account> maybeAccount = Objects.equals(accountId, account.getId()) ? Optional.of(account)
+                : accountService.getById(accountId);
         if (maybeAccount.isPresent()) {
-            if (accountService.checkFriendshipRecordExistence(account.getId(), accountId)) {
+            if (accountService.checkFriendshipRecordExistence(maybeAccount.get().getId(), accountId)) {
                 model.addAttribute("alreadySentFriendRequest", true);
             }
             model.addAttribute("account", maybeAccount.get());
@@ -82,9 +87,25 @@ public class AccountController {
     }
 
     @GetMapping("/all")
-    public String allAccounts(Model model) {
-        model.addAttribute("accounts", accountService.getAll());
-        return "account/all";
+    public String allAccounts(Model model,
+                              @SessionAttribute Account account,
+                              @RequestParam(required = false, defaultValue = "0") Long lastId,
+                              @RequestParam(defaultValue = "100") int limit,
+                              @RequestParam(required = false, defaultValue = "false") boolean isAjax) {
+        List<Account> accountsBatch = accountService.getAccounts(account.getId(), lastId, limit);
+        if (!accountsBatch.isEmpty()) {
+            Long newLastId = accountsBatch.stream()
+                    .map(Account::getId)
+                    .max(Long::compareTo)
+                    .orElse(lastId);
+            model.addAttribute("accounts", accountsBatch);
+            model.addAttribute("lastId", newLastId);
+            model.addAttribute("limit", limit);
+        } else {
+            model.addAttribute("accounts", Collections.emptyList());
+            model.addAttribute("hasMore", false);
+        }
+        return !isAjax ? "account/all" : "account/ajaxFragment";
     }
 
     @GetMapping("/delete")
@@ -109,11 +130,15 @@ public class AccountController {
     @GetMapping("/edit")
     public String edit(Model model,
                        @RequestParam("id") Long accountId) {
-        if (accountService.getById(accountId).isPresent()) {
-            model.addAttribute("account", accountService.getById(accountId).get());
-            model.addAttribute("avatarInputStream", accountService.getById(accountId).get().getAvatar());
-            model.addAttribute("personalPhones", phoneService.getPhones(accountId, PERSONAL));
-            model.addAttribute("workingPhones", phoneService.getPhones(accountId, WORKING));
+        Optional<Account> maybeAccount = accountService.getById(accountId);
+        if (maybeAccount.isPresent()) {
+            model.addAttribute("account", maybeAccount.get());
+            model.addAttribute("avatarInputStream", maybeAccount.get().getAvatar());
+            logger.info("trying get phones for account id: {}", accountId);
+            logger.info("personal phones: {}", phoneService.getPhoneNumbers(accountId, PERSONAL));
+            logger.info("working phones: {}", phoneService.getPhoneNumbers(accountId, WORKING));
+            model.addAttribute("personalPhones", phoneService.getPhoneNumbers(accountId, PERSONAL));
+            model.addAttribute("workingPhones", phoneService.getPhoneNumbers(accountId, WORKING));
             return "account/edit";
         } else {
             return "error/404";

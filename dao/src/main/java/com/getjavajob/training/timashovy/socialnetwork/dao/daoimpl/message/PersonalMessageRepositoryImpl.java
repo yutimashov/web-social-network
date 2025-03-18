@@ -1,49 +1,49 @@
 package com.getjavajob.training.timashovy.socialnetwork.dao.daoimpl.message;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.message.PersonalMessageRepository;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.repositories.message.PersonalMessageRepository;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.springdatarepositories.message.PersonalMessageRepositorySpringData;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalMessage;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
-
-import static java.util.Objects.isNull;
 
 @Repository
 public class PersonalMessageRepositoryImpl implements PersonalMessageRepository {
 
+    private final PersonalMessageRepositorySpringData personalMessageRepositorySpringData;
+
     @PersistenceContext
     private EntityManager entityManager;
 
+    public PersonalMessageRepositoryImpl(PersonalMessageRepositorySpringData personalMessageRepositorySpringData) {
+        this.personalMessageRepositorySpringData = personalMessageRepositorySpringData;
+    }
+
     @Override
     public PersonalMessage save(PersonalMessage personalMessage) {
-        entityManager.persist(personalMessage);
+        personalMessageRepositorySpringData.save(personalMessage);
         return personalMessage;
     }
 
     @Override
     public Optional<PersonalMessage> getById(Long id) {
-        try {
-            PersonalMessage existingMessage = entityManager.createQuery(
-                            "select pm from PersonalMessage pm where pm.id = :messageId", PersonalMessage.class)
-                    .setParameter("messageId", id)
-                    .getSingleResult();
-            return Optional.ofNullable(existingMessage);
-        } catch (NoResultException e) {
-            return Optional.empty();
-        }
+        return personalMessageRepositorySpringData.findById(id);
     }
 
     @Override
     public void delete(Long id) {
-        PersonalMessage existingPersonalMessage = entityManager.find(PersonalMessage.class, id);
-        if (!isNull(existingPersonalMessage)) {
-            entityManager.remove(existingPersonalMessage);
+        if (personalMessageRepositorySpringData.existsById(id)) {
+            personalMessageRepositorySpringData.deleteById(id);
         }
+    }
+
+    @Override
+    public List<PersonalMessage> getAllPersonalMessagesWithAccount(Long authorId, Long receiverId) {
+        return personalMessageRepositorySpringData.findAllPersonalMessagesBetweenAccounts(authorId, receiverId);
     }
 
     @Override
@@ -55,19 +55,6 @@ public class PersonalMessageRepositoryImpl implements PersonalMessageRepository 
                         Account.class
                 )
                 .setParameter("accountId", accountId)
-                .getResultList();
-    }
-
-    @Override
-    public List<PersonalMessage> getAllPersonalMessagesWithAccount(Long authorId, Long receiverId) {
-        return entityManager.createQuery(
-                        "select pm from PersonalMessage pm where " +
-                                "(pm.accountAuthorId = :authorId and pm.destinationId = :receiverId) " +
-                                "or (pm.accountAuthorId = :receiverId and pm.destinationId = :authorId)",
-                        PersonalMessage.class
-                )
-                .setParameter("authorId", authorId)
-                .setParameter("receiverId", receiverId)
                 .getResultList();
     }
 

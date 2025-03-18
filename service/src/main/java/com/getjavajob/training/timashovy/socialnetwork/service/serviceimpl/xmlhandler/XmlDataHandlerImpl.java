@@ -1,6 +1,6 @@
 package com.getjavajob.training.timashovy.socialnetwork.service.serviceimpl.xmlhandler;
 
-import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.account.AccountRepository;
+import com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.repositories.account.AccountRepository;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;

@@ -1,0 +1,21 @@
+package com.getjavajob.training.timashovy.socialnetwork.dao.interfaces.repositories.friendship;
+
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+
+import java.util.List;
+
+public interface FriendshipRepository {
+
+    void sendRequest(Account requester, Account receiver);
+
+    boolean acceptRequest(Long requesterId, Long accepterId);
+
+    void deleteFriend(Long accountId, Long deletingFriendId);
+
+    List<Account> getFollowerAccounts(Long accountId, Long lastId, int pageSize);
+
+    List<Account> getFollowingAccounts(Long accountId, Long lastId, int pageSize);
+
+    List<Account> getFriends(Long accountId, Long lastId, int pageSize);
+
+}
