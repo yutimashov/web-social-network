@@ -9,11 +9,16 @@ import com.getjavajob.training.timashovy.socialnetwork.domain.message.GroupMessa
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.Message;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalMessage;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalWallMessage;
+import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class MessageServiceImpl implements MessageService {
@@ -22,14 +27,75 @@ public class MessageServiceImpl implements MessageService {
     private final PersonalWallMessageRepository accountWallMessageDao;
     private final PersonalMessageRepository personalMessageDao;
     private final GroupRepository groupRepository;
+    private final AccountService accountService;
+    private final RedisTemplate<String, String> redisTemplate;
 
     public MessageServiceImpl(GroupMessageRepository groupMessageDao, PersonalWallMessageRepository accountWallMessageDao,
                               PersonalMessageRepository personalMessageDao,
-                              GroupRepository groupRepository) {
+                              GroupRepository groupRepository, RedisTemplate<String, String> redisTemplate,
+                              AccountService accountService) {
         this.groupMessageDao = groupMessageDao;
         this.accountWallMessageDao = accountWallMessageDao;
         this.personalMessageDao = personalMessageDao;
         this.groupRepository = groupRepository;
+        this.redisTemplate = redisTemplate;
+        this.accountService = accountService;
+    }
+
+    /**
+     * Get account's news feed
+     * At first tries to get data from Redis, after that - from DB
+     */
+    public List<PersonalWallMessage> getNewsFeed(Long accountId, int page, int pageSize) {
+        String key = "feed:" + accountId;
+        if (!redisTemplate.hasKey(key)) {
+            initializeUserFeed(accountId);
+        }
+        ZSetOperations<String, String> zSetOps = redisTemplate.opsForZSet();
+        Set<ZSetOperations.TypedTuple<String>> tuples = zSetOps.reverseRangeWithScores(key, (long) page * pageSize,
+                (long) (page + 1) * pageSize - 1);
+        List<Long> postIds = new ArrayList<>();
+        for (ZSetOperations.TypedTuple<String> tuple : tuples) {
+            postIds.add(Long.parseLong(tuple.getValue()));
+        }
+        List<PersonalWallMessage> messagesFromRedis = accountWallMessageDao.getPostsByAccountIds(postIds);
+        if (messagesFromRedis.size() < pageSize) {
+            List<PersonalWallMessage> messagesFromDb = accountWallMessageDao.findFriendMessagesByUserId(
+                    accountId, messagesFromRedis.size(), pageSize - messagesFromRedis.size());
+            messagesFromRedis.addAll(messagesFromDb);
+        }
+        return messagesFromRedis;
+    }
+
+    /**
+     * Инициализирует feed:{userId} для пользователя.
+     */
+    private void initializeUserFeed(Long userId) {
+        String key = "feed:" + userId;
+        List<Long> friendIds = accountService.getFriends(userId);
+        List<Message> friendMessages = messageRepository.findLatestMessagesByUserIds(friendIds, 100);
+        ZSetOperations<String, String> zSetOps = redisTemplate.opsForZSet();
+        friendMessages.forEach(message -> {
+            zSetOps.add(key, message.getId().toString(), message.getCreationDate().toEpochMilli());
+        });
+        // Ограничиваем размер ZSet до 10*n
+        zSetOps.trim(key, 0, 100 - 1); // n = 10, ограничение до 100 элементов
+    }
+
+    /**
+     * Добавляет новое сообщение в ленты всех друзей автора.
+     */
+    public void addPostToFriendsFeed(Message message) {
+        // Находим всех друзей автора
+        List<Long> friendIds = accountService.getFriends(message.getAuthorId());
+        // Добавляем сообщение в feed каждого друга
+        friendIds.forEach(friendId -> {
+            String key = "feed:" + friendId;
+            ZSetOperations<String, String> zSetOps = redisTemplate.opsForZSet();
+            zSetOps.add(key, message.getId().toString(), message.getCreatedTime().toEpochMilli());
+            // Ограничиваем размер ZSet до 10*n
+            zSetOps.trim(key, 0, 100 - 1); // n = 10, ограничение до 100 элементов
+        });
     }
 
     @Transactional

@@ -39,6 +39,16 @@ public class PersonalWallMessageRepositoryImpl implements PersonalWallMessageRep
     }
 
     @Override
+    public List<PersonalWallMessage> getPostsByAccountIds(List<Long> postIds) {
+        return null;
+    }
+
+    @Override
+    public List<PersonalWallMessage> findFriendMessagesByUserId(Long userId, int offset, int limit) {
+        return personalWallMessageRepositorySpringData.findFriendMessagesByUserId(userId, offset, limit);
+    }
+
+    @Override
     public void delete(Long id) {
         if (personalWallMessageRepositorySpringData.existsById(id)) {
             personalWallMessageRepositorySpringData.deleteById(id);

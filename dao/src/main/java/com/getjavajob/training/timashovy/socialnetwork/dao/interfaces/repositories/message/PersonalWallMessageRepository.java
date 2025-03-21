@@ -11,4 +11,8 @@ public interface PersonalWallMessageRepository extends Repository<Long, Personal
 
     List<PersonalWallMessage> getNewsFeed(Long accountId);
 
+    List<PersonalWallMessage> getPostsByAccountIds(List<Long> postIds);
+
+    List<PersonalWallMessage> findFriendMessagesByUserId(Long userId, int offset, int limit);
+
 }

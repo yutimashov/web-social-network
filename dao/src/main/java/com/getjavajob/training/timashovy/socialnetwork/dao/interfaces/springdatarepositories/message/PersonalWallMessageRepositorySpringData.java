@@ -34,4 +34,16 @@ public interface PersonalWallMessageRepositorySpringData extends CrudRepository<
     )
     List<PersonalWallMessage> findAccountNewsFeed(@Param("accountId") Long accountId);
 
+    @Query("SELECT m FROM PersonalWallMessage m WHERE m.id IN :postIds")
+    List<PersonalWallMessage> getById(@Param("postIds") List<Long> postIds);
+
+    @Query("SELECT m FROM PersonalWallMessage m " +
+            "WHERE m.accountAuthorId IN :friendIds " +
+            "ORDER BY m.creationDate DESC")
+    List<PersonalWallMessage> findFriendMessagesByUserId(
+            @Param("userId") Long userId,
+            @Param("offset") int offset,
+            @Param("limit") int limit
+    );
+
 }
