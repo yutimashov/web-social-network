@@ -9,4 +9,6 @@ public interface PersonalWallMessageRepository extends Repository<Long, Personal
 
     List<PersonalWallMessage> getAll(Long accountId);
 
+    List<PersonalWallMessage> getNewsFeed(Long accountId);
+
 }

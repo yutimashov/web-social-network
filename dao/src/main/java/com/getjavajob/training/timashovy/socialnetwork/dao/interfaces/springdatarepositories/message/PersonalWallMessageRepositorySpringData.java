@@ -21,4 +21,17 @@ public interface PersonalWallMessageRepositorySpringData extends CrudRepository<
             """)
     List<PersonalWallMessage> findAllByAccountReceiverIdOrderByCreationDateDesc(@Param("accountId") Long accountId);
 
+    @Query(value = """
+        SELECT m.*
+         FROM message_data.personal_wall_messages m
+         WHERE account_receiver_id IN (
+         	SELECT id_2 AS friend_id FROM friend_data.friendship WHERE id_1 = :accountId AND status = true
+             UNION ALL
+             SELECT id_1 AS friend_id FROM friend_data.friendship WHERE id_2 = :accountId AND status = true
+         )
+         ORDER BY m.creation_date DESC;
+        """, nativeQuery = true
+    )
+    List<PersonalWallMessage> findAccountNewsFeed(@Param("accountId") Long accountId);
+
 }

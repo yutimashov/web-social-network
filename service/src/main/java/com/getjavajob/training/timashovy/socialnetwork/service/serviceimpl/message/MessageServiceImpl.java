@@ -91,6 +91,11 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    public List<PersonalWallMessage> getNewsFeed(Long destinationId) {
+        return accountWallMessageDao.getNewsFeed(destinationId);
+    }
+
+    @Override
     public List<Account> getAllAccountsWithPersonalMessages(Long accountId) {
         return personalMessageDao.getAllAccounts(accountId);
     }

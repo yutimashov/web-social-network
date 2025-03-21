@@ -71,4 +71,11 @@ public class MessageController {
         return "redirect:/account/messages/dialog?id=" + destinationId;
     }
 
+    @GetMapping("/newsfeed")
+    public String newsFeed(@SessionAttribute Account account,
+                           Model model) {
+        model.addAttribute("newsfeed", messageService.getNewsFeed(account.getId()));
+        return "account/newsfeed";
+    }
+
 }

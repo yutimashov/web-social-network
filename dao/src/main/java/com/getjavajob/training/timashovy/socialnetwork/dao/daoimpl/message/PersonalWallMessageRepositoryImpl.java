@@ -34,6 +34,11 @@ public class PersonalWallMessageRepositoryImpl implements PersonalWallMessageRep
     }
 
     @Override
+    public List<PersonalWallMessage> getNewsFeed(Long accountId) {
+        return personalWallMessageRepositorySpringData.findAccountNewsFeed(accountId);
+    }
+
+    @Override
     public void delete(Long id) {
         if (personalWallMessageRepositorySpringData.existsById(id)) {
             personalWallMessageRepositorySpringData.deleteById(id);
