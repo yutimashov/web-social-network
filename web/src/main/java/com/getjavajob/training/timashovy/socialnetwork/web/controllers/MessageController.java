@@ -75,6 +75,7 @@ public class MessageController {
     public String newsFeed(@SessionAttribute Account account,
                            Model model) {
         model.addAttribute("newsfeed", messageService.getNewsFeed(account.getId()));
+        model.addAttribute("accountService", accountService);
         return "account/newsfeed";
     }
 
