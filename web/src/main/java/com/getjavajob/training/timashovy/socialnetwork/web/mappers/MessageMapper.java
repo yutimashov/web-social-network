@@ -16,6 +16,7 @@ public class MessageMapper {
                     .accountAuthorId(accountAuthorId)
                     .accountReceiverId(destinationId)
                     .text(messageDto.getText())
+                    .creationDate(messageDto.getCreationDate())
                     .photo(messageDto.getPhoto() != null && messageDto.getPhoto().getSize() > 0
                             ? messageDto.getPhoto().getBytes() : null)
                     .build();

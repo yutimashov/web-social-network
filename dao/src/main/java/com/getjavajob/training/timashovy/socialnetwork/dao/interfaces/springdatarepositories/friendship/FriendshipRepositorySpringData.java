@@ -86,4 +86,11 @@ public interface FriendshipRepositorySpringData extends CrudRepository<Friendshi
             """)
     void deleteFriend(@Param("accountId") Long accountId, @Param("deletingFriendId") Long deletingFriendId);
 
+    @Query(value = """
+            SELECT id_2 AS friend_id FROM friend_data.friendship WHERE id_1 = :accountId AND status = true
+            UNION ALL
+            SELECT id_1 AS friend_id FROM friend_data.friendship WHERE id_2 = :accountId AND status = true;
+            """, nativeQuery = true)
+    List<Long> getFriendsIds(@Param("accountId") Long accountId);
+
 }

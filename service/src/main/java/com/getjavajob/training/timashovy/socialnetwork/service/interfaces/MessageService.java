@@ -32,6 +32,6 @@ public interface MessageService {
 
     List<PersonalMessage> getAllPersonalMessagesWithAccount(Long authorId, Long receiverId);
 
-    List<PersonalWallMessage> getNewsFeed(Long destinationId);
+    List<PersonalWallMessage> getNewsFeed(Long destinationId, int pageSize);
 
 }

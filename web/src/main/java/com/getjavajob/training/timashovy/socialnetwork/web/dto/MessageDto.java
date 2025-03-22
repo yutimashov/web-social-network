@@ -2,12 +2,15 @@ package com.getjavajob.training.timashovy.socialnetwork.web.dto;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+
 public class MessageDto {
 
     private Long accountAuthorId;
     private Long destinationId;
     private String text;
     private MultipartFile photo;
+    private LocalDate creationDate = LocalDate.now();
 
     public MessageDto() {
     }
@@ -42,6 +45,14 @@ public class MessageDto {
 
     public void setPhoto(MultipartFile photo) {
         this.photo = photo;
+    }
+
+    public LocalDate getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDate creationDate) {
+        this.creationDate = creationDate;
     }
 
 }

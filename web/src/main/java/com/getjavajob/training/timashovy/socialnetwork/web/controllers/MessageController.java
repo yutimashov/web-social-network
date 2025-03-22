@@ -74,7 +74,7 @@ public class MessageController {
     @GetMapping("/newsfeed")
     public String newsFeed(@SessionAttribute Account account,
                            Model model) {
-        model.addAttribute("newsfeed", messageService.getNewsFeed(account.getId()));
+        model.addAttribute("newsfeed", messageService.getNewsFeed(account.getId(), 50));
         model.addAttribute("accountService", accountService);
         return "account/newsfeed";
     }

@@ -18,4 +18,6 @@ public interface FriendshipRepository {
 
     List<Account> getFriends(Long accountId, Long lastId, int pageSize);
 
+    List<Long> getFriendsIds(Long accountId);
+
 }

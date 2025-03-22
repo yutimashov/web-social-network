@@ -40,12 +40,17 @@ public class PersonalWallMessageRepositoryImpl implements PersonalWallMessageRep
 
     @Override
     public List<PersonalWallMessage> getPostsByAccountIds(List<Long> postIds) {
-        return null;
+        return personalWallMessageRepositorySpringData.getById(postIds);
     }
 
     @Override
     public List<PersonalWallMessage> findFriendMessagesByUserId(Long userId, int offset, int limit) {
         return personalWallMessageRepositorySpringData.findFriendMessagesByUserId(userId, offset, limit);
+    }
+
+    @Override
+    public List<PersonalWallMessage> findNewsFeedLatestMessages(Long userId, int limit) {
+        return personalWallMessageRepositorySpringData.findNewsFeedLatestMessages(userId, limit);
     }
 
     @Override
