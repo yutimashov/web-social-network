@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.web.session;
+package com.getjavajob.training.timashovy.socialnetwork.web.config.session;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
