@@ -1,4 +1,4 @@
-package com.getjavajob.training.timashovy.socialnetwork.web.config.caching;
+package com.getjavajob.training.timashovy.socialnetwork.web.caching;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
