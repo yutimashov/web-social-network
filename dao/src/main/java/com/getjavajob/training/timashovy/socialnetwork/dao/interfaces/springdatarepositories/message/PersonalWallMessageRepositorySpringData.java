@@ -40,20 +40,19 @@ public interface PersonalWallMessageRepositorySpringData extends CrudRepository<
     @Query(value = """
             SELECT DISTINCT m.*
             FROM message_data.personal_wall_messages m
-            JOIN friend_data.friendship f
-            ON m.account_receiver_id = f.id_2 OR m.account_receiver_id = f.id_1
-            WHERE (:userId = f.id_1 OR :userId = f.id_2 AND m.account_author_id != m.account_receiver_id)
-            AND f.status = true
+            JOIN friend_data.friendship f ON m.account_receiver_id = f.id_2 OR m.account_receiver_id = f.id_1
+            WHERE (:userId = f.id_1 OR :userId = f.id_2)
             AND m.account_author_id != :userId
             AND m.account_receiver_id != :userId
+            AND f.status = true
+            AND m.id > :lastPostId
             ORDER BY m.creation_date DESC
-            OFFSET :offset
             LIMIT :limit;
             """, nativeQuery = true
     )
     List<PersonalWallMessage> findFriendMessagesByUserId(
             @Param("userId") Long userId,
-            @Param("offset") int offset,
+            @Param("lastPostId") Long lastPostId,
             @Param("limit") int limit
     );
 

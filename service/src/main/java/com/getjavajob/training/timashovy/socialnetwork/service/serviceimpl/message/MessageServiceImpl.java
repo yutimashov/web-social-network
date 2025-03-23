@@ -12,16 +12,18 @@ import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalWa
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import static java.lang.Long.parseLong;
+import static java.time.ZoneOffset.UTC;
+import static org.slf4j.LoggerFactory.getLogger;
 
 @Service
 public class MessageServiceImpl implements MessageService {
@@ -32,9 +34,12 @@ public class MessageServiceImpl implements MessageService {
     private final GroupRepository groupRepository;
     private final AccountService accountService;
     private final RedisTemplate<String, String> redisTemplate;
-    private static final Logger logger = LoggerFactory.getLogger(MessageServiceImpl.class);
+    private static final Logger logger = getLogger(MessageServiceImpl.class);
 
-    public MessageServiceImpl(GroupMessageRepository groupMessageDao, PersonalWallMessageRepository accountWallMessageDao,
+    private final int newsFeedCacheSize = 10;
+
+    public MessageServiceImpl(GroupMessageRepository groupMessageDao,
+                              PersonalWallMessageRepository accountWallMessageDao,
                               PersonalMessageRepository personalMessageDao, GroupRepository groupRepository,
                               RedisTemplate<String, String> redisTemplate, AccountService accountService) {
         this.groupMessageDao = groupMessageDao;
@@ -50,48 +55,40 @@ public class MessageServiceImpl implements MessageService {
      * At first tries to get data from Redis, after that pulling news feed posts from DB
      */
     @Override
-    public List<PersonalWallMessage> getNewsFeed(Long accountId, int pageSize) {
-        logger.info("Trying get news feed for account: {}", accountId);
+    public List<PersonalWallMessage> getNewsFeed(Long accountId, Long lastPostId, Long cacheStartRange, int pageSize) {
         String key = "feed:" + accountId;
         if (!redisTemplate.hasKey(key)) {
-            logger.info("Cache has not been initialized already for account: {}", accountId);
             initializeUserFeed(accountId);
         }
-        logger.info("Cache has been initialized already for account: {}", accountId);
         ZSetOperations<String, String> zSetOps = redisTemplate.opsForZSet();
-        Set<ZSetOperations.TypedTuple<String>> tuples = zSetOps.reverseRangeWithScores(key, 0, 99);
+        long finishRangeIndex = cacheStartRange + newsFeedCacheSize - 1;
+        Set<ZSetOperations.TypedTuple<String>> tuples = zSetOps.reverseRangeWithScores(key, cacheStartRange,
+                finishRangeIndex);
         List<Long> postIds = new ArrayList<>();
-        logger.info("Cache redis: getting data: postIds is empty");
-        for (ZSetOperations.TypedTuple<String> tuple : tuples) {
-            postIds.add(Long.parseLong(tuple.getValue()));
+        if (!tuples.isEmpty()) {
+            for (ZSetOperations.TypedTuple<String> tuple : tuples) {
+                postIds.add(parseLong(tuple.getValue()));
+            }
         }
-        logger.info("Cache redis: getting data: postIds is full: {}", postIds);
-        List<PersonalWallMessage> messagesFromRedis = accountWallMessageDao.getPostsByAccountIds(postIds);
-        logger.info("Got messages from redis: {}", messagesFromRedis);
-        if (messagesFromRedis.size() < pageSize) {
-            logger.info("Start getting news feed from db");
-            int redisNewsFeedSize = messagesFromRedis.size();
-            List<PersonalWallMessage> messagesFromDb = accountWallMessageDao.findFriendMessagesByUserId(
-                    accountId, redisNewsFeedSize, pageSize - redisNewsFeedSize
+        List<PersonalWallMessage> newsFeedPosts = accountWallMessageDao.getPostsByAccountIds(postIds);
+        if (newsFeedPosts.isEmpty()) {
+            return accountWallMessageDao.findFriendMessagesByUserId(
+                    accountId, lastPostId, pageSize
             );
-            logger.info("Got data from db: {}", messagesFromDb);
-            messagesFromRedis.addAll(messagesFromDb);
         }
-        logger.info("messagesFromRedis size: {}", messagesFromRedis.size());
-        return messagesFromRedis;
+        return newsFeedPosts;
     }
 
     /**
      * Lazy initialization of feed:{userId}
-     * getting 10*n (100 in this case) last posts from news feed
      */
     private void initializeUserFeed(Long userId) {
-        logger.info("initialize redis cache for account: {}", userId);
         String key = "feed:" + userId;
-        List<PersonalWallMessage> friendMessages = accountWallMessageDao.findNewsFeedLatestMessages(userId, 100);
+        List<PersonalWallMessage> friendMessages = accountWallMessageDao.findNewsFeedLatestMessages(userId,
+                newsFeedCacheSize);
         ZSetOperations<String, String> zSetOps = redisTemplate.opsForZSet();
         for (PersonalWallMessage friendMessage : friendMessages) {
-            zSetOps.add(key, friendMessage.getId().toString(), friendMessage.getCreationDate().atStartOfDay(ZoneOffset.UTC)
+            zSetOps.add(key, friendMessage.getId().toString(), friendMessage.getCreationDate().atStartOfDay(UTC)
                     .toInstant().toEpochMilli());
         }
     }
@@ -101,16 +98,13 @@ public class MessageServiceImpl implements MessageService {
      */
     public void addPostToFriendsFeed(PersonalWallMessage message) {
         List<Long> friendIds = accountService.getFriendsIds(message.getAccountReceiverId());
-        logger.info("account with id={} has friends: id={}", message.getAccountReceiverId(), friendIds);
         for (Long friendId : friendIds) {
             String key = "feed:" + friendId;
             ZSetOperations<String, String> zSetOps = redisTemplate.opsForZSet();
-            zSetOps.add(key, message.getId().toString(), message.getCreationDate().atStartOfDay(ZoneOffset.UTC)
+            zSetOps.add(key, message.getId().toString(), message.getCreationDate().atStartOfDay(UTC)
                     .toInstant().toEpochMilli());
-            logger.info("add to redis cache new post: id={} from wall of account: id={} to friend: id={}",
-                    message.getId(), message.getAccountReceiverId(), friendId);
-            if (zSetOps.size(key) > 100) {
-                zSetOps.removeRange(key, 99, 100);
+            if (zSetOps.size(key) > newsFeedCacheSize) {
+                zSetOps.removeRange(key, newsFeedCacheSize - 1, newsFeedCacheSize);
             }
         }
     }

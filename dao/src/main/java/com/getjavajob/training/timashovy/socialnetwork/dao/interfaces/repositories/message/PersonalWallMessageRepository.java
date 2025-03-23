@@ -13,7 +13,7 @@ public interface PersonalWallMessageRepository extends Repository<Long, Personal
 
     List<PersonalWallMessage> getPostsByAccountIds(List<Long> postIds);
 
-    List<PersonalWallMessage> findFriendMessagesByUserId(Long userId, int offset, int limit);
+    List<PersonalWallMessage> findFriendMessagesByUserId(Long userId, Long lastPostId, int limit);
 
     List<PersonalWallMessage> findNewsFeedLatestMessages(Long userId, int limit);
 

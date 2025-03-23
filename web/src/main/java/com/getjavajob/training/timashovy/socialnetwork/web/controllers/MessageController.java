@@ -1,18 +1,18 @@
 package com.getjavajob.training.timashovy.socialnetwork.web.controllers;
 
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalWallMessage;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
 import com.getjavajob.training.timashovy.socialnetwork.web.dto.MessageDto;
 import com.getjavajob.training.timashovy.socialnetwork.web.mappers.MessageMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+import static java.util.Collections.emptyList;
 
 @Controller
 @RequestMapping
@@ -73,10 +73,28 @@ public class MessageController {
 
     @GetMapping("/newsfeed")
     public String newsFeed(@SessionAttribute Account account,
+                           @RequestParam(required = false, defaultValue = "0") Long lastPostId,
+                           @RequestParam(required = false, defaultValue = "0") Long cacheStartRange,
+                           @RequestParam(defaultValue = "10") int pageSize,
+                           @RequestParam(required = false, defaultValue = "false") boolean isAjax,
                            Model model) {
-        model.addAttribute("newsfeed", messageService.getNewsFeed(account.getId(), 50));
-        model.addAttribute("accountService", accountService);
-        return "account/newsfeed";
+        List<PersonalWallMessage> newsFeedBatch = messageService.getNewsFeed(account.getId(), lastPostId,
+                cacheStartRange, pageSize);
+        if (!newsFeedBatch.isEmpty()) {
+            Long newLastId = newsFeedBatch.stream()
+                    .map(PersonalWallMessage::getId)
+                    .max(Long::compareTo)
+                    .orElse(lastPostId);
+            model.addAttribute("newsfeed", newsFeedBatch);
+            model.addAttribute("lastPostId", newLastId);
+            model.addAttribute("cacheStartRange", cacheStartRange);
+            model.addAttribute("limit", pageSize);
+            model.addAttribute("accountService", accountService);
+        } else {
+            model.addAttribute("newsfeed", emptyList());
+            model.addAttribute("hasMore", false);
+        }
+        return !isAjax ? "newsfeed/newsfeed" : "newsfeed/ajaxFragment";
     }
 
 }
