@@ -143,6 +143,14 @@
                                     class="fa-solid fa-people-group"></i>&nbsp;Create group</a>
                         </div>
                     </div>
+                    <!-- Account's news feed -->
+                    <div class="card mb-1">
+                        <div class="card-header">News feed</div>
+                        <div class="card-body row gx-3">
+                            <a href="${rootUrl}/newsfeed"><i
+                                    class="fa-solid fa-people-group"></i>&nbsp;News</a>
+                        </div>
+                    </div>
                 </c:if>
                 <!-- Account management buttons -->
                 <div class="m-2">

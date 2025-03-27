@@ -30,6 +30,8 @@ public interface AccountService {
 
     List<Account> getFriends(Long accountId, Long lastId, int pageSize);
 
+    List<Long> getFriendsIds(Long accountId);
+
     List<Account> getFollowerAccounts(Long accountId, Long lastId, int pageSize);
 
     List<Account> getFollowingAccounts(Long accountId, Long lastId, int pageSize);

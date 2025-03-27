@@ -151,6 +151,11 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    public List<Long> getFriendsIds(Long accountId) {
+        return friendshipRepository.getFriendsIds(accountId);
+    }
+
+    @Override
     public List<Account> getFollowerAccounts(Long accountId, Long lastId, int pageSize) {
         validateAccountId(accountId);
         return friendshipRepository.getFollowerAccounts(accountId, lastId, pageSize);
