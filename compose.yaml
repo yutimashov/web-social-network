@@ -1,8 +1,9 @@
-version: '3.3'
+name: gjj-web
 
 services:
+
   redis:
-    image: redis:latest
+    image: redis
     restart: always
     ports:
       - "6379:6379"
@@ -11,5 +12,32 @@ services:
       - /c:/redis/redis.conf:/usr/local/etc/redis/redis.conf
     environment:
       - REDIS_PASSWORD=1234
-      - REDIS_PORT=6379
-      - REDIS_DATABASES=16
+
+  postgres:
+    image: postgres
+    restart: always
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_DB=social_network
+      - POSTGRES_PASSWORD=21122012loliwe+
+      - POSTGRES_USER=postgres
+    volumes:
+      - ./db/dumps/social_network_dump.sql:/docker-entrypoint-initdb.d/social_network_dump.sql
+      - postgres_data:/var/lib/postgresql/data
+
+  rabbitmq:
+    image: rabbitmq
+    hostname: rabbitmq
+    restart: always
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    volumes:
+      - ./rabbitmq:/var/lib/rabbitmq
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
+volumes:
+  postgres_data:
