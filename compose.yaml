@@ -6,7 +6,7 @@ services:
     image: redis
     restart: always
     ports:
-      - "6379:6379"
+      - 6379
     volumes:
       - /c:/redis:/root/redis
       - /c:/redis/redis.conf:/usr/local/etc/redis/redis.conf
@@ -17,14 +17,19 @@ services:
     image: postgres
     restart: always
     ports:
-      - "5433:5432"
+      - "5432:5432"
     environment:
       - POSTGRES_DB=social_network
       - POSTGRES_PASSWORD=21122012loliwe+
       - POSTGRES_USER=postgres
     volumes:
-      - ./db/dumps/social_network_dump.sql:/docker-entrypoint-initdb.d/social_network_dump.sql
+      #- ./db/dumps/social_network_dump.sql:/docker-entrypoint-initdb.d/social_network_dump.sql
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d social_network" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   rabbitmq:
     image: rabbitmq
@@ -36,8 +41,26 @@ services:
     volumes:
       - ./rabbitmq:/var/lib/rabbitmq
     ports:
-      - "15672:15672"
-      - "5672:5672"
+      - 15672
+      - 5672
+
+  app:
+    restart: always
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
+    environment:
+      SERVER_PORT: 8080
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres:5432/social_network"
+      SPRING_RABBITMQ_HOST: "rabbitmq"
+      SPRING_DATA_REDIS_HOST: "redis"
 
 volumes:
   postgres_data:
