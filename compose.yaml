@@ -4,7 +4,7 @@ services:
 
   postgres:
     image: postgres:17-alpine
-    restart: always
+    restart: unless-stopped
     ports:
       - "${POSTGRES_HOST_PORT}:5432"
     environment:
@@ -40,7 +40,7 @@ services:
 
   rabbitmq:
     image: rabbitmq:3.11-management-alpine
-    restart: always
+    restart: unless-stopped
     ports:
       - "${RABBITMQ_WEB_PORT}:15672"
       - "${RABBITMQ_AMQP_PORT}:5672"
@@ -74,7 +74,7 @@ services:
         condition: service_healthy
     environment:
       SERVER_PORT: 8080
-      SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres:5432/${POSTGRES_DB}"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres:${POSTGRES_HOST_PORT}/${POSTGRES_DB}"
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
       SPRING_RABBITMQ_HOST: "rabbitmq"
       SPRING_DATA_REDIS_HOST: "redis"
