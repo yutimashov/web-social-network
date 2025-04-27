@@ -22,5 +22,6 @@
         <module>service</module>
         <module>web</module>
         <module>messaging</module>
+        <module>eureka</module>
     </modules>
 </project>
