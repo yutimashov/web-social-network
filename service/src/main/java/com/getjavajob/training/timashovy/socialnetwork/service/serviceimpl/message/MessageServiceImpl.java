@@ -12,6 +12,7 @@ import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalWa
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.service.interfaces.MessageService;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,12 @@ public class MessageServiceImpl implements MessageService {
     private final RedisTemplate<String, String> redisTemplate;
     private static final Logger logger = getLogger(MessageServiceImpl.class);
 
-    private final int newsFeedCacheSize = 10;
+    //TODO: extract to properties file
+    @Value("${redis.cache.newsfeed.size}")
+    private int newsFeedCacheSize;
+
+    @Value("${redis.cache.newsfeed.key.prefix}")
+    private String newsFeedCacheKeyPrefix;
 
     public MessageServiceImpl(GroupMessageRepository groupMessageDao,
                               PersonalWallMessageRepository accountWallMessageDao,
@@ -56,7 +62,7 @@ public class MessageServiceImpl implements MessageService {
      */
     @Override
     public List<PersonalWallMessage> getNewsFeed(Long accountId, Long lastPostId, Long cacheStartRange, int pageSize) {
-        String key = "feed:" + accountId;
+        String key = newsFeedCacheKeyPrefix + accountId;
         if (!redisTemplate.hasKey(key)) {
             initializeUserFeed(accountId);
         }
@@ -83,7 +89,7 @@ public class MessageServiceImpl implements MessageService {
      * Lazy initialization of feed:{userId}
      */
     private void initializeUserFeed(Long userId) {
-        String key = "feed:" + userId;
+        String key = newsFeedCacheKeyPrefix + userId;
         List<PersonalWallMessage> friendMessages = accountWallMessageDao.findNewsFeedLatestMessages(userId,
                 newsFeedCacheSize);
         ZSetOperations<String, String> zSetOps = redisTemplate.opsForZSet();
@@ -99,7 +105,7 @@ public class MessageServiceImpl implements MessageService {
     public void addPostToFriendsFeed(PersonalWallMessage message) {
         List<Long> friendIds = accountService.getFriendsIds(message.getAccountReceiverId());
         for (Long friendId : friendIds) {
-            String key = "feed:" + friendId;
+            String key = newsFeedCacheKeyPrefix + friendId;
             ZSetOperations<String, String> zSetOps = redisTemplate.opsForZSet();
             zSetOps.add(key, message.getId().toString(), message.getCreationDate().atStartOfDay(UTC)
                     .toInstant().toEpochMilli());
