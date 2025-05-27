@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -28,6 +29,9 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Table(name = "account_phones", schema = "account_data")
 @Entity
 public class Phone implements BaseEntity<Long>, Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 2363248207338750050L;
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
