@@ -3,7 +3,7 @@ package com.getjavajob.securityservice.security;
 import com.getjavajob.securityservice.service.account.AccountService;
 import com.getjavajob.securityservice.service.password.PasswordService;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
-import com.getjavajob.training.timashovy.socialnetwork.dto.password.PasswordDTO;
+import com.getjavajob.training.timashovy.socialnetwork.domain.password.Password;
 import com.getjavajob.training.timashovy.socialnetwork.security.AccountUserDetails;
 import org.slf4j.Logger;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,8 +30,9 @@ public class AccountDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Account account = accountService.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("cannot find account with provided email"));
-        PasswordDTO passwordDTO = passwordService.get(account.getId());
-        return new AccountUserDetails(account.getEmail(), passwordDTO.getPasswordValue(),
+        Password password = passwordService.get(account.getId())
+                .orElseThrow(() -> new UsernameNotFoundException("cannot find password for account with provided email"));
+        return new AccountUserDetails(account.getEmail(), password.getPasswordValue(),
                 createAuthorityList(account.getRole().name()));
     }
 

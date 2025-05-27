@@ -3,7 +3,6 @@ package com.getjavajob.securityservice.service.password;
 import com.getjavajob.securityservice.dao.password.PasswordRepository;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.password.Password;
-import com.getjavajob.training.timashovy.socialnetwork.dto.password.PasswordDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +39,8 @@ public class PasswordServiceImpl implements PasswordService {
     }
 
     @Override
-    public PasswordDTO get(Long accountId) {
-        Optional<Password> password = passwordRepository.getById(accountId);
-        PasswordDTO passwordDTO = new PasswordDTO(password.get().getId(), password.get().getPasswordValue());
-        return passwordDTO;
+    public Optional<Password> get(Long accountId) {
+        return passwordRepository.getById(accountId);
     }
 
 }
