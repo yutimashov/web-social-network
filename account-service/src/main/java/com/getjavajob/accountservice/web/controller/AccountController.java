@@ -220,11 +220,6 @@ public class AccountController {
         }
     }
 
-/*    @GetMapping("/account/update-by-id")
-    public void updateById(@RequestParam Account account, @RequestParam Long accountId) {
-        accountService.updateById(account, accountId);
-    }*/
-
 /*    @GetMapping("/find-by-email")
     public ResponseEntity<Optional<Account>> findByEmail(String email) {
         return ResponseEntity.ok(accountService.findByEmail(email));
