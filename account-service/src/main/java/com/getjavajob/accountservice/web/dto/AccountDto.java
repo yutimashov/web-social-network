@@ -1,4 +1,4 @@
-package com.getjavajob.accountservice.web;
+package com.getjavajob.accountservice.web.dto;
 
 import org.springframework.web.multipart.MultipartFile;
 

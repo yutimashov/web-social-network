@@ -40,6 +40,7 @@ public class AccountServiceImpl implements AccountService {
         validateAccountId(accountId);
         if (accountDao.getById(accountId).isPresent()) {
             accountDao.changeRole(accountId, ADMIN);
+            logger.info("Account={} becomes admin", accountId);
         }
     }
 
@@ -128,7 +129,7 @@ public class AccountServiceImpl implements AccountService {
             logger.error("account with id = {} is going to accept friend request with itself", requesterId);
             throw new IllegalArgumentException("Account cannot send friend request to themselves");
         }
-        if (!friendshipClient.checkExistence(requesterId, accepterId)) {
+        if (!friendshipClient.checkExistence(requesterId, accepterId).getBody()) {
             friendshipClient.sendRequest(accountDao.getById(requesterId).get(), accountDao.getById(accepterId).get());
             return;
         }
@@ -170,13 +171,6 @@ public class AccountServiceImpl implements AccountService {
     public List<Account> getFollowingAccounts(Long accountId, Long lastId, int pageSize) {
         validateAccountId(accountId);
         return friendshipClient.getFollowings(accountId, lastId, pageSize).getBody();
-    }
-
-    @Override
-    public boolean checkFriendshipRecordExistence(Long requesterId, Long accepterId) {
-        validateAccountId(requesterId);
-        validateAccountId(accepterId);
-        return friendshipClient.checkFriendship(requesterId, accepterId);
     }
 
     @Override

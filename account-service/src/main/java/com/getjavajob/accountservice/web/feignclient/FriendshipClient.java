@@ -12,10 +12,10 @@ import java.util.List;
 @FeignClient("FRIENDSHIP-SERVICE")
 public interface FriendshipClient {
 
-    @GetMapping("/check-existance")
-    boolean checkExistence(@RequestParam Long requesterId, @RequestParam Long accepterId);
+    @GetMapping("/friendship/check-existance")
+    ResponseEntity<Boolean> checkExistence(@RequestParam Long requesterId, @RequestParam Long accepterId);
 
-    @GetMapping("/check-friendship")
+    @GetMapping("/friendship/check-friendship")
     boolean checkFriendship(@RequestParam Long requesterId, @RequestParam Long accepterId);
 
     @GetMapping("/send-request")

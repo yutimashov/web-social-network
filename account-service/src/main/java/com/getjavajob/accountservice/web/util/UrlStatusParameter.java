@@ -1,4 +1,4 @@
-package com.getjavajob.accountservice.web;
+package com.getjavajob.accountservice.web.util;
 
 public enum UrlStatusParameter {
 

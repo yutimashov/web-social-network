@@ -1,4 +1,4 @@
-package com.getjavajob.accountservice;
+package com.getjavajob.accountservice.web.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;

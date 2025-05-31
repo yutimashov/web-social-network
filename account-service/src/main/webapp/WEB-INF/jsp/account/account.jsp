@@ -174,7 +174,7 @@
         <div class="col-xl-8">
             <c:if test="${sessionAccountId eq pageAccountId}">
                 <div>
-                    <form action="${rootUrl}/account-wall/message/create" method="POST" enctype="multipart/form-data">
+                    <form action="${rootUrl}/message/account/wall/create" method="POST" enctype="multipart/form-data">
                         <input type="hidden" name="accountReceiverId" value="${pageAccountId}">
                         <div class="mb-3">
                             <label for="text" class="form-label">New post:</label>

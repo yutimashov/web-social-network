@@ -1,4 +1,4 @@
-package com.getjavajob.accountservice;
+package com.getjavajob.accountservice.web.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

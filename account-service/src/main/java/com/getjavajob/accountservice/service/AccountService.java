@@ -1,7 +1,7 @@
 package com.getjavajob.accountservice.service;
 
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
-//import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,13 +11,14 @@ import java.util.Optional;
  */
 public interface AccountService {
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     void makeAdmin(Long accountId);
 
     Account create(Account account, String password, String personalPhones, String workingPhones);
 
     void update(Long accountId, Account updatedAccount);
 
-    //@PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     void delete(Long accountId);
 
     Optional<Account> getById(Long accountId);
@@ -37,8 +38,6 @@ public interface AccountService {
     List<Account> getFollowerAccounts(Long accountId, Long lastId, int pageSize);
 
     List<Account> getFollowingAccounts(Long accountId, Long lastId, int pageSize);
-
-    boolean checkFriendshipRecordExistence(Long requesterId, Long accepterId);
 
     Optional<Account> findByEmail(String email);
 
