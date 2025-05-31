@@ -24,7 +24,6 @@
         <module>messaging</module>
         <module>eureka</module>
         <module>account-service</module>
-        <module>password-service</module>
         <module>phone-service</module>
         <module>friendship-service</module>
         <module>group-service</module>
