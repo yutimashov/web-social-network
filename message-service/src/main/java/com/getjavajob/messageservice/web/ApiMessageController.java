@@ -1,6 +1,7 @@
 package com.getjavajob.messageservice.web;
 
 import com.getjavajob.messageservice.service.MessageService;
+import com.getjavajob.training.timashovy.socialnetwork.domain.message.GroupMessage;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalWallMessage;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +28,13 @@ public class ApiMessageController {
         return ResponseEntity
                 .status(OK)
                 .body(messageService.getAllAccountWallMessages(accountId));
+    }
+
+    @GetMapping("/wall/group")
+    public ResponseEntity<List<GroupMessage>> groupMessages(@RequestParam Long id) {
+        return ResponseEntity
+                .status(OK)
+                .body(messageService.getMessagesByGroupId(id));
     }
 
 }
