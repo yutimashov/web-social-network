@@ -13,11 +13,13 @@ import com.getjavajob.accountservice.web.feignclient.PhoneClient;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.phone.Phone;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -123,14 +125,17 @@ public class AccountController {
      * @return redirect to all accounts page or login (if account deleted themselves)
      */
     @DeleteMapping("/delete")
-    public String deleteAccount(@RequestParam("id") Long id,
-                                @SessionAttribute Account account) {
+    public void deleteAccount(@RequestParam("id") Long id,
+                              @SessionAttribute Account account,
+                              HttpServletRequest request,
+                              HttpServletResponse response) throws IOException {
         accountService.delete(id);
         logger.info("Account={} is deleted successfully", id);
         if (!Objects.equals(account.getId(), id)) {
-            return "redirect:/account/all";
+            response.sendRedirect(generateRedirectBaseURL(request, "/account/all"));
         } else {
-            return "redirect:/login" + DELETE_ACCOUNT_SUCCESS_STATUS.getValue();
+            response.sendRedirect(generateRedirectBaseURL(request, "/login" + DELETE_ACCOUNT_SUCCESS_STATUS
+                    .getValue()));
         }
     }
 
@@ -138,12 +143,13 @@ public class AccountController {
      * Make application admin.
      *
      * @param id new admin account id
-     * @return redirect to new admin account page
      */
     @GetMapping("/make-admin")
-    public String makeAdmin(@RequestParam("id") Long id) {
+    public void makeAdmin(@RequestParam("id") Long id,
+                          HttpServletRequest request,
+                          HttpServletResponse response) throws IOException {
         accountService.makeAdmin(id);
-        return "redirect:/account?id=" + id;
+        response.sendRedirect(generateRedirectBaseURL(request, "/account?id=" + id));
     }
 
     /**
@@ -169,14 +175,33 @@ public class AccountController {
     }
 
     @PostMapping("/edit")
-    public String update(@ModelAttribute AccountDto accountDto,
-                         @RequestParam("id") Long accountId,
-                         HttpServletRequest req) {
+    public void update(@ModelAttribute AccountDto accountDto,
+                       @RequestParam("id") Long accountId,
+                       HttpServletRequest req,
+                       HttpServletResponse response) throws IOException {
         accountService.update(accountId, new AccountMapper().toAccount(accountDto));
         addPhones(req, accountId);
         updatePhones(req);
         deletePhones(req);
-        return "redirect:/account?id=" + accountId;
+        response.sendRedirect(generateRedirectBaseURL(req, "/account?id=" + accountId));
+    }
+
+/*    private String generateRedirectBaseURL(HttpServletRequest request, Long accountId) {
+        String scheme = request.getScheme();
+        String serverName = request.getHeader("X-Forwarded-Host");
+        if (serverName == null || serverName.isEmpty()) {
+            serverName = request.getServerName();
+        }
+        return scheme + "://" + serverName + "/account?id=" + accountId;
+    }*/
+
+    private String generateRedirectBaseURL(HttpServletRequest request, String path) {
+        String scheme = request.getScheme() + "://";
+        String serverName = request.getHeader("X-Forwarded-Host");
+        if (serverName == null || serverName.isEmpty()) {
+            serverName = request.getServerName();
+        }
+        return scheme + serverName + path;
     }
 
     private void deletePhones(HttpServletRequest req) {
@@ -219,10 +244,5 @@ public class AccountController {
             throw new WebException("Problems with processing operations with phone numbers.");
         }
     }
-
-/*    @GetMapping("/find-by-email")
-    public ResponseEntity<Optional<Account>> findByEmail(String email) {
-        return ResponseEntity.ok(accountService.findByEmail(email));
-    }*/
 
 }
