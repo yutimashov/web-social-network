@@ -15,7 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
 
-import static com.getjavajob.securityservice.web.config.UrlStatusParameter.AUTH_DATA_ERROR;
+import static com.getjavajob.securityservice.web.util.UrlStatusParameter.AUTH_DATA_ERROR;
 
 
 /**
@@ -54,8 +54,6 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                //.addFilterBefore(new SetEncodingFilter(), WebAsyncManagerIntegrationFilter.class)
-                //.addFilterAfter(new AccountSessionFilter(), RememberMeAuthenticationFilter.class)
                 .authorizeHttpRequests(
                         registry -> {
                             registry.requestMatchers(loginUrl, registerUrl).permitAll();

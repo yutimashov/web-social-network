@@ -1,4 +1,4 @@
-package com.getjavajob.securityservice.security;
+package com.getjavajob.securityservice.service.security;
 
 import com.getjavajob.securityservice.service.account.AccountService;
 import com.getjavajob.securityservice.service.password.PasswordService;

@@ -16,4 +16,19 @@ public class LoginController {
         return "auth/login";
     }
 
+    @GetMapping("/register")
+    public String handleRegisterPage() {
+        return "auth/register";
+    }
+
+/*    @PostMapping("/register")
+    public String processAccountRegistration(@ModelAttribute AccountDto accountDto,
+                                             @RequestParam("password") String password,
+                                             @RequestParam("personalPhones") String personalPhones,
+                                             @RequestParam("workingPhones") String workingPhones) {
+        Account account = accountService.create(new AccountMapper().toAccount(accountDto), password, personalPhones,
+                workingPhones);
+        return "redirect:/login" + REG_SUCCESS.getValue();
+    }*/
+
 }

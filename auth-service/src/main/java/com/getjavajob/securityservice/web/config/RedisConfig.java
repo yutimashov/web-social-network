@@ -1,4 +1,4 @@
-package com.getjavajob.securityservice;
+package com.getjavajob.securityservice.web.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;

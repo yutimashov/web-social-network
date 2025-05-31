@@ -8,10 +8,10 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 @EnableFeignClients
 @EnableRedisHttpSession
 @SpringBootApplication
-public class SecurityServiceApplication {
+public class AuthServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SecurityServiceApplication.class, args);
+        SpringApplication.run(AuthServiceApplication.class, args);
     }
 
 }

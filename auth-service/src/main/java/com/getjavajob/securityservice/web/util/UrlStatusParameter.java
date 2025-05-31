@@ -1,4 +1,4 @@
-package com.getjavajob.securityservice.web.config;
+package com.getjavajob.securityservice.web.util;
 
 public enum UrlStatusParameter {
 
