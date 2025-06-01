@@ -2,7 +2,6 @@ package com.getjavajob.accountservice.web.controller;
 
 import com.getjavajob.accountservice.service.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Optional;
+
+import static org.springframework.http.HttpStatus.OK;
 
 @Controller
 @RequestMapping("/api/account")
@@ -24,7 +25,7 @@ public class AccountApiController {
     @GetMapping
     public ResponseEntity<Optional<Account>> accountById(@RequestParam Long id) {
         return ResponseEntity
-                .status(HttpStatus.OK)
+                .status(OK)
                 .body(accountService.getById(id));
     }
 
