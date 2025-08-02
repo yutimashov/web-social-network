@@ -18,4 +18,4 @@ FROM tomcat:11.0.5-jdk17-temurin-jammy
 WORKDIR /usr/local/tomcat/webapps
 EXPOSE 8081
 
-COPY --from=builder /opt/app/web/target/*.war ./auth-service.war
+COPY --from=builder /opt/app/target/*.war ./auth-service.war
