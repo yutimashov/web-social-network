@@ -1,4 +1,4 @@
-name: gjj-web
+name: gjj-web-microservices
 
 services:
 
@@ -58,26 +58,53 @@ services:
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
 
-  app:
+  # Discovery Service
+  eureka-server:
+    image: eureka
     restart: unless-stopped
-    build:
-      context: .
-      dockerfile: Dockerfile
     ports:
-      - "${APP_HOST_PORT}:8080"
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
+      - "${EUREKA_PORT}:12312"
     environment:
-      SERVER_PORT: 8080
-      SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres:5432/${POSTGRES_DB}"
-      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
-      SPRING_RABBITMQ_HOST: "rabbitmq"
-      SPRING_DATA_REDIS_HOST: "redis"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:12312/eureka
+    networks:
+      - backend-network
+
+  # API Gateway
+  api-gateway:
+    image: api-gateway
+    restart: unless-stopped
+    ports:
+      - "${GATEWAY_PORT}:8089"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:12312/eureka
+    depends_on:
+      - eureka-server
+    networks:
+      - backend-network
+
+  # Auth Service
+  auth-service:
+    image: auth-service:v0
+    restart: unless-stopped
+    ports:
+      - "${AUTH_SERVICE_PORT}:8080"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:12312/eureka
+    depends_on:
+      - eureka-server
+    networks:
+      - backend-network
+
+  # Account Service
+  account-service:
+    image: account-service
+    restart: unless-stopped
+    ports:
+      - "${ACCOUNT_SERVICE_PORT}:8080"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:12312/eureka
+    depends_on:
+      - eureka-server
     networks:
       - backend-network
 
@@ -88,4 +115,4 @@ volumes:
 
 networks:
   backend-network:
-    external: true
+    driver: bridge
