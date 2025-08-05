@@ -97,7 +97,7 @@ services:
 
   # Account Service
   account-service:
-    image: account-service
+    image: account-service:v0
     restart: unless-stopped
     ports:
       - "${ACCOUNT_SERVICE_PORT}:8080"
