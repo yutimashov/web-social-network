@@ -1,11 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <c:set var="rootUrl" value="${pageContext.request.contextPath}"/>
 <html>
 <head>
     <title>Registration</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css"
           integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA=="
-          crossorigin="anonymous" referrerpolicy="no-referrer" />
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
 </head>
 <body>
 <section class="bg-light py-3 py-md-5 d-flex justify-content-center align-items-center min-vh-100">
@@ -16,7 +17,7 @@
                     <div class="card-body p-3 p-md-4 p-xl-5">
                         <h2 class="fs-6 fw-normal text-center text-secondary mb-4">Sign up</h2>
                         <%-- Registration form --%>
-                        <form action="http://localhost:8089/register" method="POST" enctype="multipart/form-data"
+                        <form action="${rootUrl}/register" method="POST" enctype="multipart/form-data"
                               id="registerForm">
                             <input type="hidden" id="personalPhones" name="personalPhones">
                             <input type="hidden" id="workingPhones" name="workingPhones">

@@ -16,7 +16,7 @@
                 <div class="card border border-light-subtle rounded-3 shadow-sm">
                     <div class="card-body p-3 p-md-4 p-xl-5">
                         <h2 class="fs-6 fw-normal text-center text-secondary mb-4">Sign in to your account</h2>
-                        <form action="${pageContext.request.contextPath}/login" method="POST">
+                        <form action="${rootUrl}/login" method="POST">
                             <div class="mb-3">
                                 <c:choose>
                                     <c:when test="${param.error eq 'auth_data'}">

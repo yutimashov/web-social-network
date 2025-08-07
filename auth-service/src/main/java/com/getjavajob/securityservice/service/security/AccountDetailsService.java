@@ -28,6 +28,7 @@ public class AccountDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        logger.info("Attempt to login with email: {}", email);
         Account account = accountService.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("cannot find account with provided email"));
         Password password = passwordService.get(account.getId())
