@@ -171,6 +171,20 @@ services:
     networks:
       - backend-network
 
+  # Phone Service
+  phone-service:
+    image: phone-service:v0
+    container_name: phone-service
+    restart: unless-stopped
+    ports:
+      - "${PHONE_SERVICE_PORT}:8080"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:12312/eureka
+    depends_on:
+      - eureka-server
+    networks:
+      - backend-network
+
 volumes:
   postgres_data:
   redis_data:
