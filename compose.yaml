@@ -185,6 +185,20 @@ services:
     networks:
       - backend-network
 
+  # Search Service
+  search-service:
+    image: search-service:v0
+    container_name: search-service
+    restart: unless-stopped
+    ports:
+      - "${SEARCH_SERVICE_PORT}:8080"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:12312/eureka
+    depends_on:
+      - eureka-server
+    networks:
+      - backend-network
+
 volumes:
   postgres_data:
   redis_data:
