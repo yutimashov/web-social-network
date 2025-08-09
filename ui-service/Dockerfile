@@ -1,14 +1,6 @@
 FROM maven:3.9.9-amazoncorretto-17-al2023 as builder
 WORKDIR /opt/app
 COPY . .
-COPY lib/domain-1.0.0-SNAPSHOT.jar ./domain.jar
-
-RUN mvn install:install-file \
-      -Dfile=./domain.jar \
-      -DgroupId=com.getjavajob \
-      -DartifactId=domain \
-      -Dversion=1.0.0-SNAPSHOT \
-      -Dpackaging=jar
 
 RUN mvn clean package -DskipTests
 

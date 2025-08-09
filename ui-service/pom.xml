@@ -22,12 +22,6 @@
     </properties>
 
     <dependencies>
-        <!-- project modules -->
-        <dependency>
-            <groupId>com.getjavajob</groupId>
-            <artifactId>domain</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
         <!-- Tomcat -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -65,22 +59,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-        </dependency>
-        <!-- postgresql driver -->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-        </dependency>
-        <!-- jpa -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-logging</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
     </dependencies>
     <dependencyManagement>
