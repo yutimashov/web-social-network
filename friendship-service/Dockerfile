@@ -12,7 +12,7 @@ RUN mvn install:install-file \
 
 RUN mvn clean package -DskipTests
 
-FROM tomcat:11.0.5-jdk17-temurin-jammy
+FROM tomcat:11.0.5-jre17-temurin-jammy
 WORKDIR /usr/local/tomcat/webapps
 EXPOSE 8080
 
