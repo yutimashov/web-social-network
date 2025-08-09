@@ -14,6 +14,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>data-processing-service</name>
     <description>data-processing-service</description>
+    <packaging>war</packaging>
 
     <properties>
         <java.version>17</java.version>
@@ -26,6 +27,12 @@
             <groupId>com.getjavajob</groupId>
             <artifactId>domain</artifactId>
             <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <!-- Tomcat -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
         </dependency>
         <!-- spring cloud -->
         <dependency>
@@ -66,6 +73,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

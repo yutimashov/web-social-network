@@ -143,6 +143,34 @@ services:
     networks:
       - backend-network
 
+  # Group Service
+  group-service:
+    image: group-service:v0
+    container_name: group-service
+    restart: unless-stopped
+    ports:
+      - "${GROUP_SERVICE_PORT}:8080"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:12312/eureka
+    depends_on:
+      - eureka-server
+    networks:
+      - backend-network
+
+  # Data Processing Service
+  data-processing-service:
+    image: data-processing-service:v0
+    container_name: data-processing-service
+    restart: unless-stopped
+    ports:
+      - "${DATA_PROCESSING_SERVICE_PORT}:8080"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:12312/eureka
+    depends_on:
+      - eureka-server
+    networks:
+      - backend-network
+
 volumes:
   postgres_data:
   redis_data:
