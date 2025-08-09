@@ -199,6 +199,20 @@ services:
     networks:
       - backend-network
 
+  # UI Service
+  ui-service:
+    image: ui-service:v0
+    container_name: ui-service
+    restart: unless-stopped
+    ports:
+      - "${UI_SERVICE_PORT}:8080"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:12312/eureka
+    depends_on:
+      - eureka-server
+    networks:
+      - backend-network
+
 volumes:
   postgres_data:
   redis_data:
