@@ -63,7 +63,7 @@ services:
 
   # Discovery Service
   eureka-server:
-    image: eureka:v0
+    image: alonzoni/eureka:1.0
     hostname: eureka-server
     container_name: eureka-server
     restart: unless-stopped
@@ -74,7 +74,7 @@ services:
 
   # API Gateway
   api-gateway:
-    image: api-gateway:v0
+    image: alonzoni/api-gateway:1.0
     hostname: api-gateway
     container_name: api-gateway
     restart: unless-stopped
@@ -89,7 +89,7 @@ services:
 
   # Auth Service
   auth-service:
-    image: auth-service:v0
+    image: alonzoni/auth-service:1.0
     container_name: auth-service
     restart: unless-stopped
     ports:
@@ -103,7 +103,7 @@ services:
 
   # Account Service
   account-service:
-    image: account-service:v0
+    image: alonzoni/account-service:1.0
     container_name: account-service
     restart: unless-stopped
     ports:
@@ -117,7 +117,7 @@ services:
 
   # Friendship Service
   friendship-service:
-    image: friendship-service:v0
+    image: alonzoni/friendship-service:1.0
     container_name: friendship-service
     restart: unless-stopped
     ports:
@@ -131,7 +131,7 @@ services:
 
   # Message Service
   message-service:
-    image: message-service:v0
+    image: alonzoni/message-service:1.0
     container_name: message-service
     restart: unless-stopped
     ports:
@@ -145,7 +145,7 @@ services:
 
   # Group Service
   group-service:
-    image: group-service:v0
+    image: alonzoni/group-service:1.0
     container_name: group-service
     restart: unless-stopped
     ports:
@@ -159,7 +159,7 @@ services:
 
   # Data Processing Service
   data-processing-service:
-    image: data-processing-service:v0
+    image: alonzoni/data-processing-service:1.0
     container_name: data-processing-service
     restart: unless-stopped
     ports:
@@ -173,7 +173,7 @@ services:
 
   # Phone Service
   phone-service:
-    image: phone-service:v0
+    image: alonzoni/phone-service:1.0
     container_name: phone-service
     restart: unless-stopped
     ports:
@@ -187,7 +187,7 @@ services:
 
   # Search Service
   search-service:
-    image: search-service:v0
+    image: alonzoni/search-service:1.0
     container_name: search-service
     restart: unless-stopped
     ports:
@@ -201,7 +201,7 @@ services:
 
   # UI Service
   ui-service:
-    image: ui-service:v0
+    image: alonzoni/ui-service:1.0
     container_name: ui-service
     restart: unless-stopped
     ports:
@@ -220,4 +220,3 @@ volumes:
 
 networks:
   backend-network:
-    driver: bridge
