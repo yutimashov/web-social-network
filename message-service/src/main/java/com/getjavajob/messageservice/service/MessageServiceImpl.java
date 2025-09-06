@@ -27,7 +27,7 @@ import static java.time.ZoneOffset.UTC;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @Service
-@PropertySource("classpath:application.properties")
+@PropertySource("classpath:application-local.properties")
 public class MessageServiceImpl implements MessageService {
 
     private final GroupMessageRepository groupMessageDao;
