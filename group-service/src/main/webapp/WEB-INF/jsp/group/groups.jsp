@@ -3,7 +3,7 @@
 <c:set var="rootUrl" value="${pageContext.request.contextPath}"/>
 <html>
 <head>
-    <title>Groups catalog</title>
+    <title>Groups</title>
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>

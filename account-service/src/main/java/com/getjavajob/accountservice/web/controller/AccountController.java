@@ -66,8 +66,7 @@ public class AccountController {
                           @SessionAttribute("account") Account account) {
         Optional<Account> currentAccount = accountService.getById(accountId);
         if (currentAccount.isPresent()) {
-            logger.info("Get page of account: {}", currentAccount.get().getId());
-            logger.info("Session account: {}", account.getId());
+            logger.info("Get page of account: id={}", currentAccount.get().getId());
             if (friendshipClient.checkExistence(currentAccount.get().getId(), accountId).getBody()) {
                 model.addAttribute("alreadySentFriendRequest", true);
             }
