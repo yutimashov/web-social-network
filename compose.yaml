@@ -65,6 +65,8 @@ services:
   eureka-server:
     image: alonzoni/eureka:1.0
     hostname: eureka-server
+    environment:
+      SPRING_PROFILES_ACTIVE=docker
     container_name: eureka-server
     restart: unless-stopped
     ports:
