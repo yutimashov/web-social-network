@@ -185,15 +185,6 @@ public class AccountController {
         response.sendRedirect(generateRedirectBaseURL(req, "/account?id=" + accountId));
     }
 
-/*    private String generateRedirectBaseURL(HttpServletRequest request, Long accountId) {
-        String scheme = request.getScheme();
-        String serverName = request.getHeader("X-Forwarded-Host");
-        if (serverName == null || serverName.isEmpty()) {
-            serverName = request.getServerName();
-        }
-        return scheme + "://" + serverName + "/account?id=" + accountId;
-    }*/
-
     private String generateRedirectBaseURL(HttpServletRequest request, String path) {
         String scheme = request.getScheme() + "://";
         String serverName = request.getHeader("X-Forwarded-Host");
