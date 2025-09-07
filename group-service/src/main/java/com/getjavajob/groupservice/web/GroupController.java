@@ -29,6 +29,13 @@ public class GroupController {
         this.groupMembershipService = groupMembershipService;
     }
 
+    /**
+     * Get group page
+     *
+     * @param groupId id of the group
+     * @param account session account
+     * @return jsp page of the group
+     */
     @GetMapping
     public String group(@RequestParam("id") Long groupId,
                         @SessionAttribute("account") Account account,
@@ -47,24 +54,130 @@ public class GroupController {
         }
     }
 
+    /**
+     * List all existing groups.
+     *
+     * @return jsp page with listed groups
+     */
     @GetMapping("/all")
     public String allGroups(Model model) {
-        logger.info("Get all groups");
         model.addAttribute("groups", groupService.getAll());
-        logger.info("All groups: {}", groupService.getAll());
         return "group/groups";
     }
 
+    /**
+     * Get page for group creation.
+     *
+     * @return jsp page with creating group elements
+     */
     @GetMapping("/create")
     public String create() {
         return "group/create";
     }
 
+    /**
+     * Create new group.
+     *
+     * @param groupDto object with information related to new group
+     * @param account  session account
+     * @return page of all existing groups with a new added one
+     */
     @PostMapping("/create")
     public String processGroupCreation(@ModelAttribute GroupDto groupDto,
                                        @SessionAttribute("account") Account account) {
         groupService.create(new GroupMapper().toGroup(groupDto, account), account);
         return "redirect:/group/all";
+    }
+
+    /**
+     * Accept group member request.
+     *
+     * @param groupId   group to join
+     * @param accountId id of account to join
+     * @return jsp page of the group with added member
+     */
+    @GetMapping("/accept-request")
+    public String acceptRequest(@RequestParam("groupId") Long groupId,
+                                @RequestParam("accountId") Long accountId) {
+        groupMembershipService.makeMember(groupId, accountId);
+        return "redirect:/group?id=" + groupId;
+    }
+
+    /**
+     * Decline group member request.
+     *
+     * @param groupId   group to join
+     * @param accountId id of account to join
+     * @return jsp page of the group with added member
+     */
+    @GetMapping({"/decline-request", "/delete-member"})
+    public String deleteGroupMember(@RequestParam("groupId") Long groupId,
+                                    @RequestParam("accountId") Long accountId) {
+        groupMembershipService.deleteMember(groupId, accountId);
+        return "redirect:/group?id=" + groupId;
+    }
+
+    /**
+     * List all group members.
+     *
+     * @param groupId id of a group
+     * @return jsp page with group members
+     */
+    @GetMapping("/members")
+    public String groupMembers(@RequestParam("id") Long groupId,
+                               Model model) {
+        if (groupService.getById(groupId).isPresent()) {
+            model.addAttribute("group", groupService.getById(groupId).get());
+            model.addAttribute("groupMembers", groupMembershipService.getRegularMembers(groupId));
+            model.addAttribute("groupAdmins", groupMembershipService.getAdmins(groupId));
+        }
+        return "group/members";
+    }
+
+    /**
+     * List account requests for joining group.
+     *
+     * @param groupId id of a group
+     * @return account requests for group joining
+     */
+    @GetMapping("/requests")
+    public String requests(@RequestParam("id") Long groupId,
+                           Model model) {
+        model.addAttribute("groupRequests", groupMembershipService.getIncomingRequests(groupId));
+        model.addAttribute("groupId", groupId);
+        return "group/requests";
+    }
+
+    /**
+     * Make a regular group member admin.
+     *
+     * @param groupId   id of a group
+     * @param accountId id of account, who will be a new admin
+     * @return jsp page of a group
+     */
+    @GetMapping("/make-admin")
+    public String makeAdmin(@RequestParam("groupId") Long groupId,
+                            @RequestParam("accountId") Long accountId) {
+        groupMembershipService.makeAdmin(groupId, accountId);
+        return "redirect:/group?id=" + groupId;
+    }
+
+    /**
+     * Send request for joining group.
+     *
+     * @param groupId id of a group
+     * @param account session account
+     * @return jsp page of account or 404 if group does not exist
+     */
+    @GetMapping("/send-request")
+    public String sendRequest(@RequestParam("id") Long groupId,
+                              @SessionAttribute("account") Account account) {
+        if (groupService.getById(groupId).isPresent()) {
+            groupMembershipService.sendRequest(groupService.getById(groupId).get(), account);
+            return "redirect:/account?id=" + account.getId();
+        } else {
+            return "error/404";
+        }
     }
 
 }
