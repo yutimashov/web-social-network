@@ -24,6 +24,15 @@ public class FriendshipController {
         this.friendshipService = friendshipService;
     }
 
+    /**
+     * List all account's friends.
+     *
+     * @param id     of account, whose friends are shown
+     * @param lastId last friend id loaded from db
+     * @param limit  max friends amount per page
+     * @param isAjax type of request
+     * @return jsp page with account's friends
+     */
     @GetMapping("/friends")
     public String showAllFriends(Model model,
                                  @RequestParam("id") Long id,
@@ -51,7 +60,7 @@ public class FriendshipController {
      * Accept friendship request from another account.
      *
      * @param requesterId id of account who sent request
-     * @param accepterId id of account who received request
+     * @param accepterId  id of account who received request
      */
     @GetMapping("/accept-request")
     public void acceptRequest(Long requesterId, Long accepterId) {
