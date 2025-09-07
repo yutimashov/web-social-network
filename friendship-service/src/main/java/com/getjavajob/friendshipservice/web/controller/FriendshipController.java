@@ -4,11 +4,13 @@ import com.getjavajob.friendshipservice.service.FriendshipService;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.OK;
@@ -20,6 +22,29 @@ public class FriendshipController {
 
     public FriendshipController(FriendshipService friendshipService) {
         this.friendshipService = friendshipService;
+    }
+
+    @GetMapping("/friends")
+    public String showAllFriends(Model model,
+                                 @RequestParam("id") Long id,
+                                 @RequestParam(required = false, defaultValue = "0") Long lastId,
+                                 @RequestParam(defaultValue = "100") int limit,
+                                 @RequestParam(required = false, defaultValue = "false") boolean isAjax) {
+        List<Account> friendsBatch = friendshipService.getFriends(id, lastId, limit);
+        if (!friendsBatch.isEmpty()) {
+            Long newLastId = friendsBatch.stream()
+                    .map(Account::getId)
+                    .max(Long::compareTo)
+                    .orElse(lastId);
+            model.addAttribute("friends", friendsBatch);
+            model.addAttribute("lastId", newLastId);
+            model.addAttribute("limit", limit);
+            model.addAttribute("accountId", id);
+        } else {
+            model.addAttribute("friends", Collections.emptyList());
+            model.addAttribute("hasMore", false);
+        }
+        return !isAjax ? "friendship/friends" : "friendship/ajaxFragment";
     }
 
     /**
@@ -36,12 +61,6 @@ public class FriendshipController {
     @DeleteMapping("/delete")
     public void deleteFriend(Long accountId, Long deletingFriendId) {
         friendshipService.deleteFriend(accountId, deletingFriendId);
-    }
-
-    @GetMapping("/friends")
-    public ResponseEntity<List<Account>> getFriends(Long accountId, Long lastId, int pageSize) {
-        return ResponseEntity.status(OK)
-                .body(friendshipService.getFriends(accountId, lastId, pageSize));
     }
 
     @GetMapping("/api/friendship/id")

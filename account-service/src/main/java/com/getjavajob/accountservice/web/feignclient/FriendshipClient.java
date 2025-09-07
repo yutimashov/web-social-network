@@ -27,9 +27,6 @@ public interface FriendshipClient {
     @DeleteMapping("/delete")
     void deleteFriend(@RequestParam Long accountId, @RequestParam Long deletingFriendId);
 
-    @GetMapping("/friends")
-    ResponseEntity<List<Account>> getFriends(@RequestParam Long accountId, @RequestParam Long lastId, @RequestParam int pageSize);
-
     @GetMapping("/friends-ids")
     ResponseEntity<List<Long>> getFriendsIds(@RequestParam Long accountId);
 
