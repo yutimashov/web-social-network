@@ -22,6 +22,12 @@ public class FriendshipController {
         this.friendshipService = friendshipService;
     }
 
+    /**
+     * Accept friendship request from another account.
+     *
+     * @param requesterId id of account who sent request
+     * @param accepterId id of account who received request
+     */
     @GetMapping("/accept-request")
     public void acceptRequest(Long requesterId, Long accepterId) {
         friendshipService.acceptRequest(requesterId, accepterId);
