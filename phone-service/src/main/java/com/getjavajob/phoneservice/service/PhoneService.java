@@ -12,7 +12,7 @@ public interface PhoneService {
 
     void createWorkingPhones(Account account, String phoneNumbers);
 
-    List<String> getPhoneNumbers(Long accountId, PhoneType phoneType);
+    List<Phone> getPhoneNumbers(Long accountId, PhoneType phoneType);
 
     void delete(Long phoneId);
 

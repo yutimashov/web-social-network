@@ -40,7 +40,7 @@ public class PhoneServiceImpl implements PhoneService {
     }
 
     @Override
-    public List<String> getPhoneNumbers(Long accountId, PhoneType phoneType) {
+    public List<Phone> getPhoneNumbers(Long accountId, PhoneType phoneType) {
         return phoneRepository.getPhoneNumbers(accountId, phoneType);
     }
 

@@ -5,6 +5,7 @@ import com.getjavajob.training.timashovy.socialnetwork.domain.phone.PhoneType;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,8 +38,13 @@ public class PhoneRepositoryImpl implements PhoneRepository {
     }
 
     @Override
-    public List<String> getPhoneNumbers(Long accountId, PhoneType phoneType) {
-        return phoneRepositorySpringData.findPhoneNumbersByAccountIdAndPhoneType(accountId, phoneType);
+    public List<Phone> getPhoneNumbers(Long accountId, PhoneType phoneType) {
+        List<String> phoneNumbers = phoneRepositorySpringData.findPhoneNumbersByAccountIdAndPhoneType(accountId, phoneType);
+        List<Phone> result = new ArrayList<>();
+        for (String number : phoneNumbers) {
+            result.add(new Phone(phoneType, number));
+        }
+        return result;
     }
 
     @Override

@@ -165,8 +165,8 @@ public class AccountController {
         if (maybeAccount.isPresent()) {
             model.addAttribute("account", maybeAccount.get());
             model.addAttribute("avatarInputStream", maybeAccount.get().getAvatar());
-            model.addAttribute("personalPhones", phoneClient.getPhoneNumbers(accountId, PERSONAL));
-            model.addAttribute("workingPhones", phoneClient.getPhoneNumbers(accountId, WORKING));
+            model.addAttribute("personalPhones", phoneClient.getPhoneNumbers(accountId, PERSONAL).getBody());
+            model.addAttribute("workingPhones", phoneClient.getPhoneNumbers(accountId, WORKING).getBody());
             return "account/edit";
         } else {
             return "error/404";

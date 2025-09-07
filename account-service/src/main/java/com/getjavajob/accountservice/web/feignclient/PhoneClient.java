@@ -22,7 +22,7 @@ public interface PhoneClient {
     void delete(@RequestParam Long phoneId);
 
     @GetMapping("/numbers")
-    ResponseEntity<List<String>> getPhoneNumbers(@RequestParam Long accountId, @RequestParam PhoneType phoneType);
+    ResponseEntity<List<Phone>> getPhoneNumbers(@RequestParam Long accountId, @RequestParam PhoneType phoneType);
 
     @PostMapping("/update")
     void update(@RequestParam Long phoneId, @RequestParam String newPhoneNumber);

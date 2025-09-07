@@ -27,7 +27,7 @@ public class PhoneApiController {
     }
 
     @GetMapping("/numbers")
-    public ResponseEntity<List<String>> getNumbers(Long accountId, PhoneType phoneType) {
+    public ResponseEntity<List<Phone>> getNumbers(Long accountId, PhoneType phoneType) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(phoneService.getPhoneNumbers(accountId, phoneType));

@@ -108,7 +108,7 @@
                                        placeholder="Enter new address" value="${requestScope.account.personalAddress}">
                             </div>
                         </div>
-                        <%--<!-- Form Row phones -->
+                        <!-- Form Row phones -->
                         <div class="row gx-3 mb-2">
                             <input type="hidden" id="phoneData" name="phoneData">
                             <!-- Form Group (phone number)-->
@@ -179,7 +179,7 @@
                                     </c:forEach>
                                 </c:if>
                             </div>
-                        </div>--%>
+                        </div>
                         <!-- Save changes button-->
                         <button type="button" class="btn btn-warning" data-bs-toggle="modal"
                                 data-bs-target="#editAccountModal">Save changes

@@ -9,6 +9,6 @@ public interface PhoneRepository extends Repository<Long, Phone> {
 
     void updateNumber(Long phoneId, String newNumber);
 
-    List<String> getPhoneNumbers(Long accountId, PhoneType phoneType);
+    List<Phone> getPhoneNumbers(Long accountId, PhoneType phoneType);
 
 }
