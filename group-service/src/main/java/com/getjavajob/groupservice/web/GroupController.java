@@ -2,16 +2,15 @@ package com.getjavajob.groupservice.web;
 
 import com.getjavajob.groupservice.service.group.GroupService;
 import com.getjavajob.groupservice.service.membership.GroupMembershipService;
+import com.getjavajob.groupservice.web.dto.GroupDto;
+import com.getjavajob.groupservice.web.dto.GroupMapper;
 import com.getjavajob.groupservice.web.feignclients.MessageClient;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/group")
@@ -54,6 +53,18 @@ public class GroupController {
         model.addAttribute("groups", groupService.getAll());
         logger.info("All groups: {}", groupService.getAll());
         return "group/groups";
+    }
+
+    @GetMapping("/create")
+    public String create() {
+        return "group/create";
+    }
+
+    @PostMapping("/create")
+    public String processGroupCreation(@ModelAttribute GroupDto groupDto,
+                                       @SessionAttribute("account") Account account) {
+        groupService.create(new GroupMapper().toGroup(groupDto, account), account);
+        return "redirect:/group/all";
     }
 
 }
