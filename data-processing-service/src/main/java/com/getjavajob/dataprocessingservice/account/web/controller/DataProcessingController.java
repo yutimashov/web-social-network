@@ -34,11 +34,16 @@ public class DataProcessingController {
         this.accountClient = accountClient;
     }
 
+    /**
+     * Updating account info by uploading xml file.
+     *
+     * @param file with updated account data
+     * @param accountId if of updating account
+     * @return jsp page of update account
+     */
     @PostMapping("/xml-update")
-    public void updateXml(@RequestParam("file") MultipartFile file,
-                          @RequestParam("id") Long accountId,
-                          HttpServletResponse response,
-                          HttpServletRequest request) throws IOException {
+    public String updateXml(@RequestParam("file") MultipartFile file,
+                          @RequestParam("id") Long accountId) {
         try {
             xmlDataHandler.updateAccount(file.getInputStream(), accountId);
         } catch (IOException e) {
@@ -46,16 +51,7 @@ public class DataProcessingController {
         } catch (ServiceException e) {
             throw new WebException("An error occurred while processing the account data. Please try again later.");
         }
-        response.sendRedirect(generateRedirectBaseURL(request, accountId));
-    }
-
-    private String generateRedirectBaseURL(HttpServletRequest request, Long accountId) {
-        String scheme = request.getScheme();
-        String serverName = request.getHeader("X-Forwarded-Host");
-        if (serverName == null || serverName.isEmpty()) {
-            serverName = request.getServerName();
-        }
-        return scheme + "://" + serverName + "/account/edit?id=" + accountId;
+        return "redirect:/account/edit?id=" + accountId;
     }
 
     @GetMapping("/xml-download")
