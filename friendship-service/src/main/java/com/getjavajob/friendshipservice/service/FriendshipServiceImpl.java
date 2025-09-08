@@ -21,8 +21,8 @@ public class FriendshipServiceImpl implements FriendshipService {
     }
 
     @Override
-    public void sendRequest(Account requester, Account receiver) {
-        friendshipRepository.sendRequest(requester, receiver);
+    public void sendRequest(Long requesterId, Long accepterId) {
+        friendshipRepository.sendRequest(requesterId, accepterId);
     }
 
     @Override
@@ -30,6 +30,7 @@ public class FriendshipServiceImpl implements FriendshipService {
         return friendshipRepository.acceptRequest(requesterId, accepterId);
     }
 
+    @Transactional
     @Override
     public void deleteFriend(Long accountId, Long deletingFriendId) {
         friendshipRepository.deleteFriend(accountId, deletingFriendId);
@@ -64,25 +65,23 @@ public class FriendshipServiceImpl implements FriendshipService {
      * If requester is the same as it is in table, it means that requester tries to add friend one more time.
      * If requester is accepter, it means that requester confirms friendship request already existed in the table.
      *
-     * @param requesterAccount account, who has initiated friendship request
-     * @param receiverAccount  account, who is addresses of friendship request
+     * @param requesterId account id, who has initiated friendship request
+     * @param accepterId  account id, who is addresses of friendship request
      */
     @Transactional
     @Override
-    public void addFriend(Account requesterAccount, Account receiverAccount) {
-        Long requestAccountId = requesterAccount.getId();
-        Long receiverAccountId = receiverAccount.getId();
-        if (requestAccountId.equals(receiverAccountId)) {
+    public void addFriend(Long requesterId, Long accepterId) {
+        if (requesterId.equals(accepterId)) {
             throw new IllegalArgumentException("Account cannot send friend request to themselves");
         }
-        if (!friendshipCheckerRepository.checkFriendshipRecordExistence(requestAccountId, receiverAccountId)) {
-            friendshipRepository.sendRequest(requesterAccount, receiverAccount);
+        if (!friendshipCheckerRepository.checkFriendshipRecordExistence(requesterId, accepterId)) {
+            friendshipRepository.sendRequest(requesterId, accepterId);
             return;
         }
-        if (friendshipCheckerRepository.checkUsersAreFriends(requestAccountId, receiverAccountId)) {
+        if (friendshipCheckerRepository.checkUsersAreFriends(requesterId, accepterId)) {
             return;
         }
-        friendshipRepository.acceptRequest(requestAccountId, receiverAccountId);
+        friendshipRepository.acceptRequest(requesterId, accepterId);
     }
 
 }

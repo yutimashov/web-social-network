@@ -25,17 +25,26 @@ public class FriendshipRepositoryImpl implements FriendshipRepository {
     }
 
     @Override
-    public void sendRequest(Account requester, Account accepter) {
-        friendshipRepositorySpringData.save(new Friendship(getFirstAccount(requester, accepter).getId(),
-                getSecondAccount(requester, accepter).getId(), requester, accepter, false));
+    public void sendRequest(Long requesterId, Long accepterId) {
+        Friendship friendship = new Friendship();
+        friendship.setInitiatorAccountId(getFirstAccountId(requesterId, accepterId));
+        friendship.setFriendAccountId(getSecondAccountId(requesterId, accepterId));
+        Account requester = new Account();
+        requester.setId(requesterId);
+        friendship.setRequester(requester);
+        Account accepter = new Account();
+        accepter.setId(accepterId);
+        friendship.setReceiver(accepter);
+        friendship.setFriendshipStatus(false);
+        friendshipRepositorySpringData.save(friendship);
     }
 
-    private Account getFirstAccount(Account requester, Account accepter) {
-        return requester.getId() < accepter.getId() ? requester : accepter;
+    private Long getFirstAccountId(Long requesterId, Long accepterId) {
+        return requesterId < accepterId ? requesterId : accepterId;
     }
 
-    private Account getSecondAccount(Account requester, Account accepter) {
-        return getFirstAccount(requester, accepter).equals(requester) ? accepter : requester;
+    private Long getSecondAccountId(Long requesterId, Long accepterId) {
+        return getFirstAccountId(requesterId, accepterId).equals(requesterId) ? accepterId : requesterId;
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.getjavajob.accountservice.web.api;
 
 import com.getjavajob.accountservice.service.AccountService;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,13 +32,6 @@ public class AccountApiController {
     @GetMapping("/update-by-id")
     public void updateById(@RequestParam Account account, @RequestParam Long accountId) {
         accountService.updateById(account, accountId);
-    }
-
-    @GetMapping("/get")
-    ResponseEntity<Account> getAccount(@RequestParam Long accountId) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(accountService.getById(accountId).get());
     }
 
 }

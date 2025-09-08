@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface FriendshipService {
 
-    void sendRequest(Account requester, Account receiver);
+    void sendRequest(Long requesterId, Long accepterId);
 
     boolean acceptRequest(Long requesterId, Long accepterId);
 
@@ -20,6 +20,6 @@ public interface FriendshipService {
 
     List<Long> getFriendsIds(Long accountId);
 
-    void addFriend(Account requesterAccount, Account receiverAccount);
+    void addFriend(Long requesterId, Long accepterId);
 
 }

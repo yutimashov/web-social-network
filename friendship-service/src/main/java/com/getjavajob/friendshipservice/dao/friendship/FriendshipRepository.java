@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface FriendshipRepository {
 
-    void sendRequest(Account requester, Account receiver);
+    void sendRequest(Long requesterId, Long accepterId);
 
     boolean acceptRequest(Long requesterId, Long accepterId);
 

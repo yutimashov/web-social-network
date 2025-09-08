@@ -47,7 +47,7 @@ public class Friendship implements BaseEntity<Friendship.FriendshipId> {
     @Column(name = "status")
     private boolean friendshipStatus;
 
-    protected Friendship() {
+    public Friendship() {
     }
 
     public Friendship(Long initiatorAccountId, Long friendAccountId, Account requester, Account receiver,

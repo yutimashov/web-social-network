@@ -1,13 +1,11 @@
 package com.getjavajob.friendshipservice.web.controller;
 
 import com.getjavajob.friendshipservice.service.FriendshipService;
-import com.getjavajob.friendshipservice.web.feignclient.AccountClient;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
@@ -23,11 +21,9 @@ public class FriendshipController {
 
     private static final Logger logger = getLogger(FriendshipController.class);
     private final FriendshipService friendshipService;
-    private final AccountClient accountClient;
 
-    public FriendshipController(FriendshipService friendshipService, AccountClient accountClient) {
+    public FriendshipController(FriendshipService friendshipService) {
         this.friendshipService = friendshipService;
-        this.accountClient = accountClient;
     }
 
     /**
@@ -71,8 +67,7 @@ public class FriendshipController {
     @GetMapping("/friends/accept-request")
     public String acceptRequest(@SessionAttribute Account account,
                                 @RequestParam("id") Long requesterAccountId) {
-        Account requesterAccount = accountClient.getAccount(requesterAccountId).getBody();
-        friendshipService.addFriend(requesterAccount, account);
+        friendshipService.addFriend(requesterAccountId, account.getId());
         return "redirect:/friends?id=" + account.getId();
     }
 
@@ -83,12 +78,12 @@ public class FriendshipController {
      * @param id      of a friend who will be deleted
      * @return jsp page of account who deleted friend
      */
-    @DeleteMapping("/friends/delete")
+    @GetMapping("/friends/delete")
     public String deleteFriend(@SessionAttribute("account") Account account,
                                @RequestParam("id") Long id) {
         Long accountId = account.getId();
         friendshipService.deleteFriend(accountId, id);
-        return "redirect:/account?id=" + accountId;
+        return "redirect:/friends?id=" + account.getId();
     }
 
     @GetMapping("/followers")
@@ -113,9 +108,8 @@ public class FriendshipController {
     @GetMapping("/friends/send-request")
     public String sendRequest(@SessionAttribute("account") Account account,
                               @RequestParam("id") Long id) {
-        Account receiverAccount = accountClient.getAccount(id).getBody();
-        friendshipService.addFriend(account, receiverAccount);
-        return "redirect:/account?id=" + receiverAccount.getId();
+        friendshipService.addFriend(account.getId(), id);
+        return "redirect:/friends/requests/outgoing";
     }
 
     @GetMapping("/friends/requests/incoming")
