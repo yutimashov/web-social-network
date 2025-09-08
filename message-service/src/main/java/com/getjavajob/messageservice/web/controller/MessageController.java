@@ -1,4 +1,4 @@
-package com.getjavajob.messageservice.web;
+package com.getjavajob.messageservice.web.controller;
 
 import com.getjavajob.messageservice.service.MessageService;
 import com.getjavajob.messageservice.web.dto.MessageDto;

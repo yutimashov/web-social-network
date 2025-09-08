@@ -1,4 +1,4 @@
-package com.getjavajob.messageservice.web;
+package com.getjavajob.messageservice.web.api;
 
 import com.getjavajob.messageservice.service.MessageService;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.GroupMessage;
