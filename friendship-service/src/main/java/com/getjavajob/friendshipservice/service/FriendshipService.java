@@ -20,4 +20,6 @@ public interface FriendshipService {
 
     List<Long> getFriendsIds(Long accountId);
 
+    void addFriend(Account requesterAccount, Account receiverAccount);
+
 }

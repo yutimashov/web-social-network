@@ -1,14 +1,12 @@
 package com.getjavajob.friendshipservice.web.controller;
 
 import com.getjavajob.friendshipservice.service.FriendshipService;
+import com.getjavajob.friendshipservice.web.feignclient.AccountClient;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -19,9 +17,11 @@ import static org.springframework.http.HttpStatus.OK;
 public class FriendshipController {
 
     private final FriendshipService friendshipService;
+    private final AccountClient accountClient;
 
-    public FriendshipController(FriendshipService friendshipService) {
+    public FriendshipController(FriendshipService friendshipService, AccountClient accountClient) {
         this.friendshipService = friendshipService;
+        this.accountClient = accountClient;
     }
 
     /**
@@ -59,17 +59,23 @@ public class FriendshipController {
     /**
      * Accept friendship request from another account.
      *
-     * @param requesterId id of account who sent request
-     * @param accepterId  id of account who received request
+     * @param account            account who received request
+     * @param requesterAccountId id of account who sent request
      */
     @GetMapping("/accept-request")
-    public void acceptRequest(Long requesterId, Long accepterId) {
-        friendshipService.acceptRequest(requesterId, accepterId);
+    public String acceptRequest(@SessionAttribute Account account,
+                                @RequestParam("id") Long requesterAccountId) {
+        Account requesterAccount = accountClient.getAccount(requesterAccountId).getBody();
+        friendshipService.addFriend(requesterAccount, account);
+        return "redirect:/friends?id=" + account.getId();
     }
 
     @DeleteMapping("/delete")
-    public void deleteFriend(Long accountId, Long deletingFriendId) {
-        friendshipService.deleteFriend(accountId, deletingFriendId);
+    public String deleteFriend(@SessionAttribute("account") Account account,
+                               @RequestParam("id") Long id) {
+        Long accountId = account.getId();
+        friendshipService.deleteFriend(accountId, id);
+        return "redirect:/account?id=" + accountId;
     }
 
     @GetMapping("/api/friendship/id")

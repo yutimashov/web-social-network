@@ -108,52 +108,12 @@ public class AccountServiceImpl implements AccountService {
         return accountDao.getAccountWithBirthdayToday(month, day);
     }
 
-    /**
-     * If there is no record in friendship table, it means that no friendship connection exist.
-     * Make a record - requester becomes follower of accepter.
-     * If record is already exist, check if users are already friends.
-     * If they are - return false.
-     * If they are not friends, but friendship record exists, check requester.
-     * If requester is the same as it is in table, it means that requester tries to add friend one more time.
-     * If requester is accepter, it means that requester confirms friendship request already existed in the table.
-     *
-     * @param requesterId id of account, who has initiated friendship request
-     * @param accepterId  if of account, who is addresses of friendship request
-     */
-    @Transactional
-    @Override
-    public void addFriend(Long requesterId, Long accepterId) {
-        validateAccountId(requesterId);
-        validateAccountId(accepterId);
-        if (requesterId.equals(accepterId)) {
-            logger.error("account with id = {} is going to accept friend request with itself", requesterId);
-            throw new IllegalArgumentException("Account cannot send friend request to themselves");
-        }
-        if (!friendshipClient.checkExistence(requesterId, accepterId).getBody()) {
-            friendshipClient.sendRequest(accountDao.getById(requesterId).get(), accountDao.getById(accepterId).get());
-            return;
-        }
-        if (friendshipClient.checkFriendship(requesterId, accepterId)) {
-            logger.error("account with id = {} is going to make friendship with account with id = {}. " +
-                    "But friendship already existed", requesterId, accepterId);
-            return;
-        }
-        logger.info("going to make friendship: requester with id = {} and accepter with id = {}", requesterId,
-                accepterId);
-        friendshipClient.acceptRequest(requesterId, accepterId);
-    }
-
     @Transactional
     @Override
     public void deleteFriend(Long accountId, Long deletingFriendId) {
         validateAccountId(accountId);
         validateAccountId(deletingFriendId);
         friendshipClient.deleteFriend(accountId, deletingFriendId);
-    }
-
-    public List<Account> getFriends(Long accountId, Long lastId, int pageSize) {
-        validateAccountId(accountId);
-        return friendshipClient.getFriends(accountId, lastId, pageSize).getBody();
     }
 
     @Override

@@ -27,11 +27,7 @@ public interface AccountService {
 
     List<Account> getAccountWithBirthdayToday(int month, int day);
 
-    void addFriend(Long accountId, Long friendId);
-
     void deleteFriend(Long accountId, Long friendId);
-
-    List<Account> getFriends(Long accountId, Long lastId, int pageSize);
 
     List<Long> getFriendsIds(Long accountId);
 

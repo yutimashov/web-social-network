@@ -1,8 +1,10 @@
 package com.getjavajob.friendshipservice.service;
 
+import com.getjavajob.friendshipservice.dao.checker.FriendshipCheckerRepository;
 import com.getjavajob.friendshipservice.dao.friendship.FriendshipRepository;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -10,9 +12,12 @@ import java.util.List;
 public class FriendshipServiceImpl implements FriendshipService {
 
     private final FriendshipRepository friendshipRepository;
+    private final FriendshipCheckerRepository friendshipCheckerRepository;
 
-    public FriendshipServiceImpl(FriendshipRepository friendshipRepository) {
+    public FriendshipServiceImpl(FriendshipRepository friendshipRepository,
+                                 FriendshipCheckerRepository friendshipCheckerRepository) {
         this.friendshipRepository = friendshipRepository;
+        this.friendshipCheckerRepository = friendshipCheckerRepository;
     }
 
     @Override
@@ -48,6 +53,36 @@ public class FriendshipServiceImpl implements FriendshipService {
     @Override
     public List<Long> getFriendsIds(Long accountId) {
         return friendshipRepository.getFriendsIds(accountId);
+    }
+
+    /**
+     * If there is no record in friendship table, it means that no friendship connection exist.
+     * Make a record - requester becomes follower of accepter.
+     * If record is already exist, check if users are already friends.
+     * If they are - return false.
+     * If they are not friends, but friendship record exists, check requester.
+     * If requester is the same as it is in table, it means that requester tries to add friend one more time.
+     * If requester is accepter, it means that requester confirms friendship request already existed in the table.
+     *
+     * @param requesterAccount account, who has initiated friendship request
+     * @param receiverAccount  account, who is addresses of friendship request
+     */
+    @Transactional
+    @Override
+    public void addFriend(Account requesterAccount, Account receiverAccount) {
+        Long requestAccountId = requesterAccount.getId();
+        Long receiverAccountId = receiverAccount.getId();
+        if (requestAccountId.equals(receiverAccountId)) {
+            throw new IllegalArgumentException("Account cannot send friend request to themselves");
+        }
+        if (!friendshipCheckerRepository.checkFriendshipRecordExistence(requestAccountId, receiverAccountId)) {
+            friendshipRepository.sendRequest(requesterAccount, receiverAccount);
+            return;
+        }
+        if (friendshipCheckerRepository.checkUsersAreFriends(requestAccountId, receiverAccountId)) {
+            return;
+        }
+        friendshipRepository.acceptRequest(requestAccountId, receiverAccountId);
     }
 
 }
