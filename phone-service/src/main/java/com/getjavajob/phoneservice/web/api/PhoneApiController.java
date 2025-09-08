@@ -1,4 +1,4 @@
-package com.getjavajob.phoneservice.web.controller;
+package com.getjavajob.phoneservice.web.api;
 
 import com.getjavajob.phoneservice.service.PhoneService;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
