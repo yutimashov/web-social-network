@@ -5,8 +5,6 @@ import com.getjavajob.dataprocessingservice.account.service.exception.ServiceExc
 import com.getjavajob.dataprocessingservice.account.web.exceptions.WebException;
 import com.getjavajob.dataprocessingservice.account.web.feignclient.AccountClient;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -37,13 +35,13 @@ public class DataProcessingController {
     /**
      * Updating account info by uploading xml file.
      *
-     * @param file with updated account data
+     * @param file      with updated account data
      * @param accountId if of updating account
      * @return jsp page of update account
      */
     @PostMapping("/xml-update")
     public String updateXml(@RequestParam("file") MultipartFile file,
-                          @RequestParam("id") Long accountId) {
+                            @RequestParam("id") Long accountId) {
         try {
             xmlDataHandler.updateAccount(file.getInputStream(), accountId);
         } catch (IOException e) {
@@ -54,6 +52,12 @@ public class DataProcessingController {
         return "redirect:/account/edit?id=" + accountId;
     }
 
+    /**
+     * Downloading account info into xml file.
+     *
+     * @param accountId id of account, whose data will be downloaded to xml file
+     * @return jsp page of account, whose data was converted to xml file
+     */
     @GetMapping("/xml-download")
     public ResponseEntity<byte[]> downloadAccountXml(@RequestParam("id") Long accountId) {
         Optional<Account> maybeAccount = accountClient.accountById(accountId).getBody();
