@@ -3,6 +3,7 @@ package com.getjavajob.friendshipservice.web.controller;
 import com.getjavajob.friendshipservice.service.FriendshipService;
 import com.getjavajob.friendshipservice.web.feignclient.AccountClient;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,11 +15,13 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import java.util.Collections;
 import java.util.List;
 
+import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.http.HttpStatus.OK;
 
 @Controller
 public class FriendshipController {
 
+    private static final Logger logger = getLogger(FriendshipController.class);
     private final FriendshipService friendshipService;
     private final AccountClient accountClient;
 
@@ -65,7 +68,7 @@ public class FriendshipController {
      * @param account            account who received request
      * @param requesterAccountId id of account who sent request
      */
-    @GetMapping("/accept-request")
+    @GetMapping("/friends/accept-request")
     public String acceptRequest(@SessionAttribute Account account,
                                 @RequestParam("id") Long requesterAccountId) {
         Account requesterAccount = accountClient.getAccount(requesterAccountId).getBody();
@@ -80,14 +83,13 @@ public class FriendshipController {
      * @param id      of a friend who will be deleted
      * @return jsp page of account who deleted friend
      */
-    @DeleteMapping("/delete")
+    @DeleteMapping("/friends/delete")
     public String deleteFriend(@SessionAttribute("account") Account account,
                                @RequestParam("id") Long id) {
         Long accountId = account.getId();
         friendshipService.deleteFriend(accountId, id);
         return "redirect:/account?id=" + accountId;
     }
-
 
     @GetMapping("/followers")
     public ResponseEntity<List<Account>> getFollowers(Long accountId, Long lastId, int pageSize) {
@@ -108,7 +110,7 @@ public class FriendshipController {
      * @param id      of account who receive request
      * @return jsp page of session account
      */
-    @GetMapping("/send-request")
+    @GetMapping("/friends/send-request")
     public String sendRequest(@SessionAttribute("account") Account account,
                               @RequestParam("id") Long id) {
         Account receiverAccount = accountClient.getAccount(id).getBody();
@@ -116,7 +118,7 @@ public class FriendshipController {
         return "redirect:/account?id=" + receiverAccount.getId();
     }
 
-    @GetMapping("/requests/incoming")
+    @GetMapping("/friends/requests/incoming")
     public String showIncomingRequests(@SessionAttribute("account") Account account,
                                        Model model,
                                        @RequestParam(required = false, defaultValue = "0") Long lastId,
@@ -139,12 +141,13 @@ public class FriendshipController {
         return !isAjax ? "friendship/requests/incoming" : "friendship/requests/incoming-ajaxFragment";
     }
 
-    @GetMapping("/requests/outgoing")
+    @GetMapping("/friends/requests/outgoing")
     public String showOutgoingRequests(@SessionAttribute("account") Account account,
                                        Model model,
                                        @RequestParam(required = false, defaultValue = "0") Long lastId,
                                        @RequestParam(defaultValue = "100") int limit,
                                        @RequestParam(required = false, defaultValue = "false") boolean isAjax) {
+        logger.info("Account id={} lists outgoing friendship requests", account.getId());
         List<Account> friendsBatch = friendshipService.getFollowingAccounts(account.getId(), lastId, limit);
         if (!friendsBatch.isEmpty()) {
             Long newLastId = friendsBatch.stream()

@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<c:set var="rootUrl" value="${pageContext.request.contextPath}"/>
 <c:forEach items="${requestScope.outgoingFriendRequests}" var="account">
     <div class="row col-md-6 m-2">
         <div class="col-md-1 col-sm-2">
@@ -13,10 +14,10 @@
             </c:if>
         </div>
         <div class="col-md-4 col-sm-2">
-            <a href="${pageContext.request.contextPath}/account?id=${account.id}">${account.firstName} ${account.lastName}</a>
+            <a href="${rootUrl}/account?id=${account.id}">${account.firstName} ${account.lastName}</a>
         </div>
         <div class="col-md-3 col-sm-10">
-            <a href="${pageContext.request.contextPath}/friends/delete?id=${account.id}">
+            <a href="${rootUrl}/friends/delete?id=${account.id}">
                 <button class="btn btn-danger btn-sm">Revoke request</button>
             </a>
         </div>

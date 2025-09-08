@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<c:set var="rootUrl" value="${pageContext.request.contextPath}"/>
 <html>
 <head>
     <title>Outgoing friend requests</title>
@@ -30,10 +31,10 @@
                         </c:if>
                     </div>
                     <div class="col-md-4 col-sm-2">
-                        <a href="${pageContext.request.contextPath}/account?id=${account.id}">${account.firstName} ${account.lastName}</a>
+                        <a href="${rootUrl}/account?id=${account.id}">${account.firstName} ${account.lastName}</a>
                     </div>
                     <div class="col-md-3 col-sm-10">
-                        <a href="${pageContext.request.contextPath}/friends/delete?id=${account.id}">
+                        <a href="${rootUrl}/friends/delete?id=${account.id}">
                             <button class="btn btn-danger btn-sm">Revoke request</button>
                         </a>
                     </div>
