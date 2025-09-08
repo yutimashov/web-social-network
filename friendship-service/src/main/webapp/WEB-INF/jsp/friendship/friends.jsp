@@ -1,6 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <c:set var="rootUrl" value="${pageContext.request.contextPath}"/>
+<c:set var="sessionAccountId" value="${sessionScope.account.id}"/>
+<c:set var="pageAccountId" value="${param.id}"/>
 <html>
 <head>
     <title>Friends</title>
@@ -39,9 +41,11 @@
                         <h5>
                             <a href="${rootUrl}/account?id=${friend.id}">${friend.firstName} ${friend.lastName}</a>
                         </h5>
-                        <a href="${rootUrl}/friends/delete?id=${friend.id}"
-                           class="btn btn-danger btn-sm"
-                           role="button">Delete friend</a>
+                        <c:if test="${sessionAccountId eq pageAccountId}">
+                            <a href="${rootUrl}/friends/delete?id=${friend.id}"
+                               class="btn btn-danger btn-sm"
+                               role="button">Delete friend</a>
+                        </c:if>
                     </div>
                 </div>
             </c:forEach>
