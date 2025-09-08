@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.Optional;
 
 @FeignClient(name = "ACCOUNT-SERVICE", path = "/api/account")
-public interface AccountClient {
+public interface
+AccountClient {
 
     @GetMapping
     ResponseEntity<Optional<Account>> accountById(@RequestParam Long id);
