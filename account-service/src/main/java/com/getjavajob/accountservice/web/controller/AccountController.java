@@ -62,8 +62,7 @@ public class AccountController {
      */
     @GetMapping
     public String account(@RequestParam("id") Long accountId,
-                          Model model,
-                          @SessionAttribute("account") Account account) {
+                          Model model) {
         Optional<Account> currentAccount = accountService.getById(accountId);
         if (currentAccount.isPresent()) {
             logger.info("Get page of account: id={}", currentAccount.get().getId());
