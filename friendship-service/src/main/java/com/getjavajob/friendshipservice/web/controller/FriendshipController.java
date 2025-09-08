@@ -6,7 +6,10 @@ import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import java.util.Collections;
 import java.util.List;
@@ -70,6 +73,13 @@ public class FriendshipController {
         return "redirect:/friends?id=" + account.getId();
     }
 
+    /**
+     * Process friend deleting
+     *
+     * @param account who deletes a friend
+     * @param id      of a friend who will be deleted
+     * @return jsp page of account who deleted friend
+     */
     @DeleteMapping("/delete")
     public String deleteFriend(@SessionAttribute("account") Account account,
                                @RequestParam("id") Long id) {
@@ -77,7 +87,6 @@ public class FriendshipController {
         friendshipService.deleteFriend(accountId, id);
         return "redirect:/account?id=" + accountId;
     }
-
 
 
     @GetMapping("/followers")
@@ -92,9 +101,19 @@ public class FriendshipController {
                 .body(friendshipService.getFollowingAccounts(accountId, lastId, pageSize));
     }
 
+    /**
+     * Send friendship request.
+     *
+     * @param account session account (sends request)
+     * @param id      of account who receive request
+     * @return jsp page of session account
+     */
     @GetMapping("/send-request")
-    public void sendRequest(Account requester, Account receiver) {
-        friendshipService.sendRequest(requester, receiver);
+    public String sendRequest(@SessionAttribute("account") Account account,
+                              @RequestParam("id") Long id) {
+        Account receiverAccount = accountClient.getAccount(id).getBody();
+        friendshipService.addFriend(account, receiverAccount);
+        return "redirect:/account?id=" + receiverAccount.getId();
     }
 
 }
