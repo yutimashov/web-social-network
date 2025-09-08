@@ -57,7 +57,6 @@ public class AccountController {
      *
      * @param accountId id of requested account
      * @param model     model
-     * @param account   session account
      * @return view of account or 404 page
      */
     @GetMapping
@@ -122,18 +121,14 @@ public class AccountController {
      * @param account session account
      * @return redirect to all accounts page or login (if account deleted themselves)
      */
-    @DeleteMapping("/delete")
-    public void deleteAccount(@RequestParam("id") Long id,
-                              @SessionAttribute Account account,
-                              HttpServletRequest request,
-                              HttpServletResponse response) throws IOException {
+    @GetMapping("/delete")
+    public String deleteAccount(@RequestParam("id") Long id,
+                                @SessionAttribute Account account) {
         accountService.delete(id);
-        logger.info("Account={} is deleted successfully", id);
         if (!Objects.equals(account.getId(), id)) {
-            response.sendRedirect(generateRedirectBaseURL(request, "/account/all"));
+            return "redirect:/account/all";
         } else {
-            response.sendRedirect(generateRedirectBaseURL(request, "/login" + DELETE_ACCOUNT_SUCCESS_STATUS
-                    .getValue()));
+            return "redirect:/login" + DELETE_ACCOUNT_SUCCESS_STATUS.getValue();
         }
     }
 
@@ -143,11 +138,9 @@ public class AccountController {
      * @param id new admin account id
      */
     @GetMapping("/make-admin")
-    public void makeAdmin(@RequestParam("id") Long id,
-                          HttpServletRequest request,
-                          HttpServletResponse response) throws IOException {
+    public String makeAdmin(@RequestParam("id") Long id) {
         accountService.makeAdmin(id);
-        response.sendRedirect(generateRedirectBaseURL(request, "/account?id=" + id));
+        return "redirect:/account?id=" + id;
     }
 
     /**
@@ -173,7 +166,7 @@ public class AccountController {
     }
 
     @PostMapping("/edit")
-    public void update(@ModelAttribute AccountDto accountDto,
+    public String update(@ModelAttribute AccountDto accountDto,
                        @RequestParam("id") Long accountId,
                        HttpServletRequest req,
                        HttpServletResponse response) throws IOException {
@@ -181,16 +174,7 @@ public class AccountController {
         addPhones(req, accountId);
         updatePhones(req);
         deletePhones(req);
-        response.sendRedirect(generateRedirectBaseURL(req, "/account?id=" + accountId));
-    }
-
-    private String generateRedirectBaseURL(HttpServletRequest request, String path) {
-        String scheme = request.getScheme() + "://";
-        String serverName = request.getHeader("X-Forwarded-Host");
-        if (serverName == null || serverName.isEmpty()) {
-            serverName = request.getServerName();
-        }
-        return scheme + serverName + path;
+        return "redirect:/account?id=" + accountId;
     }
 
     private void deletePhones(HttpServletRequest req) {
