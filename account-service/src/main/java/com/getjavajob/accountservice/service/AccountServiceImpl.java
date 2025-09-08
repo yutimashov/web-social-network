@@ -2,7 +2,6 @@ package com.getjavajob.accountservice.service;
 
 import com.getjavajob.accountservice.dao.AccountRepository;
 import com.getjavajob.accountservice.exception.ServiceException;
-import com.getjavajob.accountservice.web.feignclient.FriendshipClient;
 import com.getjavajob.accountservice.web.feignclient.PasswordClient;
 import com.getjavajob.accountservice.web.feignclient.PhoneClient;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
@@ -22,14 +21,11 @@ public class AccountServiceImpl implements AccountService {
 
     private static final Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class);
     private final AccountRepository accountDao;
-    private final FriendshipClient friendshipClient;
     private final PasswordClient passwordClient;
     private final PhoneClient phoneClient;
 
-    public AccountServiceImpl(AccountRepository accountDao, FriendshipClient friendshipClient,
-                              PasswordClient passwordClient, PhoneClient phoneClient) {
+    public AccountServiceImpl(AccountRepository accountDao, PasswordClient passwordClient, PhoneClient phoneClient) {
         this.accountDao = accountDao;
-        this.friendshipClient = friendshipClient;
         this.passwordClient = passwordClient;
         this.phoneClient = phoneClient;
     }
@@ -106,31 +102,6 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public List<Account> getAccountWithBirthdayToday(int month, int day) {
         return accountDao.getAccountWithBirthdayToday(month, day);
-    }
-
-    @Transactional
-    @Override
-    public void deleteFriend(Long accountId, Long deletingFriendId) {
-        validateAccountId(accountId);
-        validateAccountId(deletingFriendId);
-        friendshipClient.deleteFriend(accountId, deletingFriendId);
-    }
-
-    @Override
-    public List<Long> getFriendsIds(Long accountId) {
-        return friendshipClient.getFriendsIds(accountId).getBody();
-    }
-
-    @Override
-    public List<Account> getFollowerAccounts(Long accountId, Long lastId, int pageSize) {
-        validateAccountId(accountId);
-        return friendshipClient.getFollowers(accountId, lastId, pageSize).getBody();
-    }
-
-    @Override
-    public List<Account> getFollowingAccounts(Long accountId, Long lastId, int pageSize) {
-        validateAccountId(accountId);
-        return friendshipClient.getFollowings(accountId, lastId, pageSize).getBody();
     }
 
     @Override

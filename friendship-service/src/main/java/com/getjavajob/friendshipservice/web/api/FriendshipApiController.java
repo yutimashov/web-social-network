@@ -1,14 +1,11 @@
 package com.getjavajob.friendshipservice.web.api;
 
-import com.getjavajob.friendshipservice.service.FriendshipService;
+import com.getjavajob.friendshipservice.service.FriendshipCheckerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.List;
 
 import static org.springframework.http.HttpStatus.OK;
 
@@ -16,18 +13,18 @@ import static org.springframework.http.HttpStatus.OK;
 @RequestMapping("/api/friendship")
 public class FriendshipApiController {
 
-    private final FriendshipService friendshipService;
+    private final FriendshipCheckerService friendshipCheckerService;
 
-    public FriendshipApiController(FriendshipService friendshipService) {
-        this.friendshipService = friendshipService;
+    public FriendshipApiController(FriendshipCheckerService friendshipCheckerService) {
+        this.friendshipCheckerService = friendshipCheckerService;
     }
 
-    @GetMapping("/id")
+    @GetMapping("/check-existance")
     @ResponseBody
-    public ResponseEntity<List<Long>> getFriendsIds(@RequestParam Long accountId) {
+    public ResponseEntity<Boolean> checkExistence(Long requesterId, Long accepterId) {
         return ResponseEntity
                 .status(OK)
-                .body(friendshipService.getFriendsIds(accountId));
+                .body(friendshipCheckerService.checkFriendshipRecordExistence(requesterId, accepterId));
     }
 
 }

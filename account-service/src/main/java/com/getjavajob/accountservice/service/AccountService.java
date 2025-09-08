@@ -27,14 +27,6 @@ public interface AccountService {
 
     List<Account> getAccountWithBirthdayToday(int month, int day);
 
-    void deleteFriend(Long accountId, Long friendId);
-
-    List<Long> getFriendsIds(Long accountId);
-
-    List<Account> getFollowerAccounts(Long accountId, Long lastId, int pageSize);
-
-    List<Account> getFollowingAccounts(Long accountId, Long lastId, int pageSize);
-
     Optional<Account> findByEmail(String email);
 
     void updateById(Account account, Long accountId);

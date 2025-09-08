@@ -61,11 +61,12 @@ public class AccountController {
      */
     @GetMapping
     public String account(@RequestParam("id") Long accountId,
+                          @SessionAttribute("account") Account account,
                           Model model) {
         Optional<Account> currentAccount = accountService.getById(accountId);
         if (currentAccount.isPresent()) {
             logger.info("Get page of account: id={}", currentAccount.get().getId());
-            if (friendshipClient.checkExistence(currentAccount.get().getId(), accountId).getBody()) {
+            if (friendshipClient.checkFriendshipExistence(accountId, account.getId()).getBody()) {
                 model.addAttribute("alreadySentFriendRequest", true);
             }
             model.addAttribute("account", currentAccount.get());
