@@ -26,6 +26,17 @@ public class SearchController {
         this.groupSearchService = groupSearchService;
     }
 
+    /**
+     * Result page of search (there are 2 types of search, depends on user choice: account and group).
+     *
+     * @param searchQuery   text typed for searching
+     * @param searchType    type of searching: either group, or account
+     * @param isAjax        type of searching: ajax searching is processed when scrolling result page
+     * @param limit         of search results per page
+     * @param lastAccountId of result on a page
+     * @param lastGroupName of result on a page
+     * @return jsp page with search results
+     */
     @GetMapping
     public String doGet(@RequestParam("searchQuery") String searchQuery,
                         @RequestParam("searchType") String searchType,
@@ -40,6 +51,15 @@ public class SearchController {
                 : handleGroupSearch(model, searchQuery, lastGroupName, limit, isAjax);
     }
 
+    /**
+     * Process account type search.
+     *
+     * @param lastId      of result on a page
+     * @param searchQuery text typed for searching
+     * @param limit       of search results per page
+     * @param isAjax      type of searching: ajax searching is processed when scrolling result page
+     * @return jsp page with search results
+     */
     private String handleAccountSearch(Model model, Long lastId, String searchQuery, int limit, boolean isAjax) {
         List<Account> accountsBatch = accountSearchService.findAccounts(searchQuery, lastId, limit);
         if (!accountsBatch.isEmpty()) {
@@ -57,6 +77,15 @@ public class SearchController {
         return !isAjax ? "search/result" : "search/search-results-accounts";
     }
 
+    /**
+     * Process group type search.
+     *
+     * @param searchQuery text typed for searching
+     * @param lastName    of account in search result page
+     * @param limit       of search results per page
+     * @param isAjax      type of searching: ajax searching is processed when scrolling result page
+     * @return jsp page with search results
+     */
     private String handleGroupSearch(Model model, String searchQuery, String lastName, int limit, boolean isAjax) {
         List<Group> groupsBatch = groupSearchService.findAccounts(searchQuery, lastName, limit);
         if (!groupsBatch.isEmpty()) {
