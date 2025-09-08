@@ -78,13 +78,7 @@ public class FriendshipController {
         return "redirect:/account?id=" + accountId;
     }
 
-    @GetMapping("/api/friendship/id")
-    @ResponseBody
-    public ResponseEntity<List<Long>> getFriendsIds(@RequestParam Long accountId) {
-        return ResponseEntity
-                .status(OK)
-                .body(friendshipService.getFriendsIds(accountId));
-    }
+
 
     @GetMapping("/followers")
     public ResponseEntity<List<Account>> getFollowers(Long accountId, Long lastId, int pageSize) {
