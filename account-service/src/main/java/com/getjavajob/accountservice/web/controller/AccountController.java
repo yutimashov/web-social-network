@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -62,22 +63,42 @@ public class AccountController {
     @GetMapping
     public String account(@RequestParam("id") Long accountId,
                           @SessionAttribute("account") Account account,
-                          Model model) {
+                          Model model, HttpServletRequest request) {
+        logger.info("Processing account request for id: {}", accountId);
         Optional<Account> currentAccount = accountService.getById(accountId);
         if (currentAccount.isPresent()) {
-            logger.info("Get page of account: id={}", currentAccount.get().getId());
+            logger.info("Account found, preparing view...");
             if (friendshipClient.checkFriendshipExistence(accountId, account.getId()).getBody()) {
                 model.addAttribute("alreadySentFriendRequest", true);
             }
+            logger.info("Friendship existance checked");
             model.addAttribute("account", currentAccount.get());
+            logger.info("Get current account info");
             model.addAttribute("wallPosts", messageClient.getAccountWallMessages(accountId).getBody());
+            logger.info("Get wall posts");
             model.addAttribute("accountService", accountService);
+            logger.info("Get account service");
             model.addAttribute("personalPhones", phoneClient.getPhoneNumbers(accountId, PERSONAL)
                     .getBody());
+            logger.info("Get personal phones");
             model.addAttribute("workingPhones", phoneClient.getPhoneNumbers(accountId, WORKING)
                     .getBody());
-            return "account/account";
+            logger.info("Returning view: account/account");
+            // Проверка существования JSP файла
+            String jspPath = "/WEB-INF/jsp/account/account.jsp";
+            String realPath = request.getServletContext().getRealPath(jspPath);
+            File jspFile = new File(realPath);
+
+            logger.info("JSP file path: {}", realPath);
+            logger.info("JSP file exists: {}", jspFile.exists());
+
+            if (currentAccount.isPresent()) {
+                return "account/account";
+            } else {
+                return "error/404";
+            }
         } else {
+            logger.warn("Account not found for id: {}", accountId);
             return "error/404";
         }
     }
@@ -168,9 +189,9 @@ public class AccountController {
 
     @PostMapping("/edit")
     public String update(@ModelAttribute AccountDto accountDto,
-                       @RequestParam("id") Long accountId,
-                       HttpServletRequest req,
-                       HttpServletResponse response) throws IOException {
+                         @RequestParam("id") Long accountId,
+                         HttpServletRequest req,
+                         HttpServletResponse response) throws IOException {
         accountService.update(accountId, new AccountMapper().toAccount(accountDto));
         addPhones(req, accountId);
         updatePhones(req);

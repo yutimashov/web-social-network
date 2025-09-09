@@ -20,8 +20,9 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(registry -> registry
-                        .requestMatchers(HttpMethod.GET, "/login", "/css/**", "/js/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/WEB-INF/jsp/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/account/create").permitAll()
+                        .requestMatchers("/WEB-INF/jsp/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

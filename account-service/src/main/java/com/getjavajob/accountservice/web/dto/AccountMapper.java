@@ -1,7 +1,6 @@
 package com.getjavajob.accountservice.web.dto;
 
 import com.getjavajob.accountservice.exception.WebException;
-import com.getjavajob.accountservice.web.dto.AccountDto;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 
 import java.io.IOException;
