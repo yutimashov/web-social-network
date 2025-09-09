@@ -4,7 +4,7 @@
 <html>
 <head>
     <title>Dialog</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/style.css">
+    <link rel="stylesheet" href="${rootUrl}/static/css/style.css">
 </head>
 <body data-current-user-id="${accountSender.id}" data-receiver-user-id="${accountReceiver.id}">
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
@@ -85,6 +85,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"
         integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="${pageContext.request.contextPath}/static/js/account/chat.js"></script>
+<script src="${rootUrl}/static/js/account/chat.js"></script>
 </body>
 </html>

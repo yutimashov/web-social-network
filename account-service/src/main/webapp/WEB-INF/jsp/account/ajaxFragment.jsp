@@ -1,4 +1,6 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<c:set var="rootUrl" value="${pageContext.request.contextPath}"/>
 <c:forEach items="${requestScope.accounts}" var="account">
   <div class="row">
     <div class="col-md-1 col-sm-2">

@@ -28,6 +28,24 @@
             <artifactId>domain</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
+        <!-- JSP -->
+        <!-- compiling and rendering -->
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-jasper</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.servlet.jsp.jstl</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+        </dependency>
         <!-- Tomcat -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

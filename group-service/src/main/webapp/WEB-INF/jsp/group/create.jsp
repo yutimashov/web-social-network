@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<c:set var="rootUrl" value="${pageContext.request.contextPath}"/>
 <html>
 <head>
     <title>Group creation</title>
@@ -8,7 +10,7 @@
 <div class="container-xl mt-4">
     <h2>New group creation</h2>
     <p>Enter necessary data:</p>
-    <form action="${pageContext.request.contextPath}/group/create" method="POST" enctype="multipart/form-data">
+    <form action="${rootUrl}/group/create" method="POST" enctype="multipart/form-data">
         <hr>
         <label for="name">Group name<span style="color:red;">*</span> :
             <input type="text" name="name" id="name" required>

@@ -114,14 +114,14 @@
                         <div class="col-md-6">
                             <c:if test="${sessionAccountId eq pageAccountId}">
                                 <a class="link-underline-dark"
-                                   href="${pageContext.request.contextPath}/friends/requests/outgoing"><i
+                                   href="${rootUrl}/friends/requests/outgoing"><i
                                         class="fa-solid fa-arrow-up"></i>&nbsp;Outgoing requests</a><br>
                             </c:if>
                         </div>
                         <div class="col-md-6">
                             <c:if test="${sessionAccountId eq pageAccountId}">
                                 <a class="link-underline-dark"
-                                   href="${pageContext.request.contextPath}/friends/requests/incoming"><i
+                                   href="${rootUrl}/friends/requests/incoming"><i
                                         class="fa-solid fa-arrow-down"></i>&nbsp;Incoming requests</a><br>
                             </c:if>
                         </div>

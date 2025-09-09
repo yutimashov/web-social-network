@@ -44,7 +44,7 @@
             <div class="card mb-4">
                 <div class="card-header">Account Details</div>
                 <div class="card-body">
-                    <form action="${pageContext.request.contextPath}/account/edit?id=${requestScope.account.id}"
+                    <form action="${rootUrl}/account/edit?id=${account.id}"
                           method="POST"
                           enctype="multipart/form-data" id="editAccountForm">
                         <!-- Form Group (username)-->
@@ -69,13 +69,13 @@
                             <div class="col-md-6">
                                 <label class="small mb-1" for="middleName">Middle name</label>
                                 <input class="form-control" id="middleName" name="middleName" type="text"
-                                       placeholder="Enter your middle name" value="${requestScope.account.middleName}">
+                                       placeholder="Enter your middle name" value="${account.middleName}">
                             </div>
                             <!-- Form Group (birthdate)-->
                             <div class="col-md-6">
                                 <label class="small mb-1" for="birthDate">Birthdate</label>
                                 <input class="form-control" id="birthDate" name="birthDate" type="date"
-                                       placeholder="Enter your birthdate" value="${requestScope.account.birthDate}">
+                                       placeholder="Enter your birthdate" value="${account.birthDate}">
                             </div>
                         </div>
                         <!-- Form Row skype and icq -->
@@ -84,13 +84,13 @@
                             <div class="col-md-6">
                                 <label class="small mb-1" for="skype">Skype</label>
                                 <input class="form-control" id="skype" name="skype" type="text"
-                                       placeholder="Enter your skype" value="${requestScope.account.skype}">
+                                       placeholder="Enter your skype" value="${account.skype}">
                             </div>
                             <!-- Form Group (ICQ)-->
                             <div class="col-md-6">
                                 <label class="small mb-1" for="icq">ICQ</label>
                                 <input class="form-control" id="icq" name="icq" type="text"
-                                       placeholder="Enter your ICQ" value="${requestScope.account.icq}">
+                                       placeholder="Enter your ICQ" value="${account.icq}">
                             </div>
                         </div>
                         <!-- Form Row email and address -->
@@ -99,13 +99,13 @@
                             <div class="col-md-6">
                                 <label class="small mb-1" for="email">Email</label>
                                 <input class="form-control" id="email" name="email" type="email"
-                                       placeholder="Enter your email" value="${requestScope.account.email}">
+                                       placeholder="Enter your email" value="${account.email}">
                             </div>
                             <!-- Personal address-->
                             <div class="col-md-6">
                                 <label class="small mb-1" for="address">Address</label>
                                 <input class="form-control" id="address" name="address" type="text"
-                                       placeholder="Enter new address" value="${requestScope.account.personalAddress}">
+                                       placeholder="Enter new address" value="${account.personalAddress}">
                             </div>
                         </div>
                         <!-- Form Row phones -->
@@ -212,7 +212,7 @@
                     <c:if test="${sessionAccountId eq param.id or sessionScope.account.role eq 'ADMIN'}">
                         <!-- Update account through uploading xml file -->
                         <div class="row gx-3 mb-3">
-                            <form action="${rootUrl}/account/xml-update?id=${requestScope.account.id}"
+                            <form action="${rootUrl}/account/xml-update?id=${account.id}"
                                   method="POST" enctype="multipart/form-data" id="xmlFile">
                                 <label for="xmlFile" class="form-label text-primary">Update account using
                                     xml-file</label>

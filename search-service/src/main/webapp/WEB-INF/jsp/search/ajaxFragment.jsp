@@ -1,6 +1,6 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<c:set var="rootUrl" value="${pageContext.request.contextPath}"/>
 <div id="searchResult">
-    <c:set var="rootUrl" value="${pageContext.request.contextPath}"/>
     <c:forEach var="account" items="${requestScope.accounts}">
         <a class="dropdown-item" href="${rootUrl}/account?id=${account.id}">${account.firstName} ${account.lastName}</a>
     </c:forEach>
