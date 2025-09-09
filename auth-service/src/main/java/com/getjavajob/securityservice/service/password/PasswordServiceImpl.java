@@ -1,5 +1,6 @@
 package com.getjavajob.securityservice.service.password;
 
+import com.getjavajob.securityservice.dao.account.AccountRepositorySpringData;
 import com.getjavajob.securityservice.dao.password.PasswordRepository;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import com.getjavajob.training.timashovy.socialnetwork.domain.password.Password;
@@ -21,18 +22,21 @@ public class PasswordServiceImpl implements PasswordService {
     private final PasswordRepository passwordRepository;
 
     private final PasswordEncoder passwordEncoder;
+    private final AccountRepositorySpringData accountRepositorySpringData;
 
     @Autowired
-    public PasswordServiceImpl(PasswordRepository passwordRepository, @Lazy PasswordEncoder passwordEncoder) {
+    public PasswordServiceImpl(PasswordRepository passwordRepository, @Lazy PasswordEncoder passwordEncoder,
+                               AccountRepositorySpringData accountRepositorySpringData) {
         this.passwordRepository = passwordRepository;
         this.passwordEncoder = passwordEncoder;
+        this.accountRepositorySpringData = accountRepositorySpringData;
     }
 
     @Transactional
     @Override
     public Password create(Account account, String rawPassword) {
         Password password = new Password(passwordEncoder.encode(rawPassword));
-        password.setAccount(account);
+        password.setAccount(accountRepositorySpringData.findById(account.getId()).get());
         logger.info("new password from rawPassword={} created with value={} with encoder={}", rawPassword,
                 password.getPasswordValue(), passwordEncoder);
         return passwordRepository.save(password);

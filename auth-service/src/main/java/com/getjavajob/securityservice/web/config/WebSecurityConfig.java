@@ -3,6 +3,7 @@ package com.getjavajob.securityservice.web.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -56,8 +57,12 @@ public class WebSecurityConfig {
         return http
                 .authorizeHttpRequests(
                         registry -> {
-                            registry.requestMatchers(loginUrl, registerUrl).permitAll();
-                            registry.requestMatchers(loginPage, registerPage).permitAll();
+                            registry.requestMatchers(loginUrl).permitAll();
+                            registry.requestMatchers(registerUrl).permitAll();
+                            registry.requestMatchers(loginPage).permitAll();
+                            registry.requestMatchers(registerPage).permitAll();
+                            registry.requestMatchers(HttpMethod.POST, registerUrl).permitAll();
+                            registry.requestMatchers(HttpMethod.POST, "/api/account/create").permitAll();
                             registry.anyRequest().authenticated();
                         }
                 )

@@ -53,12 +53,28 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     }
 
     private String generateRedirectBaseURL(HttpServletRequest request, Long accountId) {
-        String scheme = request.getScheme();
-        String serverName = request.getHeader("X-Forwarded-Host");
-        if (serverName == null || serverName.isEmpty()) {
-            serverName = request.getServerName();
+        // Получаем схему из заголовка, если прокси передает
+        String scheme = request.getHeader("X-Forwarded-Proto");
+        if (scheme == null || scheme.isEmpty()) {
+            scheme = request.getScheme();
         }
-        return scheme + "://" + serverName + "/account?id=" + accountId;
+        String host = request.getHeader("X-Forwarded-Host");
+        if (host == null || host.isEmpty()) {
+            host = request.getServerName();
+        }
+        String portHeader = request.getHeader("X-Forwarded-Port");
+        int port;
+        if (portHeader != null && !portHeader.isEmpty()) {
+            port = Integer.parseInt(portHeader);
+        } else {
+            port = request.getServerPort();
+        }
+        String baseUrl = scheme + "://" + host;
+        if (("http".equals(scheme) && port != 80) ||
+                ("https".equals(scheme) && port != 443)) {
+            baseUrl += ":" + port;
+        }
+        return baseUrl + "/account?id=" + accountId;
     }
 
 }

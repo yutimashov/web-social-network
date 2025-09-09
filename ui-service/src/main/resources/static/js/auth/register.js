@@ -79,3 +79,6 @@ document.getElementById('registerForm').addEventListener('submit', (event) => {
     document.getElementById('workingPhones').value = workingPhones.join(',');
     document.getElementById('registerForm').submit();
 });
+
+console.log("Personal phones hidden field:", document.getElementById('personalPhones').value);
+console.log("Working phones hidden field:", document.getElementById('workingPhones').value);

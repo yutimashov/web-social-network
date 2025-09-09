@@ -21,12 +21,10 @@ public class AccountServiceImpl implements AccountService {
 
     private static final Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class);
     private final AccountRepository accountDao;
-    private final PasswordClient passwordClient;
     private final PhoneClient phoneClient;
 
-    public AccountServiceImpl(AccountRepository accountDao, PasswordClient passwordClient, PhoneClient phoneClient) {
+    public AccountServiceImpl(AccountRepository accountDao, PhoneClient phoneClient) {
         this.accountDao = accountDao;
-        this.passwordClient = passwordClient;
         this.phoneClient = phoneClient;
     }
 
@@ -42,9 +40,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Transactional
     @Override
-    public Account create(Account account, String password, String personalPhones, String workingPhones) {
+    public Account create(Account account, String personalPhones, String workingPhones) {
         Account createdAccount = accountDao.save(account);
-        passwordClient.create(account, password);
         if (!personalPhones.isEmpty()) {
             phoneClient.createPersonalPhones(account, personalPhones);
         }
@@ -85,7 +82,6 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void delete(Long accountId) {
         validateAccountId(accountId);
-        passwordClient.delete(accountId);
         accountDao.delete(accountId);
     }
 

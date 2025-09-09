@@ -2,6 +2,7 @@ package com.getjavajob.accountservice.web.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -19,7 +20,8 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(registry -> registry
-                        .requestMatchers("/login", "/css/**", "/js/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/login", "/css/**", "/js/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/account/create").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

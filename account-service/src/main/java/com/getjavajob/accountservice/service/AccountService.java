@@ -14,7 +14,7 @@ public interface AccountService {
     @PreAuthorize("hasAuthority('ADMIN')")
     void makeAdmin(Long accountId);
 
-    Account create(Account account, String password, String personalPhones, String workingPhones);
+    Account create(Account account, String personalPhones, String workingPhones);
 
     void update(Long accountId, Account updatedAccount);
 
