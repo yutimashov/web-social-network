@@ -1,4 +1,4 @@
-package com.getjavajob.groupservice.web;
+package com.getjavajob.groupservice.web.controller;
 
 import com.getjavajob.groupservice.service.group.GroupService;
 import com.getjavajob.groupservice.service.membership.GroupMembershipService;

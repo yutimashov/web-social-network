@@ -1,7 +1,7 @@
-package com.getjavajob.accountservice.web.controller;
+package com.getjavajob.groupservice.web.controller;
 
-import com.getjavajob.accountservice.service.AccountService;
-import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import com.getjavajob.groupservice.service.group.GroupService;
+import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.http.HttpHeaders;
@@ -22,17 +22,17 @@ import static org.springframework.http.ResponseEntity.status;
 @Controller
 public class ImageController {
 
-    private final AccountService accountService;
+    private final GroupService groupService;
 
-    public ImageController(AccountService accountService) {
-        this.accountService = accountService;
+    public ImageController(GroupService groupService) {
+        this.groupService = groupService;
     }
 
-    @GetMapping("/account/avatar")
+    @GetMapping("/group/avatar")
     public ResponseEntity<InputStreamSource> accountAvatar(@RequestParam("id") Long id) {
-        Optional<Account> accountOptional = accountService.getById(id);
-        if (accountOptional.isPresent()) {
-            InputStream avatar = new ByteArrayInputStream(accountOptional.get().getAvatar());
+        Optional<Group> groupOptional = groupService.getById(id);
+        if (groupOptional.isPresent()) {
+            InputStream avatar = new ByteArrayInputStream(groupOptional.get().getAvatar());
             return createImageResponse(avatar);
         }
         return status(NOT_FOUND).build();
