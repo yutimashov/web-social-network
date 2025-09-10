@@ -147,7 +147,7 @@
                     <div class="card mb-1">
                         <div class="card-header">News feed</div>
                         <div class="card-body row gx-3">
-                            <a href="${rootUrl}/newsfeed"><i
+                            <a href="${rootUrl}/message/newsfeed"><i
                                     class="fa-solid fa-people-group"></i>&nbsp;News</a>
                         </div>
                     </div>

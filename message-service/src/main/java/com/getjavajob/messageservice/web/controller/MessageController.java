@@ -4,11 +4,16 @@ import com.getjavajob.messageservice.service.MessageService;
 import com.getjavajob.messageservice.web.dto.MessageDto;
 import com.getjavajob.messageservice.web.dto.MessageMapper;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalWallMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+import static java.util.Collections.emptyList;
 
 @Controller
 @RequestMapping("/message")
@@ -56,15 +61,6 @@ public class MessageController {
         return "account/dialog";
     }
 
-/*    @PostMapping("/group/message/create")
-    public String createGroupMessage(@ModelAttribute MessageDto messageDto,
-                                     @RequestParam("groupId") long groupId,
-                                     @SessionAttribute("account") Account account) {
-        messageService.createGroupMessage(new MessageMapper().toGroupMessage(messageDto, account.getId()), groupId);
-        return "redirect:/group?id=" + groupId;
-    }*/
-
-/*
     @GetMapping("/newsfeed")
     public String newsFeed(@SessionAttribute Account account,
                            @RequestParam(required = false, defaultValue = "0") Long lastPostId,
@@ -83,12 +79,19 @@ public class MessageController {
             model.addAttribute("lastPostId", newLastId);
             model.addAttribute("cacheStartRange", cacheStartRange);
             model.addAttribute("limit", pageSize);
-            model.addAttribute("accountService", accountService);
         } else {
             model.addAttribute("newsfeed", emptyList());
             model.addAttribute("hasMore", false);
         }
         return !isAjax ? "newsfeed/newsfeed" : "newsfeed/ajaxFragment";
+    }
+
+/*    @PostMapping("/group/message/create")
+    public String createGroupMessage(@ModelAttribute MessageDto messageDto,
+                                     @RequestParam("groupId") long groupId,
+                                     @SessionAttribute("account") Account account) {
+        messageService.createGroupMessage(new MessageMapper().toGroupMessage(messageDto, account.getId()), groupId);
+        return "redirect:/group?id=" + groupId;
     }*/
 
 }

@@ -9,23 +9,15 @@
 <body>
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <div class="container-xl mt-4" id="newsfeed">
-    <!-- hidden field for storing data for ajax-queries -->
     <input type="hidden" id="last-post-id" value="${lastPostId}">
     <input type="hidden" id="cache-start-range" value="${cacheStartRange}">
     <input type="hidden" id="page-size" value="${limit}">
-    <!-- account wall message -->
     <c:forEach items="${requestScope.newsfeed}" var="post">
         <div class="account-wall-msg">
             <hr>
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <span>Created: ${post.creationDate}</span>
             </div>
-            <p>Author:
-                <a href="${rootUrl}/account?id=${post.accountAuthorId}">
-                        ${requestScope.accountService.getById(post.accountAuthorId).get().firstName}
-                        ${requestScope.accountService.getById(post.accountAuthorId).get().lastName}
-                </a>
-            </p>
             <p>${post.text}</p>
             <c:if test="${post.photo ne null}">
                 <img src="${rootUrl}/account-wall/image?id=${post.id}" alt="Message photo" width="150px"
