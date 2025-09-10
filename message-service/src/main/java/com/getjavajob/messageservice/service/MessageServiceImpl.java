@@ -38,7 +38,6 @@ public class MessageServiceImpl implements MessageService {
     private final RedisTemplate<String, String> redisTemplate;
     private static final Logger logger = getLogger(MessageServiceImpl.class);
 
-    //TODO: extract to properties file
     @Value("${redis.cache.newsfeed.size}")
     private int newsFeedCacheSize;
 
