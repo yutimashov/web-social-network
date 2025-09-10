@@ -47,7 +47,6 @@ public class MessageController {
 
     @GetMapping("/account/messages")
     public String personalMessages(@RequestParam("id") Long id, Model model) {
-        logger.info("Account id={} get personal messages", id);
         model.addAttribute("accounts", messageService.getAllAccountsWithPersonalMessages(id));
         return "account/messages";
     }
@@ -56,7 +55,6 @@ public class MessageController {
     public String createPersonalMessage(@ModelAttribute MessageDto messageDto,
                                         @RequestParam("destinationId") Long destinationId,
                                         @SessionAttribute("account") Account account) {
-        logger.info("Message={}", new MessageMapper().toPersonalMessage(messageDto, account.getId(), destinationId));
         messageService.createPersonalMessage(new MessageMapper().toPersonalMessage(messageDto, account.getId(),
                 destinationId));
         return "redirect:/account/messages/dialog?id=" + destinationId;

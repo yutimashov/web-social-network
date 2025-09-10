@@ -34,7 +34,7 @@
                         </c:otherwise>
                     </c:choose>
                     <h5><a href="${rootUrl}/account?id=${account.id}">${account.firstName} ${account.lastName}</a></h5>
-                    <a href="${rootUrl}/account/messages/dialog?id=${account.id}" role="button"
+                    <a href="${rootUrl}/message/account/messages/dialog?id=${account.id}" role="button"
                        class="btn btn-sm btn-warning">Open dialog</a>
                     <hr>
                 </c:if>
