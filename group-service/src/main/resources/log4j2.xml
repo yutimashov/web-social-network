@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="debug">
+
+    <Appenders>
+        <File name="File" fileName="/opt/tomcat/group-service/log.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n"/>
+        </File>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="com.getjavajob.groupservice" level="debug" additivity="false">
+            <AppenderRef ref="File"/>
+        </Logger>
+    </Loggers>
+
+</Configuration>

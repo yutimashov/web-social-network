@@ -1,0 +1,34 @@
+package com.getjavajob.accountservice.web.dto;
+
+import com.getjavajob.accountservice.exception.WebException;
+import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+
+import java.io.IOException;
+
+import static com.getjavajob.training.timashovy.socialnetwork.domain.account.AccountRole.REGULAR;
+import static java.time.LocalDate.parse;
+import static java.util.Objects.isNull;
+
+public class AccountMapper {
+
+    public Account toAccount(AccountDto accountDto) {
+        try {
+            return new Account.Builder()
+                    .firstName(accountDto.getFirstName())
+                    .lastName(accountDto.getLastName())
+                    .middleName(accountDto.getMiddleName())
+                    .email(accountDto.getEmail())
+                    .icq(accountDto.getIcq())
+                    .skype(accountDto.getSkype())
+                    .avatar(!isNull(accountDto.getAvatar()) && accountDto.getAvatar().getSize() > 0
+                            ? accountDto.getAvatar().getBytes() : null)
+                    .birthDate(!isNull(accountDto.getBirthDate()) && !accountDto.getBirthDate().isEmpty()
+                            ? parse(accountDto.getBirthDate()) : null)
+                    .role(REGULAR)
+                    .build();
+        } catch (IOException e) {
+            throw new WebException(e.getMessage(), e.getCause());
+        }
+    }
+
+}

@@ -10,6 +10,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+
+import java.io.Serializable;
 import java.util.Objects;
 
 import static jakarta.persistence.FetchType.LAZY;
@@ -20,7 +22,7 @@ import static jakarta.persistence.FetchType.LAZY;
  */
 @Entity
 @Table(name = "account_passwords", schema = "account_data")
-public class Password implements BaseEntity<Long> {
+public class Password implements BaseEntity<Long>, Serializable {
 
     @Id
     private Long id;

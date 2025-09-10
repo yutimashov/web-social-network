@@ -12,6 +12,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import org.hibernate.annotations.JdbcTypeCode;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Types;
 import java.time.LocalDate;
@@ -33,6 +34,9 @@ import static java.util.Objects.hash;
 @Table(name = "accounts", schema = "account_data")
 @Entity
 public class Account implements BaseEntity<Long>, Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -6018890236585731618L;
 
     @Id
     @GeneratedValue(strategy = IDENTITY)

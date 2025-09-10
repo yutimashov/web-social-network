@@ -17,10 +17,18 @@
         <java.version>17</java.version>
     </properties>
     <modules>
-        <module>dao</module>
         <module>domain</module>
-        <module>service</module>
-        <module>web</module>
         <module>messaging</module>
+        <module>eureka</module>
+        <module>account-service</module>
+        <module>phone-service</module>
+        <module>friendship-service</module>
+        <module>group-service</module>
+        <module>message-service</module>
+        <module>search-service</module>
+        <module>data-processing-service</module>
+        <module>auth-service</module>
+        <module>ui-service</module>
+        <module>api-gateway</module>
     </modules>
 </project>
