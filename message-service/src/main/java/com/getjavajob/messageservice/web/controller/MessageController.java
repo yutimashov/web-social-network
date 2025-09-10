@@ -6,7 +6,10 @@ import com.getjavajob.messageservice.web.dto.MessageMapper;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -15,6 +18,7 @@ import java.io.IOException;
 @RequestMapping("/message")
 public class MessageController {
 
+    private static final Logger logger = LoggerFactory.getLogger(MessageController.class);
     private final MessageService messageService;
 
     public MessageController(MessageService messageService) {
@@ -41,6 +45,14 @@ public class MessageController {
         return scheme + "://" + serverName + "/account?id=" + accountId;
     }
 
+    @GetMapping("/account/messages")
+    public String personalMessages(@RequestParam("id") Long id,
+                                   Model model) {
+        logger.info("Account id={} get personam messages", id);
+        model.addAttribute("accounts", messageService.getAllAccountsWithPersonalMessages(id));
+        return "account/messages";
+    }
+
 /*    @GetMapping("/account/messages/dialog")
     public String messageDialog(@RequestParam("id") long id,
                                 @SessionAttribute("account") Account account,
@@ -51,13 +63,6 @@ public class MessageController {
         model.addAttribute("accountSender", account);
         model.addAttribute("messages", messageService.getAllPersonalMessagesWithAccount(account.getId(), id));
         return "account/dialog";
-    }*/
-
-/*    @GetMapping("/account/messages")
-    public String personalMessages(@RequestParam("id") long id,
-                                   Model model) {
-        model.addAttribute("accounts", messageService.getAllAccountsWithPersonalMessages(id));
-        return "account/messages";
     }*/
 
 /*    @PostMapping("/group/message/create")

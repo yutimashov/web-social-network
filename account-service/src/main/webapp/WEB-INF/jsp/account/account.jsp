@@ -132,7 +132,7 @@
                     <div class="card mb-1">
                         <div class="card-header">Messages</div>
                         <div class="card-body row gx-3">
-                            <a href="${rootUrl}/account/messages?id=${pageAccountId}"><i
+                            <a href="${rootUrl}/message/account/messages?id=${pageAccountId}"><i
                                     class="fa-solid fa-envelope"></i>&nbsp;My messages</a>
                         </div>
                     </div>
