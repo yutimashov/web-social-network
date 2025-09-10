@@ -86,12 +86,12 @@ public class MessageController {
         return !isAjax ? "newsfeed/newsfeed" : "newsfeed/ajaxFragment";
     }
 
-/*    @PostMapping("/group/message/create")
+    @PostMapping("/group/create")
     public String createGroupMessage(@ModelAttribute MessageDto messageDto,
-                                     @RequestParam("groupId") long groupId,
+                                     @RequestParam("groupId") Long groupId,
                                      @SessionAttribute("account") Account account) {
         messageService.createGroupMessage(new MessageMapper().toGroupMessage(messageDto, account.getId()), groupId);
         return "redirect:/group?id=" + groupId;
-    }*/
+    }
 
 }

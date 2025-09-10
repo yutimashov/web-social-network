@@ -6,6 +6,7 @@ import com.getjavajob.messageservice.dao.PersonalWallMessageRepository;
 import com.getjavajob.messageservice.web.feignclient.FriendshipClient;
 import com.getjavajob.messageservice.web.feignclient.GroupClient;
 import com.getjavajob.training.timashovy.socialnetwork.domain.account.Account;
+import com.getjavajob.training.timashovy.socialnetwork.domain.group.Group;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.GroupMessage;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.Message;
 import com.getjavajob.training.timashovy.socialnetwork.domain.message.PersonalMessage;
@@ -30,14 +31,13 @@ import static org.slf4j.LoggerFactory.getLogger;
 @PropertySource("classpath:application-local.properties")
 public class MessageServiceImpl implements MessageService {
 
+    private static final Logger logger = getLogger(MessageServiceImpl.class);
     private final GroupMessageRepository groupMessageDao;
     private final PersonalWallMessageRepository accountWallMessageDao;
     private final PersonalMessageRepository personalMessageDao;
     private final GroupClient groupClient;
     private final FriendshipClient friendshipClient;
     private final RedisTemplate<String, String> redisTemplate;
-    private static final Logger logger = getLogger(MessageServiceImpl.class);
-
     @Value("${redis.cache.newsfeed.size}")
     private int newsFeedCacheSize;
 
@@ -119,7 +119,10 @@ public class MessageServiceImpl implements MessageService {
     @Transactional
     @Override
     public void createGroupMessage(GroupMessage groupMessage, Long groupId) {
-        groupMessage.setGroup(groupClient.group(groupId).getBody().get());
+        logger.info("statr");
+        Group group = new Group();
+        group.setId(groupId);
+        groupMessage.setGroup(group);
         groupMessageDao.save(groupMessage);
     }
 

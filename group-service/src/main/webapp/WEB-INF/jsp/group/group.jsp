@@ -35,7 +35,7 @@
         <c:if test="${requestScope.isAdmin eq true}">
             <%-- group message --%>
             <div>
-                <form action="${rootUrl}/group/message/create" method="POST" enctype="multipart/form-data">
+                <form action="${rootUrl}/message/group/create" method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="groupId" value="${requestScope.group.id}">
                     <label for="text" class="form-label">New post:</label>
                     <textarea class="form-control" id="text" name="text" rows="3"

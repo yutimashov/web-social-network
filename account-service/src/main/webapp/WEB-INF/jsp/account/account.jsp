@@ -195,10 +195,10 @@
                             <hr>
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <span>Created: ${post.creationDate}</span>
-                                <button type="button" class="close btn-delete-account-wall-msg" aria-label="Close"
+                            <%--  <button type="button" class="close btn-delete-account-wall-msg" aria-label="Close"
                                         style="background: none; border: none; cursor: pointer;">
                                     <span aria-hidden="true" style="font-size: 20px;">&times;</span>
-                                </button>
+                                </button>--%>
                             </div>
                             <p>Author:
                                 <a href="${rootUrl}/account?id=${post.accountAuthorId}">
