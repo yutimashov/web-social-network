@@ -53,17 +53,24 @@ public class MessageController {
         return "account/messages";
     }
 
-/*    @GetMapping("/account/messages/dialog")
+    @PostMapping("/account/messages/create")
+    public String createPersonalMessage(@ModelAttribute MessageDto messageDto,
+                                        @RequestParam("destinationId") long destinationId,
+                                        @SessionAttribute("account") Account account) {
+        messageService.createPersonalMessage(new MessageMapper().toPersonalMessage(messageDto, account.getId(),
+                destinationId));
+        return "redirect:/account/messages/dialog?id=" + destinationId;
+    }
+
+    @GetMapping("/account/messages/dialog")
     public String messageDialog(@RequestParam("id") long id,
                                 @SessionAttribute("account") Account account,
                                 Model model) {
-        if (accountService.getById(id).isPresent()) {
-            model.addAttribute("accountReceiver", accountService.getById(id).get());
-        }
+        model.addAttribute("accountReceiverId", id);
         model.addAttribute("accountSender", account);
         model.addAttribute("messages", messageService.getAllPersonalMessagesWithAccount(account.getId(), id));
         return "account/dialog";
-    }*/
+    }
 
 /*    @PostMapping("/group/message/create")
     public String createGroupMessage(@ModelAttribute MessageDto messageDto,
@@ -73,15 +80,7 @@ public class MessageController {
         return "redirect:/group?id=" + groupId;
     }*/
 
-/*    @PostMapping("/account/messages/create")
-    public String createPersonalMessage(@ModelAttribute MessageDto messageDto,
-                                        @RequestParam("destinationId") long destinationId,
-                                        @SessionAttribute("account") Account account) {
-        messageService.createPersonalMessage(new MessageMapper().toPersonalMessage(messageDto, account.getId(),
-                destinationId));
-        return "redirect:/account/messages/dialog?id=" + destinationId;
-    }
-
+/*
     @GetMapping("/newsfeed")
     public String newsFeed(@SessionAttribute Account account,
                            @RequestParam(required = false, defaultValue = "0") Long lastPostId,

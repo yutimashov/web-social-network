@@ -6,7 +6,7 @@
     <title>Dialog</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/style.css">
 </head>
-<body data-current-user-id="${accountSender.id}" data-receiver-user-id="${accountReceiver.id}">
+<body data-current-user-id="${accountSender.id}" data-receiver-user-id="${accountReceiverId}">
 <jsp:include page="/WEB-INF/jsp/include/header.jsp"/>
 <section>
     <div class="container py-5">

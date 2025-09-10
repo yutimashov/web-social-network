@@ -34,7 +34,7 @@
                            class="btn btn-warning">Send friend request</a>
                     </c:if>
                     <c:if test="${sessionAccountId ne pageAccountId}">
-                        <a href="${rootUrl}account/messages/dialog?id=${pageAccountId}" role="button"
+                        <a href="${rootUrl}/message/account/messages/dialog?id=${pageAccountId}" role="button"
                            class="btn btn-primary">Send message</a>
                     </c:if>
                     <div class="card-body">
