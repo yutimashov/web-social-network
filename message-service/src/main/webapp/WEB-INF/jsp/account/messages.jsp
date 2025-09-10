@@ -29,7 +29,8 @@
                         </c:when>
                         <c:otherwise>
                             <a href="${rootUrl}/account?id=${account.id}"><img
-                                    src="${rootUrl}/static/img/img-coming-soon-placeholder.png" alt="Profile avatar"
+                                    src="${rootUrl}/static/img/img-coming-soon-placeholder.png"
+                                    alt="Profile avatar"
                                     width="150px" height="150px"></a>
                         </c:otherwise>
                     </c:choose>
