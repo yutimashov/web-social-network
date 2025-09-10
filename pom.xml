@@ -17,10 +17,7 @@
         <java.version>17</java.version>
     </properties>
     <modules>
-        <module>dao</module>
         <module>domain</module>
-        <module>service</module>
-        <module>web</module>
         <module>messaging</module>
         <module>eureka</module>
         <module>account-service</module>

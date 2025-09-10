@@ -1,6 +1,0 @@
-# Compiler output
-target/
-
-# IntelliJ IDEA
-.idea/
-*.iml
